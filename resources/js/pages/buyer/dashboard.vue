@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>Admin</h1>
-    <button @click="logout">Logout</button>
-  </div>
+    <div>
+        Buyer
+        <button @click="logout">Logout</button>
+    </div>
 </template>
 
 <script>
@@ -20,4 +20,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

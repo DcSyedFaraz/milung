@@ -1,27 +1,36 @@
 // store/index.js
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createApp } from 'vue';
 
-Vue.use(Vuex);
+import Vuex from 'vuex';
+const app = createApp({})
+
+app.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    authToken: null,
-    userRole: null,
-  },
-  mutations: {
-    setAuthToken(state, token) {
-      state.authToken = token;
+    state: {
+        authToken: null,
+        userRole: null,
     },
-    setUserRole(state, role) {
-      state.userRole = role;
+    mutations: {
+        setAuthToken(state, token) {
+            state.authToken = token;
+        },
+        setUserRole(state, role) {
+            state.userRole = role;
+        },
+        clearAuth(state) {
+            state.authToken = null;
+            state.userRole = null;
+        },
     },
-  },
-  actions: {
-    login({ commit }, { token, role }) {
-      commit('setAuthToken', token);
-      commit('setUserRole', role);
+    actions: {
+        login({ commit }, { token, role }) {
+            commit('setAuthToken', token);
+            commit('setUserRole', role);
+        },
+        logout({ commit }) {
+            commit('clearAuth');
+        },
     },
-  },
 });
