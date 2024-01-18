@@ -16,14 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/done', function () {
 //     $user =[
-//         'name'=>'Supplier',
-//         'email'=>'supplier@gmail.com',
+//         'first_name'=>'admin',
+//         'current_role'=>'admin',
+//         'email'=>'admin@gmail.com',
 //         'password' => Hash::make('12345678'),
 //         'email_verified_at' => date('Y-m-d h:i:s'),
 //     ];
 
 //     $userd = User::create($user);
-//     $userd->assignRole('Supplier');
+//     // $userd->assignRole('Supplier');
 //     return 'done';
 // });
 Route::group(['namespace' => 'web'], function () {

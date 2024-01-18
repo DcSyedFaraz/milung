@@ -36,7 +36,7 @@
                                                         Me</label>
                                                 </div>
                                             </div>
-                                            <button  class="btn btn-primary btn-user btn-block float-right">
+                                            <button class="btn btn-primary btn-user btn-block float-right">
                                                 {{ loading ? "Logging in..." : "Login" }}
                                             </button>
                                         </form>
@@ -74,101 +74,76 @@
 </template>
 
 <script>
-import './style.css';
+
+// import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js';
 export default {
 
 
-data() {
-    return {
-        email: "",
-        password: "",
-        loading: false,
-        //   error: null,
-    };
-},
-methods: {
+    data() {
+        return {
+            email: "",
+            password: "",
+            loading: false,
+            //   error: null,
+        };
+    },
+    methods: {
         async login() {
-        this.error = null;
+            this.error = null;
 
-        this.loading = true;
+            this.loading = true;
 
-        try {
-            const response = await axios.post("/api/login", {
+            try {
+                const response = await axios.post("/api/login", {
 
-                email: this.email,
-                password: this.password,
+                    email: this.email,
+                    password: this.password,
 
-            });
-            const { token, role } = response.data;
+                });
+                const { token, role } = response.data;
 
-            // Store the token in local storage
-            this.$store.dispatch('login', { token, role });
-            // localStorage.setItem('authToken', token);
+                // Store the token in local storage
+                this.$store.dispatch('login', { token, role });
+                // localStorage.setItem('authToken', token);
 
-            console.log("Login successful:", response.data);
-            toastr.success('Login successful', role);
-            this.email = "";
-            this.password = "";
+                console.log("Login successful:", response.data);
+                toastr.success('Login successful', role);
+                this.email = "";
+                this.password = "";
 
-            this.redirectBasedOnRole(role);
+                this.redirectBasedOnRole(role);
 
-        } catch (error) {
+            } catch (error) {
 
-            console.error("Login failed:", error);
-            toastr.error('Email or Password is not correct.');
-            // this.error = "Invalid credentials";
+                console.error("Login failed:", error);
+                toastr.error('Email or Password is not correct.');
+                // this.error = "Invalid credentials";
 
-        } finally {
-            this.loading = false;
-        }
+            } finally {
+                this.loading = false;
+            }
+        },
+        redirectBasedOnRole(role) {
+            // Redirect based on the user's role using Vue Router
+            if (role === 'Admin') {
+                this.$router.push({ name: 'admin' });
+            }
+            else if (role === 'Supplier') {
+                this.$router.push({ name: 'supplier' });
+            }
+            else if (role === 'Buyer') {
+                this.$router.push({ name: 'buyer' });
+            }
+            else {
+                // Default redirection or handle unknown roles
+                this.$router.push('/default-dashboard');
+            }
+        },
     },
-    redirectBasedOnRole(role) {
-        // Redirect based on the user's role using Vue Router
-        if (role === 'Admin') {
-            this.$router.push({ name: 'admin' });
-        }
-        else if (role === 'Supplier') {
-            this.$router.push({ name: 'supplier' });
-        }
-        else if (role === 'Buyer') {
-            this.$router.push({ name: 'buyer' });
-        }
-        else {
-            // Default redirection or handle unknown roles
-            this.$router.push('/default-dashboard');
-        }
-    },
-},
 };
 </script>
-<!-- <style scoped>
-#login-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 100px;
-}
+<style scoped>
+@import './style.css';
+@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css';
 
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-}
-
-label {
-    margin-bottom: 5px;
-}
-
-input {
-    margin-bottom: 10px;
-    padding: 5px;
-}
-
-button {
-    padding: 5px 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-</style> -->
+</style>
