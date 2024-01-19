@@ -261,6 +261,19 @@
   .card-img-overlay {
     background-color: rgba(255, 255, 255, 0.6);
   }
+  .icon-card {
+    display: flex;
+    justify-content: space-around;
+  }
+  .img-cad {
+    border: 1px solid #f6c000;
+    border-radius: 3px;
+    padding: 6px 20px;
+    text-align: center;
+  }
+  .img-cad i {
+    font-size: 35px;
+  }
 
   /* Alerts */
   .alert-heading {
@@ -758,8 +771,13 @@
   }
 
   .sidebar-nav .nav-content a:hover,
-  .sidebar-nav .nav-content a.active {
-    color: #14245c;
+  .sidebar-nav .nav-content a.active, .active {
+    color: white !important;
+    background-color: #14245c;
+  }
+  .sidebar-nav .nav-content a{
+    color: black;
+    background-color: #fdf7eb;
   }
 
   .sidebar-nav .nav-content a.active i {

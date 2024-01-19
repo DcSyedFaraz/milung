@@ -1,10 +1,11 @@
 <template>
-    <div>
+    <!-- <div>
         <h1>Admin</h1>
         <button @click="logout">Logout</button>
-    </div>
+    </div> -->
 
     <body>
+        <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
             <div class="d-flex align-items-center justify-content-between">
                 <a href="" class="logo d-flex align-items-center">
@@ -43,7 +44,8 @@
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
                         </a><!-- End Profile Iamge Icon -->
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" style="background-color: beige;">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
+                            style="background-color: beige;">
                             <li class="dropdown-header">
                                 <h6>Kevin Anderson</h6>
                                 <span>Web Designer</span>
@@ -98,7 +100,8 @@
                             <i class="bi bi-bell"></i>
                             <span class="badge badge-number">4</span> </a><!-- End Notification Icon -->
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style="background-color: beige;">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
+                            style="background-color: beige;">
                             <li class="dropdown-header">
                                 You have 4 new notifications
                                 <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
@@ -171,7 +174,8 @@
                             <i class="bi bi-chat-left-text"></i>
                             <span class="badge badge-number">3</span> </a><!-- End Messages Icon -->
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages" style="background-color: beige;">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
+                            style="background-color: beige;">
                             <li class="dropdown-header">
                                 You have 3 new messages
                                 <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
@@ -249,27 +253,28 @@
             <div class="logo-img"><img src="../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">
+                    <router-link class="nav-link" :to="{ name: 'admins' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
                         <span>Summary</span>
-                    </a>
+                    </router-link>
                 </li>
                 <!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-person-gear"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                        :class="{ 'show': isAnyChildRouteActive() }">
                         <li>
-                            <a href="components-modal.html">
-                                <i class="bi bi-circle"></i><span>Modal</span>
-                            </a>
+                            <router-link :to="{ name: 'user' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>User</span>
+                            </router-link>
                         </li>
                         <li>
-                            <a href="components-tabs.html">
-                                <i class="bi bi-circle"></i><span>Tabs</span>
-                            </a>
+                            <router-link :to="{ name: 'admins1' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Modal1</span>
+                            </router-link>
                         </li>
                         <li>
                             <a href="components-pagination.html">
@@ -414,336 +419,7 @@
         <main id="main" class="main">
             <!-- End Page Title -->
 
-            <section class="section dashboard">
-                <div class="row">
-                    <!-- Left side columns -->
-                    <div class="col-lg-8">
-                        <div class="row">
-                            <!-- Sales Card -->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card info-card sales-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Sales <span>| Today</span></h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-cart"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>145</h6>
-                                                <span class="text-success small pt-1 fw-bold">12%</span>
-                                                <span class="text-muted small pt-2 ps-1">increase</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Sales Card -->
-
-                            <!-- Revenue Card -->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card info-card revenue-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            Revenue <span>| This Month</span>
-                                        </h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-currency-dollar"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>$3,264</h6>
-                                                <span class="text-success small pt-1 fw-bold">8%</span>
-                                                <span class="text-muted small pt-2 ps-1">increase</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Revenue Card -->
-
-                            <!-- Customers Card -->
-                            <div class="col-xxl-4 col-xl-12">
-                                <div class="card info-card customers-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            Customers <span>| This Year</span>
-                                        </h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-people"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>1244</h6>
-                                                <span class="text-danger small pt-1 fw-bold">12%</span>
-                                                <span class="text-muted small pt-2 ps-1">decrease</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Customers Card -->
-
-                            <!-- Reports -->
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Reports <span>/Today</span></h5>
-
-                                        <!-- Line Chart -->
-                                        <div id="reportsChart"></div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Reports -->
-
-                            <!-- Recent Sales -->
-                            <div class="col-12">
-                                <div class="card recent-sales overflow-auto">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Summary</h5>
-                                        <table class="table table-borderless datatable">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Customer</th>
-                                                    <th scope="col">Product</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2457</a></th>
-                                                    <td>Brandon Jacob</td>
-                                                    <td>
-                                                        <a href="#" class="text-primary">At praesentium minu</a>
-                                                    </td>
-                                                    <td>$64</td>
-                                                    <td>
-                                                        <span class="badge">Approved</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2147</a></th>
-                                                    <td>Bridie Kessler</td>
-                                                    <td>
-                                                        <a href="#" class="text-primary">Blanditiis dolor omnis
-                                                            similique</a>
-                                                    </td>
-                                                    <td>$47</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2049</a></th>
-                                                    <td>Ashleigh Langosh</td>
-                                                    <td>
-                                                        <a href="#" class="text-primary">At recusandae consectetur</a>
-                                                    </td>
-                                                    <td>$147</td>
-                                                    <td>
-                                                        <span class="badge bg-success">Approved</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Angus Grady</td>
-                                                    <td>
-                                                        <a href="#" class="text-primar">Ut voluptatem id earum et</a>
-                                                    </td>
-                                                    <td>$67</td>
-                                                    <td><span class="badge bg-danger">Rejected</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Raheem Lehner</td>
-                                                    <td>
-                                                        <a href="#" class="text-primary">Sunt similique distinctio</a>
-                                                    </td>
-                                                    <td>$165</td>
-                                                    <td>
-                                                        <span class="badge bg-success">Approved</span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Recent Sales -->
-
-                            <!-- Top Selling -->
-                            <div class="col-12">
-                                <div class="card top-selling overflow-auto">
-                                    <div class="card-body pb-0">
-                                        <h5 class="card-title">Top Selling <span>| Today</span></h5>
-
-                                        <table class="table table-borderless">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Preview</th>
-                                                    <th scope="col">Product</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col">Sold</th>
-                                                    <th scope="col">Revenue</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">
-                                                        <a href="#"><img src="./../../assets/img/product-1.jpg" alt="" /></a>
-                                                    </th>
-                                                    <td>
-                                                        <a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas
-                                                            nulla</a>
-                                                    </td>
-                                                    <td>$64</td>
-                                                    <td class="fw-bold">124</td>
-                                                    <td>$5,828</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">
-                                                        <a href="#"><img src="./../../assets/img/product-2.jpg" alt="" /></a>
-                                                    </th>
-                                                    <td>
-                                                        <a href="#" class="text-primary fw-bold">Exercitationem similique
-                                                            doloremque</a>
-                                                    </td>
-                                                    <td>$46</td>
-                                                    <td class="fw-bold">98</td>
-                                                    <td>$4,508</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">
-                                                        <a href="#"><img src="./../../assets/img/product-3.jpg" alt="" /></a>
-                                                    </th>
-                                                    <td>
-                                                        <a href="#" class="text-primary fw-bold">Doloribus nisi
-                                                            exercitationem</a>
-                                                    </td>
-                                                    <td>$59</td>
-                                                    <td class="fw-bold">74</td>
-                                                    <td>$4,366</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">
-                                                        <a href="#"><img src="./../../assets/img/product-4.jpg" alt="" /></a>
-                                                    </th>
-                                                    <td>
-                                                        <a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum
-                                                            error</a>
-                                                    </td>
-                                                    <td>$32</td>
-                                                    <td class="fw-bold">63</td>
-                                                    <td>$2,016</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">
-                                                        <a href="#"><img src="./../../assets/img/product-5.jpg" alt="" /></a>
-                                                    </th>
-                                                    <td>
-                                                        <a href="#" class="text-primary fw-bold">Sit unde debitis delectus
-                                                            repellendus</a>
-                                                    </td>
-                                                    <td>$79</td>
-                                                    <td class="fw-bold">41</td>
-                                                    <td>$3,239</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Top Selling -->
-                        </div>
-                    </div>
-                    <!-- End Left side columns -->
-
-                    <!-- Right side columns -->
-                    <div class="col-lg-4">
-                        <!-- Summary -->
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Summary</h5>
-                                <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
-
-                                <div class="Summary activity">
-                                    <p>Pending Tasks or Schedule Board</p>
-
-                                </div>
-                                <div>
-                                    <h5 class="card-title">
-                                        Budget Report <span><a href="#">See All</a></span>
-                                    </h5>
-                                    <div class="news">
-                                        <div class="post-item clearfix">
-                                            <img src="./../../assets/img/news-1.jpg" alt="" />
-                                            <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                                            <p>
-                                                Sit recusandae non aspernatur laboriosam. Quia enim
-                                                eligendi sed ut harum...
-                                            </p>
-                                        </div>
-
-                                        <div class="post-item clearfix">
-                                            <img src="./../../assets/img/news-2.jpg" alt="" />
-                                            <h4><a href="#">Quidem autem et impedit</a></h4>
-                                            <p>
-                                                Illo nemo neque maiores vitae officiis cum eum turos elan
-                                                dries werona nande...
-                                            </p>
-                                        </div>
-
-                                        <div class="post-item clearfix">
-                                            <img src="./../../assets/img/news-3.jpg" alt="" />
-                                            <h4>
-                                                <a href="#">Id quia et et ut maxime similique occaecati ut</a>
-                                            </h4>
-                                            <p>
-                                                Fugiat voluptas vero eaque accusantium eos. Consequuntur
-                                                sed ipsam et totam...
-                                            </p>
-                                        </div>
-
-                                        <div class="post-item clearfix">
-                                            <img src="./../../assets/img/news-4.jpg" alt="" />
-                                            <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-                                            <p>
-                                                Qui enim quia optio. Eligendi aut asperiores enim
-                                                repellendusvel rerum cuder...
-                                            </p>
-                                        </div>
-
-                                        <div class="post-item clearfix">
-                                            <img src="./../../assets/img/news-5.jpg" alt="" />
-                                            <h4>
-                                                <a href="#">Et dolores corrupti quae illo quod dolor</a>
-                                            </h4>
-                                            <p>
-                                                Odit ut eveniet modi reiciendis. Atque cupiditate libero
-                                                beatae dignissimos eius...
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Summay Ends -->
-                                <div>
-                                    <h5 class="card-title">Top Categories</h5>
-                                    <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
-                                </div>
-                            </div>
-                            <!-- End Right side columns -->
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <router-view></router-view>
         </main>
         <!-- End #main -->
 
@@ -757,23 +433,25 @@
 
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
                 class="bi bi-arrow-up-short"></i></a>
+
     </body>
 </template>
 
 <script>
 // import '';
-import './../../assets/vendor/apexcharts/apexcharts.min.js';
-import './../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js';
-import './../../assets/vendor/chart.js/chart.umd.js';
-import './../../assets/vendor/echarts/echarts.min.js';
-import './../../assets/vendor/quill/quill.min.js';
-import './../../assets/vendor/simple-datatables/simple-datatables.js';
-import './../../assets/vendor/tinymce/tinymce.min.js';
-import './../../assets/vendor/php-email-form/validate.js';
-import './../../assets/js/main.js';
+import './admin/index';
 
 export default {
     methods: {
+        isAnyChildRouteActive() {
+            const activeRoutes = [
+                '/admin/user',
+                '/admin/dashboard/1',
+            ];
+
+            return this.$route.matched.some(route => activeRoutes.includes(route.path));
+
+        },
         logout() {
             // Dispatch the logout action from Vuex store
             this.$store.dispatch('logout');
@@ -786,14 +464,7 @@ export default {
 </script>
 
 <style scoped>
-@import './../../assets/vendor/bootstrap/css/bootstrap.min.css';
-@import './../../assets/vendor/bootstrap-icons/bootstrap-icons.css';
-@import './../../assets/vendor/boxicons/css/boxicons.min.css';
-@import './../../assets/vendor/quill/quill.snow.css';
-@import './../../assets/vendor/quill/quill.bubble.css';
-@import './../../assets/vendor/remixicon/remixicon.css';
-@import './../../assets/vendor/simple-datatables/style.css';
-@import './../../assets/css/style.css';
+@import './admin/style.css';
 
 /* Add component-specific styles here */
 </style>

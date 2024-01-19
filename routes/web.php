@@ -14,19 +14,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/done', function () {
-//     $user =[
-//         'first_name'=>'admin',
-//         'current_role'=>'admin',
-//         'email'=>'admin@gmail.com',
-//         'password' => Hash::make('12345678'),
-//         'email_verified_at' => date('Y-m-d h:i:s'),
-//     ];
+Route::get('/done', function () {
+    Artisan::call('migrate --seed');
+    $user =[
+        'first_name'=>'admin',
+        'last_name'=>'admin',
+        'email'=>'admin@gmail.com',
+        'password' => Hash::make('12345678'),
+        'email_verified_at' => date('Y-m-d h:i:s'),
+    ];
 
-//     $userd = User::create($user);
-//     // $userd->assignRole('Supplier');
-//     return 'done';
-// });
+    $userd = User::create($user);
+    $userd->assignRole('Admin');
+    $buy =[
+        'first_name'=>'buyer',
+        'last_name'=>'buyer',
+        'email'=>'buyer@gmail.com',
+        'password' => Hash::make('12345678'),
+        'email_verified_at' => date('Y-m-d h:i:s'),
+    ];
+
+    $buyr = User::create($buy);
+    $buyr->assignRole('Buyer');
+    $supp =[
+        'first_name'=>'supplier',
+        'last_name'=>'supplier',
+        'email'=>'supplier@gmail.com',
+        'password' => Hash::make('12345678'),
+        'email_verified_at' => date('Y-m-d h:i:s'),
+    ];
+
+    $suppl = User::create($supp);
+    $suppl->assignRole('Supplier');
+    return 'done';
+});
 Route::group(['namespace' => 'web'], function () {
 
     Route::get('/{any}', function () {

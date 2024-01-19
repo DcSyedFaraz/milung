@@ -1,4 +1,5 @@
 import './bootstrap';
+import './../css/toastr.css'
 import { createApp } from 'vue';
 import app from './Layouts/app.vue';
 import router from './router';

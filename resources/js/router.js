@@ -4,6 +4,9 @@ import Dashbboard from './pages/dashboard.vue';
 import supplier from './pages/supplier/dashboard.vue';
 import buyer from './pages/buyer/dashboard.vue';
 import store from './store';
+// Admin
+import DefaultAdmin from './pages/admin/default.vue';
+import User from './pages/admin/default1.vue';
 
 
 const routes = [
@@ -12,25 +15,69 @@ const routes = [
         path: '/',
         name: 'login',
         component: login,
-        // meta: { requiresAdmin: true }
     },
     {
-        path: '/admin/dashboard',
+        path: '/admin',
         name: 'admin',
         component: Dashbboard,
-        meta: { requiresAdmin: true }
+        // meta: { requiresAdmin: true },
+        children: [
+            {
+                path: 'dashboard',
+                name: 'admins',
+                component: DefaultAdmin,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'user',
+                name: 'user',
+                component: User,
+                // meta: { requiresAdmin: true },
+            },
+        ],
+        redirect: 'admin/dashboard'
     },
     {
-        path: '/buyer/dashboard',
+        path: '/buyer',
         name: 'buyer',
         component: buyer,
-        meta: { requiresBuyer: true }
+        meta: { requiresBuyer: true },
+        children: [
+            {
+                path: 'dashboard',
+                name: 'admins1',
+                component: DefaultAdmin,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'dashboard/1',
+                name: 'admins11',
+                component: User,
+                // meta: { requiresAdmin: true },
+            },
+        ],
+        redirect: '/buyer/dashboard'
     },
     {
-        path: '/supplier/dashboard',
+        path: '/supplier',
         name: 'supplier',
         component: supplier,
-        meta: { requiresSupplier: true }
+        meta: { requiresSupplier: true },
+        children: [
+            {
+                path: 'dashboard',
+                name: 'adminss',
+                component: DefaultAdmin,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'dashboard/1',
+                name: 'admins1s',
+                component: User,
+                // meta: { requiresAdmin: true },
+            },
+        ],
+        redirect: '/supplier/dashboard'
     },
 
 ]
