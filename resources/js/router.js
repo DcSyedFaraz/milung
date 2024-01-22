@@ -6,7 +6,9 @@ import buyer from './pages/buyer/dashboard.vue';
 import store from './store';
 // Admin
 import DefaultAdmin from './pages/admin/default.vue';
-import User from './pages/admin/default1.vue';
+import User from './pages/admin/user.vue';
+import EditUser from './pages/admin/user-edit.vue';
+import AddUser from './pages/admin/add-user.vue';
 
 
 const routes = [
@@ -32,6 +34,18 @@ const routes = [
                 path: 'user',
                 name: 'user',
                 component: User,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: '/edit-user/:id',
+                name: 'edit-user',
+                component: EditUser,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'add-user',
+                name: 'add-user',
+                component: AddUser,
                 // meta: { requiresAdmin: true },
             },
         ],
