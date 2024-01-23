@@ -73,7 +73,7 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         $user->assignRole($validatedData['roles']);
-        return response()->json(['message'=>'Successfully created user!'], 201);
+        return response()->json(['message' => 'Successfully created user!'], 201);
     }
 
     /**
@@ -128,7 +128,7 @@ class UserController extends Controller
         $role = $request->roles;
 
         if ($role != implode(',', $user->getRoleNames()->toArray())) {
-                // dd('not done');
+            // dd('not done');
             $user->syncRoles($role);
         }
         // else{
@@ -144,8 +144,16 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delUser(string $id)
     {
-        //
+        // dd($id);
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            return response()->json(['message' => 'User deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error deleting user'], 500);
+        }
     }
 }

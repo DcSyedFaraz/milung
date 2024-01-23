@@ -7,4 +7,5 @@ import './../../../assets/vendor/simple-datatables/simple-datatables.js';
 import './../../../assets/vendor/tinymce/tinymce.min.js';
 import './../../../assets/vendor/php-email-form/validate.js';
 import './../../../assets/js/main.js';
+
 // import './../../../';

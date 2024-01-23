@@ -276,26 +276,7 @@
                                 <i class="bi bi-circle"></i><span>Modal1</span>
                             </router-link>
                         </li>
-                        <li>
-                            <a href="components-pagination.html">
-                                <i class="bi bi-circle"></i><span>Pagination</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-progress.html">
-                                <i class="bi bi-circle"></i><span>Progress</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-spinners.html">
-                                <i class="bi bi-circle"></i><span>Spinners</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-tooltips.html">
-                                <i class="bi bi-circle"></i><span>Tooltips</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <!-- End Components Nav -->
@@ -446,7 +427,7 @@ export default {
         isAnyChildRouteActive() {
             const activeRoutes = [
                 '/admin/user',
-                '/admin/dashboard/1',
+                '/edit-user',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
