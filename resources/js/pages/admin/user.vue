@@ -57,16 +57,18 @@
                             </tbody>
                         </table>
                         <nav>
-                            <ul class="pagination">
-                                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
+                            <ul class="pagination d-flex justify-content-center">
+                                <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
+                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)"><i
+                                                class="bi bi-arrow-left"></i> Previous</a>
                                 </li>
                                 <li class="page-item" v-for="page in totalPages" :key="page"
                                     :class="{ active: page === currentPage }">
                                     <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
                                 </li>
-                                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
+                                <li class="page-item ms-auto fw-bold" :class="{ disabled: currentPage === totalPages }">
+                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next <i
+                                                class="bi bi-arrow-right"></i> </a>
                                 </li>
                             </ul>
                         </nav>
@@ -195,6 +197,13 @@ export default {
 <style scoped>
 @import url('./style.css');
 
+.page-link {
+    border: none !important;
+    color: #14245c;
+}
+.page-item.active .page-link {
+    background-color: #14245c !important;
+}
 thead,
 th {
     border-color: #009de1 !important;
