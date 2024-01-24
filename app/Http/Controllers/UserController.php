@@ -103,7 +103,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request->roles);
+        dd($request->all(), $id);
         $request->validate([
             'status' => 'required',
             'buyer_id' => 'required',
