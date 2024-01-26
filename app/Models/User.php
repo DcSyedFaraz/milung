@@ -47,6 +47,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function scopeWithRole($query, $roleName)
+    {
+        return $query->whereHas('roles', function ($query) use ($roleName) {
+            $query->where('name', $roleName);
+        });
+    }
+
     // public function roles()
     // {
     //     return $this->belongsToMany(Role::class);

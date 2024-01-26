@@ -300,7 +300,7 @@
    * Initiate Datatables
    */
   const datatables = select('.datatable', true)
-  console.log(datatables);
+//   console.log(datatables);
   datatables.forEach(datatable => {
     new simpleDatatables.DataTable(datatable, {
       perPageSelect: [5, 10, 15, ["All", -1]],

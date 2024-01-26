@@ -57,6 +57,14 @@ class UserController extends Controller
         // dd($responseData);
         return response()->json($responseData, JsonResponse::HTTP_OK);
     }
+    public function supplier()
+    {
+        $users = User::withRole('Supplier')->get();
+
+
+        // dd($responseData);
+        return response()->json($users, JsonResponse::HTTP_OK);
+    }
     public function addUser(Request $request)
     {
         // dd($request);

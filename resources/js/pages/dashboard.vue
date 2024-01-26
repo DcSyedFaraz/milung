@@ -282,28 +282,23 @@
                 <!-- End Components Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyDataRouteActive() }" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-database"></i><span>Database</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyDataRouteActive() }">
                         <li>
-                            <a href="forms-elements.html">
-                                <i class="bi bi-circle"></i><span>Form Elements</span>
+                            <router-link :to="{ name: 'Datasupplier' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Supplier</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="bi bi-circle"></i><span>Buyer</span>
                             </a>
                         </li>
                         <li>
-                            <a href="forms-layouts.html">
-                                <i class="bi bi-circle"></i><span>Form Layouts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="forms-editors.html">
-                                <i class="bi bi-circle"></i><span>Form Editors</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="forms-validation.html">
-                                <i class="bi bi-circle"></i><span>Form Validation</span>
+                            <a href="#">
+                                <i class="bi bi-circle"></i><span>Product</span>
                             </a>
                         </li>
                     </ul>
@@ -427,7 +422,15 @@ export default {
         isAnyChildRouteActive() {
             const activeRoutes = [
                 '/admin/user',
-                '/edit-user',
+                '/admin/add-user',
+            ];
+
+            return this.$route.matched.some(route => activeRoutes.includes(route.path));
+
+        },
+        isAnyDataRouteActive() {
+            const activeRoutes = [
+                '/admin/Datasupplier',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
