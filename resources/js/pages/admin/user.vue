@@ -24,7 +24,7 @@
                                     </th>
                                     <th>Full Name</th>
                                     <th>Email</th>
-                                    <th>Buyer ID.</th>
+                                    <th>User ID</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -34,7 +34,7 @@
                                     <td class="fw-bold">{{ user.roles[0] }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.email }}</td>
-                                    <td>{{ user.buyer_id }}</td>
+                                    <td>{{ user.id }}</td>
 
                                     <td>
                                         <span
@@ -116,6 +116,7 @@
                                                             </div> -->
                                                             </div>
                                                         </div>
+                                                        <!-- {{ user.permissions }} -->
                                                         <div class="col-12 ">
                                                             <div class="row py-5">
                                                                 <div class="col-3">
@@ -132,11 +133,13 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div v-for="(item, index) in adminCheckboxes"
+                                                                    <div v-for="(adm, index) in adminCheckboxes"
                                                                         :key="index" class="form-check">
+                                                                        <!-- {{ user.permissions.includes(adm.id) }} -->
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            v-model="adminitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
+                                                                            :checked="user.permissions.includes(adm.id)"
+                                                                            @change="handleCheckboxChange(user, adm.value)" :value="adm.value">
+                                                                        <label class="form-check-label">{{ adm.label
                                                                         }}</label>
                                                                     </div>
 
@@ -155,11 +158,15 @@
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
                                                                     </div>
-                                                                    <div v-for="(item, index) in operationsCheckboxes"
+                                                                    <div v-for="(ope, index) in operationsCheckboxes"
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            v-model="operationitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
+                                                                            :checked="user.permissions.includes(ope.value)"
+                                                                            @change="handleCheckboxChange(user, ope.value)" :value="ope.value">
+                                                                        <!-- <input class="form-check-input" type="checkbox"
+                                                                            :checked="user.permissions.includes(ope.value)"
+                                                                            v-model="operationitems" :value="ope.value"> -->
+                                                                        <label class="form-check-label">{{ ope.label
                                                                         }}</label>
                                                                     </div>
 
@@ -177,11 +184,15 @@
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
                                                                     </div>
-                                                                    <div v-for="(item, index) in financeCheckboxes"
+                                                                    <div v-for="(fin, index) in financeCheckboxes"
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            v-model="financeitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
+                                                                            :checked="user.permissions.includes(fin.value)"
+                                                                            @change="handleCheckboxChange(user, fin.value)" :value="fin.value">
+                                                                        <!-- <input class="form-check-input" type="checkbox"
+                                                                            :checked="user.permissions.includes(fin.value)"
+                                                                            v-model="financeitems" :value="fin.value"> -->
+                                                                        <label class="form-check-label">{{ fin.label
                                                                         }}</label>
                                                                     </div>
 
@@ -204,7 +215,11 @@
                                                                     <div v-for="(item, index) in items" :key="index"
                                                                         class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            :value="item.value" v-model="staticsitems">
+                                                                            :checked="user.permissions.includes(item.value)"
+                                                                            :value="item.value" @change="handleCheckboxChange(user, item.value)">
+                                                                        <!-- <input class="form-check-input" type="checkbox"
+                                                                            :checked="user.permissions.includes(item.value)"
+                                                                            :value="item.value" v-model="staticsitems"> -->
                                                                         <label class="form-check-label" :for="item.id">{{
                                                                             item.label }}</label>
                                                                     </div>
@@ -270,13 +285,15 @@ export default {
     },
     data() {
         return {
+            permissions: [],
             updateuser: {
-                // id: this.$route.params.id,
+                id: null,
                 name: '',
                 email: '',
                 status: '',
                 buyer_id: '',
                 roles: '',
+                permissions: [],
             },
             adminSelectAll: false,
             adminCheckboxes: [
@@ -336,8 +353,35 @@ export default {
     },
     created() {
         this.fetchUsers();
+
+
     },
     methods: {
+        handleCheckboxChange(user, value) {
+        const index = user.permissions.indexOf(value);
+        if (index === -1) {
+            // If not found, add to permissions
+            user.permissions.push(value);
+        } else {
+            // If found, remove from permissions
+            user.permissions.splice(index, 1);
+        }
+        // You can also console.log the updated permissions here to verify the changes
+        console.log('Updated Permissions:', user.permissions);
+    },
+        isPermissionChecked(value, checkboxModel) {
+            return checkboxModel.includes(value);
+        },
+
+        populateUpdateUser(user) {
+            this.updateuser.id = user.id;
+            this.updateuser.name = user.name;
+            this.updateuser.email = user.email;
+            this.updateuser.status = user.status;
+            this.updateuser.buyer_id = user.buyer_id;
+            this.updateuser.roles = user.roles;
+            this.updateuser.permissions = user.permissions;
+        },
         adminSelectAllChanged() {
             if (this.adminSelectAll) {
                 this.adminitems = this.adminCheckboxes.map(item => item.value);
@@ -368,6 +412,9 @@ export default {
         },
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+            if (this.accordionOpen[user.id]) {
+                this.populateUpdateUser(user);
+            }
         },
         changePage(page) {
             this.currentPage = page
@@ -379,19 +426,28 @@ export default {
                 operationitems: this.operationitems,
                 financeitems: this.financeitems,
             };
+            const allItems = Object.values(formData).flat();
 
             // Send formData to your API
             // console.log('Form Data:', formData);
             try {
-                const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser,formData]);
+                const response = await axios.put(`/api/updateusers/${id}`, {
+                    updateuser: this.updateuser,
+                    formData: allItems,
+                });
 
                 if (response.status === 200) {
                     toastr.success('User updated successfully');
-                    this.$router.push({ name: 'user' });
+                    this.fetchUsers();
                 }
             } catch (error) {
                 if (error.response.status === 422) {
-                    toastr.error('Please fix the validation errors and try again');
+                    // Validation error, display Toastr messages
+                    const errors = error.response.data.errors;
+
+                    errors.forEach(errorMessage => {
+                        toastr.error(errorMessage);
+                    });
                 } else {
                     toastr.error('An error occurred while updating the user');
                 }
@@ -401,7 +457,7 @@ export default {
             try {
                 const response = await axios.get('/api/users');
                 this.users = response.data;
-                // this.pagination.totalItems = response.data.total;
+                this.permissions = this.users.map(user => user.permissions);
                 console.log(response.data);
 
             } catch (error) {
@@ -488,5 +544,4 @@ th {
 .rounded-bottom-new {
     border-bottom-left-radius: 2.25rem !important;
     border-bottom-right-radius: 2.25rem !important;
-}
-</style>
+}</style>

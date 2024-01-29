@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
@@ -39,7 +40,6 @@ class UserController extends Controller
     public function users()
     {
         $users = User::where('email', '<>', 'admin@gmail.com')->get();
-
         $responseData = [];
 
         foreach ($users as $user) {
@@ -50,6 +50,7 @@ class UserController extends Controller
                 'email' => $user->email,
                 'status' => $user->status,
                 'roles' => $user->getRoleNames()->toArray(),
+                'permissions' => $user->getPermissionNames()->toArray(),
             ];
 
             $responseData[] = $userData;
@@ -60,6 +61,14 @@ class UserController extends Controller
     public function supplier()
     {
         $users = User::withRole('Supplier')->get();
+
+
+        // dd($responseData);
+        return response()->json($users, JsonResponse::HTTP_OK);
+    }
+    public function buyer()
+    {
+        $users = User::withRole('Buyer')->get();
 
 
         // dd($responseData);
@@ -109,14 +118,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        dd($request->all(), $id);
-        $request->validate([
+        $data = $request->updateuser;
+        $validator = Validator::make($data, [
             'status' => 'required',
-            'buyer_id' => 'required',
-            'roles' => ['required', Rule::in(['Admin', 'Buyer', 'Supplier'])],
+            'name' => 'required',
+            'email' => 'required|email',
+            // 'buyer_id' => 'required',
+            // 'roles' => ['required', Rule::in(['Admin', 'Buyer', 'Supplier'])],
         ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+
+            // Return JSON response with errors
+            return response()->json(['errors' => $errors], 422);
+        }
+
+
+        // dd($data['permissions'], $id);
 
         $user = User::find($id);
 
@@ -126,22 +147,18 @@ class UserController extends Controller
             ], 404);
         }
 
-        $user->update([
-            'status' => $request->status,
-            'name' => $request->name,
-            'email' => $request->email,
-            'buyer_id' => $request->buyer_id,
-        ]);
+        // $user->update([
+        //     'status' => $data['status'],
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        // ]);
 
-        $role = $request->roles;
+        // $role = $data['roles'];
 
-        if ($role != implode(',', $user->getRoleNames()->toArray())) {
-            // dd('not done');
-            $user->syncRoles($role);
-        }
-        // else{
-        //     dd('not done');
+        // if ($role != implode(',', $user->getRoleNames()->toArray())) {
+        //     $user->syncRoles($role);
         // }
+        $user->syncPermissions($data['permissions']);
 
         return response()->json([
             'message' => 'User updated successfully',

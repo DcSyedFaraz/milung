@@ -292,10 +292,11 @@
                             </router-link>
                         </li>
                         <li>
-                            <a href="#">
+                            <router-link :to="{ name: 'Databuyer' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
-                            </a>
+                            </router-link>
                         </li>
+
                         <li>
                             <a href="#">
                                 <i class="bi bi-circle"></i><span>Product</span>
@@ -431,6 +432,7 @@ export default {
         isAnyDataRouteActive() {
             const activeRoutes = [
                 '/admin/Datasupplier',
+                '/admin/Databuyer',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
