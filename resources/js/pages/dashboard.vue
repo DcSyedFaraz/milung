@@ -433,6 +433,7 @@ export default {
             const activeRoutes = [
                 '/admin/Datasupplier',
                 '/admin/Databuyer',
+                '/admin/buyerEntry',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

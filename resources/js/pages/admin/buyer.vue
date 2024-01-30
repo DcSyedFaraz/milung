@@ -6,10 +6,12 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span ><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Buyer List</span> <br> <span class="">Overview on all Suppliers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Buyer List</span> <br> <span
+                                    class="">Overview on all Suppliers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                                    <button class="btn btn-warning fw-bold">Add New Buyer</button>
+                            <router-link :to="{ name: 'buyerEntry' }" class="btn btn-warning fw-bold">Add New
+                                Buyer</router-link>
                         </div>
                     </div>
 
@@ -20,7 +22,7 @@
                         <table class="table table-striped  display " id="">
                             <thead style="color: white; background-color: #14245c" class="">
                                 <tr class="rounded-top-new" style="">
-                                    <th >
+                                    <th>
                                         Buyer ID
                                     </th>
                                     <th>Buyer Name</th>
@@ -31,7 +33,7 @@
                             </thead>
                             <tbody v-for="user in paginatedData" :key="user.id">
                                 <tr>
-                                    <td >{{ user.id }}</td>
+                                    <td>{{ user.id }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.email }}</td>
 
@@ -382,7 +384,7 @@ export default {
             // Send formData to your API
             // console.log('Form Data:', formData);
             try {
-                const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser,formData]);
+                const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
 
                 if (response.status === 200) {
                     toastr.success('User updated successfully');

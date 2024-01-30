@@ -18,12 +18,15 @@ import 'datatables.net-bs5';
 import 'datatables.net-buttons-bs5';
 import 'datatables.net-buttons/js/buttons.html5.mjs';
 import 'datatables.net-buttons/js/buttons.print.mjs';
+import Select2 from 'vue3-select2-component';
 
 
-const Myapp = createApp(app);
-Myapp.use(router);
-Myapp.use(VuePaginate);
-Myapp.use(store);
-Myapp.use(VueGoodTablePlugin);
+
+const Myapp = createApp(app)
+Myapp.use(router)
+Myapp.use(VuePaginate)
+Myapp.use(store)
+Myapp.component('Select2', Select2)
+Myapp.use(VueGoodTablePlugin)
 // DataTable.use(DataTablesCore);
 Myapp.mount('#app');

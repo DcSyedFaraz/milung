@@ -11,6 +11,7 @@ import EditUser from './pages/admin/user-edit.vue';
 import AddUser from './pages/admin/add-user.vue';
 import Datasupplier from './pages/admin/supplier.vue';
 import Databuyer from './pages/admin/buyer.vue';
+import buyerEntry from './pages/admin/buyer-entry.vue';
 
 
 const routes = [
@@ -60,6 +61,12 @@ const routes = [
                 path: 'Databuyer',
                 name: 'Databuyer',
                 component: Databuyer,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'buyerEntry',
+                name: 'buyerEntry',
+                component: buyerEntry,
                 // meta: { requiresAdmin: true },
             },
         ],

@@ -29,6 +29,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script src="{{ mix('resources/js/app.js') }}"></script>
     @vite(['resources/js/app.js', 'resources/css/app.css'])
@@ -61,37 +63,37 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
     <script>
-        $(document).ready(function() {
+        // $(document).ready(function() {
 
 
-            var dataTable = $("#example1").DataTable({
-                "responsive": true,
-                "ordering": true,
-                "lengthChange": false,
-                "autoWidth": true,
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
-            });
+        //     var dataTable = $("#example1").DataTable({
+        //         "responsive": true,
+        //         "ordering": true,
+        //         "lengthChange": false,
+        //         "autoWidth": true,
+        //         dom: 'Bfrtip',
+        //         buttons: [
+        //             'copy', 'csv', 'excel', 'pdf', 'print'
+        //         ]
+        //     });
 
-            dataTable.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        //     dataTable.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-            var example2Table = $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "buttons": ["csv", "excel", "pdf", "print"]
-            });
+        //     var example2Table = $('#example2').DataTable({
+        //         "paging": true,
+        //         "lengthChange": true,
+        //         "searching": true,
+        //         "ordering": true,
+        //         "info": true,
+        //         "autoWidth": false,
+        //         "responsive": true,
+        //         "buttons": ["csv", "excel", "pdf", "print"]
+        //     });
 
-            example2Table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+        //     example2Table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
 
 
-        });
+        // });
     </script>
 </body>
 
