@@ -60,7 +60,7 @@ class UserController extends Controller
     }
     public function supplier()
     {
-        $users = User::withRole('Supplier')->get();
+        $users = User::withRole('Supplier')->with('supplierProfile')->get();
 
 
         // dd($responseData);
@@ -68,11 +68,76 @@ class UserController extends Controller
     }
     public function buyers(Request $request)
     {
-        dd($request);
+        // dd($request);
 
 
-        // dd($responseData);
-        // return response()->json($users, JsonResponse::HTTP_OK);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('12345678'),
+            // Add any other user-related fields
+        ]);
+
+        // Store buyer profile data
+        $user->buyerProfile()->create([
+            'address' => $request->address,
+            'website' => $request->website,
+            'office_phone' => $request->officePhone,
+            'contact' => $request->contact,
+            'buyer_description' => $request->buyerDescription,
+            'group' => $request->group,
+            // 'sec_group' => $request->Secgroup,
+        ]);
+
+        // Assign the 'supplier' role (or any other role) using Spatie permissions
+        $user->assignRole('Buyer');
+        return response()->json(['message' => 'Successfully created user!'], 201);
+    }
+    public function suppliers(Request $request)
+    {
+        // dd($request);
+        // return response()->json(['message' => 'Successfully created user!'], 201);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('12345678'),
+            // Add any other user-related fields
+        ]);
+
+        // Store buyer profile data
+        $user->supplierProfile()->create([
+            'address' => $request->address,
+            'website' => $request->website,
+            'office_phone' => $request->officePhone,
+            'contact' => $request->contact,
+            'buyer_description' => $request->buyerDescription,
+            'group' => $request->group,
+            'sec_group' => $request->Secgroup,
+        ]);
+
+        // Assign the 'supplier' role (or any other role) using Spatie permissions
+        $user->assignRole('Supplier');
+        return response()->json(['message' => 'Successfully created user!'], 201);
     }
     public function buyer()
     {
@@ -155,11 +220,11 @@ class UserController extends Controller
             ], 404);
         }
 
-        // $user->update([
-        //     'status' => $data['status'],
-        //     'name' => $data['name'],
-        //     'email' => $data['email'],
-        // ]);
+        $user->update([
+            'status' => $data['status'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+        ]);
 
         // $role = $data['roles'];
 
@@ -186,7 +251,7 @@ class UserController extends Controller
 
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error deleting user'], 500);
+            throw $e;
         }
     }
 }

@@ -54,6 +54,15 @@ class User extends Authenticatable
         });
     }
 
+    public function supplierProfile()
+    {
+        return $this->hasOne(SupplierProfile::class);
+    }
+    public function buyerProfile()
+    {
+        return $this->hasOne(BuyerProfile::class);
+    }
+
     // public function roles()
     // {
     //     return $this->belongsToMany(Role::class);

@@ -3,14 +3,14 @@
         <div class="container mt-5">
             <div class=" justify-content-start">
                 <div class="col-md-12">
-                    <h3 class="fw-bold mb-4" style="color: #14245c;">Buyer Entry</h3>
-                    <form  @submit.prevent="submitForm">
+                    <h3 class="fw-bold mb-4" style="color: #14245c;">Supplier Entry</h3>
+                    <form @submit.prevent="submitForm">
                         <div class=" ">
 
                             <div class="row">
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
-                                        <p for="name">Buyer Name:</p>
+                                        <p for="name">Supplier Name:</p>
                                     </div>
                                     <div class="col-6"><input type="text" v-model="name" class="form-control"></div>
                                 </div>
@@ -57,44 +57,65 @@
 
                         </div>
                         <div class="form-group ">
-                            <label for="buyerDescription" class="form-label">Buyer Description</label>
+                            <label for="buyerDescription" class="form-label">Supplier Description</label>
                             <textarea class="form-control" id="buyerDescription" v-model="buyerDescription" rows="3"
                                 style="height: 120px; "></textarea>
                         </div>
-                        <div class="form-group col-6 my-2">
-                            <label class="form-label">Product Group</label>
-                            <!-- <div class="form-group">
-                                <label>Multiple (.select2-purple)</label>
-                                <div class="select2-purple">
-                                    <select class="select2" multiple="multiple" id="multiple"
-                                        data-placeholder="Select a State" data-dropdown-css-class="select2-purple"
-                                        style="width: 100%;">
-                                        <option>Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                        <div class="row">
+                            <div class="form-group col-6 my-2">
+                                <label class="form-label">Primary Product Group</label>
+                                <!-- <div class="form-group">
+                                    <label>Multiple (.select2-purple)</label>
+                                    <div class="select2-purple">
+                                        <select class="select2" multiple="multiple" id="multiple"
+                                            data-placeholder="Select a State" data-dropdown-css-class="select2-purple"
+                                            style="width: 100%;">
+                                            <option>Alabama</option>
+                                            <option>Alaska</option>
+                                            <option>California</option>
+                                            <option>Delaware</option>
+                                            <option>Tennessee</option>
+                                            <option>Texas</option>
+                                            <option>Washington</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <select class="select2 w-100 multiple" v-model="group" name="group[]" id="multiple"
+                                        multiple="multiple">
+                                        <option value="Power bank">Power bank</option>
+                                        <option value="Mobile Storage">Mobile Storage</option>
+                                        <option value="Travel Adapter">Travel Adapter</option>
+                                        <option value="Wireless Charger">Wireless Charger</option>
+                                        <option value="RFID Card">RFID Card</option>
+                                        <option value="LED Lamp">LED Lamp</option>
+                                        <option value="Solar Panel">Solar Panel</option>
+                                        <option value="USB Cable">USB Cable</option>
+                                        <option value="Fan">Fan</option>
+                                        <option value="Charger">Charger</option>
                                     </select>
                                 </div>
-                            </div> -->
-                            <div class="form-group">
-                                <select class="select2 w-100" v-model="group" name="group[]" id="multiple" multiple="multiple">
-                                    <option value="Power bank">Power bank</option>
-                                    <option value="Mobile Storage">Mobile Storage</option>
-                                    <option value="Travel Adapter">Travel Adapter</option>
-                                    <option value="Wireless Charger">Wireless Charger</option>
-                                    <option value="RFID Card">RFID Card</option>
-                                    <option value="LED Lamp">LED Lamp</option>
-                                    <option value="Solar Panel">Solar Panel</option>
-                                    <option value="USB Cable">USB Cable</option>
-                                    <option value="Fan">Fan</option>
-                                    <option value="Charger">Charger</option>
-                                </select>
+                                <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
                             </div>
-                            <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
+                            <div class="form-group col-6 my-2">
+                                <label class="form-label">Secondary Product Group</label>
 
+                                <div class="form-group">
+                                    <select class="select2 w-100 multiple" v-model="Secgroup" name="Secgroup[]"
+                                        multiple="multiple">
+                                        <option value="Power bank">Power bank</option>
+                                        <option value="Mobile Storage">Mobile Storage</option>
+                                        <option value="Travel Adapter">Travel Adapter</option>
+                                        <option value="Wireless Charger">Wireless Charger</option>
+                                        <option value="RFID Card">RFID Card</option>
+                                        <option value="LED Lamp">LED Lamp</option>
+                                        <option value="Solar Panel">Solar Panel</option>
+                                        <option value="USB Cable">USB Cable</option>
+                                        <option value="Fan">Fan</option>
+                                        <option value="Charger">Charger</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex gap-2 my-2">
                             <button type="submit" class="btn col-1 btn-milung" style="height: 45px; ">Submit</button>
@@ -128,7 +149,7 @@
                                             Order Number
                                         </th>
                                         <th>Order Date</th>
-                                        <th>Buyer Name</th>
+                                        <th>Supplier Name</th>
                                         <th>Quantity</th>
                                         <th>Amount</th>
                                         <th>Article Number</th>
@@ -207,6 +228,7 @@ export default {
             officePhone: '',
             buyerDescription: '',
             group: [],
+            Secgroup: [],
             errors: []
         }
     },
@@ -214,7 +236,7 @@ export default {
         async submitForm() {
             this.errors = [];
             if (!this.name) {
-                this.errors.push('Buyer name is required.');
+                this.errors.push('Supplier name is required.');
             }
             if (!this.email) {
                 this.errors.push('Email is required.');
@@ -226,7 +248,7 @@ export default {
                 this.errors.push('Website is required.');
             }
             if (!this.buyerDescription) {
-                this.errors.push('Buyer description is required.');
+                this.errors.push('Supplier description is required.');
             }
             if (!this.group.length) {
                 this.errors.push('Product group is required.');
@@ -240,11 +262,12 @@ export default {
                     officePhone: this.officePhone,
                     contact: this.contact,
                     buyerDescription: this.buyerDescription,
-                    group: this.group
+                    group: this.group,
+                    Secgroup: this.Secgroup
                 };
                 try {
                     console.log(formData);
-                    const addbuyer = await axios.post('/api/addbuyers', formData);
+                    const addbuyer = await axios.post('/api/addsupliers', formData);
                     console.log(addbuyer.data);
                     // alert('Supplier added successfully');
                     this.resetForm();
@@ -292,7 +315,7 @@ export default {
 
     mounted() {
         // Initialize Select2 on the select element
-        $('#multiple').select2();
+        $('.multiple').select2();
         // $(this.$refs.select).select2();
     },
     beforeDestroy() {

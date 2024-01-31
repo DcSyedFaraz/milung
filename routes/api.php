@@ -14,12 +14,21 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+// Auth
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+
+// Fetching Users
 Route::get('users', [UserController::class, 'users']);
 Route::get('supplier', [UserController::class, 'supplier']);
 Route::get('buyer', [UserController::class, 'buyer']);
+
+// Adding Users
 Route::post('addbuyers', [UserController::class, 'buyers']);
+Route::post('addsupliers', [UserController::class, 'suppliers']);
+
+// Updating Users
 Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
 Route::put('updateusers/{id}', [UserController::class, 'update']);
 Route::post('addusers', [UserController::class, 'addUser']);

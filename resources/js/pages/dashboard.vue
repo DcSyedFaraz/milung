@@ -287,12 +287,12 @@
                     </a>
                     <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyDataRouteActive() }">
                         <li>
-                            <router-link :to="{ name: 'Datasupplier' }" active-class="active">
+                            <router-link :to="{ name: 'Datasupplier' }" :class="{ active: this.$route.name === 'supplerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Supplier</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'Databuyer' }" active-class="active">
+                            <router-link :to="{ name: 'Databuyer' }" :class="{ active: this.$route.name === 'buyerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
@@ -434,6 +434,7 @@ export default {
                 '/admin/Datasupplier',
                 '/admin/Databuyer',
                 '/admin/buyerEntry',
+                '/admin/supplerEntry',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

@@ -10,7 +10,7 @@
                                     class="">Overview on all Suppliers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                            <router-link :to="{ name: 'buyerEntry' }" class="btn btn-warning fw-bold">Add New
+                            <router-link :to="{ name: 'buyerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
                                 Buyer</router-link>
                         </div>
                     </div>

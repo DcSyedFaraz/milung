@@ -9,7 +9,8 @@
                             <span ><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Supplier List</span> <br> <span class="">Overview on all Suppliers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                                    <button class="btn btn-warning fw-bold">Add New Supplier</button>
+                                    <router-link :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
+                                        Supplier</router-link>
                         </div>
                     </div>
 
@@ -34,7 +35,7 @@
                                 <tr>
                                     <td >{{ user.id }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.supplier_profile?.address }}</td>
                                     <td>{{ user.buyer_id }}</td>
 
                                     <td>
