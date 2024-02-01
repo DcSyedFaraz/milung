@@ -23,6 +23,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::get('users', [UserController::class, 'users']);
 Route::get('supplier', [UserController::class, 'supplier']);
 Route::get('buyer', [UserController::class, 'buyer']);
+Route::get('products', [UserController::class, 'products']);
 
 // Adding Users
 Route::post('addbuyers', [UserController::class, 'buyers']);
@@ -33,6 +34,7 @@ Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
 Route::put('updateusers/{id}', [UserController::class, 'update']);
 Route::post('addusers', [UserController::class, 'addUser']);
 Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
+Route::delete('prodDelete/{id}', [UserController::class, 'prodDelete']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

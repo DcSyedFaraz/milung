@@ -296,12 +296,12 @@
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
-
                         <li>
-                            <a href="#">
+                            <router-link :to="{ name: 'product' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
-                            </a>
+                            </router-link>
                         </li>
+
                     </ul>
                 </li>
                 <!-- End Forms Nav -->
@@ -435,6 +435,7 @@ export default {
                 '/admin/Databuyer',
                 '/admin/buyerEntry',
                 '/admin/supplerEntry',
+                '/admin/product',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

@@ -11,8 +11,10 @@ import EditUser from './pages/admin/user-edit.vue';
 import AddUser from './pages/admin/add-user.vue';
 import Datasupplier from './pages/admin/supplier.vue';
 import Databuyer from './pages/admin/buyer.vue';
+import product from './pages/admin/product.vue';
 import buyerEntry from './pages/admin/buyer-entry.vue';
 import supplerEntry from './pages/admin/supplier-entry.vue';
+import productEntry from './pages/admin/product-entry.vue';
 
 
 const routes = [
@@ -74,6 +76,18 @@ const routes = [
                 path: 'supplerEntry',
                 name: 'supplerEntry',
                 component: supplerEntry,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'product',
+                name: 'product',
+                component: product,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'productEntry',
+                name: 'productEntry',
+                component: productEntry,
                 // meta: { requiresAdmin: true },
             },
         ],

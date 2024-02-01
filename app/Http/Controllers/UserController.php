@@ -58,6 +58,37 @@ class UserController extends Controller
         // dd($responseData);
         return response()->json($responseData, JsonResponse::HTTP_OK);
     }
+    public function products()
+    {
+        $users = [
+            [
+                'articleNumber' => 1,
+                'productName' => 'Product 1',
+                'description' => 'This is product 1 description.',
+                'productGroup' => 'Group A',
+                'status' => 'active',
+            ],
+            [
+                'articleNumber' => 2,
+                'productName' => 'Product 2',
+                'description' => 'This is product 2 description.',
+                'productGroup' => 'Group B',
+                'status' => 'Inactive',
+            ],
+            [
+                'articleNumber' => 3,
+                'productName' => 'Product 3',
+                'description' => 'This is product 3 description.',
+                'productGroup' => 'Group A',
+                'status' => 'active',
+            ],
+            // Add more product entries as needed
+        ];
+
+
+        // dd($responseData);
+        return response()->json($users, JsonResponse::HTTP_OK);
+    }
     public function supplier()
     {
         $users = User::withRole('Supplier')->with('supplierProfile')->get();
@@ -248,6 +279,17 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
+
+            return response()->json(['message' => 'User deleted successfully'], 200);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public function prodDelete($id)
+    {
+        dd($id);
+        try {
+            
 
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Exception $e) {
