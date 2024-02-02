@@ -297,7 +297,7 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'product' }" active-class="active">
+                            <router-link :to="{ name: 'product' }" :class="{ active: this.$route.name === 'productEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
@@ -436,6 +436,7 @@ export default {
                 '/admin/buyerEntry',
                 '/admin/supplerEntry',
                 '/admin/product',
+                '/admin/productEntry',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
