@@ -15,7 +15,17 @@
                         </div>
                     </div>
 
-                    <div class="card-body rounded-top">
+                    <!-- // Loader -->
+                    <div class="card-body rounded-top" v-if="isLoading">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // Loader -->
+                    <div class="card-body rounded-top" v-else>
 
 
                         <!-- Table with stripped rows -->
@@ -271,6 +281,7 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
             updateuser: {
                 // id: this.$route.params.id,
                 name: '',
@@ -336,7 +347,11 @@ export default {
 
     },
     created() {
-        this.fetchUsers();
+        this.fetchUsers().then(() => {
+            setTimeout(() => {
+                this.isLoading = false;
+            }, 1000); // Delay of 1 second
+        });
     },
     methods: {
         adminSelectAllChanged() {
@@ -454,6 +469,7 @@ export default {
 .rotate-icon {
     transform: rotate(180deg);
 }
+
 .table {
     border-collapse: separate;
     border-spacing: 0;

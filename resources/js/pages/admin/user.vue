@@ -12,7 +12,17 @@
                         </div>
                     </div>
 
-                    <div class="card-body ">
+                     <!-- // Loader -->
+                     <div class="card-body rounded-top" v-if="isLoading">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // Loader -->
+                    <div class="card-body " v-else>
 
 
                         <!-- Table with stripped rows -->
@@ -138,7 +148,8 @@
                                                                         <!-- {{ user.permissions.includes(adm.id) }} -->
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(adm.id)"
-                                                                            @change="handleCheckboxChange(user, adm.value)" :value="adm.value">
+                                                                            @change="handleCheckboxChange(user, adm.value)"
+                                                                            :value="adm.value">
                                                                         <label class="form-check-label">{{ adm.label
                                                                         }}</label>
                                                                     </div>
@@ -162,7 +173,8 @@
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(ope.value)"
-                                                                            @change="handleCheckboxChange(user, ope.value)" :value="ope.value">
+                                                                            @change="handleCheckboxChange(user, ope.value)"
+                                                                            :value="ope.value">
                                                                         <!-- <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(ope.value)"
                                                                             v-model="operationitems" :value="ope.value"> -->
@@ -188,7 +200,8 @@
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(fin.value)"
-                                                                            @change="handleCheckboxChange(user, fin.value)" :value="fin.value">
+                                                                            @change="handleCheckboxChange(user, fin.value)"
+                                                                            :value="fin.value">
                                                                         <!-- <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(fin.value)"
                                                                             v-model="financeitems" :value="fin.value"> -->
@@ -216,7 +229,8 @@
                                                                         class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(item.value)"
-                                                                            :value="item.value" @change="handleCheckboxChange(user, item.value)">
+                                                                            :value="item.value"
+                                                                            @change="handleCheckboxChange(user, item.value)">
                                                                         <!-- <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(item.value)"
                                                                             :value="item.value" v-model="staticsitems"> -->
@@ -286,6 +300,7 @@ export default {
     data() {
         return {
             permissions: [],
+            isLoading: true,
             updateuser: {
                 id: null,
                 name: '',
@@ -352,23 +367,25 @@ export default {
 
     },
     created() {
-        this.fetchUsers();
-
-
+        this.fetchUsers().then(() => {
+            setTimeout(() => {
+                this.isLoading = false;
+            }, 1000); // Delay of 1 second
+        });
     },
     methods: {
         handleCheckboxChange(user, value) {
-        const index = user.permissions.indexOf(value);
-        if (index === -1) {
-            // If not found, add to permissions
-            user.permissions.push(value);
-        } else {
-            // If found, remove from permissions
-            user.permissions.splice(index, 1);
-        }
-        // You can also console.log the updated permissions here to verify the changes
-        console.log('Updated Permissions:', user.permissions);
-    },
+            const index = user.permissions.indexOf(value);
+            if (index === -1) {
+                // If not found, add to permissions
+                user.permissions.push(value);
+            } else {
+                // If found, remove from permissions
+                user.permissions.splice(index, 1);
+            }
+            // You can also console.log the updated permissions here to verify the changes
+            console.log('Updated Permissions:', user.permissions);
+        },
         isPermissionChecked(value, checkboxModel) {
             return checkboxModel.includes(value);
         },

@@ -206,6 +206,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import './index';
 
 // import 'select2'; // Import the Select2 library
@@ -233,6 +235,16 @@ export default {
         }
     },
     methods: {
+        showToast(type,message) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                icon: type,
+                title: message
+            });
+        },
         async submitForm() {
             this.errors = [];
             if (!this.name) {
@@ -273,7 +285,8 @@ export default {
                     this.resetForm();
 
                     if (addbuyer.status === 201) {
-                        toastr.success(addbuyer.data.message);
+                        this.showToast('success',addbuyer.data.message);
+                        this.$router.push({ name: 'Datasupplier' });
                     } else {
                         // Handle other status codes or unexpected responses
                         toastr.error('Unexpected response from the server');

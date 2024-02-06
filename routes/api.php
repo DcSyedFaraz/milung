@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,8 +35,19 @@ Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
 Route::put('updateusers/{id}', [UserController::class, 'update']);
 Route::post('addusers', [UserController::class, 'addUser']);
 Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
-Route::delete('prodDelete/{id}', [UserController::class, 'prodDelete']);
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('statement', [ProductController::class, 'statement']);
+Route::middleware('auth:sanctum')->group(function () {
+    // Adding Products
+    Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
+    Route::post('addprod', [ProductController::class, 'addprod']);
+
+    // Your authenticated routes
+});
+

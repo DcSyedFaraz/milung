@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -60,34 +61,35 @@ class UserController extends Controller
     }
     public function products()
     {
-        $users = [
-            [
-                'articleNumber' => 1,
-                'productName' => 'Product 1',
-                'description' => 'This is product 1 description.',
-                'productGroup' => 'Group A',
-                'status' => 'active',
-            ],
-            [
-                'articleNumber' => 2,
-                'productName' => 'Product 2',
-                'description' => 'This is product 2 description.',
-                'productGroup' => 'Group B',
-                'status' => 'Inactive',
-            ],
-            [
-                'articleNumber' => 3,
-                'productName' => 'Product 3',
-                'description' => 'This is product 3 description.',
-                'productGroup' => 'Group A',
-                'status' => 'active',
-            ],
-            // Add more product entries as needed
-        ];
+        $products = Products::get();
+        // $users = [
+        //     [
+        //         'articleNumber' => 1,
+        //         'productName' => 'Product 1',
+        //         'description' => 'This is product 1 description.',
+        //         'productGroup' => 'Group A',
+        //         'status' => 'active',
+        //     ],
+        //     [
+        //         'articleNumber' => 2,
+        //         'productName' => 'Product 2',
+        //         'description' => 'This is product 2 description.',
+        //         'productGroup' => 'Group B',
+        //         'status' => 'Inactive',
+        //     ],
+        //     [
+        //         'articleNumber' => 3,
+        //         'productName' => 'Product 3',
+        //         'description' => 'This is product 3 description.',
+        //         'productGroup' => 'Group A',
+        //         'status' => 'active',
+        //     ],
+        //     // Add more product entries as needed
+        // ];
 
 
         // dd($responseData);
-        return response()->json($users, JsonResponse::HTTP_OK);
+        return response()->json($products, JsonResponse::HTTP_OK);
     }
     public function supplier()
     {
@@ -285,15 +287,5 @@ class UserController extends Controller
             throw $e;
         }
     }
-    public function prodDelete($id)
-    {
-        dd($id);
-        try {
-            
-
-            return response()->json(['message' => 'User deleted successfully'], 200);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
+    
 }

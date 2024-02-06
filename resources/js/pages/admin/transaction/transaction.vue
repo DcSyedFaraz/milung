@@ -5,26 +5,66 @@
 
                 <div class="card  ">
                     <div class="card-header pt-3  ">
-                        <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
-                            <div class="col-4 d-flex">
-                                <div class="col-6">
-
-                                    <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                        ref="search" placeholder="Write here..." />
+                        <div class="mb-5">
+                            <div class="row d-flex">
+                                <div class="col-2">
+                                    <div class="text-uppercase fw-bold fs-4 " style="color: #14245c;">date:</div>
+                                    <div class="text-uppercase fw-bold fs-4 mt-2" style="color: #14245c;">bank:</div>
                                 </div>
-                                <div class="col-6 mx-2">
-                                    <router-link :to="{ name: 'productEntry' }"
-                                        class="btn btn-warning fw-bold text-dark">Add New
-                                        Product</router-link>
+                                <div class="col-10">
+                                    <div class="row">
+                                        <div class="row  ">
+                                            <div class="col-3">
+                                                <input type="date" name="start_date" class="form-control ">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="date" name="end_date" class="form-control ">
+                                            </div>
+                                        </div>
+                                        <form @submit.prevent="submitForm" enctype="multipart/form-data">
+                                            <div class="row mt-2 ">
+
+                                                <div class="col-3">
+                                                    <input type="text" placeholder="Bnak Name USD" v-model="bank_name"
+                                                        class="form-control ">
+                                                </div>
+                                                <div class="col-3">
+                                                    <button class="btn btn-light text-white fw-bold"
+                                                        style="background-color: #009de1; border-color: #009de1;"
+                                                        type="button" @click="uploadFile">UPLOAD</button>
+                                                    <button class="btn btn-milung text-white mx-2 fw-bold">Submit</button>
+                                                    <input ref="fileInput" type="file" name="statement" class="d-none "
+                                                        @change="handleFileUpload">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="d-flex justify-content-between align-items-center mx-3">
+                            <span>
+                                <span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">BANK STATEMENT:</span>
+                            </span>
+
+                            <div class="col-4 d-flex">
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1"><i style="color: #41b400;"
+                                                class="bx bx-filter-alt fw-bold fs-4"></i></span>
+                                        <input type="text" name="search" class="form-control " v-model="searchQuery"
+                                            ref="search" placeholder="Write here to filter..." />
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
+
                     <!-- // Loader -->
                     <div class="card-body rounded-top" v-if="isLoading">
-
+                        
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border text-warning" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -36,25 +76,27 @@
 
 
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped  display " id="">
+                        <table class="table table-striped  display ">
                             <thead style="color: white; background-color: #14245c" class="">
                                 <tr class="rounded-top-new" style="">
                                     <th>
-                                        Article#
+                                        Date
                                     </th>
-                                    <th>Product Name</th>
-                                    <th>Discription</th>
-                                    <th>Product Group</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Transaction Details</th>
+                                    <th>Deposit</th>
+                                    <th>Widrawal</th>
+                                    <th>Balance</th>
+                                    <th>Notice</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody v-for="user in dataToDisplay" :key="user.id">
                                 <tr>
-                                    <td>{{ user.article }}</td>
+                                    <td>{{ user.id }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.description }}</td>
-                                    <td>{{ user.group }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.email }}</td>
 
                                     <td>
                                         <span
@@ -77,9 +119,6 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
-
-                                </transition>
 
                             </tbody>
                         </table>
@@ -108,7 +147,7 @@
 </template>
 
 <script>
-import './index';
+import './../index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -116,6 +155,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 export default {
+    name: "Transaction",
     props: {
         data: {
             type: Array,
@@ -129,6 +169,8 @@ export default {
     data() {
         return {
             isLoading: true,
+            bank_name: '',
+            file: null,
             users: [],
             accordionOpen: {},
             currentPage: 1,
@@ -143,7 +185,7 @@ export default {
     computed: {
         filteredUsers() {
             return this.users.filter(user => {
-                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.article.toLowerCase().includes(this.searchQuery.toLowerCase());
+                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.email.toLowerCase().includes(this.searchQuery.toLowerCase());
             });
         },
         totalPages() {
@@ -173,47 +215,39 @@ export default {
         });
     },
     methods: {
-        showToast(type,message) {
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                icon: type,
-                title: message
-            });
+        uploadFile() {
+            this.$refs.fileInput.click();
         },
+        handleFileUpload(e) {
+            this.file = e.target.files[0];
+            console.log(this.file);
+        },
+        async submitForm() {
+            const formData = new FormData();
+            formData.append('bank_name', this.bank_name);
+            formData.append('statement', this.file);
+
+            try {
+                const response = await axios.post('/api/statement', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
         },
         changePage(page) {
             this.currentPage = page
         },
-        async updateUser(id) {
-            // const formData = {
-
-            // };
-
-            // Send formData to your API
-            // console.log('Form Data:', formData);
-            try {
-                // const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
-
-                if (response.status === 200) {
-                    toastr.success('User updated successfully');
-                    this.$router.push({ name: 'user' });
-                }
-            } catch (error) {
-                if (error.response.status === 422) {
-                    toastr.error('Please fix the validation errors and try again');
-                } else {
-                    toastr.error('An error occurred while updating the user');
-                }
-            }
-        },
         async fetchUsers() {
             try {
-                const response = await axios.get('/api/products');
+                const response = await axios.get('/api/users');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
@@ -223,46 +257,13 @@ export default {
                 toastr.error('Error fetching data');
             }
         },
-        async deleteUser(userId) {
-            // Display SweetAlert confirmation dialog
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this product!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            });
-
-            if (result.isConfirmed) {
-                // User confirmed, proceed with the deletion
-                try {
-                    await axios.delete(`/api/prodDelete/${userId}`);
-
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Product deleted successfully',
-                    });
-                } catch (error) {
-                    console.error('Error deleting user:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error deleting product',
-                    });
-                }
-            }
-        },
 
     },
 };
 </script>
 
 <style scoped>
-@import url('./style.css');
+@import url('./../style.css');
 
 .rotate-icon {
     transform: rotate(180deg);

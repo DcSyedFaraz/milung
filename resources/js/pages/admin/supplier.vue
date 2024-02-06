@@ -6,22 +6,33 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span ><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Supplier List</span> <br> <span class="">Overview on all Suppliers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Supplier List</span> <br> <span
+                                    class="">Overview on all Suppliers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                                    <router-link :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
-                                        Supplier</router-link>
+                            <router-link :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
+                                Supplier</router-link>
                         </div>
                     </div>
 
-                    <div class="card-body rounded-top">
+                    <!-- // Loader -->
+                    <div class="card-body rounded-top" v-if="isLoading">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // Loader -->
+                    <div class="card-body rounded-top" v-else>
 
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped  display " id="">
                             <thead style="color: white; background-color: #14245c" class="">
                                 <tr class="rounded-top-new" style="">
-                                    <th >
+                                    <th>
                                         Supplier ID
                                     </th>
                                     <th>Supplier Name</th>
@@ -33,7 +44,7 @@
                             </thead>
                             <tbody v-for="user in paginatedData" :key="user.id">
                                 <tr>
-                                    <td >{{ user.id }}</td>
+                                    <td>{{ user.id }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.supplier_profile?.address }}</td>
                                     <td>{{ user.buyer_id }}</td>
@@ -272,6 +283,7 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
             updateuser: {
                 // id: this.$route.params.id,
                 name: '',
@@ -337,7 +349,11 @@ export default {
 
     },
     created() {
-        this.fetchUsers();
+        this.fetchUsers().then(() => {
+            setTimeout(() => {
+                this.isLoading = false;
+            }, 1000); // Delay of 1 second
+        });
     },
     methods: {
         adminSelectAllChanged() {
@@ -385,7 +401,7 @@ export default {
             // Send formData to your API
             // console.log('Form Data:', formData);
             try {
-                const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser,formData]);
+                const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
 
                 if (response.status === 200) {
                     toastr.success('User updated successfully');
@@ -455,6 +471,7 @@ export default {
 .rotate-icon {
     transform: rotate(180deg);
 }
+
 .table {
     border-collapse: separate;
     border-spacing: 0;

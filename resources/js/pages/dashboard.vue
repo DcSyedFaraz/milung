@@ -271,11 +271,11 @@
                                 <i class="bi bi-circle"></i><span>User</span>
                             </router-link>
                         </li>
-                        <li>
+                        <!-- <li>
                             <router-link :to="{ name: 'admins1' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Modal1</span>
                             </router-link>
-                        </li>
+                        </li> -->
 
                     </ul>
                 </li>
@@ -374,10 +374,18 @@
                 </li>
                 <!-- End Icons Nav -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="users-profile.html">
+                    <a class="nav-link collapsed" data-bs-target="#Finance" data-bs-toggle="collapse" href="#" :class="{ active: this.$route.name === 'Transaction' }">
                         <i class="bi bi-cash-coin"></i>
-                        <span>Finance</span>
+                        <span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
+                    <ul id="Finance" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ show: this.$route.name === 'Transaction' }">
+                        <li>
+                            <router-link :to="{ name: 'Transaction' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Transaction</span>
+                            </router-link>
+                        </li>
+
+                    </ul>
                 </li>
                 <!-- End Profile Page Nav -->
 
