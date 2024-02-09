@@ -16,6 +16,8 @@ import buyerEntry from './pages/admin/buyer-entry.vue';
 import supplerEntry from './pages/admin/supplier-entry.vue';
 import productEntry from './pages/admin/product-entry.vue';
 import Transaction from './pages/admin/transaction/transaction.vue';
+import product_group from './pages/admin/product_group/product_group.vue';
+import product_group_entry from './pages/admin/product_group/product_group_entry.vue';
 
 
 const routes = [
@@ -95,6 +97,18 @@ const routes = [
                 path: 'Transaction',
                 name: 'Transaction',
                 component: Transaction,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'product_group',
+                name: 'product_group',
+                component: product_group,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'product_group_entry',
+                name: 'product_group_entry',
+                component: product_group_entry,
                 // meta: { requiresAdmin: true },
             },
         ],

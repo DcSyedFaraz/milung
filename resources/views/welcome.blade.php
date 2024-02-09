@@ -32,7 +32,6 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script src="{{ mix('resources/js/app.js') }}"></script>
     @vite(['resources/js/app.js', 'resources/css/app.css'])
 </head>
 
@@ -64,35 +63,7 @@
 
     <script>
         // $(document).ready(function() {
-
-
-        //     var dataTable = $("#example1").DataTable({
-        //         "responsive": true,
-        //         "ordering": true,
-        //         "lengthChange": false,
-        //         "autoWidth": true,
-        //         dom: 'Bfrtip',
-        //         buttons: [
-        //             'copy', 'csv', 'excel', 'pdf', 'print'
-        //         ]
-        //     });
-
-        //     dataTable.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        //     var example2Table = $('#example2').DataTable({
-        //         "paging": true,
-        //         "lengthChange": true,
-        //         "searching": true,
-        //         "ordering": true,
-        //         "info": true,
-        //         "autoWidth": false,
-        //         "responsive": true,
-        //         "buttons": ["csv", "excel", "pdf", "print"]
-        //     });
-
-        //     example2Table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
-
-
+        //     $('.multiple').select2();
         // });
     </script>
 </body>

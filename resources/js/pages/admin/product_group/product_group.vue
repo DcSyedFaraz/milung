@@ -4,24 +4,37 @@
             <div class="col-lg-12 ">
 
                 <div class="card  ">
-                    <div class="card-header pt-3  ">
-                        <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
-                            <div class="col-4 d-flex">
-                                <div class="col-6">
+                    <div class="card-header  ">
+                        <div class="">
 
-                                    <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                        ref="search" placeholder="Write here..." />
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mx-3">
+                            <span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Product Groups:</span>
+                            </span>
+
+                            <div class="col-4 d-flex">
+                                <div class="col-12 d-flex">
+                                    <div class="col-8">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon1"><i style="color: #41b400;"
+                                                    class="bx bx-filter-alt fw-bold fs-4"></i></span>
+                                            <input type="text" name="search" class="form-control " v-model="searchQuery"
+                                                ref="search" placeholder="Write here to filter..." />
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mx-2">
+                                        <router-link :to="{ name: 'product_group_entry' }"
+                                            class="btn btn-warning fw-bold text-dark">Add New
+                                        </router-link>
+                                    </div>
+
                                 </div>
-                                <div class="col-6 mx-2">
-                                    <router-link :to="{ name: 'productEntry' }"
-                                        class="btn btn-warning fw-bold text-dark">Add New
-                                        Product</router-link>
-                                </div>
+
                             </div>
                         </div>
                     </div>
+
                     <!-- // Loader -->
                     <div class="card-body rounded-top" v-if="isLoading">
 
@@ -36,32 +49,29 @@
 
 
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped table-hover  display " id="">
-                            <thead style="color: white; background-color: #14245c" class="">
-                                <tr class="rounded-top-new" style="">
+                        <table class="table table-striped table-hover  ">
+                            <thead style="color: #009de1; " class="">
+                                <tr style="">
                                     <th>
-                                        Article#
+                                        Product Group
                                     </th>
-                                    <th>Product Name</th>
-                                    <th>Discription</th>
-                                    <th>Product Group</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>HS-CN Code</th>
+                                    <th>HS-DE Code</th>
+                                    <th>Fixed Profit in %</th>
+                                    <th>Fixed Amount</th>
+                                    <th>Last Changed</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody v-for="user in dataToDisplay" :key="user.id">
-                                <tr>
-                                    <td>{{ user.article }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.description }}</td>
-                                    <td>{{ user.group }}</td>
+                                <tr style="border-bottom-color: snow !important;">
+                                    <td>{{ user.group_name }}</td>
+                                    <td>{{ user.hs_cn }}</td>
+                                    <td>{{ user.hs_de }}</td>
+                                    <td>{{ user.profit }}</td>
+                                    <td>{{ user.amount }}</td>
+                                    <td>{{ formattedDateTime(user) }}</td>
 
-                                    <td>
-                                        <span
-                                            :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
-                                            {{ user.status === 'active' ? 'Active' : 'InActive' }}
-                                        </span>
-                                    </td>
 
                                     <td>
                                         <button @click="toggleAccordion(user)" class="btn btn-light"
@@ -77,9 +87,6 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
-
-                                </transition>
 
                             </tbody>
                         </table>
@@ -108,19 +115,18 @@
 </template>
 
 <script>
-import './index';
+import './../index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { format } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 
 
 
 export default {
+    name: "Transaction",
     props: {
-        data: {
-            type: Array,
-            required: true
-        },
         perPage: {
             type: Number,
             default: 10
@@ -129,6 +135,8 @@ export default {
     data() {
         return {
             isLoading: true,
+            bank_name: '',
+            file: null,
             users: [],
             accordionOpen: {},
             currentPage: 1,
@@ -141,9 +149,13 @@ export default {
         }
     },
     computed: {
+
         filteredUsers() {
             return this.users.filter(user => {
-                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.article.toLowerCase().includes(this.searchQuery.toLowerCase());
+                return user.group_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (user.hs_de.toString().includes(this.searchQuery)) ||
+                    (user.hs_cn.toString().includes(this.searchQuery));
+
             });
         },
         totalPages() {
@@ -173,15 +185,15 @@ export default {
         });
     },
     methods: {
-        showToast(type,message) {
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                icon: type,
-                title: message
-            });
+        formattedDateTime(user) {
+            if (user.updated_at) {
+                // Parse the datetime string using date-fns
+                const parsedDateTime = parseISO(user.updated_at);
+                // Format the parsed date using date-fns
+                return format(parsedDateTime, 'dd MMMM yyyy HH:mm');
+            } else {
+                return '';
+            }
         },
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
@@ -189,31 +201,9 @@ export default {
         changePage(page) {
             this.currentPage = page
         },
-        async updateUser(id) {
-            // const formData = {
-
-            // };
-
-            // Send formData to your API
-            // console.log('Form Data:', formData);
-            try {
-                // const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
-
-                if (response.status === 200) {
-                    toastr.success('User updated successfully');
-                    this.$router.push({ name: 'user' });
-                }
-            } catch (error) {
-                if (error.response.status === 422) {
-                    toastr.error('Please fix the validation errors and try again');
-                } else {
-                    toastr.error('An error occurred while updating the user');
-                }
-            }
-        },
         async fetchUsers() {
             try {
-                const response = await axios.get('/api/products');
+                const response = await axios.get('/api/product_group_get');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
@@ -223,59 +213,19 @@ export default {
                 toastr.error('Error fetching data');
             }
         },
-        async deleteUser(userId) {
-            // Display SweetAlert confirmation dialog
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this product!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            });
-
-            if (result.isConfirmed) {
-                // User confirmed, proceed with the deletion
-                try {
-                    await axios.delete(`/api/prodDelete/${userId}`);
-
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Product deleted successfully',
-                    });
-                } catch (error) {
-                    console.error('Error deleting user:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error deleting product',
-                    });
-                }
-            }
-        },
 
     },
 };
 </script>
 
 <style scoped>
-@import url('./style.css');
+@import url('./../style.css');
 
 .rotate-icon {
     transform: rotate(180deg);
 }
 
-.table {
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 20px;
 
-    border-radius: 10px 10px 0 0;
-    overflow: hidden;
-}
 
 .fade-enter-active,
 .fade-leave-active {
@@ -298,7 +248,9 @@ export default {
     color: white;
 }
 
-
+td {
+    border: none !important;
+}
 
 .rounded-top-new {
     border-top-left-radius: 2.25rem !important;

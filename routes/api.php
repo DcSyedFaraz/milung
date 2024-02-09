@@ -36,6 +36,9 @@ Route::put('updateusers/{id}', [UserController::class, 'update']);
 Route::post('addusers', [UserController::class, 'addUser']);
 Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
 
+//Product-group
+Route::post('product_group', [ProductController::class, 'product_group']);
+Route::get('product_group_get', [ProductController::class, 'product_group_get']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

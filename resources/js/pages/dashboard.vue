@@ -301,6 +301,11 @@
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
+                        <li>
+                            <router-link :to="{ name: 'product_group' }" :class="{ active: this.$route.name === 'product_group_entry' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Product Group</span>
+                            </router-link>
+                        </li>
 
                     </ul>
                 </li>
@@ -445,6 +450,8 @@ export default {
                 '/admin/supplerEntry',
                 '/admin/product',
                 '/admin/productEntry',
+                '/admin/product_group',
+                '/admin/product_group_entry',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

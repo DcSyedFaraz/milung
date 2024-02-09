@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductGroup;
 use App\Models\Products;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -20,13 +23,45 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function product_group_get()
     {
-        //
+        $prod = ProductGroup::all();
+        $formattedProducts = $prod->map(function ($product) {
+            // Assuming the datetime fields are named 'created_at' and 'updated_at'
+            $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
+            $product->updated_at = Carbon::parse($product->updated_at)->toDateString(); // Adjust format as needed
+            return $product;
+        });
+
+        // Return the formatted ProductGroup collection as JSON response
+        return response()->json($formattedProducts, JsonResponse::HTTP_OK);
     }
     public function statement(Request $request)
     {
         dd($request->all());
+    }
+    public function product_group(Request $request)
+    {
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'group_name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'profit' => 'required|integer',
+            'amount' => 'required|integer',
+            'hs_de' => 'required|integer',
+            'hs_cn' => 'required|integer',
+        ]);
+
+        $product = new ProductGroup();
+        $product->group_name = $validatedData['group_name'];
+        $product->description = $validatedData['description'];
+        $product->profit = $validatedData['profit'];
+        $product->amount = $validatedData['amount'];
+        $product->hs_de = $validatedData['hs_de'];
+        $product->hs_cn = $validatedData['hs_cn'];
+        $product->save();
+
+        return response()->json(['message' => 'Product created successfully']);
     }
 
     /**

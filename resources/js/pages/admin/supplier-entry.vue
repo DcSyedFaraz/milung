@@ -81,7 +81,9 @@
                                     </div>
                                 </div> -->
                                 <div class="form-group">
-                                    <select class="select2 w-100 multiple" v-model="group" name="group[]" id="multiple"
+                                    <multiselect v-model="group" :options="productOptions" :multiple="true">
+                                    </multiselect>
+                                    <!-- <select class="select2 w-100 multiple" v-model="group" name="group[]" id="multiple"
                                         multiple="multiple">
                                         <option value="Power bank">Power bank</option>
                                         <option value="Mobile Storage">Mobile Storage</option>
@@ -93,7 +95,7 @@
                                         <option value="USB Cable">USB Cable</option>
                                         <option value="Fan">Fan</option>
                                         <option value="Charger">Charger</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                                 <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
                             </div>
@@ -101,7 +103,9 @@
                                 <label class="form-label">Secondary Product Group</label>
 
                                 <div class="form-group">
-                                    <select class="select2 w-100 multiple" v-model="Secgroup" name="Secgroup[]"
+                                    <multiselect v-model="Secgroup" :options="productOptions" :multiple="true">
+                                    </multiselect>
+                                    <!-- <select class="select2 w-100 multiple" v-model="Secgroup" name="Secgroup[]"
                                         multiple="multiple">
                                         <option value="Power bank">Power bank</option>
                                         <option value="Mobile Storage">Mobile Storage</option>
@@ -113,7 +117,7 @@
                                         <option value="USB Cable">USB Cable</option>
                                         <option value="Fan">Fan</option>
                                         <option value="Charger">Charger</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
                         </div>
@@ -209,6 +213,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import './index';
+import Multiselect from 'vue-multiselect'
 
 // import 'select2'; // Import the Select2 library
 // import 'select2/dist/css/select2.min.css';
@@ -218,9 +223,22 @@ window.jQuery = window.$ = $;
 
 export default {
 
+    components: { Multiselect },
     // components: { Select2 },
     data() {
         return {
+            productOptions: [
+                'Power bank',
+                'Mobile Storage',
+                'Travel Adapter',
+                'Wireless Charger',
+                'RFID Card',
+                'LED Lamp',
+                'Solar Panel',
+                'USB Cable',
+                'Fan',
+                'Charger'
+            ],
             // myValue: [],
             name: '',
             email: '',
@@ -235,7 +253,7 @@ export default {
         }
     },
     methods: {
-        showToast(type,message) {
+        showToast(type, message) {
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -285,7 +303,7 @@ export default {
                     this.resetForm();
 
                     if (addbuyer.status === 201) {
-                        this.showToast('success',addbuyer.data.message);
+                        this.showToast('success', addbuyer.data.message);
                         this.$router.push({ name: 'Datasupplier' });
                     } else {
                         // Handle other status codes or unexpected responses
@@ -328,7 +346,11 @@ export default {
 
     mounted() {
         // Initialize Select2 on the select element
-        $('.multiple').select2();
+        if ($.fn.select2) {
+            $(this.$el).find('.multiple').select2();
+        } else {
+            console.error('Select2 not found');
+        }
         // $(this.$refs.select).select2();
     },
     beforeDestroy() {
@@ -338,19 +360,18 @@ export default {
 
 }
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style>
 @import url('./style.css');
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.multiselect__tag {
     background-color: #14245c !important;
     color: white;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remov {
-    float: right !important;
-    margin-left: 5px !important;
-    margin-right: -2px !important;
+.multiselect__tag-icon::after{
+    color: white;
+
 }
 
 .table {
