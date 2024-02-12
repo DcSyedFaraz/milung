@@ -312,22 +312,25 @@
                 <!-- End Forms Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                    <router-link class="nav-link" :to="{ name: 'price_inquiry' }" :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
+                        <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
+                    </router-link>
+                    <!-- <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span><i
-                            class="bi bi-chevron-down ms-auto"></i>
+                        class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <a href="tables-general.html">
-                                <i class="bi bi-circle"></i><span>General Tables</span>
-                            </a>
+                            <router-link :to="{ name: 'price_inquiry' }" :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Price Inquiry</span>
+                            </router-link>
                         </li>
                         <li>
                             <a href="tables-data.html">
                                 <i class="bi bi-circle"></i><span>Data Tables</span>
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
                 </li>
                 <!-- End Tables Nav -->
 

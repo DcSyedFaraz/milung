@@ -18,6 +18,8 @@ import productEntry from './pages/admin/product-entry.vue';
 import Transaction from './pages/admin/transaction/transaction.vue';
 import product_group from './pages/admin/product_group/product_group.vue';
 import product_group_entry from './pages/admin/product_group/product_group_entry.vue';
+import price_inquiry from './pages/admin/price_inquiry/price_inquiry.vue';
+import price_inquiry_entry from './pages/admin/price_inquiry/price_inquiry_entry.vue';
 
 
 const routes = [
@@ -109,6 +111,18 @@ const routes = [
                 path: 'product_group_entry',
                 name: 'product_group_entry',
                 component: product_group_entry,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'price_inquiry',
+                name: 'price_inquiry',
+                component: price_inquiry,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'price_inquiry_entry',
+                name: 'price_inquiry_entry',
+                component: price_inquiry_entry,
                 // meta: { requiresAdmin: true },
             },
         ],

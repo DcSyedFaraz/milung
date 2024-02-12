@@ -26,15 +26,15 @@ class ProductController extends Controller
     public function product_group_get()
     {
         $prod = ProductGroup::all();
-        $formattedProducts = $prod->map(function ($product) {
-            // Assuming the datetime fields are named 'created_at' and 'updated_at'
-            $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
-            $product->updated_at = Carbon::parse($product->updated_at)->toDateString(); // Adjust format as needed
-            return $product;
-        });
+        // $formattedProducts = $prod->map(function ($product) {
+        //     // Assuming the datetime fields are named 'created_at' and 'updated_at'
+        //     $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
+        //     $product->updated_at = Carbon::parse($product->updated_at)->toDateString(); // Adjust format as needed
+        //     return $product;
+        // });
 
         // Return the formatted ProductGroup collection as JSON response
-        return response()->json($formattedProducts, JsonResponse::HTTP_OK);
+        return response()->json($prod, JsonResponse::HTTP_OK);
     }
     public function statement(Request $request)
     {
