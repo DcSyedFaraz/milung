@@ -1,10 +1,11 @@
 <template>
     <section class="section">
-        <form @submit.prevent="submitForm" enctype="multipart/form-data">
+        <form @submit.prevent="onSubmit" enctype="multipart/form-data">
 
             <div class="container">
 
                 <div class="row my-5">
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
                     <div class="col-md-6">
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
@@ -29,8 +30,14 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="name" class="form-control"> -->
                                 <select class=" form-control" v-model="group">
+                                    <option value="">Select a product group</option>
+                                    <option v-for="group in groups" :key="group.id" :value="group.group_name">
+                                      {{ group.group_name }}
+                                    </option>
+                                  </select>
+                                <!-- <input type="text" v-model="name" class="form-control"> -->
+                                <!-- <select class=" form-control" v-model="group">
                                     <option value="Power bank">Power bank</option>
                                     <option value="Mobile Storage">Mobile Storage</option>
                                     <option value="Travel Adapter">Travel Adapter</option>
@@ -41,7 +48,7 @@
                                     <option value="USB Cable">USB Cable</option>
                                     <option value="Fan">Fan</option>
                                     <option value="Charger">Charger</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -188,7 +195,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
-                                    <input class="form-check-input " type="checkbox" value="urgent" v-model="urgent">
+                                    <input class="form-check-input " type="checkbox" v-model="urgent">
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Urgent
                                     </label>
@@ -210,6 +217,38 @@
                                 <canvas ref="canvas" width="322" height="300" class="border border-2"></canvas>
                             </div>
                         </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <p for="v-model">Supplier Product Photo/3D Artwork:</p>
+                                <button @click="importImage1" type="button" class="btn px-4 btn-milung">
+                                    Import
+                                </button>
+                                <button type="button" class="btn px-4 btn-primary my-2">
+                                    Export
+                                </button>
+                            </div>
+                            <div class="col-8">
+                                <input ref="fileInput1" type="file" class="form-control d-none" accept=".jpg,.png">
+                                <canvas ref="canvas1" width="322" height="300" class="border border-2"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-12 my-2">
+                            <div class="row ms-2">
+
+                                <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3">Send To Supplier</button>
+
+                                <button type="button" class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow Up</button>
+
+                                <button type="button" style="background-color: aqua !important; "
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Quote Buyer</button>
+
+                                <button style="background-color: #bc7803 !important;"
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button>
+
+                                <button type="button" style="background-color: #41b400 !important;"
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -225,10 +264,37 @@ export default {
             materials: [{ quantity: '' }],
             capacity: [{ quantity: '' }],
             buyer: '',
-            inquiry_number: '', article: '', group: '', name: '', description: '', cargo: '', cargo_place: [], incoterm: '', urgent: false, method: '', color: '', packaging: '', requirements: '', status: '', file: '', imageLoaded: false,
+            inquiry_number: '',
+            article: '',
+            groups: [],
+            group: '',
+            name: '',
+            description: '',
+            cargo: '',
+            cargo_place: [],
+            incoterm: '',
+            urgent: false,
+            method: '',
+            color: '',
+            packaging: '',
+            requirements: '',
+            status: '',
+            file: '',
+            file1: '',
+            imageLoaded: false,
         };
     },
     methods: {
+        fetchProductGroups() {
+            axios.get('/api/product_group_get') // Replace '/api/product-groups' with your API endpoint
+                .then(response => {
+                    this.groups = response.data;
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         addMaterial() {
             this.materials.push({ quantity: '' });
         },
@@ -265,21 +331,134 @@ export default {
                             newWidth = (img.width * newHeight) / img.height;
                         }
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+
                     };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
         },
-        onSubmit() {
-            // Handle form submission
+        importImage1() {
+            this.$refs.fileInput1.click();
+        },
+        loadImage1(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const canvas = this.$refs.canvas1;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const aspectRatio = canvas.width / canvas.height;
+                        let newWidth, newHeight;
+                        if (img.width > img.height) {
+                            newWidth = canvas.width;
+                            newHeight = (img.height * newWidth) / img.width;
+                        } else {
+                            newHeight = canvas.height;
+                            newWidth = (img.width * newHeight) / img.height;
+                        }
+                        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        handleValidationErrors(validationErrors) {
+            // Assuming you have a function to display toastr error messages
+            for (const key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    const messages = validationErrors[key];
+                    // Display each validation error message
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
+        },
+        async onSubmit() {
+            try {
+
+                const formData = new FormData();
+                formData.append('buyer', this.buyer);
+                formData.append('inquiry_number', this.inquiry_number);
+                formData.append('article', this.article);
+                formData.append('group', this.group);
+                formData.append('name', this.name);
+                formData.append('description', this.description);
+                formData.append('cargo', this.cargo);
+                this.cargo_place.forEach(place => {
+                    formData.append('cargo_place[]', place);
+                });
+                // formData.append('cargo_place', JSON.stringify(this.cargo_place));
+                formData.append('incoterm', this.incoterm);
+                formData.append('urgent', this.urgent ? 'true' : 'false');
+                formData.append('method', this.method);
+                formData.append('color', this.color);
+                formData.append('packaging', this.packaging);
+                formData.append('requirements', this.requirements);
+                formData.append('status', this.status);
+                formData.append('file', this.$refs.fileInput.files[0]);
+                formData.append('file1', this.$refs.fileInput1.files[0]);
+
+                for (let i = 0; i < this.materials.length; i++) {
+                    formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                }
+
+                // const formattedCapacity = this.formattedCapacity.join(',');
+                // formData.append('capacity', formattedCapacity);
+                // Append each quantity and unit from capacity array
+                this.capacity.forEach((caps, index) => {
+                    const capacityString = `${caps.quantity}${caps.unit}`;
+                    formData.append(`capacity[${index}]`, capacityString);
+                });
+
+                console.log(formData, this.capacity);
+                const response = await axios.post('/api/price_inquiry', formData);
+
+                console.log(response);
+                if (response.ok) {
+
+                    // Assuming you want to show a success toastr notification
+                    toastr.success(response.data.message);
+                    this.$router.push({ name: 'price_inquiry' });
+                } else {
+                    toastr.error('Something is not correct');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    // Non-validation error, log the error
+                    console.error(error);
+
+                    // Show a toastr error notification
+                    toastr.error('An error occurred while adding the user');
+                }
+            }
         }
-    },
+    }, computed: {
+        formattedCapacity() {
+            return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);
+        }
+    }
+    ,
     mounted() {
+        this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
+        this.$refs.fileInput1.addEventListener('change', this.loadImage1);
     },
     beforeUnmount() {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);
+        this.$refs.fileInput1.removeEventListener('change', this.loadImage1);
     }
 }
 </script>

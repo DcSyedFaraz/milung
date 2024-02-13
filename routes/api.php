@@ -40,6 +40,10 @@ Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
 Route::post('product_group', [ProductController::class, 'product_group']);
 Route::get('product_group_get', [ProductController::class, 'product_group_get']);
 
+//Product-group
+Route::post('price_inquiry', [ProductController::class, 'price_inquiry']);
+Route::get('price_inquiry_get', [ProductController::class, 'product_group_get']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
 use Auth;
@@ -15,9 +16,63 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function price_inquiry(Request $request)
+    {   $request->urgent = true;
+        // dd($request->all());
+
+        $validatedData = $request->validate([
+            'buyer' => 'required|string',
+            'inquiry_number' => 'required|string',
+            'article' => 'required|string',
+            'group' => 'required|string',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'cargo' => 'required|string',
+            'cargo_place' => 'required|array',
+            'incoterm' => 'required|string',
+            'urgent' => 'nullable',
+            'method' => 'required|string',
+            'color' => 'required|string',
+            'packaging' => 'required|string',
+            'requirements' => 'required|string',
+            'status' => 'required|string',
+            'pcs' => 'required|array',
+            'capacity' => 'required|array',
+        ]);
+
+        $priceInquiry = PriceInquiry::create($validatedData);
+
+        // Handle file uploads
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/files', $fileName);
+            $priceInquiry->file = $fileName;
+        }
+        if ($request->hasFile('file1')) {
+            $file1 = $request->file('file1');
+            $fileName1 = time() . '_' . $file1->getClientOriginalName();
+            $file1->storeAs('public/files', $fileName1);
+            $priceInquiry->file1 = $fileName1;
+        }
+
+        // Save materials data
+        $pcs = $request->input('pcs');
+        $priceInquiry->pcs = array_filter($pcs, function ($value) {
+            return $value !== null;
+        });
+
+        // Save capacity data
+        $capacity = $request->input('capacity');
+        $priceInquiry->capacity = array_filter($capacity, function ($value) {
+            return $value !== null && $value !== 'undefined';
+        });
+
+        Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+
+        $priceInquiry->save();
+
+        return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
     }
 
     /**
@@ -25,7 +80,7 @@ class ProductController extends Controller
      */
     public function product_group_get()
     {
-        $prod = ProductGroup::all();
+        $prod = ProductGroup::select('id','group_name')->get();
         // $formattedProducts = $prod->map(function ($product) {
         //     // Assuming the datetime fields are named 'created_at' and 'updated_at'
         //     $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
@@ -34,6 +89,12 @@ class ProductController extends Controller
         // });
 
         // Return the formatted ProductGroup collection as JSON response
+        return response()->json($prod, JsonResponse::HTTP_OK);
+    }
+    public function price_inquiry_get()
+    {
+        $prod = PriceInquiry::all();
+
         return response()->json($prod, JsonResponse::HTTP_OK);
     }
     public function statement(Request $request)
