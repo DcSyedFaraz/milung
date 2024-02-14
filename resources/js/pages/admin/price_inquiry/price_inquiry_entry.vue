@@ -30,12 +30,12 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-control" v-model="group">
-                                    <option value="">Select a product group</option>
-                                    <option v-for="group in groups" :key="group.id" :value="group.group_name">
-                                      {{ group.group_name }}
+                                <select class=" form-control" v-model="group" @change="fetchSupplierProfiles(group)">
+                                    <option selected disabled>Select a product group</option>
+                                    <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
+                                        {{ group1.group_name }}
                                     </option>
-                                  </select>
+                                </select>
                                 <!-- <input type="text" v-model="name" class="form-control"> -->
                                 <!-- <select class=" form-control" v-model="group">
                                     <option value="Power bank">Power bank</option>
@@ -183,8 +183,11 @@
                                 <p for="v-model" class="my-1">Status:</p>
                             </div>
                             <div class="col-8"><select class="fw-bold form-control" v-model="status">
-                                    <option value="Active">Active</option>
-                                    <option value="InActive">In-Active</option>
+                                    <option value="ML Checking">ML Checking</option>
+                                    <option value="ML Replied">ML Replied</option>
+                                    <option value="ML Follow Up">ML Follow Up</option>
+                                    <option value="Customer Follow Up">Customer Follow Up</option>
+                                    <option value="Cutomer Quoted">Cutomer Quoted</option>
                                 </select></div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -235,9 +238,11 @@
                         <div class="col-12 my-2">
                             <div class="row ms-2">
 
-                                <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3">Send To Supplier</button>
+                                <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3"
+                                    data-bs-toggle="modal" data-bs-target="#supplierModal">Send To Supplier</button>
 
-                                <button type="button" class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow Up</button>
+                                <button type="button" class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
+                                    Up</button>
 
                                 <button type="button" style="background-color: aqua !important; "
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Quote Buyer</button>
@@ -247,10 +252,34 @@
 
                                 <button type="button" style="background-color: #41b400 !important;"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
+
                             </div>
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Select Supplier</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
+                                <input class="form-check-input" type="checkbox" :value="supplier.id" v-model="supplier.checked">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    {{ supplier.name }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -258,6 +287,9 @@
 </template>
 
 <script>
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
 export default {
     data() {
         return {
@@ -282,17 +314,35 @@ export default {
             file: '',
             file1: '',
             imageLoaded: false,
+            supplier_profiles: [],
         };
     },
     methods: {
+        fetchSupplierProfiles(groupId) {
+            NProgress.start();
+            console.log(groupId);
+            axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
+                .then(response => {
+                    this.supplier_profiles = response.data;
+                    console.log(response);
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
+        },
         fetchProductGroups() {
+            NProgress.start();
             axios.get('/api/product_group_get') // Replace '/api/product-groups' with your API endpoint
                 .then(response => {
                     this.groups = response.data;
                     console.log(response);
+                    NProgress.done();
                 })
                 .catch(error => {
                     console.error(error);
+                    NProgress.done();
                 });
         },
         addMaterial() {
@@ -408,6 +458,10 @@ export default {
                 formData.append('file', this.$refs.fileInput.files[0]);
                 formData.append('file1', this.$refs.fileInput1.files[0]);
 
+                this.selectedSupplierIds.forEach(id => {
+                    formData.append('supplier_ids[]', id);
+                });
+
                 for (let i = 0; i < this.materials.length; i++) {
                     formData.append(`pcs[${i}]`, this.materials[i].quantity);
                 }
@@ -424,7 +478,7 @@ export default {
                 const response = await axios.post('/api/price_inquiry', formData);
 
                 console.log(response);
-                if (response.ok) {
+                if (response.status === 201) {
 
                     // Assuming you want to show a success toastr notification
                     toastr.success(response.data.message);
@@ -448,10 +502,16 @@ export default {
     }, computed: {
         formattedCapacity() {
             return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);
-        }
+        },
+        selectedSupplierIds() {
+            return this.supplier_profiles
+                .filter(supplier => supplier.checked)
+                .map(supplier => supplier.id);
+        },
     }
     ,
     mounted() {
+        NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
         this.$refs.fileInput1.addEventListener('change', this.loadImage1);

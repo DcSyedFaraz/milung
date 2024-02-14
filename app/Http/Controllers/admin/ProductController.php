@@ -17,10 +17,12 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function price_inquiry(Request $request)
-    {   $request->urgent = true;
-        // dd($request->all());
+    {
+
+        // dd($request->input('supplier_ids'));
 
         $validatedData = $request->validate([
+            'supplier_ids' => 'array|exists:users,id',
             'buyer' => 'required|string',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
@@ -80,7 +82,20 @@ class ProductController extends Controller
      */
     public function product_group_get()
     {
-        $prod = ProductGroup::select('id','group_name')->get();
+        $prod = ProductGroup::select('id', 'group_name')->get();
+        // $formattedProducts = $prod->map(function ($product) {
+        //     // Assuming the datetime fields are named 'created_at' and 'updated_at'
+        //     $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
+        //     $product->updated_at = Carbon::parse($product->updated_at)->toDateString(); // Adjust format as needed
+        //     return $product;
+        // });
+
+        // Return the formatted ProductGroup collection as JSON response
+        return response()->json($prod, JsonResponse::HTTP_OK);
+    }
+    public function product_group_get_all()
+    {
+        $prod = ProductGroup::orderby('created_at', 'desc')->get();
         // $formattedProducts = $prod->map(function ($product) {
         //     // Assuming the datetime fields are named 'created_at' and 'updated_at'
         //     $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed
@@ -93,9 +108,21 @@ class ProductController extends Controller
     }
     public function price_inquiry_get()
     {
-        $prod = PriceInquiry::all();
+        $prod = PriceInquiry::orderby('created_at', 'desc')->get();
 
         return response()->json($prod, JsonResponse::HTTP_OK);
+    }
+    public function PriceDelete($id)
+    {
+        // dd($id);
+        try {
+            $user = PriceInquiry::findOrFail($id);
+            $user->delete();
+
+            return response()->json(['message' => 'Inquiry deleted successfully'], 200);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
     public function statement(Request $request)
     {

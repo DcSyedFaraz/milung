@@ -190,7 +190,7 @@ export default {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.updated_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd MMMM yyyy HH:mm');
+                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
             } else {
                 return '';
             }
@@ -203,7 +203,7 @@ export default {
         },
         async fetchUsers() {
             try {
-                const response = await axios.get('/api/product_group_get');
+                const response = await axios.get('/api/product_group_get_all');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);

@@ -13,5 +13,6 @@ class PriceInquiry extends Model
         'cargo_place' => 'array',
         'pcs' => 'array',
         'capacity' => 'array',
+        'supplier_ids' => 'array',
     ];
 }

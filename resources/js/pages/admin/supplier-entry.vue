@@ -81,21 +81,9 @@
                                     </div>
                                 </div> -->
                                 <div class="form-group">
-                                    <multiselect v-model="group" :options="productOptions" :multiple="true">
+                                    <multiselect v-model="group" :options="productOptions" :multiple="true" label="group_name" track-by="id">
                                     </multiselect>
-                                    <!-- <select class="select2 w-100 multiple" v-model="group" name="group[]" id="multiple"
-                                        multiple="multiple">
-                                        <option value="Power bank">Power bank</option>
-                                        <option value="Mobile Storage">Mobile Storage</option>
-                                        <option value="Travel Adapter">Travel Adapter</option>
-                                        <option value="Wireless Charger">Wireless Charger</option>
-                                        <option value="RFID Card">RFID Card</option>
-                                        <option value="LED Lamp">LED Lamp</option>
-                                        <option value="Solar Panel">Solar Panel</option>
-                                        <option value="USB Cable">USB Cable</option>
-                                        <option value="Fan">Fan</option>
-                                        <option value="Charger">Charger</option>
-                                    </select> -->
+
                                 </div>
                                 <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
                             </div>
@@ -103,21 +91,8 @@
                                 <label class="form-label">Secondary Product Group</label>
 
                                 <div class="form-group">
-                                    <multiselect v-model="Secgroup" :options="productOptions" :multiple="true">
+                                    <multiselect v-model="Secgroup" :options="productOptions" :multiple="true" label="group_name" track-by="id">
                                     </multiselect>
-                                    <!-- <select class="select2 w-100 multiple" v-model="Secgroup" name="Secgroup[]"
-                                        multiple="multiple">
-                                        <option value="Power bank">Power bank</option>
-                                        <option value="Mobile Storage">Mobile Storage</option>
-                                        <option value="Travel Adapter">Travel Adapter</option>
-                                        <option value="Wireless Charger">Wireless Charger</option>
-                                        <option value="RFID Card">RFID Card</option>
-                                        <option value="LED Lamp">LED Lamp</option>
-                                        <option value="Solar Panel">Solar Panel</option>
-                                        <option value="USB Cable">USB Cable</option>
-                                        <option value="Fan">Fan</option>
-                                        <option value="Charger">Charger</option>
-                                    </select> -->
                                 </div>
                             </div>
                         </div>
@@ -227,18 +202,7 @@ export default {
     // components: { Select2 },
     data() {
         return {
-            productOptions: [
-                'Power bank',
-                'Mobile Storage',
-                'Travel Adapter',
-                'Wireless Charger',
-                'RFID Card',
-                'LED Lamp',
-                'Solar Panel',
-                'USB Cable',
-                'Fan',
-                'Charger'
-            ],
+            productOptions: [],
             // myValue: [],
             name: '',
             email: '',
@@ -253,6 +217,14 @@ export default {
         }
     },
     methods: {
+        async fetchProductOptions() {
+            try {
+                const response = await axios.get('/api/product_group_get');
+                this.productOptions = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
         showToast(type, message) {
             Swal.fire({
                 toast: true,
@@ -292,14 +264,13 @@ export default {
                     officePhone: this.officePhone,
                     contact: this.contact,
                     buyerDescription: this.buyerDescription,
-                    group: this.group,
-                    Secgroup: this.Secgroup
+                    group: this.group.map(option => option.id),
+                    Secgroup: this.Secgroup.map(option => option.id)
                 };
                 try {
                     console.log(formData);
                     const addbuyer = await axios.post('/api/addsupliers', formData);
                     console.log(addbuyer.data);
-                    // alert('Supplier added successfully');
                     this.resetForm();
 
                     if (addbuyer.status === 201) {
@@ -345,13 +316,7 @@ export default {
     },
 
     mounted() {
-        // Initialize Select2 on the select element
-        if ($.fn.select2) {
-            $(this.$el).find('.multiple').select2();
-        } else {
-            console.error('Select2 not found');
-        }
-        // $(this.$refs.select).select2();
+        this.fetchProductOptions();
     },
     beforeDestroy() {
         // Destroy Select2 instance when the component is destroyed to prevent memory leaks
@@ -369,7 +334,7 @@ export default {
     color: white;
 }
 
-.multiselect__tag-icon::after{
+.multiselect__tag-icon::after {
     color: white;
 
 }

@@ -65,14 +65,13 @@
                             </thead>
                             <tbody v-for="user in dataToDisplay" :key="user.id">
                                 <tr style="border-bottom-color: snow !important;">
-                                    <td>{{ user.group_name }}</td>
-                                    <td><span
-                                        :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-secondary': user.status !== 'active' }">
-                                        {{ user.status === 'active' ? 'Active' : 'Customer Quoted' }}
-                                    </span></td>
+                                    <td>{{ user.inquiry_number }}</td>
+                                    <td>
+                                        <span :class="statusBadge(user)">{{ user.status }}</span>
+                                    </td>
                                     <td>{{ updated_at(user) }}</td>
                                     <td>{{ created_at(user) }}</td>
-                                    <td>{{ user.profit }}</td>
+                                    <td>{{ user.requirements }}</td>
 
 
                                     <td>
@@ -90,21 +89,21 @@
                                     </td>
                                 </tr>
                                 <transition name="fade">
-                            <tr v-show="accordionOpen[user.id]">
-                                <td :colspan="7">
-                                    <div>
-                                        <!-- <p>Additional information about user {{ user.name }}</p> -->
-                                        <div class="">
-                                            hi
-                                            <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
-                                                    class="bi bi-trash"></i>
-                                            </a>
-                                        </div>
-                                        <!-- Add more content here -->
-                                    </div>
-                                </td>
-                            </tr>
-                            </transition>
+                                    <tr v-show="accordionOpen[user.id]">
+                                        <td :colspan="7">
+                                            <div>
+                                                <!-- <p>Additional information about user {{ user.name }}</p> -->
+                                                <div class="">
+                                                    hi
+                                                    <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
+                                                            class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                                <!-- Add more content here -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </transition>
 
                             </tbody>
                         </table>
@@ -142,6 +141,7 @@ import { parseISO } from 'date-fns';
 
 
 
+
 export default {
     name: "Transaction",
     props: {
@@ -170,9 +170,8 @@ export default {
 
         filteredUsers() {
             return this.users.filter(user => {
-                return user.group_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (user.hs_de.toString().includes(this.searchQuery)) ||
-                    (user.hs_cn.toString().includes(this.searchQuery));
+                return user.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (user.requirements.toLowerCase().includes(this.searchQuery));
 
             });
         },
@@ -203,12 +202,28 @@ export default {
         });
     },
     methods: {
+        statusBadge(user) {
+            switch (user.status) {
+                case 'ML Checking':
+                    return 'badge bg-primary';
+                case 'ML Replied':
+                    return 'badge bg-cyan';
+                case 'ML Follow Up':
+                    return 'badge bg-success';
+                case 'Customer Follow Up':
+                    return 'badge bg-pink';
+                case 'Customer Quoted':
+                    return 'badge bg-info';
+                default:
+                    return 'badge bg-secondary';
+            }
+        },
         updated_at(user) {
             if (user.updated_at) {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.updated_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd MMMM yyyy HH:mm');
+                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
             } else {
                 return '';
             }
@@ -218,7 +233,7 @@ export default {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.created_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd MMMM yyyy HH:mm');
+                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
             } else {
                 return '';
             }
@@ -229,9 +244,42 @@ export default {
         changePage(page) {
             this.currentPage = page
         },
+        async deleteUser(userId) {
+            // Display SweetAlert confirmation dialog
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this inquiry!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (result.isConfirmed) {
+                // User confirmed, proceed with the deletion
+                try {
+                    await axios.delete(`/api/PriceDelete/${userId}`);
+
+                    // If successful, remove the user from the local data
+                    this.users = this.users.filter(user => user.id !== userId);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Inquiry deleted successfully',
+                    });
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error deleting user',
+                    });
+                }
+            }
+        },
         async fetchUsers() {
             try {
-                const response = await axios.get('/api/product_group_get');
+                const response = await axios.get('/api/price_inquiry_get');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
@@ -253,7 +301,13 @@ export default {
     transform: rotate(180deg);
 }
 
+.bg-cyan {
+    background-color: #12d4b3 !important;
+}
 
+.bg-pink {
+    background-color: #b40096 !important;
+}
 
 .fade-enter-active,
 .fade-leave-active {

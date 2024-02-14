@@ -30,6 +30,7 @@ return new class extends Migration
             $table->text('requirements');
             $table->string('status');
             $table->json('pcs');
+            $table->json('supplier_ids')->nullable();
             $table->json('capacity');
             $table->string('file')->nullable();
             $table->string('file1')->nullable();

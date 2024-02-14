@@ -29,6 +29,7 @@ Route::get('products', [UserController::class, 'products']);
 // Adding Users
 Route::post('addbuyers', [UserController::class, 'buyers']);
 Route::post('addsupliers', [UserController::class, 'suppliers']);
+Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
 
 // Updating Users
 Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
@@ -39,10 +40,12 @@ Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
 //Product-group
 Route::post('product_group', [ProductController::class, 'product_group']);
 Route::get('product_group_get', [ProductController::class, 'product_group_get']);
+Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all']);
 
-//Product-group
+//price_inquiry
 Route::post('price_inquiry', [ProductController::class, 'price_inquiry']);
-Route::get('price_inquiry_get', [ProductController::class, 'product_group_get']);
+Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
+Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -50,6 +53,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('statement', [ProductController::class, 'statement']);
+// Auth
 Route::middleware('auth:sanctum')->group(function () {
     // Adding Products
     Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);

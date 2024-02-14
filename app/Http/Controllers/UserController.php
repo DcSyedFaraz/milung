@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products;
+use App\Models\SupplierProfile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -220,6 +221,29 @@ class UserController extends Controller
         // // dd($responseData);
         return response()->json($responseData, JsonResponse::HTTP_OK);
     }
+    public function supplier_profiles($id)
+{
+    // Typecast $id to ensure it's of the correct type
+    $id = (int)$id;
+
+    // Assuming $id is an integer
+    $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$id])
+        ->with('user:id,name')
+        ->get();
+
+    // Iterate through $supplierProfiles to create the desired response structure
+    $data = $supplierProfiles->map(function ($profile) {
+        return [
+            'id' => $profile->user->id,
+            'name' => $profile->user->name
+        ];
+    });
+
+    // Assuming you want to return JSON response with user id and name
+    return response()->json($data);
+}
+
+
 
     /**
      * Update the specified resource in storage.
@@ -287,5 +311,5 @@ class UserController extends Controller
             throw $e;
         }
     }
-    
+
 }
