@@ -31,9 +31,9 @@
                                             </div>
                                             <div class="mb-3 form-check">
                                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                                <label class="form-check-label" for="exampleCheck1">Remember
+                                                <label class="form-check-label text-muted" for="exampleCheck1">Remember
                                                     Me</label>
-                                              </div>
+                                            </div>
                                             <button class="btn btn-primary btn-user btn-block float-right">
                                                 {{ loading ? "Logging in..." : "Login" }}
                                             </button>
@@ -143,11 +143,12 @@ export default {
 <style scoped>
 @import './style.css';
 @import 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css';
+
 .col-lg-6.backg-gradi {
-    border-radius:3% 0px 0px 3%;
+    border-radius: 3% 0px 0px 3%;
 }
+
 .col-lg-6.d-none.d-lg-block.bg-login-image {
     border-radius: 0px 3% 3% 0px;
 }
-
 </style>

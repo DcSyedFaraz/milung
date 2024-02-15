@@ -16,36 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/done', function () {
     Artisan::call('migrate:fresh --seed');
-    // $user =[
-    //     'first_name'=>'admin',
-    //     'last_name'=>'admin',
-    //     'email'=>'admin@gmail.com',
-    //     'password' => Hash::make('12345678'),
-    //     'email_verified_at' => date('Y-m-d h:i:s'),
-    // ];
+    Artisan::call('optimize:clear');
 
-    // $userd = User::create($user);
-    // $userd->assignRole('Admin');
-    // $buy =[
-    //     'first_name'=>'buyer',
-    //     'last_name'=>'buyer',
-    //     'email'=>'buyer@gmail.com',
-    //     'password' => Hash::make('12345678'),
-    //     'email_verified_at' => date('Y-m-d h:i:s'),
-    // ];
-
-    // $buyr = User::create($buy);
-    // $buyr->assignRole('Buyer');
-    // $supp =[
-    //     'first_name'=>'supplier',
-    //     'last_name'=>'supplier',
-    //     'email'=>'supplier@gmail.com',
-    //     'password' => Hash::make('12345678'),
-    //     'email_verified_at' => date('Y-m-d h:i:s'),
-    // ];
-
-    // $suppl = User::create($supp);
-    // $suppl->assignRole('Supplier');
     return 'done';
 });
 Route::group(['namespace' => 'web'], function () {

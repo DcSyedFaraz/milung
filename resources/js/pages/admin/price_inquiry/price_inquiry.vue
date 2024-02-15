@@ -91,16 +91,7 @@
                                 <transition name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
-                                            <div>
-                                                <!-- <p>Additional information about user {{ user.name }}</p> -->
-                                                <div class="">
-                                                    hi
-                                                    <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
-                                                            class="bi bi-trash"></i>
-                                                    </a>
-                                                </div>
-                                                <!-- Add more content here -->
-                                            </div>
+                                            <PriceInquiry mode="edit" :user="user"/>
                                         </td>
                                     </tr>
                                 </transition>
@@ -137,12 +128,16 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
+import PriceInquiry from './price_inquiry_entry.vue';
 
 
 
 
 
 export default {
+    components: {
+        PriceInquiry
+    },
     name: "Transaction",
     props: {
         perPage: {
@@ -223,7 +218,7 @@ export default {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.updated_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
+                return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
@@ -233,7 +228,7 @@ export default {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.created_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
+                return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
@@ -294,8 +289,7 @@ export default {
 };
 </script>
 
-<style scoped>
-@import url('./../style.css');
+<style scoped>@import url('./../style.css');
 
 .rotate-icon {
     transform: rotate(180deg);
@@ -342,5 +336,4 @@ td {
 .rounded-bottom-new {
     border-bottom-left-radius: 2.25rem !important;
     border-bottom-right-radius: 2.25rem !important;
-}
-</style>
+}</style>

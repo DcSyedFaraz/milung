@@ -269,7 +269,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
-                                <input class="form-check-input" type="checkbox" :value="supplier.id" v-model="supplier.checked">
+                                <input class="form-check-input" type="checkbox" :value="supplier.id"
+                                    v-model="supplier.checked">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     {{ supplier.name }}
                                 </label>
@@ -291,28 +292,38 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
+    props: {
+        mode: String, // "create" or "edit"
+        user: {
+            type: Object,
+            default: null
+        }
+    },
     data() {
         return {
-            materials: [{ quantity: '' }],
-            capacity: [{ quantity: '' }],
-            buyer: '',
-            inquiry_number: '',
-            article: '',
+            materials: this.mode === 'create' ? [{ quantity: '' }] : this.user && this.user.pcs ? this.user.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }],
+            capacity: this.mode === 'create' ? [{ quantity: '', unit: '' }] : this.user && this.user.capacity ? this.user.capacity.map(capacity => {
+                const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
+                return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+            }) : [{ quantity: '' }],
+            buyer: this.mode === 'create' ? '' : this.user ? this.user.buyer : '',
+            inquiry_number: this.mode === 'create' ? '' : this.user ? this.user.inquiry_number : '',
+            article: this.mode === 'create' ? '' : this.user ? this.user.article : '',
             groups: [],
-            group: '',
-            name: '',
-            description: '',
-            cargo: '',
-            cargo_place: [],
-            incoterm: '',
-            urgent: false,
-            method: '',
-            color: '',
-            packaging: '',
-            requirements: '',
-            status: '',
-            file: '',
-            file1: '',
+            group: this.mode === 'create' ? null : this.user ? this.user.group : null,
+            name: this.mode === 'create' ? '' : this.user ? this.user.name : '',
+            description: this.mode === 'create' ? '' : this.user ? this.user.description : '',
+            cargo: this.mode === 'create' ? '' : this.user ? this.user.cargo : '',
+            cargo_place: this.mode === 'create' ? [] : this.user ? this.user.cargo_place : [],
+            incoterm: this.mode === 'create' ? '' : this.user ? this.user.incoterm : '',
+            urgent: this.mode === 'create' ? false : this.user ? this.user.urgent : false,
+            method: this.mode === 'create' ? '' : this.user ? this.user.method : '',
+            color: this.mode === 'create' ? '' : this.user ? this.user.color : '',
+            packaging: this.mode === 'create' ? '' : this.user ? this.user.packaging : '',
+            requirements: this.mode === 'create' ? '' : this.user ? this.user.requirements : '',
+            status: this.mode === 'create' ? '' : this.user ? this.user.status : '',
+            file: this.mode === 'create' ? '' : this.user ? this.user.file : '',
+            file1: this.mode === 'create' ? '' : this.user ? this.user.file1 : '',
             imageLoaded: false,
             supplier_profiles: [],
         };
@@ -387,8 +398,36 @@ export default {
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                console.log('event', this.file);
+                this.loadImageFromPath(this.file, this.$refs.canvas);
             }
         },
+        loadImageFromPath(imageFileName, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
+
+            // Construct the URL to the file in the storage folder
+            const imageUrl = `/storage/files/${imageFileName}`;
+            // console.log(imageUrl,ctx);
+
+            const img = new Image();
+            img.onload = () => {
+                const aspectRatio = canvas.width / canvas.height;
+                let newWidth, newHeight;
+                if (img.width > img.height) {
+                    newWidth = canvas.width;
+                    newHeight = (img.height * newWidth) / img.width;
+                } else {
+                    newHeight = canvas.height;
+                    newWidth = (img.width * newHeight) / img.height;
+                }
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                console.log('Image loaded and drawn onto the canvas successfully.');
+            };
+            img.src = imageUrl;
+        },
+
         importImage1() {
             this.$refs.fileInput1.click();
         },
@@ -434,68 +473,75 @@ export default {
             }
         },
         async onSubmit() {
-            try {
+            if (this.mode === 'edit') {
+                // Handle creating new data
+                console.log('Updating existing data:',  /* Add other properties */);
+            } else {
+                console.log('Creating new data:',  /* Add other properties */);
+                // Handle updating existing data
+                try {
 
-                const formData = new FormData();
-                formData.append('buyer', this.buyer);
-                formData.append('inquiry_number', this.inquiry_number);
-                formData.append('article', this.article);
-                formData.append('group', this.group);
-                formData.append('name', this.name);
-                formData.append('description', this.description);
-                formData.append('cargo', this.cargo);
-                this.cargo_place.forEach(place => {
-                    formData.append('cargo_place[]', place);
-                });
-                // formData.append('cargo_place', JSON.stringify(this.cargo_place));
-                formData.append('incoterm', this.incoterm);
-                formData.append('urgent', this.urgent ? 'true' : 'false');
-                formData.append('method', this.method);
-                formData.append('color', this.color);
-                formData.append('packaging', this.packaging);
-                formData.append('requirements', this.requirements);
-                formData.append('status', this.status);
-                formData.append('file', this.$refs.fileInput.files[0]);
-                formData.append('file1', this.$refs.fileInput1.files[0]);
+                    const formData = new FormData();
+                    formData.append('buyer', this.buyer);
+                    formData.append('inquiry_number', this.inquiry_number);
+                    formData.append('article', this.article);
+                    formData.append('group', this.group);
+                    formData.append('name', this.name);
+                    formData.append('description', this.description);
+                    formData.append('cargo', this.cargo);
+                    this.cargo_place.forEach(place => {
+                        formData.append('cargo_place[]', place);
+                    });
+                    // formData.append('cargo_place', JSON.stringify(this.cargo_place));
+                    formData.append('incoterm', this.incoterm);
+                    formData.append('urgent', this.urgent ? 'true' : 'false');
+                    formData.append('method', this.method);
+                    formData.append('color', this.color);
+                    formData.append('packaging', this.packaging);
+                    formData.append('requirements', this.requirements);
+                    formData.append('status', this.status);
+                    formData.append('file', this.$refs.fileInput.files[0]);
+                    formData.append('file1', this.$refs.fileInput1.files[0]);
 
-                this.selectedSupplierIds.forEach(id => {
-                    formData.append('supplier_ids[]', id);
-                });
+                    this.selectedSupplierIds.forEach(id => {
+                        formData.append('supplier_ids[]', id);
+                    });
 
-                for (let i = 0; i < this.materials.length; i++) {
-                    formData.append(`pcs[${i}]`, this.materials[i].quantity);
-                }
+                    for (let i = 0; i < this.materials.length; i++) {
+                        formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                    }
 
-                // const formattedCapacity = this.formattedCapacity.join(',');
-                // formData.append('capacity', formattedCapacity);
-                // Append each quantity and unit from capacity array
-                this.capacity.forEach((caps, index) => {
-                    const capacityString = `${caps.quantity}${caps.unit}`;
-                    formData.append(`capacity[${index}]`, capacityString);
-                });
+                    // const formattedCapacity = this.formattedCapacity.join(',');
+                    // formData.append('capacity', formattedCapacity);
+                    // Append each quantity and unit from capacity array
+                    this.capacity.forEach((caps, index) => {
+                        const capacityString = `${caps.quantity}${caps.unit}`;
+                        formData.append(`capacity[${index}]`, capacityString);
+                    });
 
-                console.log(formData, this.capacity);
-                const response = await axios.post('/api/price_inquiry', formData);
+                    console.log(formData, this.capacity);
+                    const response = await axios.post('/api/price_inquiry', formData);
 
-                console.log(response);
-                if (response.status === 201) {
+                    console.log(response);
+                    if (response.status === 201) {
 
-                    // Assuming you want to show a success toastr notification
-                    toastr.success(response.data.message);
-                    this.$router.push({ name: 'price_inquiry' });
-                } else {
-                    toastr.error('Something is not correct');
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 422) {
-                    const validationErrors = error.response.data.errors;
-                    this.handleValidationErrors(validationErrors);
-                } else {
-                    // Non-validation error, log the error
-                    console.error(error);
+                        // Assuming you want to show a success toastr notification
+                        toastr.success(response.data.message);
+                        this.$router.push({ name: 'price_inquiry' });
+                    } else {
+                        toastr.error('Something is not correct');
+                    }
+                } catch (error) {
+                    if (error.response && error.response.status === 422) {
+                        const validationErrors = error.response.data.errors;
+                        this.handleValidationErrors(validationErrors);
+                    } else {
+                        // Non-validation error, log the error
+                        console.error(error);
 
-                    // Show a toastr error notification
-                    toastr.error('An error occurred while adding the user');
+                        // Show a toastr error notification
+                        toastr.error('An error occurred while adding the user');
+                    }
                 }
             }
         }
@@ -515,6 +561,14 @@ export default {
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
         this.$refs.fileInput1.addEventListener('change', this.loadImage1);
+
+        // Trigger loadImage method if in edit mode and there's an existing image
+        if (this.mode === 'edit' && this.file) {
+            this.loadImageFromPath(this.file, this.$refs.canvas);
+        }
+        if (this.mode === 'edit' && this.file1) {
+            this.loadImageFromPath(this.file1, this.$refs.canvas1);
+        }
     },
     beforeUnmount() {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);
