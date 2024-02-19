@@ -473,78 +473,70 @@ export default {
             }
         },
         async onSubmit() {
-            if (this.mode === 'edit') {
-                // Handle creating new data
-                console.log('Updating existing data:',  /* Add other properties */);
-            } else {
-                console.log('Creating new data:',  /* Add other properties */);
-                // Handle updating existing data
-                try {
+            NProgress.start();
+            try {
+                const formData = new FormData();
+                formData.append('buyer', this.buyer);
+                formData.append('inquiry_number', this.inquiry_number);
+                formData.append('article', this.article);
+                formData.append('group', this.group);
+                formData.append('name', this.name);
+                formData.append('description', this.description);
+                formData.append('cargo', this.cargo);
+                this.cargo_place.forEach(place => {
+                    formData.append('cargo_place[]', place);
+                });
+                formData.append('incoterm', this.incoterm);
+                formData.append('urgent', this.urgent ? 'true' : 'false');
+                formData.append('method', this.method);
+                formData.append('color', this.color);
+                formData.append('packaging', this.packaging);
+                formData.append('requirements', this.requirements);
+                formData.append('status', this.status);
+                formData.append('file', this.$refs.fileInput.files[0]);
+                formData.append('file1', this.$refs.fileInput1.files[0]);
 
-                    const formData = new FormData();
-                    formData.append('buyer', this.buyer);
-                    formData.append('inquiry_number', this.inquiry_number);
-                    formData.append('article', this.article);
-                    formData.append('group', this.group);
-                    formData.append('name', this.name);
-                    formData.append('description', this.description);
-                    formData.append('cargo', this.cargo);
-                    this.cargo_place.forEach(place => {
-                        formData.append('cargo_place[]', place);
-                    });
-                    // formData.append('cargo_place', JSON.stringify(this.cargo_place));
-                    formData.append('incoterm', this.incoterm);
-                    formData.append('urgent', this.urgent ? 'true' : 'false');
-                    formData.append('method', this.method);
-                    formData.append('color', this.color);
-                    formData.append('packaging', this.packaging);
-                    formData.append('requirements', this.requirements);
-                    formData.append('status', this.status);
-                    formData.append('file', this.$refs.fileInput.files[0]);
-                    formData.append('file1', this.$refs.fileInput1.files[0]);
+                this.selectedSupplierIds.forEach(id => {
+                    formData.append('supplier_ids[]', id);
+                });
 
-                    this.selectedSupplierIds.forEach(id => {
-                        formData.append('supplier_ids[]', id);
-                    });
+                for (let i = 0; i < this.materials.length; i++) {
+                    formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                }
 
-                    for (let i = 0; i < this.materials.length; i++) {
-                        formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                this.capacity.forEach((caps, index) => {
+                    const capacityString = `${caps.quantity}${caps.unit}`;
+                    formData.append(`capacity[${index}]`, capacityString);
+                });
+                console.log(formData);
+                const url = this.mode === 'edit' ? `/api/update_price_inquiry/${this.user.id}` : '/api/price_inquiry';
+                // const method = this.mode === 'edit' ? 'put' : 'post';
+                const method = 'post';
+                const response = await axios[method](url, formData);
+
+                if (response.status === 201 || response.status === 200) {
+                    NProgress.done();
+                    toastr.success(response.data.message);
+                    this.$router.push({ name: 'price_inquiry' });
+                    if (this.mode === 'edit'){
+                        this.$emit('record-updated');
                     }
-
-                    // const formattedCapacity = this.formattedCapacity.join(',');
-                    // formData.append('capacity', formattedCapacity);
-                    // Append each quantity and unit from capacity array
-                    this.capacity.forEach((caps, index) => {
-                        const capacityString = `${caps.quantity}${caps.unit}`;
-                        formData.append(`capacity[${index}]`, capacityString);
-                    });
-
-                    console.log(formData, this.capacity);
-                    const response = await axios.post('/api/price_inquiry', formData);
-
-                    console.log(response);
-                    if (response.status === 201) {
-
-                        // Assuming you want to show a success toastr notification
-                        toastr.success(response.data.message);
-                        this.$router.push({ name: 'price_inquiry' });
-                    } else {
-                        toastr.error('Something is not correct');
-                    }
-                } catch (error) {
-                    if (error.response && error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        this.handleValidationErrors(validationErrors);
-                    } else {
-                        // Non-validation error, log the error
-                        console.error(error);
-
-                        // Show a toastr error notification
-                        toastr.error('An error occurred while adding the user');
-                    }
+                } else {
+                    NProgress.done();
+                    toastr.error('Something is not correct');
+                }
+            } catch (error) {
+                NProgress.done();
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error('An error occurred while adding the user');
                 }
             }
         }
+
     }, computed: {
         formattedCapacity() {
             return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);

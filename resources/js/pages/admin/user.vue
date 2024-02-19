@@ -455,6 +455,7 @@ export default {
 
                 if (response.status === 200) {
                     toastr.success('User updated successfully');
+                    this.accordionOpen = {};
                     this.fetchUsers();
                 }
             } catch (error) {

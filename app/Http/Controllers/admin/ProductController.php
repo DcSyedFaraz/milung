@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function price_inquiry(Request $request)
     {
 
-        // dd($request->input('supplier_ids'));
+        // dd($request->all());
 
         $validatedData = $request->validate([
             'supplier_ids' => 'array|exists:users,id',
@@ -75,6 +75,70 @@ class ProductController extends Controller
         $priceInquiry->save();
 
         return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
+    }
+    public function update_price_inquiry(Request $request, $id)
+    {
+        // dd($request->all(),$id);
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'supplier_ids' => 'array|exists:users,id',
+            'buyer' => 'required|string',
+            'inquiry_number' => 'required|string',
+            'article' => 'required|string',
+            'group' => 'required|string',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'cargo' => 'required|string',
+            'cargo_place' => 'required|array',
+            'incoterm' => 'required|string',
+            'urgent' => 'nullable',
+            'method' => 'required|string',
+            'color' => 'required|string',
+            'packaging' => 'required|string',
+            'requirements' => 'required|string',
+            'status' => 'required|string',
+            'pcs' => 'required|array',
+            'capacity' => 'required|array',
+        ]);
+
+        // Find the PriceInquiry record by ID
+        $priceInquiry = PriceInquiry::findOrFail($id);
+
+        // Update the fields with the validated data
+        $priceInquiry->update($validatedData);
+
+        // Handle file uploads if necessary
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/files', $fileName);
+            $priceInquiry->file = $fileName;
+        }
+        if ($request->hasFile('file1')) {
+            $file1 = $request->file('file1');
+            $fileName1 = time() . '_' . $file1->getClientOriginalName();
+            $file1->storeAs('public/files', $fileName1);
+            $priceInquiry->file1 = $fileName1;
+        }
+
+        // Save materials data
+        $pcs = $request->input('pcs');
+        $priceInquiry->pcs = array_filter($pcs, function ($value) {
+            return $value !== null;
+        });
+
+        // Save capacity data
+        $capacity = $request->input('capacity');
+        $priceInquiry->capacity = array_filter($capacity, function ($value) {
+            return $value !== null && $value !== 'undefined';
+        });
+
+        // Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+
+        $priceInquiry->save();
+
+        // Return a success response
+        return response()->json(['message' => 'Price inquiry updated successfully'], 200);
     }
 
     /**

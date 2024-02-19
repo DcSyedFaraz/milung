@@ -91,7 +91,7 @@
                                 <transition name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
-                                            <PriceInquiry mode="edit" :user="user"/>
+                                            <PriceInquiry mode="edit" :user="user" @record-updated="handleRecordUpdated" />
                                         </td>
                                     </tr>
                                 </transition>
@@ -129,9 +129,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
 import PriceInquiry from './price_inquiry_entry.vue';
-
-
-
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 
 export default {
@@ -197,6 +196,11 @@ export default {
         });
     },
     methods: {
+        handleRecordUpdated() {
+            this.accordionOpen = {};
+            // Refresh the data in the parent component
+            this.fetchUsers();
+        },
         statusBadge(user) {
             switch (user.status) {
                 case 'ML Checking':
@@ -273,13 +277,16 @@ export default {
             }
         },
         async fetchUsers() {
+            NProgress.start();
             try {
                 const response = await axios.get('/api/price_inquiry_get');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 
+                NProgress.done();
             } catch (error) {
+                NProgress.done();
                 console.error('Error fetching users:', error);
                 toastr.error('Error fetching data');
             }
@@ -289,7 +296,8 @@ export default {
 };
 </script>
 
-<style scoped>@import url('./../style.css');
+<style scoped>
+@import url('./../style.css');
 
 .rotate-icon {
     transform: rotate(180deg);
