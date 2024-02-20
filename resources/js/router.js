@@ -6,20 +6,27 @@ import buyer from './pages/buyer/dashboard.vue';
 import store from './store';
 // Admin
 import DefaultAdmin from './pages/admin/default.vue';
+
 import User from './pages/admin/user.vue';
 import EditUser from './pages/admin/user-edit.vue';
 import AddUser from './pages/admin/add-user.vue';
 import Datasupplier from './pages/admin/supplier.vue';
 import Databuyer from './pages/admin/buyer.vue';
-import product from './pages/admin/product.vue';
 import buyerEntry from './pages/admin/buyer-entry.vue';
 import supplerEntry from './pages/admin/supplier-entry.vue';
+import product from './pages/admin/product.vue';
 import productEntry from './pages/admin/product-entry.vue';
+
 import Transaction from './pages/admin/transaction/transaction.vue';
+
 import product_group from './pages/admin/product_group/product_group.vue';
 import product_group_entry from './pages/admin/product_group/product_group_entry.vue';
+
 import price_inquiry from './pages/admin/price_inquiry/price_inquiry.vue';
 import price_inquiry_entry from './pages/admin/price_inquiry/price_inquiry_entry.vue';
+
+import order_list from './pages/admin/order/order_list.vue';
+import order_entry from './pages/admin/order/order_entry.vue';
 
 
 const routes = [
@@ -123,6 +130,18 @@ const routes = [
                 path: 'price_inquiry_entry',
                 name: 'price_inquiry_entry',
                 component: price_inquiry_entry,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'order_list',
+                name: 'order_list',
+                component: order_list,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: 'order_entry',
+                name: 'order_entry',
+                component: order_entry,
                 // meta: { requiresAdmin: true },
             },
         ],

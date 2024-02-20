@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,9 @@ Route::post('price_inquiry', [ProductController::class, 'price_inquiry']);
 Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
 Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
 Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
+
+//Orders
+Route::post('orderentry', [OrderController::class, 'orderentry']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
