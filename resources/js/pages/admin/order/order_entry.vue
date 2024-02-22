@@ -4,9 +4,9 @@
 
             <div class="container">
                 <div class="row my-5">
-                    <h3 class="text-milung mb-4 fw-bold text-uppercase">Order Overview {{ orders[0].article }}</h3>
-                    <h4 class="text-milung mb-4 fw-bold text-uppercase">I. Order Information</h4>
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">Order Overview</h3>
                     <div class="col-md-4">
+                        <h4 class="text-milung mb-4 fw-bold ">I. Order Information</h4>
 
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
@@ -220,7 +220,7 @@
                                 <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">
                                     Import
                                 </button>
-                                <button>submit</button>
+                                <!-- <button>submit</button> -->
                                 <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
                             </div>
                         </div>
@@ -264,8 +264,8 @@
                         </div> -->
                         <FileInputWithName label="Logo File" :files="orders[0].logoFiles" @update:files="updateFiles"
                             @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles" @update:files="updateFiles"
-                            @export-file="exportFile" />
+                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
                         <FileInputWithName label="Manual" :files="orders[0].manualFiles" @update:files="updateFiles"
                             @export-file="exportFile" />
                         <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles" @update:files="updateFiles"
@@ -277,21 +277,148 @@
 
                     </div>
                     <div class="col-md-4">
+                        <h4 class="text-milung mb-4 fw-bold ">II. Price:</h4>
                         <div class="d-flex col-12 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Article Number:</p>
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Byuing Price:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="orders[0].article" class="form-control"></div>
+                            <div class="col-8">
+                                <!-- <input type="text"  class="form-control"> -->
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" v-model="orders[0].buyingprice">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">USD</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Selling Price:</p>
+                            </div>
+                            <div class="col-8">
+                                <!-- <input type="text"  class="form-control"> -->
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" v-model="orders[0].sellingprice">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">USD</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Total Order Value:</p>
+                            </div>
+                            <div class="col-8">
+                                <!-- <input type="text"  class="form-control"> -->
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" v-model="orders[0].totalvalue">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">USD</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="text-milung mb-4 fw-bold mt-3">III. Delivery/Shipping Information:</h5>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 ">
+                                <p for="v-model" class=" fs-7">HS Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ selectedProductGroupCode.hs_de }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 ">
+                                <p for="v-model" class=" fs-7">HS-CN Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ selectedProductGroupCode.hs_cn }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Latest SendOut Date:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" v-model="orders[0].sendoutdate" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Notice:</p>
+                            </div>
+                            <div class="col-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Fix Date"
+                                        v-model="orders[0].notice">
+                                    <label class="form-check-label">
+                                        Fix Date
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="PV to Customer"
+                                        v-model="orders[0].notice">
+                                    <label class="form-check-label">
+                                        PV to Customer
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">SO#:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders[0].so_number" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">ATC#:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders[0].atc_number" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Shipping Document#:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders[0].ship_doc" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Incoterm#:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders[0].incoterm" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2 bg-danger">
+                            <p>
+                                XD Page not cleared
+                            </p>
+                        </div>
+                        <div class="d-flex col-12 my-2 ">
+                            <button class="btn btn-milung mx-2 px-3">Save</button>
+                            <button class="btn btn-warning mx-2">Create order</button>
+                        </div>
+
                     </div>
 
                 </div>
             </div>
         </form>
+        <progress-modal :show="showProgress"></progress-modal>
     </section>
 </template>
 
 <script>
+import ProgressModal from "../progress/ProgressModal.vue";
 import './../index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -301,10 +428,12 @@ import 'nprogress/nprogress.css';
 
 export default {
     components: {
-        FileInputWithName
+        FileInputWithName,
+        ProgressModal
     },
     data() {
         return {
+            showProgress: false,
             files: [],
             groups: [],
             orders: [
@@ -313,35 +442,29 @@ export default {
                     safetySheetFiles: [],
                     manualFiles: [],
                     labelFiles: [],
-                    combinedValue: '',
                     capacity: [{ quantity: '' }],
-                    // article: '',
-                    // status: '',
-                    // buyerorder: '',
-                    // reference: '',
-                    // inquiry: '',
-                    // milungorder: '',
-                    // supplier: '',
-                    // orderdate: '',
-                    // buyeremail: '',
-                    // buyer: '',
-                    // orderremarks: '',
-                    // qcremarks: '',
-                    // group: '',
-                    // ftyitem: '',
-                    // productname: '',
-                    // productcolor: '',
-                    // accessories: '',
-                    // printingmethod: '',
-                    // logocolor: '',
-                    // packaging: '',
-                    // packagingprinting: '',
-                    // quantity: '',
-                    // files: null,
+                    notice: [],
                 }
             ],
 
         }
+    },
+    watch: {
+        // selectedGroup(newValue) {
+        //     const selectedGroup = this.groups.find(group => group.id === newValue.id);
+        //     console.log('Selected Group:', selectedGroup);
+        //     if (selectedGroup) {
+        //         // Create a new object with the updated properties
+        //         const updatedGroup = Object.assign({}, this.orders[0].group, {
+        //             hs_de: selectedGroup.hs_de,
+        //             hs_cn: selectedGroup.hs_cn,
+        //         });
+        //         this.orders[0].group = updatedGroup;
+        //     } else {
+        //         // Reset the orders[0].group object if no group is selected
+        //         this.orders[0].group = {};
+        //     }
+        // },
     },
     methods: {
         updateFiles(payload) {
@@ -375,15 +498,18 @@ export default {
         },
         handleValidationErrors(validationErrors) {
             // Assuming you have a function to display toastr error messages
-            for (const key in validationErrors) {
-                if (validationErrors.hasOwnProperty(key)) {
-                    const messages = validationErrors[key];
-                    // Display each validation error message
-                    messages.forEach(message => {
-                        toastr.error(message);
-                    });
-                }
-            }
+            validationErrors.forEach(message => {
+                toastr.error(message);
+            });
+            // for (const key in validationErrors) {
+            //     if (validationErrors.hasOwnProperty(key)) {
+            //         const messages = validationErrors[key];
+            //         // Display each validation error message
+            //         messages.forEach(message => {
+            //             toastr.error(message);
+            //         });
+            //     }
+            // }
         },
         loadImage(event) {
             const file = event.target.files[0];
@@ -419,6 +545,8 @@ export default {
             }
         },
         onSubmit() {
+            this.showProgress = true;
+            NProgress.start();
             console.log(this.orders);
             axios.post('/api/orderentry', this.orders, {
                 headers: {
@@ -426,17 +554,26 @@ export default {
                 }
             })
                 .then(response => {
+                    setTimeout(() => {
+                        this.showProgress = false;
+                    }, 1000);
                     // Handle successful user creation
                     console.log(response);
-
+                    NProgress.done();
                     // Assuming you want to show a success toastr notification
-                    toastr.success('User added successfully');
+                    toastr.success('Order added successfully');
                     // this.$router.push({ name: 'user' });
                 })
                 .catch(error => {
+                    setTimeout(() => {
+                        this.showProgress = false;
+                    }, 1000);
+                    NProgress.done();
+
                     // Handle errors
                     if (error.response && error.response.status === 422) {
                         const validationErrors = error.response.data.errors;
+                        // console.error(validationErrors);
                         this.handleValidationErrors(validationErrors);
                     } else {
                         // Non-validation error, log the error
@@ -468,6 +605,7 @@ export default {
         },
     },
     mounted() {
+
         NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
@@ -476,13 +614,21 @@ export default {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);
     },
     computed: {
+        selectedGroup() {
+            return this.groups.find(group => group.id === this.orders[0].group);
+        },
+        selectedProductGroupCode() {
+            const selectedGroup = this.selectedGroup;
+            // console.log('hi ', selectedGroup);
+            if (!selectedGroup) {
+                return '';
+            }
+            return selectedGroup; // or any other HS code property you want to display
+        },
         formattedCapacity() {
             return this.orders[0].capacity.map(caps => `${caps.quantity}${caps.unit}`);
         },
     },
-    watch: {
-
-    }
 }
 </script>
 

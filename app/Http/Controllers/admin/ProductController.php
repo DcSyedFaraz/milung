@@ -146,7 +146,7 @@ class ProductController extends Controller
      */
     public function product_group_get()
     {
-        $prod = ProductGroup::select('id', 'group_name')->get();
+        $prod = ProductGroup::select('id', 'group_name','hs_de','hs_cn')->get();
         // $formattedProducts = $prod->map(function ($product) {
         //     // Assuming the datetime fields are named 'created_at' and 'updated_at'
         //     $product->created_at = Carbon::parse($product->created_at)->toDateString(); // Adjust format as needed

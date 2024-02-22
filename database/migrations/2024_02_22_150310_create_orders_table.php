@@ -1,0 +1,64 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->string('accessories')->nullable();
+            $table->string('article')->nullable();
+            $table->string('atc_number')->nullable();
+            $table->string('buyer')->nullable();
+            $table->string('capacity')->nullable();
+            $table->string('buyeremail')->nullable();
+            $table->string('buyerorder')->nullable();
+            $table->string('buyingprice')->nullable();
+            // $table->string('combinedValue')->nullable();
+            $table->string('ftyitem')->nullable();
+            $table->string('logocolor')->nullable();
+            $table->integer('group')->nullable();
+            $table->string('incoterm')->nullable();
+            $table->string('inquiry')->nullable();
+            $table->string('milungorder')->nullable();
+            $table->json('notice')->nullable();
+            $table->date('orderdate')->nullable();
+            $table->string('orderremarks')->nullable();
+            $table->string('packaging')->nullable();
+            $table->string('packagingprinting')->nullable();
+            $table->string('printingmethod')->nullable();
+            $table->string('productcolor')->nullable();
+            $table->string('productname')->nullable();
+            $table->string('qcremarks')->nullable();
+            $table->string('quantity_unit')->nullable();
+            $table->string('reference')->nullable();
+            $table->json('logoFiles')->nullable();
+            $table->json('manualFiles')->nullable();
+            $table->json('safetySheetFiles')->nullable();
+            $table->json('labelFiles')->nullable();
+            $table->json('files')->nullable();
+            $table->string('sellingprice')->nullable();
+            $table->date('sendoutdate')->nullable();
+            $table->string('ship_doc')->nullable();
+            $table->string('so_number')->nullable();
+            $table->string('status')->nullable();
+            $table->string('supplier')->nullable();
+            $table->string('totalvalue')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('orders');
+    }
+};
