@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -10,9 +11,21 @@ use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
+    public function orderentryget(Request $request)
+    {
+        $order = Order::select('id','buyer','updated_at','created_at','sendoutdate','supplier','status')->orderby('created_at','desc')->get();
+        return response()->json($order, JsonResponse::HTTP_OK);
+    }
+    public function orderentrygetID($id)
+    {
+        $order = Order::findOrFail($id);
+        return response()->json($order, JsonResponse::HTTP_OK);
+    }
     public function orderentry(Request $request)
     {
         $data = $request->all()[0];
+        // dd($data);
+
 
         $validatedData = Validator::make($data, [
             'group' => 'required|string',
@@ -32,7 +45,7 @@ class OrderController extends Controller
             'printingmethod' => 'required|string',
             'logocolor' => 'required|string',
             'packaging' => 'required|string',
-            'packagingprinting' => 'required|string',
+            'packagingprinting' => 'required',
             'quantity' => 'required|string',
             'buyingprice' => 'required|string',
             'sellingprice' => 'required|string',
@@ -95,6 +108,6 @@ class OrderController extends Controller
 
         $fileName = Str::random(10) . '.' . $file['file']->getClientOriginalExtension();
         $filePath = $file['file']->storeAs('orders/' . $key, $fileName, 'public');
-        $data[$key] = ['filename' => $fileName, 'filepath' => $filePath];
+        $data[$key] = ['filename' => $file['fileName'], 'filepath' => $filePath];
     }
 }

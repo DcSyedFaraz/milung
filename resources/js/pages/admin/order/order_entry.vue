@@ -22,11 +22,15 @@
                             </div>
                             <div class="col-8">
                                 <select class="fw-bold form-control" v-model="orders[0].status">
-                                    <option value="ML Checking">ML Checking</option>
-                                    <option value="ML Replied">ML Replied</option>
-                                    <option value="ML Follow Up">ML Follow Up</option>
-                                    <option value="Customer Follow Up">Customer Follow Up</option>
-                                    <option value="Cutomer Quoted">Cutomer Quoted</option>
+                                    <option value="New Order">New Order</option>
+                                    <option value="Printview Confirmation">Printview Confirmation</option>
+                                    <option value="Printview Reject">Printview Reject</option>
+                                    <option value="Order Confirm">Order Confirm</option>
+                                    <option value="Cargo Ready">Cargo Ready</option>
+                                    <option value="Shipment Approval">Shipment Approval</option>
+                                    <option value="Export/Import">Export/Import</option>
+                                    <option value="Delivered">Delivered</option>
+
                                 </select>
                             </div>
                         </div>
@@ -206,7 +210,19 @@
                                 <p for="v-model" class="my-auto fs-7">Packaging Printing: <br> (if applicable)</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].packagingprinting" class="form-control ">
+                                <div class="input-group">
+                                    <input type="text" v-model="orders[0].packagingprinting[0]" class="form-control">
+                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"
+                                        @click="addInput">+1c Label</button>
+                                </div>
+                                <div v-for="(input, index) in orders[0].packagingprinting" :key="index">
+                                    <div class="input-group mt-2" v-if="index > 0">
+                                        <input type="text" class="form-control"
+                                            v-model="orders[0].packagingprinting[index]">
+                                        <button class="btn btn-outline-danger" type="button"
+                                            @click="removeInput(index)">Remove</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -262,13 +278,13 @@
                                 </div>
                             </div>
                         </div> -->
-                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles" @update:files="updateFiles"
+                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles" :fileData="orders[0].logoFiles" @update:files="updateFiles"
                             @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles"
+                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles" :fileData="orders[0].safetySheetFiles"
                             @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Manual" :files="orders[0].manualFiles" @update:files="updateFiles"
+                        <FileInputWithName label="Manual" :files="orders[0].manualFiles" :fileData="orders[0].manualFiles" @update:files="updateFiles"
                             @export-file="exportFile" />
-                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles" @update:files="updateFiles"
+                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles" :fileData="orders[0].labelFiles" @update:files="updateFiles"
                             @export-file="exportFile" />
 
                         <!-- <FileInputWithName label="Label File2" v-model="orders[0].multiFiles2"
@@ -404,7 +420,7 @@
                             </p>
                         </div>
                         <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-milung mx-2 px-3">Save</button>
+                            <button class="btn btn-milung mx-2 px-3">Save </button>
                             <button class="btn btn-warning mx-2">Create order</button>
                         </div>
 
@@ -418,6 +434,8 @@
 </template>
 
 <script>
+// import { ref } from 'vue';
+// import useForm from 'laravel-precognition-vue';
 import ProgressModal from "../progress/ProgressModal.vue";
 import './../index';
 import Swal from 'sweetalert2';
@@ -431,24 +449,47 @@ export default {
         FileInputWithName,
         ProgressModal
     },
+    props: {
+        isEditing: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return {
             showProgress: false,
+            inputs: [],
             files: [],
             groups: [],
             orders: [
                 {
+
+                    packagingprinting: [],
                     logoFiles: [],
                     safetySheetFiles: [],
                     manualFiles: [],
                     labelFiles: [],
-                    capacity: [{ quantity: '' }],
+                    capacity: this.isEditing == true ? [{ quantity: '', unit: 'GB' }] : this.orders[0] && this.orders[0].capacity ? this.orders[0].capacity.map(capacity => {
+                        const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
+                        return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+                    }) : [{ quantity: '', unit: 'GB' }],
                     notice: [],
                 }
             ],
 
         }
     },
+    // setup(props) {
+    //     console.log(props);
+    //     const form = useForm('post', '/api/orderentry', props.orders);
+
+    //     const submit = () => form.submit();
+
+    //     return {
+    //         form,
+    //         submit,
+    //     };
+    // },
     watch: {
         // selectedGroup(newValue) {
         //     const selectedGroup = this.groups.find(group => group.id === newValue.id);
@@ -467,6 +508,12 @@ export default {
         // },
     },
     methods: {
+        addInput() {
+            this.orders[0].packagingprinting.push('');
+        },
+        removeInput(index) {
+            this.orders[0].packagingprinting.splice(index, 1);
+        },
         updateFiles(payload) {
             console.log(payload.label);
             // this.orders[0].multifiles.push(payload);
@@ -562,7 +609,7 @@ export default {
                     NProgress.done();
                     // Assuming you want to show a success toastr notification
                     toastr.success('Order added successfully');
-                    // this.$router.push({ name: 'user' });
+                    this.$router.push({ name: 'order_list' });
                 })
                 .catch(error => {
                     setTimeout(() => {
@@ -592,7 +639,7 @@ export default {
         },
         fetchProductGroups() {
             NProgress.start();
-            axios.get('/api/product_group_get') // Replace '/api/product-orders.groups' with your API endpoint
+            axios.get('/api/product_group_get')
                 .then(response => {
                     this.groups = response.data;
                     console.log(response);
@@ -603,9 +650,54 @@ export default {
                     NProgress.done();
                 });
         },
+
+        loadImageFromPath(imageFileName, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
+
+            // Construct the URL to the file in the storage folder
+            const imageUrl = `/storage/${imageFileName}`;
+            // console.log(imageUrl,ctx);
+
+            const img = new Image();
+            img.onload = () => {
+                const aspectRatio = canvas.width / canvas.height;
+                let newWidth, newHeight;
+                if (img.width > img.height) {
+                    newWidth = canvas.width;
+                    newHeight = (img.height * newWidth) / img.width;
+                } else {
+                    newHeight = canvas.height;
+                    newWidth = (img.width * newHeight) / img.height;
+                }
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                console.log('Image loaded and drawn onto the canvas successfully.');
+            };
+            img.src = imageUrl;
+        },
+        fetchorder(orderId) {
+            NProgress.start();
+            axios.get(`/api/orderentry/${orderId}`)
+                .then(response => {
+                    this.orders[0] = response.data;
+                    console.log(response);
+                    console.log('files ', this.orders[0].files[0]['filepath']);
+                    this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
+        },
     },
     mounted() {
-
+        if (this.isEditing) {
+            const orderId = this.$route.params.id;
+            this.fetchorder(orderId);
+            // console.log(this.orders[0]);
+            //
+        }
         NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);

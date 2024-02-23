@@ -46,53 +46,53 @@
                         </div>
                     </div>
                     <!-- // Loader -->
-                    <div class="card-body rounded-top" v-else>
+                    <div class="card-body rounded-top table-responsive" v-else>
 
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
-                            <thead style="color: #009de1; " class="">
+                            <thead style="color: #009de1; " class="text-center">
                                 <tr style="">
-                                    <th>Buyer ID</th>
-                                    <th> Order Number </th>
-                                    <th>Status</th>
-                                    <th>Date Modified</th>
-                                    <th>Date Created</th>
-                                    <th>Latest SendOut Date</th>
-                                    <th>Supplier ID</th>
-                                    <th>Actions</th>
+                                    <th class="text-nowrap">Buyer ID</th>
+                                    <th class="text-nowrap"> Order Number </th>
+                                    <th class="text-nowrap">Status</th>
+                                    <th class="text-nowrap">Date Modified</th>
+                                    <th class="text-nowrap">Date Created</th>
+                                    <th class="text-nowrap">Latest SendOut Date</th>
+                                    <th class="text-nowrap">Supplier ID</th>
+                                    <th class="text-nowrap">Actions</th>
                                 </tr>
                             </thead>
                             <tbody v-for="user in dataToDisplay" :key="user.id">
-                                <tr style="border-bottom-color: snow !important;">
+                                <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                {{ user.inquiry_number }}
+                                                {{ user.buyer }}
                                             </label>
                                         </div>
                                     </td>
                                     <td>
-                                        {{ user.inquiry_number }}
+                                        {{ user.id }}
                                     </td>
                                     <td>
                                         <span :class="statusBadge(user)">{{ user.status }}</span>
                                     </td>
                                     <td>{{ updated_at(user) }}</td>
                                     <td>{{ created_at(user) }}</td>
-                                    <td>{{ user.requirements }}</td>
-                                    <td>{{ user.requirements }}</td>
+                                    <td>{{ user.sendoutdate }}</td>
+                                    <td>{{ user.supplier }}</td>
 
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
+                                        <!-- <button @click="toggleAccordion(user)" class="btn btn-light"
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" class="text-dark">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
                                         <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
                                                 class="bi bi-trash"></i>
@@ -212,16 +212,22 @@ export default {
         },
         statusBadge(user) {
             switch (user.status) {
-                case 'ML Checking':
+                case 'New Order':
                     return 'badge bg-primary';
-                case 'ML Replied':
+                case 'Printview Confirmation':
                     return 'badge bg-cyan';
-                case 'ML Follow Up':
+                case 'Printview Reject':
+                    return 'badge bg-danger';
+                case 'Order Confirm':
                     return 'badge bg-success';
-                case 'Customer Follow Up':
-                    return 'badge bg-pink';
-                case 'Customer Quoted':
+                case 'Cargo Ready':
+                    return 'badge bg-warning';
+                case 'Shipment Approval':
                     return 'badge bg-info';
+                case 'Export/Import':
+                    return 'badge bg-dark';
+                case 'Delivered':
+                    return 'badge bg-secondary';
                 default:
                     return 'badge bg-secondary';
             }
@@ -288,7 +294,7 @@ export default {
         async fetchUsers() {
             NProgress.start();
             try {
-                const response = await axios.get('/api/price_inquiry_get');
+                const response = await axios.get('/api/orderentry');
                 this.users = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);

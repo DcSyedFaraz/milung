@@ -26,14 +26,33 @@ export default {
     props: {
         label: { type: String, required: true, },
         files: { type: Array, required: true, },
+        fileData: { type: Object, required: false, },
+
     },
     data() {
         return {
             fileNames: '',
             file: {
                 name: ''
-            }
+            },
         };
+    },
+    computed: {
+        filename() {
+            if (this.fileData && this.fileData.filename) {
+                // console.log('hi', this.fileData);
+                return this.fileData.filename;
+            } else {
+                return '';
+            }
+        },
+    },
+    created() {
+        // Set fileNames initially if fileData exists
+        if (this.fileData && this.fileData.filename) {
+            console.log('set initial file names'  , this.fileData.filename);
+            this.fileNames = this.fileData.filename;
+        }
     },
     methods: {
         importFile() {

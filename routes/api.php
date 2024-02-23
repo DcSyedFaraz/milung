@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
 //Orders
 Route::post('orderentry', [OrderController::class, 'orderentry']);
+Route::get('orderentry', [OrderController::class, 'orderentryget']);
+Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
