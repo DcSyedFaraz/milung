@@ -344,9 +344,11 @@
 
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'order_list' }"
-                        :class="{ active: this.$route.name === 'order_entry' }" active-class="active">
+                        :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
+                        active-class="active">
                         <i class="bi bi-bag"></i><span>Order</span>
                     </router-link>
+
                     <!-- <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-bag"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>

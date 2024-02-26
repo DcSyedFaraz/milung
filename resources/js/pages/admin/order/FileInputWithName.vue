@@ -37,15 +37,17 @@ export default {
             },
         };
     },
-    computed: {
-        filename() {
-            if (this.fileData && this.fileData.filename) {
-                // console.log('hi', this.fileData);
-                return this.fileData.filename;
-            } else {
-                return '';
-            }
-        },
+    watch: {
+        fileData: {
+            handler(newVal) {
+                if (newVal && newVal.filename) {
+                    this.fileNames = newVal.filename;
+                } else {
+                    this.fileNames = '';
+                }
+            },
+            immediate: true
+        }
     },
     created() {
         // Set fileNames initially if fileData exists

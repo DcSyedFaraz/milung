@@ -90,11 +90,11 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" class="text-dark">
+                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
+                                        <a href="#" @click="deleteUser(user.id)" class="text-danger"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -146,7 +146,7 @@ import 'nprogress/nprogress.css';
 export default {
     components: {
     },
-    name: "Transaction",
+    name: "order list",
     props: {
         perPage: {
             type: Number,
@@ -173,8 +173,8 @@ export default {
 
         filteredUsers() {
             return this.users.filter(user => {
-                return user.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (user.requirements.toLowerCase().includes(this.searchQuery));
+                return user.buyer.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (user.supplier.toLowerCase().includes(this.searchQuery));
 
             });
         },
@@ -273,20 +273,20 @@ export default {
             if (result.isConfirmed) {
                 // User confirmed, proceed with the deletion
                 try {
-                    await axios.delete(`/api/PriceDelete/${userId}`);
+                    await axios.delete(`/api/orderDelete/${userId}`);
 
                     // If successful, remove the user from the local data
                     this.users = this.users.filter(user => user.id !== userId);
 
                     Swal.fire({
                         icon: 'success',
-                        title: 'Inquiry deleted successfully',
+                        title: 'Order deleted successfully',
                     });
                 } catch (error) {
-                    console.error('Error deleting user:', error);
+                    console.error('Error deleting order:', error);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error deleting user',
+                        title: 'Error deleting order',
                     });
                 }
             }

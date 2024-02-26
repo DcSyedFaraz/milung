@@ -12,6 +12,8 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('linked_order')->nullable();
+            $table->foreign('linked_order')->references('id')->on('orders')->onDelete('cascade');
             $table->string('accessories')->nullable();
             $table->string('article')->nullable();
             $table->string('atc_number')->nullable();
@@ -27,7 +29,7 @@ return new class extends Migration {
             $table->string('incoterm')->nullable();
             $table->string('inquiry')->nullable();
             $table->string('milungorder')->nullable();
-            $table->json('notice')->nullable();
+            $table->json('notice')->nullable()->default('[]');
             $table->date('orderdate')->nullable();
             $table->string('orderremarks')->nullable();
             $table->string('packaging')->nullable();

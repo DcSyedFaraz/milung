@@ -253,8 +253,8 @@
                                 <div class="input-group my-2">
                                     <input type="number" class="form-control" v-model="orders[0].quantity">
                                     <select style="color: #41b400;" class="fw-bold form-control" v-model="orders[0].unit">
-                                        <option selected value="GB">GB</option>
-                                        <option value="mAh">mAh</option>
+                                        <option selected value="units">units</option>
+                                        <!-- <option value="mAh">mAh</option> -->
                                     </select>
                                 </div>
                             </div>
@@ -278,14 +278,14 @@
                                 </div>
                             </div>
                         </div> -->
-                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles" :fileData="orders[0].logoFiles" @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles" :fileData="orders[0].safetySheetFiles"
+                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles" :fileData="orders[0].logoFiles"
                             @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Manual" :files="orders[0].manualFiles" :fileData="orders[0].manualFiles" @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles" :fileData="orders[0].labelFiles" @update:files="updateFiles"
-                            @export-file="exportFile" />
+                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles"
+                            :fileData="orders[0].safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Manual" :files="orders[0].manualFiles" :fileData="orders[0].manualFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles"
+                            :fileData="orders[0].labelFiles" @update:files="updateFiles" @export-file="exportFile" />
 
                         <!-- <FileInputWithName label="Label File2" v-model="orders[0].multiFiles2"
                             @update:files="updateFiles1" @export-file="exportFile" /> -->
@@ -420,8 +420,8 @@
                             </p>
                         </div>
                         <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-milung mx-2 px-3">Save </button>
-                            <button class="btn btn-warning mx-2">Create order</button>
+                            <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
+                            <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
                         </div>
 
                     </div>
@@ -469,11 +469,8 @@ export default {
                     safetySheetFiles: [],
                     manualFiles: [],
                     labelFiles: [],
-                    capacity: this.isEditing == true ? [{ quantity: '', unit: 'GB' }] : this.orders[0] && this.orders[0].capacity ? this.orders[0].capacity.map(capacity => {
-                        const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
-                        return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
-                    }) : [{ quantity: '', unit: 'GB' }],
                     notice: [],
+                    capacity: [{ quantity: '', unit: '' }],
                 }
             ],
 
@@ -516,25 +513,37 @@ export default {
         },
         updateFiles(payload) {
             console.log(payload.label);
-            // this.orders[0].multifiles.push(payload);
 
             switch (payload.label) {
                 case 'Logo File':
+                    if (!Array.isArray(this.orders[0].logoFiles)) {
+                        this.orders[0].logoFiles = [];
+                    }
                     this.orders[0].logoFiles.push(payload);
                     break;
                 case 'Label File':
+                    if (!Array.isArray(this.orders[0].labelFiles)) {
+                        this.orders[0].labelFiles = [];
+                    }
                     this.orders[0].labelFiles.push(payload);
                     break;
                 case 'Manual':
+                    if (!Array.isArray(this.orders[0].manualFiles)) {
+                        this.orders[0].manualFiles = [];
+                    }
                     this.orders[0].manualFiles.push(payload);
                     break;
                 case 'Safety Sheet':
+                    if (!Array.isArray(this.orders[0].safetySheetFiles)) {
+                        this.orders[0].safetySheetFiles = [];
+                    }
                     this.orders[0].safetySheetFiles.push(payload);
                     break;
                 default:
                     break;
             }
         },
+
         exportFile(file) {
             // Access the file and file name here
             console.log('File:', file.file);
@@ -591,24 +600,42 @@ export default {
                 this.loadImageFromPath(this.file, this.$refs.canvas);
             }
         },
+        handleApiCall(method, url, data) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: method,
+                    url: url,
+                    data: data,
+                    headers: {
+                        'Content-Type': 'multipart/form-data' // Set the correct Content-Type header for FormData
+                    }
+                })
+                    .then(response => {
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        },
+
         onSubmit() {
             this.showProgress = true;
             NProgress.start();
             console.log(this.orders);
-            axios.post('/api/orderentry', this.orders, {
-                headers: {
-                    'Content-Type': 'multipart/form-data' // Set the correct Content-Type header for FormData
-                }
-            })
+            this.orders[0].linked_order = event.submitter.getAttribute('value');
+            let method = 'post';
+            let url = this.isEditing ? `/api/orderentry/${this.orders[0].id}` : '/api/orderentry';
+
+            this.handleApiCall(method, url, this.orders[0])
                 .then(response => {
                     setTimeout(() => {
                         this.showProgress = false;
                     }, 1000);
-                    // Handle successful user creation
+                    // Handle successful order update or creation
                     console.log(response);
                     NProgress.done();
-                    // Assuming you want to show a success toastr notification
-                    toastr.success('Order added successfully');
+                    toastr.success(this.isEditing ? 'Order updated successfully' : 'Order added successfully');
                     this.$router.push({ name: 'order_list' });
                 })
                 .catch(error => {
@@ -617,17 +644,12 @@ export default {
                     }, 1000);
                     NProgress.done();
 
-                    // Handle errors
                     if (error.response && error.response.status === 422) {
                         const validationErrors = error.response.data.errors;
-                        // console.error(validationErrors);
                         this.handleValidationErrors(validationErrors);
                     } else {
-                        // Non-validation error, log the error
                         console.error(error);
-
-                        // Show a toastr error notification
-                        toastr.error('An error occurred while adding the user');
+                        toastr.error(this.isEditing ? 'An error occurred while updating the order' : 'An error occurred while adding the order');
                     }
                 });
         },
@@ -680,7 +702,22 @@ export default {
             axios.get(`/api/orderentry/${orderId}`)
                 .then(response => {
                     this.orders[0] = response.data;
-                    console.log(response);
+                    console.log(this.orders[0]);
+                    // Pre-fill capacity if it exists
+                    if (this.orders[0].capacity) {
+                        this.orders[0].capacity = this.orders[0].capacity.map(capacity => {
+                            const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
+                            return { quantity: parseInt(quantity), unit };
+                        });
+                    } else {
+                        // If capacity doesn't exist, initialize it with default values
+                        this.orders[0].capacity = [{ quantity: '', unit: '' }];
+                    }
+                    if (this.orders[0].quantity_unit) {
+                        const quantityString = this.orders[0].quantity_unit;
+                        const quantity = parseInt(quantityString.split('units')[0]);
+                        this.orders[0].quantity = quantity;
+                    }
                     console.log('files ', this.orders[0].files[0]['filepath']);
                     this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
                     NProgress.done();
