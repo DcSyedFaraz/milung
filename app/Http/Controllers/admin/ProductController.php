@@ -276,7 +276,7 @@ class ProductController extends Controller
             if ($request->file('images')) {
                 foreach ($request->file('images') as $image) {
                     $fileName = \Str::random(5) . $image->getClientOriginalName();
-                    $path = $image->store('images', $fileName, 'public');
+                    $path = $image->storeAs('images', $fileName, 'public');
                     // $path = $image->store('images', 'public');
                     // Attach image to the product
                     $product->images()->create(['path' => $path, 'name' => $image->getClientOriginalName()]);
