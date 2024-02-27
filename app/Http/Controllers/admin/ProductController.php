@@ -198,8 +198,8 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'group_name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'profit' => 'required|integer',
-            'amount' => 'required|integer',
+            'profit' => 'nullable',
+            'amount' => 'nullable',
             'hs_de' => 'required|integer',
             'hs_cn' => 'required|integer',
         ]);
@@ -222,7 +222,7 @@ class ProductController extends Controller
     public function addprod(Request $request)
     {
         // dd(auth()->user()->id);
-        dd($request->all());
+        // dd($request->all());
         // In your controller's validation method
         try {
             $validatedData = $request->validate([

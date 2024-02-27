@@ -31,23 +31,39 @@
                             </div>
                             <div class="d-flex col-11 my-2">
                                 <div class="col-5">
-                                    <p for="v-model">Fixed Profit:</p>
+                                    <p>Choose one:</p>
                                 </div>
                                 <div class="col-7">
-                                    <div class="input-group ">
-                                        <input type="number" max="100" class="form-control" v-model="profit">
-                                        <span class="input-group-text">%</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="profitRadio" value="profit" @change="handleOptionChange"
+                                            v-model="selectedOption">
+                                        <label class="form-check-label" for="profitRadio">
+                                            Profit (%)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="amountRadio" checked value="amount" @change="handleOptionChange"
+                                            v-model="selectedOption">
+                                        <label class="form-check-label" for="amountRadio">
+                                            Amount
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex col-11 my-2">
                                 <div class="col-5">
-                                    <p for="v-model">Fixed Amount:</p>
+                                    <p>{{ selectedOption === 'profit' ? 'Fixed Profit:' : 'Fixed Amount:' }}</p>
                                 </div>
                                 <div class="col-7">
-                                    <input type="number" v-model="amount" class="form-control">
+                                    <div class="input-group">
+                                        <input v-if="selectedOption === 'profit'" type="text" max="100"
+                                            class="form-control" v-model="profit">
+                                        <input v-else type="number" class="form-control" v-model="amount">
+                                        <span class="input-group-text" v-if="selectedOption === 'profit'">%</span>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="d-flex col-11 my-2">
                                 <div class="col-5">
                                     <p for="v-model">HS-DE Code:</p>
@@ -84,6 +100,7 @@ export default {
     data() {
         return {
             group_name: '',
+            selectedOption: '',
             description: '',
             profit: '',
             amount: '',
@@ -93,18 +110,25 @@ export default {
         }
     },
     methods: {
+        handleOptionChange() {
+            if (this.selectedOption === 'profit') {
+                this.amount = 0; // Set amount to null if profit is selected
+            } else {
+                this.profit = 0; // Set profit to null if amount is selected
+            }
+        },
         handleValidationErrors(validationErrors) {
-                // Assuming you have a function to display toastr error messages
-                for (const key in validationErrors) {
-                    if (validationErrors.hasOwnProperty(key)) {
-                        const messages = validationErrors[key];
-                        // Display each validation error message
-                        messages.forEach(message => {
-                            toastr.error(message);
-                        });
-                    }
+            // Assuming you have a function to display toastr error messages
+            for (const key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    const messages = validationErrors[key];
+                    // Display each validation error message
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
                 }
-            },
+            }
+        },
         submitForm() {
             // Disable submit button to prevent multiple submissions
             this.submitting = true;

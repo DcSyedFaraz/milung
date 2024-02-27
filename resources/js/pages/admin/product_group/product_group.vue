@@ -190,7 +190,7 @@ export default {
                 // Parse the datetime string using date-fns
                 const parsedDateTime = parseISO(user.updated_at);
                 // Format the parsed date using date-fns
-                return format(parsedDateTime, 'dd-mm-yyyy HH:mm');
+                return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }

@@ -623,7 +623,9 @@ export default {
             this.showProgress = true;
             NProgress.start();
             console.log(this.orders);
-            this.orders[0].linked_order = event.submitter.getAttribute('value');
+            if (this.isEditing) {
+                this.orders[0].linked_order = event.submitter.getAttribute('value');
+            }
             let method = 'post';
             let url = this.isEditing ? `/api/orderentry/${this.orders[0].id}` : '/api/orderentry';
 
