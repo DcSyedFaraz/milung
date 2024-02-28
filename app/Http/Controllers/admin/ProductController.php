@@ -227,9 +227,10 @@ class ProductController extends Controller
         try {
             $validatedData = $request->validate([
                 'article' => 'required|max:255',
+                'status' => 'required',
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'group' => 'nullable|string|max:255',
+                'group' => 'nullable|integer|max:255',
                 'cargo' => 'nullable|string|max:255',
                 'cargo_place' => 'nullable',
                 'color' => 'nullable|string|max:255',
@@ -295,7 +296,7 @@ class ProductController extends Controller
                 'manual' => $manualPath,
                 'product_label' => $productLabelPath,
                 'packaging_label' => $packagingLabelPath,
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->user()->id ?? '',
             ]);
 
 

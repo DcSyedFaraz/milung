@@ -13,4 +13,8 @@ class Products extends Model
     {
         return $this->hasMany(ProductImages::class);
     }
+    public function product_group()
+    {
+        return $this->belongsTo(ProductGroup::class, 'group');
+    }
 }

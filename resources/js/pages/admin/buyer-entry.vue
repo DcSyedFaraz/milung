@@ -8,6 +8,14 @@
                         <div class=" ">
 
                             <div class="row">
+                                <div class="d-flex col-6  my-2">
+                                    <div class="col-6">
+                                        <p for="name">User ID:</p>
+                                    </div>
+                                    <div class="col-6"><input type="text" v-model="userid" class="form-control"></div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
                                         <p for="name">Buyer Name:</p>
@@ -80,18 +88,8 @@
                                 </div>
                             </div> -->
                             <div class="form-group">
-                                <select class="select2 w-100" v-model="group" name="group[]" id="multiple" multiple="multiple">
-                                    <option value="Power bank">Power bank</option>
-                                    <option value="Mobile Storage">Mobile Storage</option>
-                                    <option value="Travel Adapter">Travel Adapter</option>
-                                    <option value="Wireless Charger">Wireless Charger</option>
-                                    <option value="RFID Card">RFID Card</option>
-                                    <option value="LED Lamp">LED Lamp</option>
-                                    <option value="Solar Panel">Solar Panel</option>
-                                    <option value="USB Cable">USB Cable</option>
-                                    <option value="Fan">Fan</option>
-                                    <option value="Charger">Charger</option>
-                                </select>
+                                <multiselect v-model="group" :options="productOptions" :multiple="true" label="group_name" track-by="id">
+                                </multiselect>
                             </div>
                             <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
 
@@ -186,6 +184,7 @@
 
 <script>
 import './index';
+import Multiselect from 'vue-multiselect'
 
 // import 'select2'; // Import the Select2 library
 // import 'select2/dist/css/select2.min.css';
@@ -194,12 +193,14 @@ window.jQuery = window.$ = $;
 
 
 export default {
-
+    components: { Multiselect },
     // components: { Select2 },
     data() {
         return {
             // myValue: [],
+            productOptions: [],
             name: '',
+            userid: '',
             email: '',
             address: '',
             website: '',
@@ -211,10 +212,21 @@ export default {
         }
     },
     methods: {
+        async fetchProductOptions() {
+            try {
+                const response = await axios.get('/api/product_group_get');
+                this.productOptions = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
         async submitForm() {
             this.errors = [];
             if (!this.name) {
                 this.errors.push('Buyer name is required.');
+            }
+            if (!this.userid) {
+                this.errors.push('UserID is required.');
             }
             if (!this.email) {
                 this.errors.push('Email is required.');
@@ -235,6 +247,7 @@ export default {
                 const formData = {
                     name: this.name,
                     email: this.email,
+                    userid: this.userid,
                     address: this.address,
                     website: this.website,
                     officePhone: this.officePhone,
@@ -251,6 +264,7 @@ export default {
 
                     if (addbuyer.status === 201) {
                         toastr.success(addbuyer.data.message);
+                        this.$router.push({ name: 'Databuyer' });
                     } else {
                         // Handle other status codes or unexpected responses
                         toastr.error('Unexpected response from the server');
@@ -291,9 +305,7 @@ export default {
     },
 
     mounted() {
-        // Initialize Select2 on the select element
-        $('#multiple').select2();
-        // $(this.$refs.select).select2();
+        this.fetchProductOptions();
     },
     beforeDestroy() {
         // Destroy Select2 instance when the component is destroyed to prevent memory leaks

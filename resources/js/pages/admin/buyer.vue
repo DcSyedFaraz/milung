@@ -7,7 +7,7 @@
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Buyer List</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
+                                    class="">Overview on all Buyers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
                             <router-link :to="{ name: 'buyerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
@@ -43,9 +43,9 @@
                             </thead>
                             <tbody v-for="user in paginatedData" :key="user.id">
                                 <tr>
-                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.userid }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.buyer_profile?.address }}</td>
 
                                     <td>
                                         <span

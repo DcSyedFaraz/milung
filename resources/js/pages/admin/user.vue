@@ -44,7 +44,7 @@
                                     <td class="fw-bold">{{ user.roles[0] }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.email }}</td>
-                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.userid }}</td>
 
                                     <td>
                                         <span
@@ -102,7 +102,7 @@
                                                                     <label for="userIdContactPerson"
                                                                         class="form-label">ID:</label>
                                                                     <input type="text" disabled class="form-control"
-                                                                        :value="user.id">
+                                                                        :value="user.userid">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -306,7 +306,7 @@ export default {
                 name: '',
                 email: '',
                 status: '',
-                buyer_id: '',
+                userid: '',
                 roles: '',
                 permissions: [],
             },
@@ -395,7 +395,7 @@ export default {
             this.updateuser.name = user.name;
             this.updateuser.email = user.email;
             this.updateuser.status = user.status;
-            this.updateuser.buyer_id = user.buyer_id;
+            this.updateuser.userid = user.userid;
             this.updateuser.roles = user.roles;
             this.updateuser.permissions = user.permissions;
         },

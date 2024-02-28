@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductGroup;
 use App\Models\Products;
 use App\Models\SupplierProfile;
 use App\Models\User;
@@ -47,6 +48,7 @@ class UserController extends Controller
         foreach ($users as $user) {
             $userData = [
                 'id' => $user->id,
+                'userid' => $user->userid,
                 'name' => $user->name,
                 'buyer_id' => $user->buyer_id,
                 'email' => $user->email,
@@ -62,44 +64,31 @@ class UserController extends Controller
     }
     public function products()
     {
-        $products = Products::get();
-        // $users = [
-        //     [
-        //         'articleNumber' => 1,
-        //         'productName' => 'Product 1',
-        //         'description' => 'This is product 1 description.',
-        //         'productGroup' => 'Group A',
-        //         'status' => 'active',
-        //     ],
-        //     [
-        //         'articleNumber' => 2,
-        //         'productName' => 'Product 2',
-        //         'description' => 'This is product 2 description.',
-        //         'productGroup' => 'Group B',
-        //         'status' => 'Inactive',
-        //     ],
-        //     [
-        //         'articleNumber' => 3,
-        //         'productName' => 'Product 3',
-        //         'description' => 'This is product 3 description.',
-        //         'productGroup' => 'Group A',
-        //         'status' => 'active',
-        //     ],
-        //     // Add more product entries as needed
-        // ];
-
-
-        // dd($responseData);
+        $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with([
+            'product_group' => function ($query) {
+                $query->select('id', 'group_name'); 
+            }
+        ])->get();
         return response()->json($products, JsonResponse::HTTP_OK);
     }
     public function supplier()
     {
         $users = User::withRole('Supplier')->with('supplierProfile')->get();
 
+        $responseData = [];
+        foreach ($users as $user) {
+            $supplierProfile = $user->supplierProfile;
+            if ($supplierProfile) {
+                $group = $supplierProfile->group;
+                $groupNames = ProductGroup::whereIn('id', $group)->pluck('group_name')->toArray();
+                $user->supplierProfile->group_names = $groupNames;
+            }
+            $responseData[] = $user;
+        }
 
-        // dd($responseData);
-        return response()->json($users, JsonResponse::HTTP_OK);
+        return response()->json($responseData, JsonResponse::HTTP_OK);
     }
+
     public function buyers(Request $request)
     {
         // dd($request);
@@ -108,6 +97,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'userid' => 'required|unique:users,userid',
         ]);
 
         if ($validator->fails()) {
@@ -116,6 +106,7 @@ class UserController extends Controller
 
 
         $user = User::create([
+            'userid' => $request->userid,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make('12345678'),
@@ -144,6 +135,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'userid' => 'required|unique:users,userid',
         ]);
 
         if ($validator->fails()) {
@@ -152,6 +144,7 @@ class UserController extends Controller
 
 
         $user = User::create([
+            'userid' => $request->userid,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make('12345678'),
@@ -175,7 +168,7 @@ class UserController extends Controller
     }
     public function buyer()
     {
-        $users = User::withRole('Buyer')->get();
+        $users = User::withRole('Buyer')->with('buyerProfile')->get();
 
 
         // dd($responseData);
@@ -186,9 +179,9 @@ class UserController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'userid' => 'required|unique:users,userid',
             'email' => 'required|string|email|max:255|unique:users',
             'status' => 'required|string|in:active,inactive',
-            'buyer_id' => 'required|integer',
             'roles' => 'required|string|in:Admin,Buyer,Supplier',
             'password' => 'required|string|min:8',
         ]);
@@ -222,26 +215,26 @@ class UserController extends Controller
         return response()->json($responseData, JsonResponse::HTTP_OK);
     }
     public function supplier_profiles($id)
-{
-    // Typecast $id to ensure it's of the correct type
-    $id = (int)$id;
+    {
+        // Typecast $id to ensure it's of the correct type
+        $id = (int) $id;
 
-    // Assuming $id is an integer
-    $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$id])
-        ->with('user:id,name')
-        ->get();
+        // Assuming $id is an integer
+        $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$id])
+            ->with('user:id,name')
+            ->get();
 
-    // Iterate through $supplierProfiles to create the desired response structure
-    $data = $supplierProfiles->map(function ($profile) {
-        return [
-            'id' => $profile->user->id,
-            'name' => $profile->user->name
-        ];
-    });
+        // Iterate through $supplierProfiles to create the desired response structure
+        $data = $supplierProfiles->map(function ($profile) {
+            return [
+                'id' => $profile->user->id,
+                'name' => $profile->user->name
+            ];
+        });
 
-    // Assuming you want to return JSON response with user id and name
-    return response()->json($data);
-}
+        // Assuming you want to return JSON response with user id and name
+        return response()->json($data);
+    }
 
 
 

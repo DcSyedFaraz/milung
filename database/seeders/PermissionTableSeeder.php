@@ -55,6 +55,7 @@ class PermissionTableSeeder extends Seeder
 
 
         $user = [
+            'userid' => 'Milung01',
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
@@ -65,6 +66,7 @@ class PermissionTableSeeder extends Seeder
         $userd->assignRole('Admin');
 
         $buy = [
+            'userid' => 'Buyer01',
             'name' => 'buyer',
             'email' => 'buyer@gmail.com',
             'password' => Hash::make('12345678'),
@@ -74,6 +76,7 @@ class PermissionTableSeeder extends Seeder
         $buyr = User::create($buy);
         $buyr->assignRole('Buyer');
         $supp = [
+            'userid' => 'Supplier01',
             'name' => 'supplier',
             'email' => 'supplier@gmail.com',
             'password' => Hash::make('12345678'),

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('group_name')->unique();
             $table->string('description')->nullable();
-            $table->integer('profit');
-            $table->integer('amount');
+            $table->integer('profit')->nullable();
+            $table->integer('amount')->nullable();
             $table->integer('hs_de');
             $table->integer('hs_cn');
             $table->timestamps();

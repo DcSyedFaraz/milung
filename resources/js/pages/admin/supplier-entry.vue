@@ -8,6 +8,14 @@
                         <div class=" ">
 
                             <div class="row">
+                                <div class="d-flex col-6  my-2">
+                                    <div class="col-6">
+                                        <p for="name">User ID:</p>
+                                    </div>
+                                    <div class="col-6"><input type="text" v-model="userid" class="form-control"></div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
                                         <p for="name">Supplier Name:</p>
@@ -205,6 +213,7 @@ export default {
             productOptions: [],
             // myValue: [],
             name: '',
+            userid: '',
             email: '',
             address: '',
             website: '',
@@ -252,6 +261,9 @@ export default {
             if (!this.buyerDescription) {
                 this.errors.push('Supplier description is required.');
             }
+            if (!this.userid) {
+                this.errors.push('User ID is required.');
+            }
             if (!this.group.length) {
                 this.errors.push('Product group is required.');
             }
@@ -261,6 +273,7 @@ export default {
                     email: this.email,
                     address: this.address,
                     website: this.website,
+                    userid: this.userid,
                     officePhone: this.officePhone,
                     contact: this.contact,
                     buyerDescription: this.buyerDescription,

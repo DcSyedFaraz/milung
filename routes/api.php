@@ -64,10 +64,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('statement', [ProductController::class, 'statement']);
 // Auth
+// Adding Products
+Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
+Route::post('addprod', [ProductController::class, 'addprod']);
 Route::middleware('auth:sanctum')->group(function () {
-    // Adding Products
-    Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
-    Route::post('addprod', [ProductController::class, 'addprod']);
 
     // Your authenticated routes
 });

@@ -24,6 +24,17 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
+                                <p for="v-model">Status:</p>
+                            </div>
+                            <div class="col-8">
+                                <select v-model="status" class="form-control">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">InActive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
                                 <p for="v-model">Product Name:</p>
                             </div>
                             <div class="col-8">
@@ -43,18 +54,8 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class="form-control" v-model="group">
-                                    <option value="Power bank">Power bank</option>
-                                    <option value="Mobile Storage">Mobile Storage</option>
-                                    <option value="Travel Adapter">Travel Adapter</option>
-                                    <option value="Wireless Charger">Wireless Charger</option>
-                                    <option value="RFID Card">RFID Card</option>
-                                    <option value="LED Lamp">LED Lamp</option>
-                                    <option value="Solar Panel">Solar Panel</option>
-                                    <option value="USB Cable">USB Cable</option>
-                                    <option value="Fan">Fan</option>
-                                    <option value="Charger">Charger</option>
-                                </select>
+                                <multiselect v-model="group" :options="productOptions" label="group_name" track-by="id">
+                                </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -186,6 +187,22 @@
                                     <input type="text" class="form-control" v-model="accessory_weight" />
                                     <span class="input-group-text">g</span>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4 ">
+                                <p for="v-model" class=" fs-7">HS Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ group.hs_de }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4 ">
+                                <p for="v-model" class=" fs-7">HS-CN Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ group.hs_cn }}</p>
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">3. Battery Details</h3>
@@ -435,6 +452,7 @@
 import ImageSelector from './product/imageselector.vue';
 import fileinput from './product/file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
+import Multiselect from 'vue-multiselect'
 import '@vuepic/vue-datepicker/dist/main.css'
 import './index';
 
@@ -445,10 +463,12 @@ export default {
     components: {
         ImageSelector,
         fileinput,
-        VueDatePicker
+        VueDatePicker,
+        Multiselect
     },
     data() {
         return {
+            productOptions: [],
             quoteExpiredDate: '',
             article: '',
             name: '',
@@ -497,62 +517,35 @@ export default {
             uploadedFiles: {},
         };
     },
-
     mounted() {
-
+        this.fetchProductOptions();
     },
     created() {
         // this.fetchUsers();
     },
     methods: {
-
+        async fetchProductOptions() {
+            try {
+                const response = await axios.get('/api/product_group_get');
+                this.productOptions = response.data;
+                console.log(this.productOptions);
+            } catch (error) {
+                console.error(error);
+            }
+        },
         handleFileUploaded(inputName, fileName) {
             console.log(`File uploaded for input ${inputName}: ${fileName}`);
             this.uploadedFiles[inputName] = fileName;
         },
         handleImagesSelected(images) {
             // Update selectedImages in parent component
-            // console.log(images);
+            console.log('new  ', images);
             this.selectedImages = images;
-            // this.selectedFiles.push(images);
 
-            // Convert Blob objects to File objects
-            const formData = new FormData();
 
-            images.forEach((image, index) => {
-                const file = new File([image], `image_${Date.now()}_${index}.png`, {
-                    type: image.type,
-                    lastModified: Date.now(),
-                });
-                formData.append(`image_${index}`, file);
-            });
 
-            // Store the selected images in the uploadedFiles object
-            const fileArray = Array.from(formData.keys()).map(key => formData.get(key));
-            this.uploadedFiles.images = fileArray;
-            console.log('new', this.uploadedFiles.images);
         },
 
-        dataURItoBlob(dataURI) {
-            const splitData = dataURI.split(',');
-            const hasBase64 = splitData[0].indexOf('base64') !== -1;
-
-            let byteString;
-            if (hasBase64) {
-                byteString = atob(splitData[1]);
-            } else {
-                byteString = unescape(splitData[1]);
-            }
-
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-
-            return new Blob([ab], { type: 'image/png' });
-        },
 
 
         async submitForm() {
@@ -563,7 +556,7 @@ export default {
 
             // Define an array of field names
             const formFields = [
-                'article', 'name', 'description', 'group', 'cargo', 'cargo_place', 'color',
+                'article','status', 'name', 'description', 'cargo', 'cargo_place', 'color',
                 'material', 'size', 'weight', 'specification', 'memory', 'feature', 'accessory',
                 'accessory_weight', 'battery_type', 'rated', 'capacity', 'voltage', 'pcs',
                 'mAh', 'mm', 'gram', 'edition', 'msds_expiry', 'un_expiry', 'air_safety_expiry',
@@ -571,28 +564,14 @@ export default {
                 'unit_packaging_paper', 'unit_packaging_plastic', 'unit_packaging_metal',
                 'unit_packaging_others', 'packaging_material', 'packaging_weight', 'standart_packaging'
             ];
-
+            formData.append('group', this.group.id);
             // Append form fields to FormData dynamically
             formFields.forEach(field => {
                 formData.append(field, this[field]);
             });
-
-            this.selectedImages.forEach((image, index) => {
-                const file = this.dataURItoBlob(image);
-                const originalName = `image_${index}.${file.type.split('/')[1]}`;
-                formData.append('images[]', file, originalName);
-            });
-
-            // if (this.selectedFiles.length > 0) {
-            //     for (const file of this.selectedFiles) {
-            //         formData.append("imagesss[]", file);
-            //     }
-            // }
-            // if (this.uploadedFiles.images && this.uploadedFiles.images.length > 0) {
-            //     this.uploadedFiles.images.forEach((image, index) => {
-            //         formData.append(`images[${index}]`, image);
-            //     });
-            // }
+            for (const image of this.selectedImages) {
+                formData.append('images[]', image);
+            }
 
             // Append file inputs to the FormData object
             Object.entries(this.uploadedFiles).forEach(([inputName, fileName]) => {
@@ -603,8 +582,8 @@ export default {
             //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             // }
 
-
             try {
+                console.log(this.group.id);
                 // Send the form data to the API endpoint
                 const addProduct = await axios.post('/api/addprod', formData);
 

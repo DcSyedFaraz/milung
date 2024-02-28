@@ -15,9 +15,9 @@
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select> </div>
-                <div class="form-group col-md-6"> <label for="buyer_id" class="form-label">Buyer ID</label> <input
-                        type="number" class="form-control" id="buyer_id" v-model="user.buyer_id" placeholder="Buyer ID"
-                        required> </div>
+                <div class="form-group col-md-6"> <label for="buyer_id" class="form-label">User ID</label> <input
+                        type="text" class="form-control" id="buyer_id" v-model="user.userid" placeholder="User ID" required>
+                </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6"> <label for="role" class="form-label">Role</label> <select
@@ -44,7 +44,7 @@ export default {
                 name: '',
                 email: '',
                 status: '',
-                buyer_id: '',
+                userid: '',
                 roles: '',
             },
         };
@@ -75,22 +75,21 @@ export default {
                     }
                 });
         },
-        methods: {
-            handleValidationErrors(validationErrors) {
-                // Assuming you have a function to display toastr error messages
-                for (const key in validationErrors) {
-                    if (validationErrors.hasOwnProperty(key)) {
-                        const messages = validationErrors[key];
-                        // Display each validation error message
-                        messages.forEach(message => {
-                            toastr.error(message);
-                        });
-                    }
+        handleValidationErrors(validationErrors) {
+            // Assuming you have a function to display toastr error messages
+            for (const key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    const messages = validationErrors[key];
+                    // Display each validation error message
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
                 }
             }
-        },
-
+        }
     },
+
+
 };
 </script>
 

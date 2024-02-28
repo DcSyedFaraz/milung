@@ -44,10 +44,11 @@
                             </thead>
                             <tbody v-for="user in paginatedData" :key="user.id">
                                 <tr>
-                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.userid }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.supplier_profile?.address }}</td>
-                                    <td>{{ user.buyer_id }}</td>
+                                    <td>{{ user.supplier_profile?.group_names.join(', ') }}</td>
+
 
                                     <td>
                                         <span

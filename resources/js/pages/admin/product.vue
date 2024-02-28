@@ -54,7 +54,7 @@
                                     <td>{{ user.article }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.description }}</td>
-                                    <td>{{ user.group }}</td>
+                                    <td>{{ user.product_group?.group_name }}</td>
 
                                     <td>
                                         <span
