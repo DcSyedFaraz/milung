@@ -11,6 +11,17 @@
     background-color: #14245c !important;
     color: white;
 }
+.page-link {
+    border: none !important;
+    color: #14245c;
+}
+
+.page-item.active .page-link,
+.btn-milung {
+    background-color: #14245c !important;
+    color: white;
+}
+
 .btn-milung:hover {
     background-color: white !important;
     color: #14245c;
@@ -28,3 +39,6 @@
     background-color: #41b400 !important;
     border-color: #41b400 !important;
   }
+  .fs-7 {
+    font-size: 14px !important;
+}

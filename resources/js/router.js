@@ -27,6 +27,7 @@ import price_inquiry_entry from "./pages/admin/price_inquiry/price_inquiry_entry
 
 import order_list from "./pages/admin/order/order_list.vue";
 import order_entry from "./pages/admin/order/order_entry.vue";
+import order_price_inquiry from "./pages/admin/order/order_price_inquiry.vue";
 
 const routes = [
     {
@@ -149,6 +150,12 @@ const routes = [
                 path: "order_entry",
                 name: "order_entry",
                 component: order_entry,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: "order_price_inquiry",
+                name: "order_price_inquiry",
+                component: order_price_inquiry,
                 // meta: { requiresAdmin: true },
             },
         ],

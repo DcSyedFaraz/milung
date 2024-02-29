@@ -16,6 +16,21 @@ class OrderController extends Controller
         $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status')->orderby('created_at', 'desc')->get();
         return response()->json($order, JsonResponse::HTTP_OK);
     }
+    public function orderAll(Request $request)
+    {
+        $orders = Order::orderby('created_at', 'desc')->with('product_group')->get();
+        foreach ($orders as $order) {
+            // Assuming you have a file path stored in the database field 'filepath'
+            $filePath = $order->files[0]['filepath']; // Replace 'filepath' with your actual field name
+            // Generate the thumbnail URL
+            $thumbnailUrl = Storage::url($filePath) . '?thumbnail=true';
+            // dd($thumbnailUrl);
+
+            // Append the thumbnail URL to the order object
+            $order->thumbnail_url = $thumbnailUrl;
+        }
+        return response()->json($orders, JsonResponse::HTTP_OK);
+    }
     public function orderUpdate(Request $request, $id)
     {
         $data = $request->all();

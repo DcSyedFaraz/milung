@@ -19,4 +19,9 @@ class Order extends Model
         'manualFiles' => 'array',
         'safetySheetFiles' => 'array',
     ];
+
+    public function product_group()
+    {
+        return $this->belongsTo(ProductGroup::class, 'group');
+    }
 }
