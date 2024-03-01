@@ -22,14 +22,13 @@ return new class extends Migration {
             $table->string('buyeremail')->nullable();
             $table->string('buyerorder')->nullable();
             $table->string('buyingprice')->nullable();
-            // $table->string('combinedValue')->nullable();
             $table->string('ftyitem')->nullable();
             $table->string('logocolor')->nullable();
             $table->integer('group')->nullable();
             $table->string('incoterm')->nullable();
             $table->string('inquiry')->nullable();
             $table->string('milungorder')->nullable();
-            $table->json('notice')->nullable()->default('[]');
+            $table->string('notice')->nullable()->default('[]');
             $table->date('orderdate')->nullable();
             $table->string('orderremarks')->nullable();
             $table->string('packaging')->nullable();

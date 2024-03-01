@@ -52,6 +52,7 @@ Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
 //Orders
 Route::post('orderentry', [OrderController::class, 'orderentry']);
+Route::post('saveSelectedOrders', [OrderController::class, 'saveSelectedOrders']);
 Route::get('orderentry', [OrderController::class, 'orderentryget']);
 Route::get('orderAll', [OrderController::class, 'orderAll']);
 Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID']);

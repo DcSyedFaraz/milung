@@ -66,7 +66,7 @@ class UserController extends Controller
     {
         $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with([
             'product_group' => function ($query) {
-                $query->select('id', 'group_name'); 
+                $query->select('id', 'group_name');
             }
         ])->get();
         return response()->json($products, JsonResponse::HTTP_OK);
@@ -216,13 +216,16 @@ class UserController extends Controller
     }
     public function supplier_profiles($id)
     {
+        // dd($id);
         // Typecast $id to ensure it's of the correct type
         $id = (int) $id;
 
         // Assuming $id is an integer
-        $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$id])
+        $idJson = json_encode([$id]); // Convert integer to JSON array
+        $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$idJson])
             ->with('user:id,name')
             ->get();
+
 
         // Iterate through $supplierProfiles to create the desired response structure
         $data = $supplierProfiles->map(function ($profile) {

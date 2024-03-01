@@ -25,7 +25,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4 mx-2">
-                                        <button class="btn btn-warning fw-bold text-dark">Place All
+                                        <button class="btn btn-warning fw-bold text-dark" @click="placeAll">Place All
                                         </button>
                                     </div>
 
@@ -79,12 +79,13 @@
                                     <th class="text-nowrap text-milung">Remarks</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="order in dataToDisplay" :key="order.id">
-                                <tr class="text-center" style="border-bottom-color: snow !important;">
+                            <tbody>
+                                <tr class="text-center" style="border-bottom-color: snow !important;"
+                                    v-for="order in dataToDisplay" :key="order.id">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" :value="order.id"
-                                                id="flexCheckDefault">
+                                                v-model="order.checked">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{ order.id }}
                                             </label>
@@ -95,7 +96,8 @@
                                     </td>
                                     <td>{{ order.product_group?.group_name }}</td>
                                     <td><span class="my-2">{{ order.article }}</span> <br>
-                                        <img class="w-milung" :src="order.thumbnail_url" alt="Thumbnail">
+                                        <img class="w-milung" :src="order.thumbnail_url" alt="Thumbnail"
+                                            v-if="order.thumbnail_url">
                                         <br>
                                         <span class="my-2">{{ order.quantity_unit }}</span>
                                     </td>
@@ -107,10 +109,35 @@
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.sendoutdate }}</td>
-                                    <td>{{ order.supplier }}</td>
-                                    <td>2.30</td>
-                                    <td>+0.25</td>
-                                    <td>2.55</td>
+                                    <td>
+                                        <div class="form-check" v-for="(supplier, index) in order.order_suppliers"
+                                            :key="index">
+                                            <input class="form-check-input" type="radio" :name="order.id"
+                                                v-model="order.selectedSupplierId" :value="supplier.user.id">
+                                            <label class="form-check-label">
+                                                {{ supplier.user.userid }}
+                                            </label>
+                                            <br v-if="index !== order.order_suppliers.length - 1">
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <span v-for="(supplier, index) in order.order_suppliers" :key="index">
+                                            {{ supplier.purchase ? supplier.purchase : 'null' }}
+                                            <br v-if="index !== order.order_suppliers.length - 1">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        +{{ order.product_group.amount === 0 ? order.product_group.profit + '%' :
+                                            order.product_group.amount }}
+                                    </td>
+
+                                    <td>
+                                        <span v-for="(supplier, index) in order.order_suppliers" :key="index">
+                                            {{ supplier.selling ? supplier.selling : 'null' }}
+                                            <br v-if="index !== order.order_suppliers.length - 1">
+                                        </span>
+                                    </td>
 
 
                                     <td>
@@ -122,22 +149,22 @@
                             </tbody>
                         </table>
                     </div>
-                        <nav class="mt-3">
-                            <ul class="pagination d-flex justify-content-center">
-                                <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
-                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)"><i
-                                            class="bi bi-arrow-left"></i> Previous</a>
-                                </li>
-                                <li class="page-item" v-for="page in totalPages" :key="page"
-                                    :class="{ active: page === currentPage }">
-                                    <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
-                                </li>
-                                <li class="page-item ms-auto fw-bold" :class="{ disabled: currentPage === totalPages }">
-                                    <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next <i
-                                            class="bi bi-arrow-right"></i> </a>
-                                </li>
-                            </ul>
-                        </nav>
+                    <nav class="mt-3">
+                        <ul class="pagination d-flex justify-content-center">
+                            <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
+                                <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)"><i
+                                        class="bi bi-arrow-left"></i> Previous</a>
+                            </li>
+                            <li class="page-item" v-for="page in totalPages" :key="page"
+                                :class="{ active: page === currentPage }">
+                                <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                            </li>
+                            <li class="page-item ms-auto fw-bold" :class="{ disabled: currentPage === totalPages }">
+                                <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next <i
+                                        class="bi bi-arrow-right"></i> </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
 
             </div>
@@ -204,10 +231,40 @@ export default {
         });
     },
     methods: {
-        getThumbnailUrl(imagePath) {
-            // Modify this method according to your application's logic
-            // For example, you might need to append a parameter to the image path to request a thumbnail version
-            return `${imagePath}?thumbnail=true`; // Modify this line as per your requirement
+        async placeAll() {
+            // Get the IDs of selected orders
+            const data = [];
+
+            this.dataToDisplay.forEach(order => {
+                if (order.checked && order.selectedSupplierId) {
+                    console.log('hi');
+                        const orderData = {
+                            orderId: order.id,
+                            supplierId: order.selectedSupplierId
+                        };
+                        data.push(orderData);
+                }
+            });
+
+            console.log('Data:', data);
+            // Send the data to the API
+            // try {
+            //     const response = await axios.post('/api/placeAll', data);
+            //     // Handle the API response as needed
+            //     console.log(response.data);
+            //     // Show a success message
+            //     Swal.fire({
+            //         icon: 'success',
+            //         title: 'Orders placed successfully',
+            //     });
+            // } catch (error) {
+            //     console.error('Error placing orders:', error);
+            //     // Show an error message
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error placing orders',
+            //     });
+            // }
         },
         changePage(page) {
             this.currentPage = page

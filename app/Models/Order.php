@@ -24,4 +24,8 @@ class Order extends Model
     {
         return $this->belongsTo(ProductGroup::class, 'group');
     }
+    public function orderSuppliers()
+    {
+        return $this->hasMany(OrderSupplier::class);
+    }
 }

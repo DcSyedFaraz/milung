@@ -67,7 +67,8 @@
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                            <input class="form-check-input" type="checkbox" :value="user.id"
+                                                id="flexCheckDefault" v-model="selectedUserIds">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{ user.buyer }}
                                             </label>
@@ -90,7 +91,8 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" class="text-success mx-2">
+                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }"
+                                            class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -109,6 +111,7 @@
 
                             </tbody>
                         </table>
+
                         <nav>
                             <ul class="pagination d-flex justify-content-center">
                                 <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
@@ -125,6 +128,38 @@
                                 </li>
                             </ul>
                         </nav>
+                        <div class="my-2">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#supplierModal"
+                                @click="openSupplierModal" class="btn btn-warning">Pricing</button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Select Supplier</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
+                                            <input class="form-check-input" type="checkbox" :value="supplier.id"
+                                                v-model="supplier.checked">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                {{ supplier.name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                                        <button type="button" @click="saveChanges" class="btn btn-primary"
+                                            data-bs-dismiss="modal">Save
+                                            changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -155,6 +190,9 @@ export default {
     },
     data() {
         return {
+            selectedUserIds: [],
+            groupId: null,
+            supplier_profiles: [],
             isLoading: true,
             bank_name: '',
             file: null,
@@ -205,6 +243,65 @@ export default {
         });
     },
     methods: {
+        async saveChanges() {
+            NProgress.start();
+            try {
+                const selectedSupplierIds = this.supplier_profiles
+                    .filter(supplier => supplier.checked)
+                    .map(supplier => supplier.id);
+
+                const data = {
+                    selectedOrderIds: this.selectedUserIds,
+                    selectedSupplierIds: selectedSupplierIds
+                };
+                console.log(data);
+                const response = await axios.post('/api/saveSelectedOrders', data);
+                console.log(response);
+                this.selectedUserIds = [];
+                if (response.status == 200) {
+                    NProgress.done();
+                    toastr.success(response.data.message);
+                } else {
+                    NProgress.done();
+                }
+            } catch (error) {
+                NProgress.done();
+                toastr.error('Please Select Valid Supplier.');
+                // Handle error if needed
+                console.error('Error saving data:', error);
+            }
+        },
+        openSupplierModal() {
+            // Find the first checked user
+            const checkedUser = this.users.find(user => this.selectedUserIds.includes(user.id));
+            console.log(checkedUser);
+            // Check if a user is found and has a group ID
+            if (checkedUser && checkedUser.group) {
+                // Set the group ID
+                this.groupId = checkedUser.group;
+                console.log(this.groupId);
+                // Send selected user IDs and group ID to the server
+                this.fetchSupplierProfiles(this.groupId);
+            } else {
+                // Handle case where no checked user with group ID is found
+                console.error('No checked user with group ID found.');
+            }
+        },
+
+        fetchSupplierProfiles(groupId) {
+            NProgress.start();
+            console.log(groupId);
+            axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
+                .then(response => {
+                    this.supplier_profiles = response.data;
+                    console.log(response);
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
+        },
         handleRecordUpdated() {
             this.accordionOpen = {};
             // Refresh the data in the parent component
