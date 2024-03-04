@@ -80,7 +80,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="text-center" style="border-bottom-color: snow !important;"
+                                <tr v-if="dataToDisplay.length > 0" class="text-center" style="border-bottom-color: snow !important;"
                                     v-for="order in dataToDisplay" :key="order.id">
                                     <td>
                                         <div class="form-check">
@@ -101,11 +101,11 @@
                                         <br>
                                         <span class="my-2">{{ order.quantity_unit }}</span>
                                     </td>
-                                    <td>{{ order.capacity.join(', ') }}</td>
+                                    <td>{{ order.capacity?.join(', ') }}</td>
                                     <td>{{ order.accessories }}</td>
                                     <td>{{ order.printingmethod }}</td>
                                     <td>{{ order.logocolor }}</td>
-                                    <td>{{ order.packagingprinting.join(', ') }}</td>
+                                    <td>{{ order.packagingprinting.join(', ') ?? 'N/A' }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.sendoutdate }}</td>
@@ -134,7 +134,14 @@
 
                                     <td>
                                         <span v-for="(supplier, index) in order.order_suppliers" :key="index">
-                                            {{ supplier.selling ? supplier.selling : 'null' }}
+                                            {{
+                                                supplier.purchase !== null ?
+                                                (order.product_group.amount !== 0 ? (parseFloat(supplier.purchase) +
+                                                    parseFloat(order.product_group.amount)) : (parseFloat(supplier.purchase) +
+                                                        (parseFloat(supplier.purchase) * parseFloat(order.product_group.profit) / 100)))
+                                                :
+                                                'null'
+                                            }}
                                             <br v-if="index !== order.order_suppliers.length - 1">
                                         </span>
                                     </td>
@@ -144,7 +151,9 @@
 
                                     </td>
                                 </tr>
-
+                                <tr v-else>
+                                    <td colspan="17"><p class="text-center">No orders to display.</p></td>
+                                </tr>
 
                             </tbody>
                         </table>
@@ -180,6 +189,7 @@ import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+
 export default {
     props: {
         perPage: {
@@ -238,33 +248,61 @@ export default {
             this.dataToDisplay.forEach(order => {
                 if (order.checked && order.selectedSupplierId) {
                     console.log('hi');
-                        const orderData = {
-                            orderId: order.id,
-                            supplierId: order.selectedSupplierId
-                        };
-                        data.push(orderData);
+                    const orderData = {
+                        orderId: order.id,
+                        supplierId: order.selectedSupplierId
+                    };
+                    data.push(orderData);
                 }
             });
 
             console.log('Data:', data);
             // Send the data to the API
-            // try {
-            //     const response = await axios.post('/api/placeAll', data);
-            //     // Handle the API response as needed
-            //     console.log(response.data);
-            //     // Show a success message
-            //     Swal.fire({
-            //         icon: 'success',
-            //         title: 'Orders placed successfully',
-            //     });
-            // } catch (error) {
-            //     console.error('Error placing orders:', error);
-            //     // Show an error message
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error placing orders',
-            //     });
-            // }
+            try {
+                if (Object.keys(data).length === 0) {
+                    // The data object is empty
+                    toastr.error('Data is empty. Please select orders before placing.');
+                    return
+                }
+
+                const response = await axios.post('/api/placeAll', data);
+
+                // Handle the API response as needed
+                console.log(response.data);
+                // Show a success message
+                if (response.data.success == true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.data.message,
+                    });
+                    this.fetchorders().then(() => {
+                        setTimeout(() => {
+                            this.isLoading = false;
+                        }, 1000); // Delay of 1 second
+                    });
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: response.data.message,
+                    });
+                }
+            } catch (error) {
+                console.error('Error placing orders:', error);
+                // Show an error message
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error('An error occurred while updating the order');
+                }
+            }
+        },
+        handleValidationErrors(validationErrors) {
+            validationErrors.forEach(message => {
+                toastr.error(message);
+            });
         },
         changePage(page) {
             this.currentPage = page

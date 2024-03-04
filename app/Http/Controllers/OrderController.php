@@ -17,6 +17,53 @@ class OrderController extends Controller
         $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->orderby('created_at', 'desc')->get();
         return response()->json($order, JsonResponse::HTTP_OK);
     }
+    public function placeAll(Request $request)
+    {
+        $data = $request->all();
+
+        if (empty($data)) {
+            return response()->json(['errors' => 'Request Is Empty'], 422);
+        }
+
+        foreach ($data as $orderData) {
+            $orderId = $orderData['orderId'];
+            $supplierId = $orderData['supplierId'];
+
+            $order_place = OrderSupplier::where('order_id', $orderId)
+                ->where('user_id', $supplierId)
+                ->first();
+
+            // Check if $order_place exists
+            if ($order_place) {
+                if ($order_place->purchase !== null) {
+                    $order = Order::find($orderId);
+
+                    $quantityValue = (int) preg_replace('/[^0-9]/', '', $order->quantity_unit);
+                    $order->buyingprice = $order_place->purchase;
+
+                    $purchaseNumeric = floatval($order_place->purchase); // Convert to numeric value
+
+                    if ($order->product_group->amount !== 0) {
+                        $selling = $purchaseNumeric + $order->product_group->amount;
+                    } else {
+                        $selling = $purchaseNumeric + ($purchaseNumeric * $order->product_group->profit / 100);
+                    }
+
+                    $order->sellingprice = $selling;
+                    $order->totalvalue = $selling * $quantityValue;
+                    $order->save();
+                } else {
+                    return response()->json(['message' => 'The supplier has not provided a price quote yet.', 'success' => false], 200);
+                }
+
+            } else {
+                return response()->json(['message' => 'Order not found', 'success' => false], 404);
+            }
+        }
+
+        return response()->json(['message' => 'Orders placed successfully', 'success' => true], 200);
+    }
+
     public function saveSelectedOrders(Request $request)
     {
         // Validate the request data
@@ -39,7 +86,7 @@ class OrderController extends Controller
                         ->where('user_id', $supplierId)
                         ->exists();
                     // Save order-supplier relationship in the pivot table
-                    if (!$existingRecord){
+                    if (!$existingRecord) {
                         OrderSupplier::create([
                             'order_id' => $orderId,
                             'user_id' => $supplierId,
@@ -57,7 +104,10 @@ class OrderController extends Controller
     }
     public function orderAll(Request $request)
     {
-        $orders = Order::whereHas('orderSuppliers')->orderby('created_at', 'desc')->with(['orderSuppliers', 'orderSuppliers.user','product_group'])->get();
+        $orders = Order::whereHas('orderSuppliers')->orderby('created_at', 'desc')->with(['orderSuppliers', 'orderSuppliers.user', 'product_group'])->where(function ($query) {
+            $query->whereNull('buyingprice')
+                ->orWhere('buyingprice', '=', '');
+        })->get();
         foreach ($orders as $order) {
             // dd($order->files);
             if ($order->files && $order->files != null) {

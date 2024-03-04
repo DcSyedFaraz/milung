@@ -301,7 +301,7 @@
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" v-model="orders[0].buyingprice">
+                                    <input type="text" class="form-control" disabled v-model="orders[0].buyingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
@@ -315,7 +315,7 @@
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" v-model="orders[0].sellingprice">
+                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="orders[0].sellingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
@@ -329,7 +329,7 @@
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" v-model="orders[0].totalvalue">
+                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="orders[0].totalvalue">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
