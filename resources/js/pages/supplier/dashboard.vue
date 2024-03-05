@@ -345,25 +345,24 @@
                 <!-- End Tables Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-bag"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
-                            <a href="charts-chartjs.html">
-                                <i class="bi bi-circle"></i><span>Chart.js</span>
-                            </a>
+                            <router-link class="nav-link" :to="{ name: 'order_list' }"
+                                :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
+                                active-class="active">
+                                <i class="bi bi-bag"></i><span>Order</span>
+                            </router-link>
+                            <router-link class="nav-link" :to="{ name: 'supplier_order_price_inquiry' }"
+                                :class="{ active: $route.name === 'supplier_order_price_inquiry' }"
+                                active-class="active">
+                                <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
+                            </router-link>
                         </li>
-                        <li>
-                            <a href="charts-apexcharts.html">
-                                <i class="bi bi-circle"></i><span>ApexCharts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="charts-echarts.html">
-                                <i class="bi bi-circle"></i><span>ECharts</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <!-- Shipment -->
@@ -440,6 +439,17 @@ export default {
             const activeRoutes = [
                 '/buyer/dashboard',
                 '/buyer/dashboard/1',
+            ];
+
+            return this.$route.matched.some(route => activeRoutes.includes(route.path));
+
+        },
+        isAnyOrderRouteActive() {
+            const activeRoutes = [
+                '/supplier/order_list',
+                '/supplier/order_entry',
+                '/edit-order/:id',
+                '/supplier/order_price_inquiry',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

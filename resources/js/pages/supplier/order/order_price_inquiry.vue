@@ -49,7 +49,7 @@
 
 
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped table-hover  ">
+                        <table class="table">
                             <thead style="color: #009de1; " class="text-center fs-7 ">
                                 <tr style="">
                                     <th class="text-nowrap"> Order Number </th>
@@ -58,34 +58,36 @@
                                     <th class="text-nowrap">Product</th>
                                     <th class="text-nowrap">Storage/Capacity</th>
                                     <th class="text-nowrap">Accessories</th>
+
                                     <th class="text-nowrap text-milung">Method</th>
                                     <th class="text-nowrap"><span>Printing</span> <br>
                                         <span class="text-milung">Pantone</span>
                                     </th>
-
                                     <th class="text-nowrap text-milung">Label</th>
+
                                     <th class="text-nowrap"><span>Packaging</span> <br>
                                         <span class="text-milung">Type</span>
                                     </th>
                                     <th class="text-nowrap text-milung">Label</th>
+
                                     <th class="text-nowrap ">Shipment Date</th>
                                     <th class="text-nowrap ">Supplier ID</th>
 
-                                    <th class="text-nowrap text-milung">Purchase Price</th>
                                     <th class="text-nowrap"><span>Final Quote</span> <br>
-                                        <span class="text-milung">Profit</span>
+                                        <span class="text-milung">Selling Price</span>
                                     </th>
-                                    <th class="text-nowrap text-milung">Selling Price</th>
                                     <th class="text-nowrap text-milung">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="dataToDisplay.length > 0" class="text-center" style="border-bottom-color: snow !important;"
-                                    v-for="order in dataToDisplay" :key="order.id">
+                                <tr v-if="dataToDisplay.length > 0" class="text-center"
+                                    style="border-bottom-color: snow !important;" v-for="order in dataToDisplay"
+                                    :key="order.id">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" :value="order.id"
-                                                v-model="order.checked">
+                                                v-model="order.checked"
+                                                :disabled="order.order_suppliers_only?.purchase > 0">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{ order.id }}
                                             </label>
@@ -109,54 +111,27 @@
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.sendoutdate }}</td>
-                                    <td>
-                                        <div class="form-check" v-for="(supplier, index) in order.order_suppliers"
-                                            :key="index">
-                                            <input class="form-check-input" type="radio" :name="order.id"
-                                                v-model="order.selectedSupplierId" :value="supplier.user.id">
-                                            <label class="form-check-label">
-                                                {{ supplier.user.userid }}
-                                            </label>
-                                            <br v-if="index !== order.order_suppliers.length - 1">
+                                    <td> {{ order.userid }}</td>
+                                    <td class="text-nowrap d-flex justify-content-around align-items-center"
+                                        style="width: 155px;">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon1">US $</span>
+                                            <input type="number" class="form-control" v-model="order.selling_price"
+                                                :disabled="order.order_suppliers_only?.purchase > 0">
                                         </div>
-
                                     </td>
                                     <td>
-                                        <span v-for="(supplier, index) in order.order_suppliers" :key="index">
-                                            {{ supplier.purchase ? supplier.purchase : 'null' }}
-                                            <br v-if="index !== order.order_suppliers.length - 1">
-                                        </span>
-                                    </td>
-                                    <td>
-                                        +{{ order.product_group.amount === 0 ? order.product_group.profit + '%' :
-                                            order.product_group.amount }}
+                                        <textarea name="remarks" cols="30" rows="4" class="form-control"
+                                            style="width: 230px !important; " v-model="order.remarks"
+                                            :disabled="order.order_suppliers_only?.purchase > 0"
+                                            ></textarea>
                                     </td>
 
-                                    <td>
-                                        <span v-for="(supplier, index) in order.order_suppliers" :key="index">
-                                            {{
-                                                supplier.purchase !== null ?
-                                                (order.product_group.amount !== 0 ? (parseFloat(supplier.purchase) +
-                                                    parseFloat(order.product_group.amount)) : (parseFloat(supplier.purchase) +
-                                                        (parseFloat(supplier.purchase) * parseFloat(order.product_group.profit) / 100)))
-                                                :
-                                                'null'
-                                            }}
-                                            <br v-if="index !== order.order_suppliers.length - 1">
-                                        </span>
-                                    </td>
-
-
-                                    <td>
-                                        <span v-for="(supplier, index) in order.order_suppliers" :key="index">
-                                            {{ supplier.remarks ? supplier.remarks : 'null' }}
-                                            <br v-if="index !== order.order_suppliers.length - 1">
-                                            <hr v-if="index !== order.order_suppliers.length - 1">
-                                        </span>
-                                    </td>
                                 </tr>
                                 <tr v-else>
-                                    <td colspan="17"><p class="text-center">No orders to display.</p></td>
+                                    <td colspan="17">
+                                        <p class="text-center">No orders to display.</p>
+                                    </td>
                                 </tr>
 
                             </tbody>
@@ -241,6 +216,10 @@ export default {
         this.fetchorders().then(() => {
             setTimeout(() => {
                 this.isLoading = false;
+                this.orders.forEach(order => {
+                order.selling_price = order.order_suppliers_only?.purchase || 0;
+                order.remarks = order.order_suppliers_only?.remarks || null;
+            });
             }, 1000); // Delay of 1 second
         });
     },
@@ -250,11 +229,12 @@ export default {
             const data = [];
 
             this.dataToDisplay.forEach(order => {
-                if (order.checked && order.selectedSupplierId) {
+                if (order.checked && order.selling_price) {
                     console.log('hi');
                     const orderData = {
                         orderId: order.id,
-                        supplierId: order.selectedSupplierId
+                        selling_price: order.selling_price, // USD value
+                        remarks: order.remarks
                     };
                     data.push(orderData);
                 }
@@ -269,7 +249,7 @@ export default {
                     return
                 }
 
-                const response = await axios.post('/api/placeAll', data);
+                const response = await axios.post('/api/supplier/placeAll', data);
 
                 // Handle the API response as needed
                 console.log(response.data);
@@ -314,9 +294,10 @@ export default {
         async fetchorders() {
             NProgress.start();
             try {
-                const response = await axios.get('/api/orderAll');
+                const response = await axios.get('/api/SupplierOrder');
                 this.orders = response.data;
                 // this.pagination.totalItems = response.data.total;
+
                 console.log(response.data);
 
                 NProgress.done();

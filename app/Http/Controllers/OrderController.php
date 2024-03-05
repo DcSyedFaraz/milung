@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderSupplier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -63,6 +64,41 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Orders placed successfully', 'success' => true], 200);
     }
+    public function supplierPlace(Request $request)
+    {
+        $data = $request->all();
+        $id = 3;
+        //Auth::User()->id;
+        if (empty($data)) {
+            return response()->json(['errors' => 'Request Is Empty'], 422);
+        }
+
+    //    return $data;
+        foreach ($data as $orderData) {
+            $orderId = $orderData['orderId'];
+
+            $order_place = OrderSupplier::where('order_id', $orderId)
+                ->where('user_id', $id)
+                ->first();
+
+            // Check if $order_place exists
+            if ($order_place) {
+                if ($order_place->purchase == null) {
+
+                    $order_place->purchase = $orderData['selling_price'];
+                    $order_place->remarks = $orderData['remarks'];
+                    $order_place->save();
+                } else {
+                    return response()->json(['message' => 'You already provided a price quote.', 'success' => false], 200);
+                }
+
+            } else {
+                return response()->json(['message' => 'Order not found', 'success' => false], 404);
+            }
+        }
+
+        return response()->json(['message' => 'Price quoted successfully', 'success' => true], 200);
+    }
 
     public function saveSelectedOrders(Request $request)
     {
@@ -102,7 +138,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
         }
     }
-    public function orderAll(Request $request)
+    public function orderAll()
     {
         $orders = Order::whereHas('orderSuppliers')->orderby('created_at', 'desc')->with(['orderSuppliers', 'orderSuppliers.user', 'product_group'])->where(function ($query) {
             $query->whereNull('buyingprice')
@@ -119,6 +155,34 @@ class OrderController extends Controller
                 // Append the thumbnail URL to the order object
                 $order->thumbnail_url = $thumbnailUrl;
             }
+        }
+        return response()->json($orders, JsonResponse::HTTP_OK);
+    }
+    public function SupplierOrder()
+    {
+        // $user = Auth::user();
+        $id = 3;
+        $userid = 'Supplier01';
+        // Retrieve order_ids from the orderSuppliers table where the user ID matches the authenticated user's ID
+        $orderIds = OrderSupplier::where('user_id', $id)
+            ->pluck('order_id')
+            ->toArray();
+
+        // Retrieve orders where the order_id is present in the array of order_ids
+        $orders = Order::whereIn('id', $orderIds)->with('product_group','orderSuppliersOnly')
+            ->get();
+        foreach ($orders as $order) {
+            // dd($order->files);
+            if ($order->files && $order->files != null) {
+                $filePath = $order->files[0]['filepath']; // Replace 'filepath' with your actual field name
+                // Generate the thumbnail URL
+                $thumbnailUrl = Storage::url($filePath) . '?thumbnail=true';
+                // dd($thumbnailUrl);
+
+                // Append the thumbnail URL to the order object
+                $order->thumbnail_url = $thumbnailUrl;
+            }
+            $order->userid = $userid;
         }
         return response()->json($orders, JsonResponse::HTTP_OK);
     }

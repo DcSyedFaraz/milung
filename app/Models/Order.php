@@ -28,4 +28,8 @@ class Order extends Model
     {
         return $this->hasMany(OrderSupplier::class);
     }
+    public function orderSuppliersOnly()
+    {
+        return $this->hasOne(OrderSupplier::class);
+    }
 }

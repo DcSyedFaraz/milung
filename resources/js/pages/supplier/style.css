@@ -1,0 +1,44 @@
+/* @import './../../../assets/vendor/bootstrap/css/bootstrap.min.css'; */
+@import './../../../assets/vendor/bootstrap-icons/bootstrap-icons.css';
+@import './../../../assets/vendor/boxicons/css/boxicons.min.css';
+@import './../../../assets/vendor/quill/quill.snow.css';
+@import './../../../assets/vendor/quill/quill.bubble.css';
+@import './../../../assets/vendor/remixicon/remixicon.css';
+/* @import './../../../assets/vendor/simple-datatables/style.css'; */
+@import './../../../assets/css/style.css';
+@import './../../../css/select2.css';
+.btn-milung {
+    background-color: #14245c !important;
+    color: white;
+}
+.page-link {
+    border: none !important;
+    color: #14245c;
+}
+
+.page-item.active .page-link,
+.btn-milung {
+    background-color: #14245c !important;
+    color: white;
+}
+
+.btn-milung:hover {
+    background-color: white !important;
+    color: #14245c;
+    border-color: #14245c;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 700ms;
+}
+.text-milung {
+    color: #14245c !important;
+}
+.form-check-input:checked {
+    background-color: #41b400 !important;
+    border-color: #41b400 !important;
+  }
+  .fs-7 {
+    font-size: 14px !important;
+}

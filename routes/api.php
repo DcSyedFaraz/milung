@@ -60,6 +60,9 @@ Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate']);
 Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
 Route::post('placeAll', [OrderController::class, 'placeAll']);
 
+Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
+Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

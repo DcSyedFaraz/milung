@@ -29,6 +29,9 @@ import order_list from "./pages/admin/order/order_list.vue";
 import order_entry from "./pages/admin/order/order_entry.vue";
 import order_price_inquiry from "./pages/admin/order/order_price_inquiry.vue";
 
+// Supplier
+import supplier_order_price_inquiry from "./pages/supplier/order/order_price_inquiry.vue";
+
 const routes = [
     {
         path: "/",
@@ -186,7 +189,7 @@ const routes = [
         path: "/supplier",
         name: "supplier",
         component: supplier,
-        meta: { requiresSupplier: true },
+        // meta: { requiresSupplier: true },
         children: [
             {
                 path: "dashboard",
@@ -195,10 +198,10 @@ const routes = [
                 // meta: { requiresAdmin: true },
             },
             {
-                path: "dashboard/1",
-                name: "admins1s",
-                component: User,
-                // meta: { requiresAdmin: true },
+                path: "order_price_inquiry",
+                name: "supplier_order_price_inquiry",
+                component: supplier_order_price_inquiry,
+                // meta: { requiresSupplier: true },
             },
         ],
         redirect: "/supplier/dashboard",
