@@ -23,7 +23,7 @@ class ProductController extends Controller
 
         $validatedData = $request->validate([
             'supplier_ids' => 'array|exists:users,id',
-            'buyer' => 'required|string',
+            'buyer' => 'required|exists:users,id',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
             'group' => 'required|string',
@@ -82,7 +82,7 @@ class ProductController extends Controller
         // Validate the incoming request data
         $validatedData = $request->validate([
             'supplier_ids' => 'array|exists:users,id',
-            'buyer' => 'required|string',
+            'buyer' => 'required|exists:users,id',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
             'group' => 'required|string',

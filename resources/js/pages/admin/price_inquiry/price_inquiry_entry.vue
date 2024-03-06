@@ -11,7 +11,12 @@
                             <div class="col-4">
                                 <p for="v-model">Buyer ID:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="buyer" class="form-control"></div>
+                            <div class="col-8">
+                                <!-- <input type="text" v-model="buyer" class="form-control"> -->
+                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                    track-by="id">
+                                </multiselect>
+                            </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
@@ -93,7 +98,8 @@
                                         </label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place" value="china">
+                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
+                                            value="china">
                                         <label class="form-check-label" for="flexCheckDefault2">
                                             Mainland China
                                         </label>
@@ -119,9 +125,10 @@
                                     <input type="number" class="form-control" v-model="material.quantity" />
                                     <span class="input-group-text mx-2 fw-bold" style="color: #41b400;">Pcs</span>
                                     <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button" @click="addMaterial(index)"
-                                            v-if="index === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button" @click="removeMaterial(index)"
+                                        <button class="btn btn-warning btn ms-1" type="button"
+                                            @click="addMaterial(index)" v-if="index === 0">+</button>
+                                        <button class="btn btn-danger  ms-2" type="button"
+                                            @click="removeMaterial(index)"
                                             v-if="index !== 0 && materials.length > 1">-</button>
                                     </div>
                                 </div>
@@ -135,14 +142,16 @@
                             <div class="col-8">
                                 <div class="input-group my-2" v-for="(caps, indexs) in capacity" :="indexs">
                                     <input type="number" class="form-control" v-model="caps.quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-control mx-2" v-model="caps.unit">
+                                    <select style="color: #41b400;" class="fw-bold form-control mx-2"
+                                        v-model="caps.unit">
                                         <option value="GB">GB</option>
                                         <option value="mAh">mAh</option>
                                     </select>
                                     <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button" @click="addcapacity(indexs)"
-                                            v-if="indexs === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button" @click="removecapacity(indexs)"
+                                        <button class="btn btn-warning btn ms-1" type="button"
+                                            @click="addcapacity(indexs)" v-if="indexs === 0">+</button>
+                                        <button class="btn btn-danger  ms-2" type="button"
+                                            @click="removecapacity(indexs)"
                                             v-if="indexs !== 0 && capacity.length > 1">-</button>
                                     </div>
                                 </div>
@@ -241,7 +250,8 @@
                                 <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3"
                                     data-bs-toggle="modal" data-bs-target="#supplierModal">Send To Supplier</button>
 
-                                <button type="button" class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
+                                <button type="button"
+                                    class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
                                     Up</button>
 
                                 <button type="button" style="background-color: aqua !important; "
@@ -260,7 +270,8 @@
                 </div>
             </div>
             <!-- Modal -->
-            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -290,8 +301,12 @@
 <script>
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import Multiselect from 'vue-multiselect'
 
 export default {
+    components: {
+        Multiselect,
+    },
     props: {
         mode: String, // "create" or "edit"
         user: {
@@ -301,6 +316,8 @@ export default {
     },
     data() {
         return {
+            selectedBuyerId: [],
+            buyers: [],
             materials: this.mode === 'create' ? [{ quantity: '' }] : this.user && this.user.pcs ? this.user.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }],
             capacity: this.mode === 'create' ? [{ quantity: '', unit: '' }] : this.user && this.user.capacity ? this.user.capacity.map(capacity => {
                 const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
@@ -329,6 +346,21 @@ export default {
         };
     },
     methods: {
+        fetchBuyers() {
+            axios.get('/api/buyerOrder')
+                .then(response => {
+                    this.buyers = response.data;
+                    console.log(this.buyers);
+                    const selectedbuyerIds = Number(this.buyer);
+                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    if (selectedbuyer) {
+                        this.selectedBuyerId = selectedbuyer;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         fetchSupplierProfiles(groupId) {
             NProgress.start();
             console.log(groupId);
@@ -518,7 +550,7 @@ export default {
                     NProgress.done();
                     toastr.success(response.data.message);
                     this.$router.push({ name: 'price_inquiry' });
-                    if (this.mode === 'edit'){
+                    if (this.mode === 'edit') {
                         this.$emit('record-updated');
                     }
                 } else {
@@ -546,11 +578,17 @@ export default {
                 .filter(supplier => supplier.checked)
                 .map(supplier => supplier.id);
         },
-    }
-    ,
+    },
+    watch: {
+        selectedBuyerId(newValue) {
+            // console.log(newValue);
+            this.buyer = newValue.id;
+        },
+    },
     mounted() {
         NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
+        this.fetchBuyers();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
         this.$refs.fileInput1.addEventListener('change', this.loadImage1);
 

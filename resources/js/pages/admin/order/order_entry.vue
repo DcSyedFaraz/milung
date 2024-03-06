@@ -473,8 +473,8 @@ export default {
     data() {
         return {
             suppliers: [],
-            selectedBuyerId: [],
             selectedSupplierId: [],
+            selectedBuyerId: [],
             buyers: [],
             showProgress: false,
             inputs: [],
