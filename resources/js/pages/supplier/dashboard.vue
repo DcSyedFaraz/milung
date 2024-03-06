@@ -248,7 +248,7 @@
             <div class="logo-img"><img src="../../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'admin' }" >
+                    <router-link class="nav-link" :to="{ name: 'supplierdash' }" >
                         <i class="bi bi-pie-chart"></i>
                         <span>Summary</span>
                     </router-link>

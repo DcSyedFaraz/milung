@@ -63,14 +63,14 @@
                                     <th class="text-nowrap">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
+                            <tbody v-for="user in dataToDisplay" :key="user.id" v-if="dataToDisplay.length > 0">
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" :value="user.id"
                                                 id="flexCheckDefault" v-model="selectedUserIds">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                {{ user.buyer }}
+                                                {{ user.buyerid?.userid }}
                                             </label>
                                         </div>
                                     </td>
@@ -83,7 +83,7 @@
                                     <td>{{ updated_at(user) }}</td>
                                     <td>{{ created_at(user) }}</td>
                                     <td>{{ user.sendoutdate }}</td>
-                                    <td>{{ user.supplier }}</td>
+                                    <td>{{ user.supplierid?.userid }}</td>
 
 
                                     <td>
@@ -109,6 +109,13 @@
                                     </tr>
                                 </transition>
 
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td colspan="17">
+                                        <p class="text-center">No orders to display.</p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
 

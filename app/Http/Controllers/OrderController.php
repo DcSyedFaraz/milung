@@ -15,7 +15,7 @@ class OrderController extends Controller
 {
     public function orderentryget()
     {
-        $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->orderby('created_at', 'desc')->get();
+        $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->with('buyerid','supplierid')->orderby('created_at', 'desc')->get();
         return response()->json($order, JsonResponse::HTTP_OK);
     }
     public function placeAll(Request $request)
@@ -41,6 +41,7 @@ class OrderController extends Controller
 
                     $quantityValue = (int) preg_replace('/[^0-9]/', '', $order->quantity_unit);
                     $order->buyingprice = $order_place->purchase;
+                    $order->supplier = $supplierId;
 
                     $purchaseNumeric = floatval($order_place->purchase); // Convert to numeric value
 
@@ -68,7 +69,7 @@ class OrderController extends Controller
     {
         $data = $request->all();
         $id = 3;
-        //Auth::User()->id;
+        //$id = Auth::User()->id;
         if (empty($data)) {
             return response()->json(['errors' => 'Request Is Empty'], 422);
         }
@@ -160,11 +161,10 @@ class OrderController extends Controller
     }
     public function SupplierOrder()
     {
-        // $user = Auth::user();
-        $id = 3;
-        $userid = 'Supplier01';
+        $user = Auth::user();
+
         // Retrieve order_ids from the orderSuppliers table where the user ID matches the authenticated user's ID
-        $orderIds = OrderSupplier::where('user_id', $id)
+        $orderIds = OrderSupplier::where('user_id', $user->id)
             ->pluck('order_id')
             ->toArray();
 
@@ -182,7 +182,7 @@ class OrderController extends Controller
                 // Append the thumbnail URL to the order object
                 $order->thumbnail_url = $thumbnailUrl;
             }
-            $order->userid = $userid;
+            $order->userid = $user->userid;
         }
         return response()->json($orders, JsonResponse::HTTP_OK);
     }
@@ -199,10 +199,10 @@ class OrderController extends Controller
             'reference' => 'required|string',
             'inquiry' => 'required|string',
             'milungorder' => 'required|string',
-            'supplier' => 'required|string',
+            'supplier' => 'exists:users,id',
+            'buyer' => 'required|exists:users,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
-            'buyer' => 'required|string',
             'ftyitem' => 'required|string',
             'productname' => 'required|string',
             'productcolor' => 'required|string',
@@ -212,9 +212,9 @@ class OrderController extends Controller
             'packaging' => 'required|string',
             'packagingprinting' => 'required',
             'quantity' => 'required|string',
-            'buyingprice' => 'required|string',
-            'sellingprice' => 'required|string',
-            'totalvalue' => 'required|string',
+            'buyingprice' => 'nullable|integer',
+            'sellingprice' => 'nullable|integer',
+            'totalvalue' => 'nullable|integer',
             'sendoutdate' => 'required|date',
             'so_number' => 'required|string',
             'atc_number' => 'required|string',
@@ -282,10 +282,10 @@ class OrderController extends Controller
             'reference' => 'required|string',
             'inquiry' => 'required|string',
             'milungorder' => 'required|string',
-            'supplier' => 'required|string',
+            'supplier' => 'exists:users,id',
+            'buyer' => 'required|exists:users,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
-            'buyer' => 'required|string',
             'ftyitem' => 'required|string',
             'productname' => 'required|string',
             'productcolor' => 'required|string',

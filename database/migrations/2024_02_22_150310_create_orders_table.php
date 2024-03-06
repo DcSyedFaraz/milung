@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('accessories')->nullable();
             $table->string('article')->nullable();
             $table->string('atc_number')->nullable();
-            $table->string('buyer')->nullable();
+            $table->integer('buyer')->nullable();
             $table->string('capacity')->nullable();
             $table->string('buyeremail')->nullable();
             $table->string('buyerorder')->nullable();
@@ -49,7 +49,7 @@ return new class extends Migration {
             $table->string('ship_doc')->nullable();
             $table->string('so_number')->nullable();
             $table->string('status')->nullable();
-            $table->string('supplier')->nullable();
+            $table->integer('supplier')->nullable();
             $table->string('totalvalue')->nullable();
             $table->timestamps();
         });

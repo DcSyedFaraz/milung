@@ -63,7 +63,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
+                            <tbody v-for="user in dataToDisplay" :key="user.id" v-if="dataToDisplay.length > 0">
                                 <tr style="border-bottom-color: snow !important;">
                                     <td>{{ user.inquiry_number }}</td>
                                     <td>
@@ -88,14 +88,23 @@
                                         </a>
                                     </td>
                                 </tr>
+
                                 <transition name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
-                                            <PriceInquiry mode="edit" :user="user" @record-updated="handleRecordUpdated" />
+                                            <PriceInquiry mode="edit" :user="user"
+                                                @record-updated="handleRecordUpdated" />
                                         </td>
                                     </tr>
                                 </transition>
 
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td colspan="17">
+                                        <p class="text-center">No inquiries to display.</p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -344,4 +353,5 @@ td {
 .rounded-bottom-new {
     border-bottom-left-radius: 2.25rem !important;
     border-bottom-right-radius: 2.25rem !important;
-}</style>
+}
+</style>

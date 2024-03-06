@@ -26,12 +26,14 @@ Route::post('register', [UserController::class, 'register']);
 Route::get('users', [UserController::class, 'users']);
 Route::get('supplier', [UserController::class, 'supplier']);
 Route::get('buyer', [UserController::class, 'buyer']);
+Route::get('supplierOrder', [UserController::class, 'supplierOrder']);
+Route::get('buyerOrder', [UserController::class, 'buyerOrder']);
 Route::get('products', [UserController::class, 'products']);
+Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
 
 // Adding Users
 Route::post('addbuyers', [UserController::class, 'buyers']);
 Route::post('addsupliers', [UserController::class, 'suppliers']);
-Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
 
 // Updating Users
 Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
@@ -60,21 +62,21 @@ Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate']);
 Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
 Route::post('placeAll', [OrderController::class, 'placeAll']);
 
-Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
-Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
 
 Route::post('statement', [ProductController::class, 'statement']);
 // Auth
 // Adding Products
 Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
 Route::post('addprod', [ProductController::class, 'addprod']);
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Your authenticated routes
+    Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
+    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
 });
 

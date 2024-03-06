@@ -32,4 +32,12 @@ class Order extends Model
     {
         return $this->hasOne(OrderSupplier::class);
     }
+    public function buyerid()
+    {
+        return $this->belongsTo(User::class,'buyer')->select('id','userid');
+    }
+    public function supplierid()
+    {
+        return $this->belongsTo(User::class,'supplier')->select('id','userid');
+    }
 }
