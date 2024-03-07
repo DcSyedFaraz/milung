@@ -366,25 +366,18 @@
                 <!-- Shipment -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-box2"></i><span>shipment</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
-                            <a href="icons-bootstrap.html">
-                                <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
-                            </a>
+                            <router-link class="nav-link" :to="{ name: 'shipment_overview' }"
+                                :class="{ active: $route.name === 'shipment_overview' || $route.name === 'create_so' }"
+                                active-class="active">
+                                <i class="bi bi-bag"></i><span>Shipment Overview</span>
+                            </router-link>
                         </li>
-                        <li>
-                            <a href="icons-remix.html">
-                                <i class="bi bi-circle"></i><span>Remix Icons</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="icons-boxicons.html">
-                                <i class="bi bi-circle"></i><span>Boxicons</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <!-- End Icons Nav -->
@@ -460,6 +453,16 @@ export default {
                 '/admin/order_entry',
                 '/edit-order/:id',
                 '/admin/order_price_inquiry',
+            ];
+
+            return this.$route.matched.some(route => activeRoutes.includes(route.path));
+
+        },
+        isAnyShipmentRouteActive() {
+            const activeRoutes = [
+                '/admin/create_so',
+                '/admin/shipment_overview',
+
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
