@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class ShipmentController extends Controller
 {
+    public function shipment(Request $request)
+    {
+        dd($request->all());
+    }
     public function create_so(Request $request)
     {
         $data = $request->all();

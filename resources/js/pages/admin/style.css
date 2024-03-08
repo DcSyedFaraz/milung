@@ -42,3 +42,7 @@
   .fs-7 {
     font-size: 14px !important;
 }
+.btn-success {
+    background-color: #41b400 !important;
+    border-color: #41b400 !important;
+}

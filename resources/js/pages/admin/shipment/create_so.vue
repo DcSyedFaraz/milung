@@ -26,7 +26,10 @@
                                     <p for="v-model">Buyer ID:</p>
                                 </div>
                                 <div class="col-7">
-                                    <input type="text" v-model="so.buyerid" class="form-control">
+                                    <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
+                                    <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                    track-by="id">
+                                </multiselect>
                                 </div>
                             </div>
 
@@ -84,15 +87,44 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect'
 export default {
+    components: {
+        Multiselect,
+    },
     data() {
         return {
-            so:{},
+            so: {},
+            buyers: [],
+            selectedBuyerId: [],
             submitting: false
         }
     },
+    mounted() {
+        this.fetchBuyers();
+     },
+    watch: {
+        selectedBuyerId(newValue) {
+            // console.log(newValue);
+            this.so.buyerid = newValue.id;
+        },
+    },
     methods: {
-
+        fetchBuyers() {
+            axios.get('/api/buyerOrder')
+                .then(response => {
+                    this.buyers = response.data;
+                    // console.log(this.buyers);
+                    // const selectedbuyerIds = Number(this.orders[0].buyer);
+                    // const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    // if (selectedbuyer) {
+                    //     this.selectedBuyerId = selectedbuyer;
+                    // }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         handleValidationErrors(validationErrors) {
             // Assuming you have a function to display toastr error messages
             for (const key in validationErrors) {

@@ -16,7 +16,7 @@
                         <p for="v-model" class="my-auto ">Buyer ID:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" disabled v-model="so.user?.userid" class="form-control ">
+                        <input type="text" disabled v-model="so.user.userid" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -74,10 +74,10 @@
                 <h3 class="text-milung text-uppercase fw-bold">Buyer Shipment Information</h3>
                 <div class="d-flex col-12 my-2">
                     <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto ">Shippind Date:</p>
+                        <p for="v-model" class="my-auto ">Shipping Date:</p>
                     </div>
                     <div class="col-8">
-                        <input type="date" v-model="so.ship_date" class="form-control ">
+                        <input type="date" v-model="buyer.ship_date" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -85,7 +85,7 @@
                         <p for="v-model" class="my-auto ">Shipping Agent:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.ship_agent" class="form-control ">
+                        <input type="text" v-model="buyer.ship_agent" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -93,7 +93,7 @@
                         <p for="v-model" class="my-auto ">Tracking / Waybillt#:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.waybill" class="form-control ">
+                        <input type="text" v-model="buyer.waybill" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -101,7 +101,7 @@
                         <p for="v-model" class="my-auto ">Courier:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.courier" class="form-control ">
+                        <input type="text" v-model="buyer.courier" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -109,7 +109,7 @@
                         <p for="v-model" class="my-auto ">Flight:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.flight" class="form-control ">
+                        <input type="text" v-model="buyer.flight" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -117,7 +117,7 @@
                         <p for="v-model" class="my-auto ">Vessel:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.vessel" class="form-control ">
+                        <input type="text" v-model="buyer.vessel" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -125,7 +125,7 @@
                         <p for="v-model" class="my-auto ">Train:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.train" class="form-control ">
+                        <input type="text" v-model="buyer.train" class="form-control ">
                     </div>
                 </div>
 
@@ -136,7 +136,7 @@
                         <p for="v-model" class="my-auto ">Delivery Date:</p>
                     </div>
                     <div class="col-7">
-                        <input type="date" v-model="so.delivery" class="form-control ">
+                        <input type="date" v-model="buyer.delivery" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -144,19 +144,107 @@
                         <p for="v-model" class="my-auto ">ATC Number:</p>
                     </div>
                     <div class="col-7">
-                        <input type="date" v-model="so.atc_no" class="form-control ">
+                        <input type="text" v-model="buyer.atc_no" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
                     <div class="mt-2">
                         <label class="form-label">Remarks:</label>
                         <!-- <button @click="save">save</button> -->
-                        <textarea v-model="so.buyerremarks" cols="57" rows="6" class="form-control "></textarea>
+                        <textarea v-model="buyer.buyerremarks" cols="57" rows="6" class="form-control "></textarea>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Buyer shipment End -->
+        <!-- Supplier shipment -->
+        <div class="row px-2 pb-5">
+            <h3 class="text-milung text-uppercase fw-bold">Supplier Shipment Information</h3>
+            <div class="col-6">
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Shipping Date:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="date" v-model="supplier.ship_date" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Mode Of Delivery:</p>
+                    </div>
+                    <div class="col-8">
+                        <select class="fw-bold form-select" v-model="supplier.mode_delivery">
+                            <option value="Forwarder Pickup">Forwarder Pickup</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Tracking / Waybillt#:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" v-model="supplier.waybill" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Courier:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" v-model="supplier.courier" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Flight:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" v-model="supplier.flight" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Vessel:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" v-model="supplier.vessel" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Train:</p>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" v-model="supplier.train" class="form-control ">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex col-12 my-2 ">
+                    <div class="col-4 my-auto">
+                        <p for="v-model" class="my-auto ">Delivery Date:</p>
+                    </div>
+                    <div class="col-7">
+                        <input type="date" v-model="supplier.delivery" class="form-control ">
+                    </div>
+                </div>
+                <div class="d-flex col-12 my-2">
+                    <div class="mt-2">
+                        <label class="form-label">Remarks:</label>
+                        <textarea v-model="supplier.buyerremarks" cols="57" rows="6" class="form-control "></textarea>
+                    </div>
+                    <!-- <button @click="save">save</button> -->
+                </div>
+                <div class="d-flex col-12 my-2 justify-content-end mt-5">
+
+                    <button class="btn btn-success px-4" @click="save">Save</button>
+                </div>
+            </div>
+        </div>
+        <!-- Supplier shipment End -->
     </div>
 </template>
 
@@ -171,22 +259,31 @@ export default {
     data() {
         return {
             so: this.soData,
+            buyer: {},
+            supplier: {},
         }
     },
-    methods:{
+    methods: {
         async save() {
             console.log(this.so);
+            console.log(this.buyer);
+            console.log(this.supplier);
+            const formData = {
+                'shipment_order': this.so,
+                'buyer': this.buyer,
+                'supplier': this.supplier
+            };
 
-            // try {
-            //     const response = await axios.post('/api/statement', formData, {
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         }
-            //     });
-            //     console.log(response.data);
-            // } catch (error) {
-            //     console.error(error);
-            // }
+            try {
+                const response = await axios.post('/api/shipment', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
         },
     }
 }
