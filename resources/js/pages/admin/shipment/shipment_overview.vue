@@ -10,7 +10,8 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Shipment Overview:</span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Shipment
+                                    Overview:</span>
                             </span>
 
                             <div class="col-4 d-flex">
@@ -57,7 +58,7 @@
                                     <th class="text-nowrap">Shipping Method</th>
                                     <th class="text-nowrap">Tracking / Waybillt#</th>
                                     <th class="text-nowrap">Delivery Date</th>
-                                    <th class="text-nowrap">Packing List</th>
+                                    <th class="text-nowrap">Shipping Documents</th>
                                     <th class="text-nowrap">Actions</th>
                                 </tr>
                             </thead>
@@ -65,29 +66,52 @@
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" :value="ship.id"
+                                            <!-- <input class="form-check-input" type="checkbox" :value="ship.id"
                                                 id="flexCheckDefault" v-model="selectedshipIds">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                {{ ship.so_number }}
-                                            </label>
+                                            </label> -->
+                                            {{ ship.so_number }}
                                         </div>
                                     </td>
-                                    <td>
-                                        {{ ship.id }}
+                                    <td
+                                        :class="{ 'text-muted': ship?.shipment?.ship_date == null, 'fst-italic': ship?.shipment?.ship_date == null }">
+                                        {{ ship?.shipment?.ship_date ?? 'null' }}
                                     </td>
                                     <td>
-                                        <span >{{ ship.method }}</span>
+                                        <span>{{ ship.method }}</span>
                                     </td>
-                                    <td>{{ ship.id }}</td>
-                                    <td>{{ ship.id }}</td>
-                                    <td>{{ ship.supplierid?.shipid }}</td>
+                                    <td
+                                        :class="{ 'text-muted': ship?.shipment?.waybill == null, 'fst-italic': ship?.shipment?.waybill == null }">
+                                        {{ ship?.shipment?.waybill ?? 'null' }}</td>
+                                    <td
+                                        :class="{ 'text-muted': ship?.shipment?.delivery == null, 'fst-italic': ship?.shipment?.delivery == null }">
+                                        {{ ship?.shipment?.delivery ?? 'null'
+                                        }}</td>
+                                    <td>
+                                        <!-- Example single danger button -->
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-danger dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Action
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
 
 
                                     <td>
                                         <button @click="toggleAccordion(ship)" class="btn btn-light"
-                                        :class="{ 'rotate-icon': accordionOpen[ship.id] }">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
+                                            :class="{ 'rotate-icon': accordionOpen[ship.id] }">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
 
                                         <a href="#" @click="deleteship(ship.id)" class="text-danger"><i
                                                 class="bi bi-trash"></i>
@@ -167,7 +191,8 @@ export default {
             selectedshipIds: [],
             accordionOpen: {},
             currentPage: 1,
-            searchQuery: ''
+            searchQuery: '',
+            dropdownOpen: false
         };
     },
     watch: {
@@ -270,6 +295,9 @@ export default {
                 toastr.error('Error fetching data');
             }
         },
+        toggleDropdown() {
+            this.dropdownOpen = !this.dropdownOpen;
+        }
 
     },
 };
@@ -284,6 +312,14 @@ export default {
 
 .bg-cyan {
     background-color: #12d4b3 !important;
+}
+
+.dropdown-menu {
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 .bg-pink {

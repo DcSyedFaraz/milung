@@ -14,4 +14,12 @@ class ShipmentOrder extends Model
     {
         return $this->belongsTo(User::class,'buyerid')->select('id','userid');
     }
+    public function shipment()
+    {
+        return $this->hasOne(Shipment::class);
+    }
+    public function shipmentsupplier()
+    {
+        return $this->hasOne(ShipmentSupplier::class);
+    }
 }

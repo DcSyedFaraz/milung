@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('so_number')->unique();
             $table->integer('buyerid');
+            $table->integer('supplierid');
             $table->string('method');
             $table->string('port');
+            $table->longText('remarks')->nullable();
             $table->string('destination');
             $table->string('incoterm');
             $table->timestamps();

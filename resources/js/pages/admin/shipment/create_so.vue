@@ -22,12 +22,23 @@
                                 <div class="col-7"><input type="text" v-model="so.so_number" class="form-control"></div>
                             </div>
                             <div class="d-flex col-11 my-2">
-                                <div class="col-5">
-                                    <p for="v-model">Buyer ID:</p>
+                                <div class="col-5 my-auto">
+                                    <p for="v-model my-auto">Buyer ID:</p>
                                 </div>
                                 <div class="col-7">
                                     <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
                                     <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                    track-by="id">
+                                </multiselect>
+                                </div>
+                            </div>
+                            <div class="d-flex col-11 my-2">
+                                <div class="col-5 my-auto">
+                                    <p for="v-model my-auto">Supplier ID:</p>
+                                </div>
+                                <div class="col-7">
+                                    <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
+                                    <multiselect v-model="selectedsupplierId" :options="suppliers" field="id" label="userid"
                                     track-by="id">
                                 </multiselect>
                                 </div>
@@ -96,30 +107,41 @@ export default {
         return {
             so: {},
             buyers: [],
+            suppliers: [],
+            selectedsupplierId: [],
             selectedBuyerId: [],
             submitting: false
         }
     },
     mounted() {
         this.fetchBuyers();
+        this.fetchSuppliers();
      },
     watch: {
         selectedBuyerId(newValue) {
             // console.log(newValue);
             this.so.buyerid = newValue.id;
         },
+        selectedsupplierId(newValue) {
+            // console.log(newValue);
+            this.so.supplierid = newValue.id;
+        },
     },
     methods: {
+        fetchSuppliers() {
+            axios.get('/api/supplierOrder')
+                .then(response => {
+                    this.suppliers = response.data;
+                    // console.log(this.suppliers);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         fetchBuyers() {
             axios.get('/api/buyerOrder')
                 .then(response => {
                     this.buyers = response.data;
-                    // console.log(this.buyers);
-                    // const selectedbuyerIds = Number(this.orders[0].buyer);
-                    // const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
-                    // if (selectedbuyer) {
-                    //     this.selectedBuyerId = selectedbuyer;
-                    // }
                 })
                 .catch(error => {
                     console.error(error);

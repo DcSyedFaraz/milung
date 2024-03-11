@@ -8,7 +8,7 @@
                         <p for="v-model" class="my-auto ">SO#:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="so.so_number" class="form-control ">
+                        <input type="text" v-model="so.so_number" disabled class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -151,7 +151,7 @@
                     <div class="mt-2">
                         <label class="form-label">Remarks:</label>
                         <!-- <button @click="save">save</button> -->
-                        <textarea v-model="buyer.buyerremarks" cols="57" rows="6" class="form-control "></textarea>
+                        <textarea v-model="buyer.remarks" cols="57" rows="6" class="form-control "></textarea>
                     </div>
                 </div>
             </div>
@@ -234,7 +234,7 @@
                 <div class="d-flex col-12 my-2">
                     <div class="mt-2">
                         <label class="form-label">Remarks:</label>
-                        <textarea v-model="supplier.buyerremarks" cols="57" rows="6" class="form-control "></textarea>
+                        <textarea v-model="supplier.remarks" cols="57" rows="6" class="form-control "></textarea>
                     </div>
                     <!-- <button @click="save">save</button> -->
                 </div>
@@ -259,8 +259,8 @@ export default {
     data() {
         return {
             so: this.soData,
-            buyer: {},
-            supplier: {},
+            buyer: this.soData.shipment ? this.soData.shipment : {},
+            supplier: this.soData.shipmentsupplier ? this.soData.shipmentsupplier : {},
         }
     },
     methods: {
@@ -275,14 +275,17 @@ export default {
             };
 
             try {
-                const response = await axios.post('/api/shipment', formData, {
+                const response = await axios.post(`/api/shipment/${this.so.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
                 console.log(response.data);
+                toastr.success(response.data.message);
+                this.$emit('record-updated');
             } catch (error) {
                 console.error(error);
+                toastr.error(error.response.data.error);
             }
         },
     }

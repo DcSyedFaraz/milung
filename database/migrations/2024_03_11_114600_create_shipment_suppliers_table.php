@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shipments', function (Blueprint $table) {
+        Schema::create('shipment_suppliers', function (Blueprint $table) {
             $table->id();
             $table->date('ship_date')->nullable();
-            $table->string('ship_agent')->nullable();
+            $table->string('mode_delivery')->nullable();
             $table->string('waybill')->nullable();
             $table->string('courier')->nullable();
             $table->string('flight')->nullable();
             $table->string('vessel')->nullable();
             $table->string('train')->nullable();
             $table->date('delivery')->nullable();
-            $table->string('atc_no')->nullable();
             $table->longText('remarks')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('shipment_order_id')->constrained()->onDelete('cascade');
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shipments');
+        Schema::dropIfExists('shipment_suppliers');
     }
 };
