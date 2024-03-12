@@ -31,6 +31,7 @@ import order_price_inquiry from "./pages/admin/order/order_price_inquiry.vue";
 
 import shipment_overview from "./pages/admin/shipment/shipment_overview.vue";
 import create_so from "./pages/admin/shipment/create_so.vue";
+import information from "./pages/admin/shipment/documents/information.vue";
 
 
 // Supplier
@@ -175,6 +176,12 @@ const routes = [
                 path: "create_so",
                 name: "create_so",
                 component: create_so,
+                // meta: { requiresAdmin: true },
+            },
+            {
+                path: "information",
+                name: "information",
+                component: information,
                 // meta: { requiresAdmin: true },
             },
         ],

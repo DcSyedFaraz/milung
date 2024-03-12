@@ -88,21 +88,45 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <!-- Example single danger button -->
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-danger dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Action
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-                                                <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                            </ul>
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-light text-primary fw-bold"
+                                            data-bs-toggle="modal" :data-bs-target="`#exampleModal${ship.id}`">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" :id="`exampleModal${ship.id}`" tabindex="-1"
+                                            ref="modalRef" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Choose Document
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="">
+                                                            <li>
+                                                                <router-link :to="{ name: 'information' }"
+                                                                @click="toggleModal('exampleModal' + ship.id, 'information')"
+                                                                    data-bs-dismiss="modal">
+                                                                    <i class="bi bi-circle"></i> <span>
+                                                                        Information</span>
+                                                                </router-link>
+                                                            </li>
+
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <!-- <button type="button" class="btn btn-primary">Save
+                                                            changes</button> -->
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
 
@@ -297,6 +321,19 @@ export default {
         },
         toggleDropdown() {
             this.dropdownOpen = !this.dropdownOpen;
+        },
+        toggleModal(modalId, routeName) {
+            // Dismiss the modal
+            const modal = this.$refs[modalId];
+            if (modal) {
+                const bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.hide();
+            }
+
+            // Navigate to the specified route
+            if (routeName) {
+                this.$router.push({ name: routeName });
+            }
         }
 
     },
