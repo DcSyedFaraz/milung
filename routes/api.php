@@ -65,6 +65,7 @@ Route::post('placeAll', [OrderController::class, 'placeAll']);
 
 //Shipment
 Route::post('create_so', [ShipmentController::class, 'create_so']);
+Route::post('create_doc', [ShipmentController::class, 'create_doc']);
 Route::delete('soDelete/{id}', [ShipmentController::class, 'soDelete']);
 Route::get('shipmentget', [ShipmentController::class, 'shipmentget']);
 // Route::post('shipment', [ShipmentController::class, 'shipment']);

@@ -122,33 +122,6 @@
                 </div>
             </div>
 
-            <div class="col-3 my-2">
-                <div class="d-flex">
-                    <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-truck text-warning"></i>
-                            Courier:</p>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" v-model="info.courier" class="form-control ">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-3 my-2">
-                <div class="d-flex">
-                    <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto fs-7 text-white"><i
-                                class="bi bi-journal-check text-warning"></i> Tracking#:</p>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" v-model="info.tracking" class="form-control ">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-3 my-auto">
-                <button class="btn btn-warning mx-3 my-auto px-5 fw-bold" type="reset">Save</button>
-            </div>
 
         </div>
     </div>
@@ -163,8 +136,7 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">III Packing
-                                    List:</span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Comercial Invoice:</span>
                             </span>
 
                             <div class="col-4 d-flex">
@@ -184,31 +156,38 @@
                         </div>
                     </div>
 
-                    <div class="card-body rounded-top table-responsive">
+                    <div class="card-body rounded-top table-responsive border-top border-bottom">
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
                             <thead style="color: #009de1; " class="text-center fs-7 ">
                                 <tr style="">
-                                    <th class="text-nowrap"> Carton No. </th>
-                                    <th class="text-nowrap">Order Number</th>
+                                    <th class="text-nowrap"> Order No. </th>
                                     <th class="text-nowrap">Description</th>
-                                    <th class="text-nowrap">QTY</th>
-                                    <th class="text-nowrap">Ctn</th>
-                                    <th class="text-nowrap">Total Qty</th>
-                                    <th class="text-nowrap">N.W. (KGS)</th>
-                                    <th class="text-nowrap">Total</th>
-                                    <th class="text-nowrap">G.W. (KGS)</th>
-                                    <th class="text-nowrap">Total</th>
-
-
-                                    <th class="text-nowrap text-milung">L(CM)</th>
-                                    <th class="text-nowrap"><span>Carton Measurement</span> <br>
-                                        <span class="text-milung">W(CM)</span>
+                                    <th class="text-nowrap"><span>Quantity</span> <br>
+                                        <span class="text-milung">Pcs or set</span>
                                     </th>
-                                    <th class="text-nowrap text-milung">H(CM)</th>
-                                    <th class="text-nowrap text-milung">CBM</th>
-                                    <th class="text-nowrap">Actions</th>
+                                    <th class="text-nowrap">Unit Price US$</th>
+                                    <th class="text-nowrap">Total Amount US$</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td colspan="17">
+                                        <p class="text-center">No data to display.</p>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="table table-striped table-hover  w-25">
+                            <thead style="color: #009de1; " class="text-center fs-7 ">
+                                <tr style="">
+                                    <th class="text-nowrap"> HS Code. </th>
+                                    <th class="text-nowrap">Description</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -225,40 +204,6 @@
 
                 </div>
 
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row align-items-center"> <!-- Align items vertically -->
-            <div class="col-3">
-                <div class="d-flex">
-                    <div class="col-8 my-auto">
-                        <p for="v-model" class="my-auto fs-7">Shipment Extra Cost:</p>
-                    </div>
-                    <div class="col-4">
-                        <input type="number" v-model="blue.extra" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-2">
-                <button class="btn btn-warning px-5">Save</button> <!-- Adjust padding for consistency -->
-            </div>
-            <div class="col-2">
-                <router-link :to="{ name: 'cibd' }" class="btn btn-milung px-4 fs-7">
-                    <span>Generate CIBD</span>
-                </router-link>
-                <!-- <button ></button> -->
-            </div>
-
-            <div class="col-2">
-                <router-link :to="{ name: 'ci' }" class="btn bg-blue px-4 fs-7">
-                    <span>Generate CI</span>
-                </router-link>
-            </div>
-
-            <div class="col-3">
-                <button class="btn btn-success px-4" type="button">Export Shipping Docs</button>
             </div>
         </div>
     </div>

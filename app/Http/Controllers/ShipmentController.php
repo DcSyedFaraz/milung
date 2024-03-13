@@ -11,6 +11,10 @@ use Illuminate\Validation\Rule;
 
 class ShipmentController extends Controller
 {
+    public function create_doc(Request $request)
+    {
+        dd($request->all());
+    }
     public function shipment(Request $request, $id)
     {
         // dd($request->all());

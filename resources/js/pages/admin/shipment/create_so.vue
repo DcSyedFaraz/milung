@@ -28,8 +28,8 @@
                                 <div class="col-7">
                                     <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
                                     <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
-                                    track-by="id">
-                                </multiselect>
+                                        track-by="id">
+                                    </multiselect>
                                 </div>
                             </div>
                             <div class="d-flex col-11 my-2">
@@ -38,9 +38,9 @@
                                 </div>
                                 <div class="col-7">
                                     <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                    <multiselect v-model="selectedsupplierId" :options="suppliers" field="id" label="userid"
-                                    track-by="id">
-                                </multiselect>
+                                    <multiselect v-model="selectedsupplierId" :options="suppliers" field="id"
+                                        label="userid" track-by="id">
+                                    </multiselect>
                                 </div>
                             </div>
 
@@ -116,7 +116,7 @@ export default {
     mounted() {
         this.fetchBuyers();
         this.fetchSuppliers();
-     },
+    },
     watch: {
         selectedBuyerId(newValue) {
             // console.log(newValue);
