@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackingList;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
 use App\Models\ShipmentSupplier;
@@ -111,6 +112,23 @@ class ShipmentController extends Controller
     public function shipmentget()
     {
         $shipment = ShipmentOrder::with('user', 'shipment', 'shipmentsupplier')->get();
+        return response()->json($shipment, JsonResponse::HTTP_OK);
+    }
+    public function shipmentgetid($id)
+    {
+        $shipment = PackingList::where('shipment_order_id',$id)->with('orders.product_group','supplierid')->get();
+        $totalQty = $shipment->sum('qty');
+        $totalTotalQty = $shipment->sum(function($item) {
+            // dump($item->totalqty);
+            return str_replace(',', '', $item->totalqty); // Remove commas and sum
+        });
+        // dd($shipment);
+        // $data = [
+        //     'shipment' => $shipment,
+        //     'totalQty' => $totalQty,
+        //     'totalTotalQty' => $totalTotalQty,
+        // ];
+
         return response()->json($shipment, JsonResponse::HTTP_OK);
     }
     public function shipmentsget()

@@ -33,6 +33,7 @@
                         <table class="table table-striped table-hover  ">
                             <thead style="color: #009de1; " class="text-center fs-7 ">
                                 <tr style="">
+
                                     <th class="text-nowrap"> Carton No. </th>
                                     <th class="text-nowrap">Order Number</th>
                                     <th class="text-nowrap">Description</th>
@@ -58,6 +59,7 @@
 
                                 <tr v-for="(item, index) in orders" :key="index" class="text-center">
                                     <!-- Editable cells -->
+
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'carton')">{{
                             item.packinglist?.carton }} </td>
                                     <td>{{ item.id }} </td>
@@ -202,15 +204,12 @@ export default {
             }
         },
         calculateTotal(qty, quantityUnit) {
-            // Extract the numeric part from the quantity unit string
             const numericQuantity = parseInt(quantityUnit);
 
-            // Check if the extraction was successful and numericQuantity is a valid number
             if (!isNaN(numericQuantity)) {
                 // Perform the calculation
                 return qty * numericQuantity;
             } else {
-                // If the quantity unit is not in the expected format, return a default value or handle it accordingly
                 return 'N/A';
             }
         },

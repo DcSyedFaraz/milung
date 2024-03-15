@@ -24,61 +24,65 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
-// Fetching Users
-Route::get('users', [UserController::class, 'users']);
-Route::get('supplier', [UserController::class, 'supplier']);
-Route::get('buyer', [UserController::class, 'buyer']);
-Route::get('supplierOrder', [UserController::class, 'supplierOrder']);
-Route::get('buyerOrder', [UserController::class, 'buyerOrder']);
-Route::get('products', [UserController::class, 'products']);
-Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
+Route::group(['middleware' => []], function () {
 
-// Adding Users
-Route::post('addbuyers', [UserController::class, 'buyers']);
-Route::post('addsupliers', [UserController::class, 'suppliers']);
+    // Fetching Users
+    Route::get('users', [UserController::class, 'users']);
+    Route::get('supplier', [UserController::class, 'supplier']);
+    Route::get('buyer', [UserController::class, 'buyer']);
+    Route::get('supplierOrder', [UserController::class, 'supplierOrder']);
+    Route::get('buyerOrder', [UserController::class, 'buyerOrder']);
+    Route::get('products', [UserController::class, 'products']);
+    Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
 
-// Updating Users
-Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
-Route::put('updateusers/{id}', [UserController::class, 'update']);
-Route::post('addusers', [UserController::class, 'addUser']);
-Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
+    // Adding Users
+    Route::post('addbuyers', [UserController::class, 'buyers']);
+    Route::post('addsupliers', [UserController::class, 'suppliers']);
 
-//Product-group
-Route::post('product_group', [ProductController::class, 'product_group']);
-Route::get('product_group_get', [ProductController::class, 'product_group_get']);
-Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all']);
+    // Updating Users
+    Route::get('editusers/{id}', [UserController::class, 'usersEdit']);
+    Route::put('updateusers/{id}', [UserController::class, 'update']);
+    Route::post('addusers', [UserController::class, 'addUser']);
+    Route::delete('userDelete/{id}', [UserController::class, 'delUser']);
 
-//price_inquiry
-Route::post('price_inquiry', [ProductController::class, 'price_inquiry']);
-Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
-Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
-Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
+    //Product-group
+    Route::post('product_group', [ProductController::class, 'product_group']);
+    Route::get('product_group_get', [ProductController::class, 'product_group_get']);
+    Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all']);
 
-//Orders
-Route::post('orderentry', [OrderController::class, 'orderentry']);
-Route::post('saveSelectedOrders', [OrderController::class, 'saveSelectedOrders']);
-Route::get('orderentry', [OrderController::class, 'orderentryget']);
-Route::get('orderAll', [OrderController::class, 'orderAll']);
-Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID']);
-Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate']);
-Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
-Route::post('placeAll', [OrderController::class, 'placeAll']);
-Route::get('shipmentsget', [ShipmentController::class, 'shipmentsget']);
+    //price_inquiry
+    Route::post('price_inquiry', [ProductController::class, 'price_inquiry']);
+    Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
+    Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
+    Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
-//Shipment
-Route::post('create_so', [ShipmentController::class, 'create_so']);
-Route::post('create_doc', [ShipmentController::class, 'create_doc']);
-Route::delete('soDelete/{id}', [ShipmentController::class, 'soDelete']);
-Route::get('shipmentget', [ShipmentController::class, 'shipmentget']);
-// Route::post('shipment', [ShipmentController::class, 'shipment']);
-Route::post('shipment/{id}', [ShipmentController::class, 'shipment']);
+    //Orders
+    Route::post('orderentry', [OrderController::class, 'orderentry']);
+    Route::post('saveSelectedOrders', [OrderController::class, 'saveSelectedOrders']);
+    Route::get('orderentry', [OrderController::class, 'orderentryget']);
+    Route::get('orderAll', [OrderController::class, 'orderAll']);
+    Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID']);
+    Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate']);
+    Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
+    Route::post('placeAll', [OrderController::class, 'placeAll']);
+    Route::get('shipmentsget', [ShipmentController::class, 'shipmentsget']);
 
+    //Shipment
+    Route::post('create_so', [ShipmentController::class, 'create_so']);
+    Route::post('create_doc', [ShipmentController::class, 'create_doc']);
+    Route::delete('soDelete/{id}', [ShipmentController::class, 'soDelete']);
+    Route::get('shipmentget', [ShipmentController::class, 'shipmentget']);
+    Route::get('shipmentget/{id}', [ShipmentController::class, 'shipmentgetid']);
+    Route::post('shipment/{id}', [ShipmentController::class, 'shipment']);
 
-Route::post('statement', [ProductController::class, 'statement']);
-// Auth
-// Adding Products
-Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
-Route::post('addprod', [ProductController::class, 'addprod']);
+    // Doc Routes
+    Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
+
+    Route::post('statement', [ProductController::class, 'statement']);
+    // Adding Products
+    Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
+    Route::post('addprod', [ProductController::class, 'addprod']);
+});
 
 
 // Supplier Routes

@@ -159,7 +159,7 @@ const adminRoutes = [
         // meta: { requiresAdmin: true },
     },
     {
-        path: "information",
+        path: "information/:id",
         name: "information",
         component: information,
         // meta: { requiresAdmin: true },

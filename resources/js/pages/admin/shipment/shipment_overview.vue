@@ -88,14 +88,19 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
+                                        <router-link :to="{ name: 'information', params: { id: ship.id }  }"
+                                            >
+                                            <i class="bi bi-circle"></i> <span>
+                                                Information</span>
+                                        </router-link>
                                         <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-light text-primary fw-bold"
+                                        <!-- <button type="button" class="btn btn-light text-primary fw-bold"
                                             data-bs-toggle="modal" :data-bs-target="`#exampleModal${ship.id}`">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
-                                        </button>
+                                        </button>-->
 
                                         <!-- Modal -->
-                                        <div class="modal fade" :id="`exampleModal${ship.id}`" tabindex="-1"
+                                        <!-- <div class="modal fade" :id="`exampleModal${ship.id}`" tabindex="-1"
                                             ref="modalRef" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -109,7 +114,7 @@
                                                         <ul class="">
                                                             <li>
                                                                 <router-link :to="{ name: 'information' }"
-                                                                @click="toggleModal('exampleModal' + ship.id, 'information')"
+                                                                    @click="toggleModal('exampleModal' + ship.id, 'information')"
                                                                     data-bs-dismiss="modal">
                                                                     <i class="bi bi-circle"></i> <span>
                                                                         Information</span>
@@ -122,12 +127,11 @@
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Close</button>
-                                                        <!-- <button type="button" class="btn btn-primary">Save
-                                                            changes</button> -->
+
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </td>
 
 
