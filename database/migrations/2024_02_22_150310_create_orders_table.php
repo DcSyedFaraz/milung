@@ -47,7 +47,7 @@ return new class extends Migration {
             $table->string('sellingprice')->nullable();
             $table->date('sendoutdate')->nullable();
             $table->string('ship_doc')->nullable();
-            $table->string('so_number')->nullable();
+            $table->integer('so_number')->nullable();
             $table->string('status')->nullable();
             $table->integer('supplier')->nullable();
             $table->string('totalvalue')->nullable();

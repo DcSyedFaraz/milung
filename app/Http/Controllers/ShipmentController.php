@@ -113,6 +113,11 @@ class ShipmentController extends Controller
         $shipment = ShipmentOrder::with('user', 'shipment', 'shipmentsupplier')->get();
         return response()->json($shipment, JsonResponse::HTTP_OK);
     }
+    public function shipmentsget()
+    {
+        $shipment = ShipmentOrder::select('id', 'so_number')->get();
+        return response()->json($shipment, JsonResponse::HTTP_OK);
+    }
     public function soDelete($id)
     {
         $shipment = ShipmentOrder::findOrFail($id);

@@ -36,7 +36,7 @@ const routes = [
         path: "/supplier",
         name: "supplier",
         component: supplier,
-        meta: { requiresSupplier: true },
+        // meta: { requiresSupplier: true },
         children: supplierRoutes,
         redirect: "/supplier/dashboard",
     },

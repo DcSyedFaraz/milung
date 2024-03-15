@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
+use App\Http\Controllers\supplier\SupplierShipmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Http\Request;
@@ -62,6 +63,7 @@ Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID']);
 Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate']);
 Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
 Route::post('placeAll', [OrderController::class, 'placeAll']);
+Route::get('shipmentsget', [ShipmentController::class, 'shipmentsget']);
 
 //Shipment
 Route::post('create_so', [ShipmentController::class, 'create_so']);
@@ -72,16 +74,17 @@ Route::get('shipmentget', [ShipmentController::class, 'shipmentget']);
 Route::post('shipment/{id}', [ShipmentController::class, 'shipment']);
 
 
-
-
-
-
-
 Route::post('statement', [ProductController::class, 'statement']);
 // Auth
 // Adding Products
 Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
 Route::post('addprod', [ProductController::class, 'addprod']);
+
+
+// Supplier Routes
+Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershipments']);
+Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
+Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

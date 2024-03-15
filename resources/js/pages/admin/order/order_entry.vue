@@ -72,8 +72,8 @@
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders[0].supplier" class="form-control "> -->
-                                <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing" :options="suppliers" field="id" label="userid"
-                                    track-by="id">
+                                <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing"
+                                    :options="suppliers" field="id" label="userid" track-by="id">
                                 </multiselect>
                             </div>
                         </div>
@@ -400,7 +400,10 @@
                                 <p for="v-model" class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].so_number" class="form-control ">
+                                <!-- <input type="text" v-model="orders[0].so_number" class="form-control "> -->
+                                <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
+                                track-by="id">
+                            </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -473,7 +476,9 @@ export default {
     data() {
         return {
             suppliers: [],
+            so: [],
             selectedSupplierId: [],
+            selectedsoId: [],
             selectedBuyerId: [],
             buyers: [],
             showProgress: false,
@@ -511,6 +516,10 @@ export default {
             // console.log(newValue);
             this.orders[0].buyer = newValue.id;
         },
+        selectedsoId(newValue) {
+            // console.log(newValue);
+            this.orders[0].so_number = newValue.id;
+        },
         selectedSupplierId(newValue) {
             this.orders[0].supplier = newValue.id;
             // console.log(this.orders[0].supplier);
@@ -542,6 +551,21 @@ export default {
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
                     if (selectedbuyer) {
                         this.selectedBuyerId = selectedbuyer;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        fetchSO() {
+            axios.get('/api/shipmentsget')
+                .then(response => {
+                    this.so = response.data;
+                    console.log(this.so);
+                    // const selectedbuyerIds = Number(this.orders[0].buyer);
+                    const selectedso = this.so.find(sos => sos.id === this.orders[0].so_number);
+                    if (selectedso) {
+                        this.selectedsoId = selectedso;
                     }
                 })
                 .catch(error => {
@@ -663,7 +687,7 @@ export default {
         },
 
         onSubmit() {
-            this.showProgress = true;
+            // this.showProgress = true;
             NProgress.start();
             console.log(this.orders);
             if (this.isEditing) {
@@ -783,6 +807,7 @@ export default {
         NProgress.configure({ showSpinner: false });
         this.fetchSuppliers();
         this.fetchBuyers();
+        this.fetchSO();
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
     },
@@ -814,10 +839,12 @@ export default {
 #main {
     padding: 20px 0px !important;
 }
-.multiselect{
+
+.multiselect {
     border: 1px solid #ced4da;
     border-radius: 0.25rem
 }
+
 .fs-7 {
     font-size: 14px !important;
 }

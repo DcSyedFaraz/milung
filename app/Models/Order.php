@@ -32,6 +32,10 @@ class Order extends Model
     {
         return $this->hasOne(OrderSupplier::class);
     }
+    public function packinglist()
+    {
+        return $this->hasOne(PackingList::class);
+    }
     public function buyerid()
     {
         return $this->belongsTo(User::class,'buyer')->select('id','userid');
@@ -39,5 +43,9 @@ class Order extends Model
     public function supplierid()
     {
         return $this->belongsTo(User::class,'supplier')->select('id','userid');
+    }
+    public function shipmentOrders()
+    {
+        return $this->belongsTo(ShipmentOrder::class,'so_number');
     }
 }

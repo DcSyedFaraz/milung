@@ -1,4 +1,5 @@
 <template>
+
     <body>
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
@@ -34,7 +35,8 @@
                     <!-- End Search Icon-->
 
                     <li class="nav-item dropdown pe-3">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
+                            data-bs-toggle="dropdown">
                             <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
                         </a><!-- End Profile Iamge Icon -->
@@ -248,7 +250,7 @@
             <div class="logo-img"><img src="../../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'supplierdash' }" >
+                    <router-link class="nav-link" :to="{ name: 'supplierdash' }">
                         <i class="bi bi-pie-chart"></i>
                         <span>Summary</span>
                     </router-link>
@@ -256,7 +258,8 @@
                 <!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }"
+                        data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-person-gear"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
@@ -346,10 +349,12 @@
 
                 <li class="nav-item">
 
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }"
+                        data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-bag"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyOrderRouteActive() }">
+                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                        :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'order_list' }"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
@@ -368,25 +373,19 @@
                 <!-- Shipment -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-box2"></i><span>shipment</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }"
+                        data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                        :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
-                            <a href="icons-bootstrap.html">
-                                <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
-                            </a>
+                            <router-link class="nav-link" :to="{ name: 'packinglist' }"
+                                active-class="active">
+                                <i class="bi bi-bag"></i><span>Shipment Overview</span>
+                            </router-link>
                         </li>
-                        <li>
-                            <a href="icons-remix.html">
-                                <i class="bi bi-circle"></i><span>Remix Icons</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="icons-boxicons.html">
-                                <i class="bi bi-circle"></i><span>Boxicons</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <!-- End Icons Nav -->
@@ -434,11 +433,20 @@
 <script>
 import './../admin/index';
 export default {
-  methods: {
-    isAnyChildRouteActive() {
+    methods: {
+        isAnyChildRouteActive() {
             const activeRoutes = [
                 '/buyer/dashboard',
                 '/buyer/dashboard/1',
+            ];
+
+            return this.$route.matched.some(route => activeRoutes.includes(route.path));
+
+        },
+        isAnyShipmentRouteActive() {
+            const activeRoutes = [
+                '/supplier/packinglist',
+                // '/supplier/dashboard/1',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
@@ -455,17 +463,17 @@ export default {
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
 
         },
-    logout() {
-      // Dispatch the logout action from Vuex store
-      this.$store.dispatch('logout');
+        logout() {
+            // Dispatch the logout action from Vuex store
+            this.$store.dispatch('logout');
 
-      // Redirect the user to the login page or another route
-      this.$router.push({ name: 'login' });
+            // Redirect the user to the login page or another route
+            this.$router.push({ name: 'login' });
+        },
     },
-  },
 };
 </script>
 
-<style  scoped>
+<style scoped>
 @import './../admin/style.css';
 </style>
