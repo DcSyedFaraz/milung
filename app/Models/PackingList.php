@@ -12,7 +12,7 @@ class PackingList extends Model
 
     public function orders()
     {
-        return $this->belongsTo(Order::class,'order_id')->select('id','group','quantity_unit');
+        return $this->belongsTo(Order::class,'order_id')->select('id','group','quantity_unit','totalvalue','sellingprice');
     }
     public function supplierid()
     {

@@ -159,19 +159,19 @@ const adminRoutes = [
         // meta: { requiresAdmin: true },
     },
     {
-        path: "information/:id",
+        path: "information/:id/:so_number",
         name: "information",
         component: information,
         // meta: { requiresAdmin: true },
     },
     {
-        path: "documents/cibd",
+        path: "documents/cibd/:id/:so_number",
         name: "cibd",
         component: cibd,
         // meta: { requiresAdmin: true },
     },
     {
-        path: "documents/ci",
+        path: "documents/ci/:id/:so_number",
         name: "ci",
         component: ci,
         // meta: { requiresAdmin: true },

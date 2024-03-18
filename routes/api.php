@@ -69,11 +69,13 @@ Route::group(['middleware' => []], function () {
 
     //Shipment
     Route::post('create_so', [ShipmentController::class, 'create_so']);
-    Route::post('create_doc', [ShipmentController::class, 'create_doc']);
     Route::delete('soDelete/{id}', [ShipmentController::class, 'soDelete']);
     Route::get('shipmentget', [ShipmentController::class, 'shipmentget']);
     Route::get('shipmentget/{id}', [ShipmentController::class, 'shipmentgetid']);
     Route::post('shipment/{id}', [ShipmentController::class, 'shipment']);
+    // Information
+    Route::post('create_doc', [ShipmentController::class, 'create_doc']);
+    Route::get('information/{id}', [ShipmentController::class, 'information']);
 
     // Doc Routes
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);

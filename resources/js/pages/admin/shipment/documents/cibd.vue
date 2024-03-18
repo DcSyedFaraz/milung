@@ -39,29 +39,29 @@
                 </div>
             </div>
             <div class="col-12 mt-5">
-                <form @submit.prevent="submitForm">
+                <form>
 
-                    <div class="row">
+                    <div class="row mb-4">
 
                         <div class="col-6">
                             <div class="d-flex col-11 my-2">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">Shipper:</label>
-                                    <textarea v-model="info.shipper" class="form-control" cols="58" rows="6"></textarea>
+                                    <p class="mb-6">{{ info.shipper }}</p>
+                                    <!-- <textarea v-model="info.shipper" class="form-control" cols="58" rows="6"></textarea> -->
                                 </div>
                             </div>
                             <div class="d-flex col-11 my-2">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">consignee:</label>
-                                    <textarea v-model="info.consignee" class="form-control" cols="58"
-                                        rows="6"></textarea>
+                                    <p class="mb-6">{{ info.consignee }}</p>
                                 </div>
                             </div>
                             <div class=" col-11 my-2">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">notify
                                         party:</label>
-                                    <input type="text" v-model="info.party" class="form-control ">
+                                    <p class="">{{ info.party }}</p>
                                 </div>
                             </div>
 
@@ -72,36 +72,30 @@
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">carton
                                         mark:</label>
-                                    <textarea v-model="info.carton" class="form-control" cols="58" rows="6"></textarea>
+                                    <p class="mb-6">{{ info.carton }}</p>
                                 </div>
                             </div>
                             <div class=" col-11 my-4">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">port of
                                         loading:</label>
-                                    <input type="text" v-model="info.loading" class="form-control ">
+                                    <p class="">{{ info.loading }}</p>
                                 </div>
                             </div>
                             <div class=" col-11 my-3">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">final
                                         destination:</label>
-                                    <input type="text" v-model="info.destination" class="form-control ">
+                                    <p class="">{{ info.destination }}</p>
                                 </div>
                             </div>
                             <div class=" col-11 my-2">
                                 <div class="">
                                     <label class="form-label text-milung fw-bold text-uppercase fs-5">payment:</label>
-                                    <input type="text" v-model="info.payment" class="form-control ">
+                                    <p class="">{{ info.payment }}</p>
                                 </div>
                             </div>
-                            <div class=" col-11 my-4 d-flex justify-content-end">
-                                <div class="">
-                                    <button class="btn btn-success px-5" :disabled="submitting"><span
-                                            v-if="submitting">Submitting...</span>
-                                        <span v-else>Save</span></button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </form>
@@ -117,7 +111,7 @@
                         <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-box text-warning"></i> SO#:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="info.so_no" class="form-control ">
+                        <input type="text" v-model="info.shipment_order_id" class="form-control ">
                     </div>
                 </div>
             </div>
@@ -136,7 +130,8 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Comercial Invoice:</span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Comercial
+                                    Invoice:</span>
                             </span>
 
                             <div class="col-4 d-flex">
@@ -172,9 +167,25 @@
 
                                 </tr>
                             </thead>
-                            <tbody>
-
-                                <tr>
+                            <tbody class="text-center">
+                                <tr v-for="(item, index) in packinglst" :key="index" v-if="packinglst.length > 0">
+                                    <td>
+                                        {{ item.order_id }}
+                                    </td>
+                                    <td>
+                                        {{ item.orders?.product_group?.group_name }}
+                                    </td>
+                                    <td>
+                                        {{ item.orders?.quantity_unit }}
+                                    </td>
+                                    <td>
+                                        US$ {{ item.orders?.sellingprice }}
+                                    </td>
+                                    <td>
+                                        US$ {{ item.orders?.totalvalue }}
+                                    </td>
+                                </tr>
+                                <tr v-else>
                                     <td colspan="17">
                                         <p class="text-center">No data to display.</p>
                                     </td>
@@ -191,13 +202,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr>
-                                    <td colspan="17">
-                                        <p class="text-center">No data to display.</p>
+                                <tr v-for="item in packinglst" class="text-center ">
+                                    <td>
+                                        {{ item.orders?.product_group?.hs_de }}
+                                    </td>
+                                    <td>
+                                        {{ item.orders?.product_group?.group_name }}
                                     </td>
                                 </tr>
-
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card border-top mt-3">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="fs-6 text-start fw-normal">Comments/Remarks : </th>
+                                    <th class="fs-6 text-start fw-normal">Comments/Remarks : </th>
+                                    <th class="fs-6 text-start fw-normal"> : </th>
+                                    <th class="fs-6 text-start fw-normal"> : </th>
+                                    <th class="fs-6 text-start fw-normal"> : </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        Total
+                                    </td>
+                                    <td>
+                                        {{ totalQtys }}
+                                    </td>
+                                    <td>
+                                       US$ {{totalvalue}}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -212,14 +250,28 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
+import { parseISO } from 'date-fns';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 export default {
     data() {
         return {
             info: {},
             blue: {},
+            packinglst: [],
             searchQuery: '',
             submitting: false
+
         }
+    },
+    computed: {
+        totalQtys() {
+            return this.packinglst.reduce((sum, item) => parseInt(sum) + (parseFloat(item.orders?.quantity_unit) || 0), 0);
+        },
+        totalvalue() {
+            return this.packinglst.reduce((sum, item) => parseInt(sum) + (parseFloat(item.orders?.totalvalue) || 0), 0);
+        },
     },
     methods: {
         handleValidationErrors(validationErrors) {
@@ -234,46 +286,55 @@ export default {
                 }
             }
         },
-        submitForm() {
-            // Disable submit button to prevent multiple submissions
-            this.submitting = true;
+        async fetchSO() {
+            const soId = this.$route.params.id;
+            NProgress.start();
+            try {
+                const response = await axios.get('/api/shipmentget/' + soId);
+                this.packinglst = response.data;
+                // this.pagination.totalItems = response.data.total;
+                console.log(response.data);
 
-            console.log(this.info);
-            axios.post('/api/create_doc', this.info)
-                .then(response => {
-                    // Handle successful user creation
-                    console.log(response.data);
-
-                    // Assuming you want to show a success toastr notification
-                    toastr.success(response.data.message);
-                    // this.$router.push({ name: 'shipment_overview' });
-                })
-                .catch(error => {
-                    // Handle errors
-                    if (error.response && error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        this.handleValidationErrors(validationErrors);
-                    } else {
-                        // Non-validation error, log the error
-                        console.error(error);
-
-                        // Show a toastr error notification
-                        toastr.error('An error occurred while adding the user');
-                    }
-                })
-                .finally(() => {
-                    // Re-enable submit button after form submission is complete
-                    this.submitting = false;
-                });
+                NProgress.done();
+            } catch (error) {
+                NProgress.done();
+                console.error('Error fetching shipment:', error);
+                toastr.error('Error fetching data');
+            }
         },
-    }
+        async fetchInfo() {
+            const soId = this.$route.params.id;
+            console.log(soId);
+
+            NProgress.start();
+            try {
+                const response = await axios.get('/api/information/' + soId);
+                this.info = response.data;
+                this.info.shipment_order_id = this.$route.params.so_number;
+                // this.pagination.totalItems = response.data.total;
+                console.log(response.data);
+
+                NProgress.done();
+            } catch (error) {
+                NProgress.done();
+                console.error('Error fetching shipment:', error);
+                toastr.error('Error fetching data');
+            }
+        },
+    },
+    mounted() {
+        this.fetchSO();
+        this.fetchInfo();
+
+    },
 }
 </script>
 
 <style scoped>
-.mx-6 {
-    margin-right: 11rem !important;
-    margin-left: 11rem !important;
+.mb-6 {
+    margin-bottom: 2rem !important;
+    height: 6rem !important;
+    max-width: 10rem !important;
 }
 
 .bg-blue {

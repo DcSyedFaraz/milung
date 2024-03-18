@@ -1,46 +1,46 @@
 <template>
     <form @submit.prevent="submitForm">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-milung fw-bold text-center">MiLung Trade Limited</h1>
-                <p class="text-center text-milung fw-bold my-3">
-                    Unit 1704-05, 17/F. Hang Seng North Point Building,<br>
-                    341 North Point, Hong Kong. <br>
-                    Tel: 852 2540 2488
-                </p>
-            </div>
-            <div class="col-12">
-                <div class="row mx-6 mt-4">
-                    <div class="col mx-1 border rounded-3 rounded bg-milung">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-milung fw-bold text-center">MiLung Trade Limited</h1>
+                    <p class="text-center text-milung fw-bold my-3">
+                        Unit 1704-05, 17/F. Hang Seng North Point Building,<br>
+                        341 North Point, Hong Kong. <br>
+                        Tel: 852 2540 2488
+                    </p>
+                </div>
+                <div class="col-12">
+                    <div class="row mx-6 mt-4">
+                        <div class="col mx-1 border rounded-3 rounded bg-milung">
 
-                        <div class="text-center p-3">
-                            <p class="fw-bold">Invoice No: <br> 12345678</p>
+                            <div class="text-center p-3">
+                                <p class="fw-bold">Invoice No: <br> {{ info.invoice ?? '---' }}</p>
+                            </div>
+
                         </div>
+                        <div class="col mx-1 border rounded-3 rounded bg-blue">
 
-                    </div>
-                    <div class="col mx-1 border rounded-3 rounded bg-blue">
-
-                        <div class="text-center p-3">
-                            <p class="fw-bold">Cust Ref. (ATC): <br> 12345678</p>
+                            <div class="text-center p-3">
+                                <p class="fw-bold">Cust Ref. (ATC): <br> 12345678</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col mx-1 border rounded-3 rounded bg-warning">
+                        <div class="col mx-1 border rounded-3 rounded bg-warning">
 
-                        <div class="text-center p-3">
-                            <p class="fw-bold">Date: <br> 12345678</p>
+                            <div class="text-center p-3">
+                                <p class="fw-bold">Date: <br> {{ created_at(info) ?? '---' }}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col mx-1 border rounded-3 rounded bg-orange">
+                        <div class="col mx-1 border rounded-3 rounded bg-orange">
 
-                        <div class="text-center p-3">
-                            <p class="fw-bold">Prepred By: <br> 12345678</p>
+                            <div class="text-center p-3">
+                                <p class="fw-bold">Prepred By: <br> {{ info.user?.userid ?? '---' }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 mt-5">
+                <div class="col-12 mt-5">
 
                     <div class="row">
 
@@ -109,56 +109,57 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container p-4" style="background-color: #14245c;">
-        <div class="row justify-content-between">
+        <div class="container p-4" style="background-color: #14245c;">
+            <div class="row justify-content-between">
 
-            <div class="col-3 my-2">
-                <div class="d-flex">
-                    <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-box text-warning"></i> SO#:</p>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" v-model="info.so_no" class="form-control ">
+                <div class="col-3 my-2">
+                    <div class="d-flex">
+                        <div class="col-4 my-auto">
+                            <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-box text-warning"></i> SO#:
+                            </p>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" disabled v-model="info.shipment_order_id" class="form-control ">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-3 my-2">
-                <div class="d-flex">
-                    <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-truck text-warning"></i>
-                            Courier:</p>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" v-model="info.courier" class="form-control ">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-3 my-2">
-                <div class="d-flex">
-                    <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto fs-7 text-white"><i
-                                class="bi bi-journal-check text-warning"></i> Tracking#:</p>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" v-model="info.tracking" class="form-control ">
+                <div class="col-3 my-2">
+                    <div class="d-flex">
+                        <div class="col-4 my-auto">
+                            <p for="v-model" class="my-auto fs-7 text-white"><i class="bi bi-truck text-warning"></i>
+                                Courier:</p>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" v-model="info.courier" class="form-control ">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-3 my-auto">
-                <button class="btn btn-warning px-5" :disabled="submitting"><span
-                    v-if="submitting">Submitting...</span>
-                <span v-else>Save</span></button>
-            </div>
+                <div class="col-3 my-2">
+                    <div class="d-flex">
+                        <div class="col-4 my-auto">
+                            <p for="v-model" class="my-auto fs-7 text-white"><i
+                                    class="bi bi-journal-check text-warning"></i> Tracking#:</p>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" v-model="info.tracking" class="form-control ">
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-3 my-auto">
+                    <button class="btn btn-warning px-5" :disabled="submitting"><span
+                            v-if="submitting">Submitting...</span>
+                        <span v-else>Save</span></button>
+                </div>
+
+            </div>
         </div>
-    </div>
-</form>
+    </form>
 
     <div class="container my-4">
         <div class="row">
@@ -225,34 +226,34 @@
                                     class="text-center">
                                     <td class="fw-bold">{{ item.supplierid?.userid }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'carton')">{{
-                    item.carton }} </td>
+        item.carton }} </td>
                                     <td>{{ item.id }} </td>
                                     <td>{{ item.orders?.product_group?.group_name }} </td>
                                     <td>{{ item.orders?.quantity_unit }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'qty')">{{
-                    item.qty
-                }} </td>
+        item.qty
+    }} </td>
                                     <td>{{ calculateTotal(item.qty, item.orders?.quantity_unit) }}</td>
 
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'nw')">{{
-                    item.nw }}
+        item.nw }}
                                     </td>
                                     <td>{{ item.nw * item.qty }} </td>
 
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'gw')">{{
-                    item.gw }}
+        item.gw }}
                                     </td>
                                     <td>{{ item.gw * item.qty }} </td>
 
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'lcm')">{{
-                    item.lcm
-                }} </td>
+        item.lcm
+    }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'wcm')">{{
-                    item.wcm
-                }} </td>
+        item.wcm
+    }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'hcm')">{{
-                    item.hcm
-                }} </td>
+        item.hcm
+    }} </td>
                                     <td>{{ calculateVolume(item) }}</td>
 
                                     <td> <template v-if="!item.editable">
@@ -272,25 +273,29 @@
                                     </td>
                                 </tr>
 
+                                <td colspan="17" class="fs-4 "><span class="text-milung fw-bold">Provisional Customes
+                                        Clearance Code:</span><span class="fw-bold">N325</span></td>
                             </tbody>
-                            <table class="table table-striped table-hover  w-25 mt-5">
-                                <thead style="color: #009de1; " class="text-center">
-                                    <tr style="">
-                                        <th class="text-nowrap">H.S Code </th>
-                                        <th class="text-nowrap">Description </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in packinglst" class="text-center ">
-                                        <td>
-                                            {{ item.orders?.product_group?.hs_cn }}
-                                        </td>
-                                        <td>
-                                            {{ item.orders?.product_group?.group_name }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <span>
+                                <table class="table table-striped table-hover  mt-5">
+                                    <thead style="color: #009de1; " class="text-center">
+                                        <tr style="">
+                                            <th class="text-nowrap">H.S Code </th>
+                                            <th class="text-nowrap">Description </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in packinglst" class="text-center ">
+                                            <td>
+                                                {{ item.orders?.product_group?.hs_de }}
+                                            </td>
+                                            <td>
+                                                {{ item.orders?.product_group?.group_name }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </span>
                             <!-- <hr class="w-10">
                             <hr class="w-10"> -->
                             <tbody class="w-full border-top border-3">
@@ -330,14 +335,16 @@
                 <button class="btn btn-warning px-5">Save</button> <!-- Adjust padding for consistency -->
             </div>
             <div class="col-2">
-                <router-link :to="{ name: 'cibd' }" class="btn btn-milung px-4 fs-7">
+                <router-link :to="{ name: 'cibd', params: { id: info.id, so_number: info.shipment_order_id} }"
+                    class="btn btn-milung px-4 fs-7">
                     <span>Generate CIBD</span>
                 </router-link>
                 <!-- <button ></button> -->
             </div>
 
             <div class="col-2">
-                <router-link :to="{ name: 'ci' }" class="btn bg-blue px-4 fs-7">
+                <router-link :to="{ name: 'ci', params: { id: info.id, so_number: info.shipment_order_id} }"
+                    class="btn bg-blue px-4 fs-7">
                     <span>Generate CI</span>
                 </router-link>
             </div>
@@ -352,14 +359,17 @@
 </template>
 
 <script>
-
+import { format } from 'date-fns';
+import { parseISO } from 'date-fns';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
     data() {
         return {
-            info: {},
+            info: {
+                shipment_order_id: null,
+            },
             packinglst: [],
             searchQuery: '',
             submitting: false
@@ -398,6 +408,16 @@ export default {
     },
 
     methods: {
+        created_at(info) {
+            if (info.created_at) {
+                // Parse the datetime string using date-fns
+                const parsedDateTime = parseISO(info.created_at);
+                // Format the parsed date using date-fns
+                return format(parsedDateTime, 'dd-MM-yyyy');
+            } else {
+                return '---';
+            }
+        },
         toggleEditMode(index) {
             this.packinglst[index].editable = true;
         },
@@ -429,7 +449,6 @@ export default {
                         break;
                 }
             }
-
         },
         saveItem(index) {
             const updatedItem = this.packinglst[index];
@@ -480,28 +499,23 @@ export default {
             }
         },
         handleValidationErrors(validationErrors) {
-            // Assuming you have a function to display toastr error messages
             for (const key in validationErrors) {
                 if (validationErrors.hasOwnProperty(key)) {
                     const messages = validationErrors[key];
-                    // Display each validation error message
-                    messages.forEach(message => {
-                        toastr.error(message);
-                    });
+                    // console.log(messages);
+                    toastr.error(messages);
+
                 }
             }
         },
         submitForm() {
-            // Disable submit button to prevent multiple submissions
             this.submitting = true;
 
             console.log(this.info);
             axios.post('/api/create_doc', this.info)
                 .then(response => {
-                    // Handle successful packing_list creation
                     console.log(response.data);
 
-                    // Assuming you want to show a success toastr notification
                     toastr.success(response.data.message);
                     // this.$router.push({ name: 'shipment_overview' });
                 })
@@ -511,15 +525,12 @@ export default {
                         const validationErrors = error.response.data.errors;
                         this.handleValidationErrors(validationErrors);
                     } else {
-                        // Non-validation error, log the error
                         console.error(error);
 
-                        // Show a toastr error notification
                         toastr.error('An error occurred while adding the packing_list');
                     }
                 })
                 .finally(() => {
-                    // Re-enable submit button after form submission is complete
                     this.submitting = false;
                 });
         },
@@ -538,10 +549,31 @@ export default {
                 console.error('Error fetching shipment:', error);
                 toastr.error('Error fetching data');
             }
-        }
+        },
+        async fetchInfo() {
+            const soId = this.$route.params.id;
+            console.log(soId);
+
+            NProgress.start();
+            try {
+                const response = await axios.get('/api/information/' + soId);
+                this.info = response.data;
+                this.info.shipment_order_id = this.$route.params.so_number;
+                // this.pagination.totalItems = response.data.total;
+                console.log(response.data);
+
+                NProgress.done();
+            } catch (error) {
+                NProgress.done();
+                console.error('Error fetching shipment:', error);
+                toastr.error('Error fetching data');
+            }
+
+        },
     },
     mounted() {
         this.fetchSO();
+        this.fetchInfo();
     },
 }
 </script>

@@ -101,9 +101,14 @@ class SupplierShipmentController extends Controller
     public function infosave($id, Request $request)
     {
 
-        // dd($quantityUnit);
+        // dd($request->all());
         $userId = 8;
-        // $userId = Auth::user()->id;
+
+        // if (Auth::user()->hasRole('admin')) {
+        //     $userId = $request->input('user_id');
+        // } else {
+        //     $userId = Auth::user()->id;
+        // }
 
         try {
             \DB::beginTransaction();

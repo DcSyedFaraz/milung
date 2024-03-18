@@ -372,7 +372,7 @@
                     <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'shipment_overview' }"
-                                :class="{ active: $route.name === 'shipment_overview' || $route.name === 'create_so' }"
+                                :class="{ active: $route.name === 'information' || $route.name === 'create_so' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Shipment Overview</span>
                             </router-link>
@@ -462,6 +462,7 @@ export default {
             const activeRoutes = [
                 '/admin/create_so',
                 '/admin/shipment_overview',
+                '/admin/information/:id/:so_number',
 
             ];
 

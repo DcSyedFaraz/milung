@@ -88,10 +88,9 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link :to="{ name: 'information', params: { id: ship.id }  }"
+                                        <router-link class="btn btn-light text-black" :to="{ name: 'information', params: { id: ship.id, so_number: ship.so_number }  }"
                                             >
-                                            <i class="bi bi-circle"></i> <span>
-                                                Information</span>
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
                                         <!-- Button trigger modal -->
                                         <!-- <button type="button" class="btn btn-light text-primary fw-bold"
