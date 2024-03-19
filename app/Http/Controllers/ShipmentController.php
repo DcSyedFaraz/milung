@@ -155,15 +155,19 @@ class ShipmentController extends Controller
     }
     public function shipmentgetid($id)
     {
-        $shipment = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
-        // dd($shipment);
+        $packing = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
+        $shipment = ShipmentOrder::findOrFail($id)->select('id','buyerid','incoterm')->first();
+        $data = Shipment::where('shipment_order_id',$id)->where('user_id',$shipment->buyerid)->select('id','atc_no')->first();
+
+        $result = compact('packing', 'data','shipment');
+        // dd($result);
         // $data = [
         //     'shipment' => $shipment,
         //     'totalQty' => $totalQty,
         //     'totalTotalQty' => $totalTotalQty,
         // ];
 
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($result, JsonResponse::HTTP_OK);
     }
     public function shipmentsget()
     {
