@@ -463,6 +463,8 @@ export default {
                 '/admin/create_so',
                 '/admin/shipment_overview',
                 '/admin/information/:id/:so_number',
+                '/admin/documents/cibd/:id/:so_number',
+                '/admin/documents/ci/:id/:so_number',
 
             ];
 

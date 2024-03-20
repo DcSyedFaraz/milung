@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-12 mt-5">
                     <form>
-                        <div class="row mb-4 ">
+                        <div class="row mb-4">
                             <div class="col-6">
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
@@ -358,12 +358,12 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="d-flex col-6  mt-4">
+                                <div class="d-flex col-6 mt-4">
                                     <h3 class="text-milung fw-bold">
                                         Payment By Telegraphic Transfer:
                                     </h3>
                                 </div>
-                                <div class="d-flex col-6 ">
+                                <div class="d-flex col-6 mb-5">
                                     <table
                                         class="table table-striped table-hover"
                                     >
@@ -487,30 +487,52 @@ export default {
     },
     methods: {
         generatePdf() {
+            NProgress.start();
             const pdfName = "CIBD.pdf";
-            const pdf = new jsPDF("p", "mm", "a4");
+            // Specify custom dimensions for the page (width, height)
+            const pdf = new jsPDF("p", "mm", [210, 297]); // A4 size is [210, 297] mm
+
             const source = document.getElementById("invoice-content");
 
             html2canvas(source)
                 .then((canvas) => {
                     const imgData = canvas.toDataURL("image/png");
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
                     const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-                    let imgHeight = (imgWidth * canvas.height) / canvas.width;
-
-                    if (imgHeight > pageHeight) {
-                        pdf.addPage();
-                        imgHeight = (imgWidth * canvas.height) / canvas.width;
-                    }
+                    const imgHeight = (imgWidth * canvas.height) / canvas.width;
 
                     pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-                    pdf.save(pdfName);
+
+                    // Save the PDF temporarily
+                    const tempPdfName = "CIBD.pdf";
+                    pdf.save(tempPdfName);
+
+                    // Remove the first page from the temporary PDF
+                    const pdfDoc = new jsPDF();
+                    const tempPdf = new jsPDF();
+                    tempPdf.loadFile(tempPdfName, () => {
+                        for (
+                            let i = 2;
+                            i <= tempPdf.internal.getNumberOfPages();
+                            i++
+                        ) {
+                            pdfDoc.addPage(tempPdf.getPage(i));
+                        }
+                        pdfDoc.save(pdfName);
+
+                        // Clean up - delete the temporary PDF
+                        setTimeout(() => {
+                            tempPdf.deleteFile(tempPdfName);
+                        }, 100);
+                    });
+
+                    NProgress.done();
                 })
                 .catch((error) => {
+                    NProgress.done();
                     console.error("Error generating PDF:", error);
                 });
         },
+
         numberToWords(num) {
             const ones = [
                 "",

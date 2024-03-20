@@ -43,6 +43,7 @@ class ShipmentController extends Controller
         }
         // $data['user_id'] = Auth::id();
         $data['user_id'] = 1;
+        unset($data['shipment_order']);
         try {
             // Find or create the Information instance based on the shipment_order_id
             Information::updateOrCreate(
@@ -52,7 +53,7 @@ class ShipmentController extends Controller
 
             return response()->json(['message' => 'Information updated successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error occurred while updating information'], 500);
+            return response()->json(['message' => 'Error occurred while updating information'.$e->getMessage()], 500);
         }
     }
     public function shipment(Request $request, $id)

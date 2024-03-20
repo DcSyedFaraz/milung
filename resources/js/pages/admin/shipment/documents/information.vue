@@ -187,7 +187,7 @@
                             <input
                                 type="text"
                                 disabled
-                                v-model="info.shipment_order_id"
+                                v-model="info.shipment_order"
                                 class="form-control"
                             />
                         </div>
@@ -561,7 +561,7 @@
                         name: 'cibd',
                         params: {
                             id: info.id,
-                            so_number: info.shipment_order_id,
+                            so_number: info.shipment_order,
                         },
                     }"
                     class="btn btn-milung px-4 fs-7"
@@ -577,7 +577,7 @@
                         name: 'ci',
                         params: {
                             id: info.id,
-                            so_number: info.shipment_order_id,
+                            so_number: info.shipment_order,
                         },
                     }"
                     class="btn bg-blue px-4 fs-7"
@@ -605,6 +605,7 @@ export default {
     data() {
         return {
             info: {
+                shipment_order: null,
                 shipment_order_id: null,
             },
             packinglst: [],
@@ -826,7 +827,8 @@ export default {
             try {
                 const response = await axios.get("/api/information/" + soId);
                 this.info = response.data;
-                this.info.shipment_order_id = this.$route.params.so_number;
+                this.info.shipment_order = this.$route.params.so_number;
+                this.info.shipment_order_id = soId;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 

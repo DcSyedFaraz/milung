@@ -163,31 +163,14 @@
                                     <span
                                         class="fw-bold fs-4 text-uppercase"
                                         style="color: #14245c"
-                                        >Comercial Invoice:</span
+                                        >Declaration Comercial Invoice:</span
                                     >
                                 </span>
 
                                 <div class="col-4 d-flex">
                                     <div class="col-12 d-flex">
                                         <div class="col-12">
-                                            <div class="input-group">
-                                                <span
-                                                    class="input-group-text"
-                                                    id="basic-addon1"
-                                                    ><i
-                                                        style="color: #41b400"
-                                                        class="bx bx-filter-alt fw-bold fs-4"
-                                                    ></i
-                                                ></span>
-                                                <input
-                                                    type="text"
-                                                    name="search"
-                                                    class="form-control"
-                                                    v-model="searchQuery"
-                                                    ref="search"
-                                                    placeholder="Write here to filter..."
-                                                />
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -204,7 +187,7 @@
                                     class="text-center fs-7"
                                 >
                                     <tr style="">
-                                        <th class="text-nowrap">Order No.</th>
+
                                         <th class="text-nowrap">Description</th>
                                         <th class="text-nowrap">
                                             <span>Quantity</span> <br />
@@ -212,9 +195,7 @@
                                                 >Pcs or set</span
                                             >
                                         </th>
-                                        <th class="text-nowrap">
-                                            Unit Price US$
-                                        </th>
+
                                         <th class="text-nowrap">
                                             Total Amount US$
                                         </th>
@@ -226,9 +207,7 @@
                                         :key="index"
                                         v-if="packinglst.length > 0"
                                     >
-                                        <td>
-                                            {{ item.order_id }}
-                                        </td>
+
                                         <td>
                                             {{
                                                 item.orders?.product_group
@@ -238,9 +217,7 @@
                                         <td>
                                             {{ item.orders?.quantity_unit }}
                                         </td>
-                                        <td>
-                                            US$ {{ item.orders?.sellingprice }}
-                                        </td>
+
                                         <td>
                                             US$ {{ item.orders?.totalvalue }}
                                         </td>
@@ -252,6 +229,13 @@
                                             </p>
                                         </td>
                                     </tr>
+
+                                    <td colspan="3" class="fs-4 text-start">
+                                        <span class="text-milung fw-bold "
+                                            >Provisional Customes Clearance
+                                            Code:</span
+                                        ><span class="fw-bold">N325</span>
+                                    </td>
                                 </tbody>
                                 <span>
                                     <table
@@ -297,17 +281,17 @@
                                     <tr class="fw-bold">
                                         <td
                                             class="text-blue"
-                                            colspan="2"
+                                            colspan="1"
                                             style="color: #009de1"
                                         >
                                             Total:
                                         </td>
                                         <td
                                             class="text-blue"
-                                            colspan="2"
+                                            colspan="1 "
                                             style="color: #009de1"
                                         >
-                                            <span class="ms-5">{{
+                                            <span class="ms-5 text-center">{{
                                                 totalQtys
                                             }}</span>
                                         </td>
@@ -343,7 +327,7 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="d-flex col-6 my-2">
+                                <div class="d-flex col-6 my-2 mb-5">
                                     <div class="col-3 my-auto">
                                         <p
                                             for="v-model"
@@ -357,71 +341,6 @@
                                             {{ totalValueInWords }} Dollars
                                         </p>
                                     </div>
-                                </div>
-                                <div class="d-flex col-6  mt-4">
-                                    <h3 class="text-milung fw-bold">
-                                        Payment By Telegraphic Transfer:
-                                    </h3>
-                                </div>
-                                <div class="d-flex col-6 ">
-                                    <table
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead
-                                            style="color: #009de1"
-                                            class="text-center fs-7"
-                                        >
-                                            <tr style="">
-                                                <th class="text-nowrap">
-                                                    Item
-                                                </th>
-                                                <th class="text-nowrap">
-                                                    Information
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    Beneficiary Bank
-                                                </td>
-                                                <td>Hang Seng Bank Limited</td>
-                                            </tr>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    Beneficiary Bank Address
-                                                </td>
-                                                <td>
-                                                    83 Des Voeux Road Central.
-                                                    Hong Kong
-                                                </td>
-                                            </tr>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    SWIFT Code
-                                                </td>
-                                                <td>HASEHKHH</td>
-                                            </tr>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    CHIPS No
-                                                </td>
-                                                <td>10522</td>
-                                            </tr>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    Beneficiary Name
-                                                </td>
-                                                <td>MILUNG TRADE LTD.</td>
-                                            </tr>
-                                            <tr class="text-center">
-                                                <td class="fw-bolder">
-                                                    Beneficiary Account Number
-                                                </td>
-                                                <td>787-646660-883</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                                 <div class="col-12">
                                     <div
@@ -487,7 +406,7 @@ export default {
     },
     methods: {
         generatePdf() {
-            const pdfName = "CIBD.pdf";
+            const pdfName = "CI.pdf";
             const pdf = new jsPDF("p", "mm", "a4");
             const source = document.getElementById("invoice-content");
 
