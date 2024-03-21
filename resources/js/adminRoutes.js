@@ -27,6 +27,7 @@ import create_so from "./pages/admin/shipment/create_so.vue";
 import information from "./pages/admin/shipment/documents/information.vue";
 import cibd from "./pages/admin/shipment/documents/cibd.vue";
 import ci from "./pages/admin/shipment/documents/ci.vue";
+import payable from "./pages/admin/account/payable.vue";
 
 const adminRoutes = [
     {
@@ -174,6 +175,12 @@ const adminRoutes = [
         path: "documents/ci/:id/:so_number",
         name: "ci",
         component: ci,
+        // meta: { requiresAdmin: true },
+    },
+    {
+        path: "accounts/payable",
+        name: "payable",
+        component: payable,
         // meta: { requiresAdmin: true },
     },
 ];

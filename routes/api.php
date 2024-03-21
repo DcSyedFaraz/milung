@@ -77,6 +77,10 @@ Route::group(['middleware' => []], function () {
     Route::post('create_doc', [ShipmentController::class, 'create_doc']);
     Route::get('information/{id}', [ShipmentController::class, 'information']);
 
+    // Finance
+    Route::get('so/{id}', [ShipmentController::class, 'SupplierSo']);
+
+
     // Doc Routes
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
 

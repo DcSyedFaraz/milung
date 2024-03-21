@@ -203,7 +203,6 @@ export default {
     components: {
         shipmentdetails
     },
-    name: "order list",
     props: {
         perPage: {
             type: Number,

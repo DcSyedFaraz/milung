@@ -19,6 +19,11 @@ class ShipmentController extends Controller
         $data = Information::where('shipment_order_id',$id)->with('user')->first();
         return response()->json($data, JsonResponse::HTTP_OK);
     }
+    public function SupplierSo($id)
+    {
+        $data = Information::where('shipment_order_id',$id)->with('user')->first();
+        return response()->json($data, JsonResponse::HTTP_OK);
+    }
     public function create_doc(Request $request)
     {
         // dd($request->all());

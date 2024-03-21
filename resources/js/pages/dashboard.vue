@@ -393,6 +393,9 @@
                             <router-link :to="{ name: 'Transaction' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Transaction</span>
                             </router-link>
+                            <router-link :to="{ name: 'payable' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Accounts Payable</span>
+                            </router-link>
                         </li>
 
                     </ul>
