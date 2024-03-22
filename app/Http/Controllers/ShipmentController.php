@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Information;
+use App\Models\Order;
 use App\Models\PackingList;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
@@ -21,7 +22,8 @@ class ShipmentController extends Controller
     }
     public function SupplierSo($id)
     {
-        $data = Information::where('shipment_order_id',$id)->with('user')->first();
+        $data = Order::where('supplier',$id)->with('shipmentOrders','information')->select('id','status','sendoutdate','so_number','totalvalue')->get();
+
         return response()->json($data, JsonResponse::HTTP_OK);
     }
     public function create_doc(Request $request)

@@ -39,15 +39,45 @@
                                         <multiselect
                                             v-model="selectedsoId"
                                             :options="so"
-                                            field="id"
-                                            label="userid"
-                                            track-by="id"
                                         >
                                         </multiselect>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6">by</div>
+                            <div class="col-6">
+                                <div
+                                    class="d-flex col-11 my-2 justify-content-end"
+                                >
+                                    <div class="col-4 my-auto">
+                                        <p class="text-milung my-auto">
+                                            Reciept/Delivery Note:
+                                        </p>
+                                    </div>
+                                    <div class="col-5">
+                                        <input
+                                            type="text"
+                                            v-model="so.buyerid"
+                                            class="form-control"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    class="d-flex col-11 my-2 justify-content-end"
+                                >
+                                    <div class="col-4 my-auto">
+                                        <p class="fw-bold my-auto">
+                                            ML User Only:
+                                        </p>
+                                    </div>
+                                    <div class="col-5">
+                                        <button
+                                            class="btn btn-warning px-5 fw-bold"
+                                        >
+                                            Approved
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div
                             class="d-flex justify-content-between align-items-center mx-3"
@@ -59,18 +89,6 @@
                                     >Outstanding payment order list:</span
                                 >
                             </span>
-
-                            <!-- <div class="col-4 d-flex">
-                                <div class="col-12 d-flex justify-content-end">
-                                    <div class="col-4 mx-2 align-items-end">
-                                        <router-link
-                                            :to="{ name: 'create_so' }"
-                                            class="btn btn-warning fw-bold text-dark"
-                                            >Create SO#
-                                        </router-link>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
 
@@ -86,32 +104,188 @@
                         </div>
                     </div>
                     <!-- // Loader -->
-                    <div class="card-body rounded-top table-responsive" v-else>
+                    <div
+                        class="card-body border-bottom border-3 rounded-top table-responsive"
+                        v-else
+                    >
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
                             <thead style="color: #009de1" class="text-center">
                                 <tr style="">
+                                    <th class="text-nowrap">Order Number</th>
+                                    <th class="text-nowrap">Status</th>
+                                    <th class="text-nowrap">
+                                        Supplier SendOut Date
+                                    </th>
                                     <th class="text-nowrap">SO#</th>
-                                    <th class="text-nowrap">Shipment Date</th>
-                                    <th class="text-nowrap">Shipping Method</th>
                                     <th class="text-nowrap">
-                                        Tracking / Waybillt#
+                                        Shipping Invoice#
                                     </th>
-                                    <th class="text-nowrap">Delivery Date</th>
-                                    <th class="text-nowrap">
-                                        Shipping Documents
-                                    </th>
-                                    <th class="text-nowrap">Actions</th>
+                                    <th class="text-nowrap">Order Value</th>
+                                    <th class="text-nowrap">Reciept Note</th>
                                 </tr>
                             </thead>
 
-                            <tbody>
-                                <tr>
+                            <tbody class="text-center">
+                                <tr
+                                    v-for="(item, index) in orders"
+                                    :key="index"
+                                    v-if="orders.length > 0"
+                                >
+                                    <td>
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                :value="item.id"
+                                                id="flexCheckDefault"
+                                                v-model="selectedOrderIds"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="flexCheckDefault"
+                                            >
+                                                {{ item.id }}
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>{{ item.status }}</td>
+                                    <td>{{ item.sendoutdate }}</td>
+                                    <td>
+                                        {{ item.shipment_orders?.so_number }}
+                                    </td>
+                                    <td>{{ item.information?.invoice }}</td>
+                                    <td>{{ item.totalvalue }}</td>
+                                    <td>
+                                        <router-link
+                                            class="fw-bold"
+                                            style="color: #009de1 !important"
+                                            :to="{
+                                                name: 'information',
+                                                params: {
+                                                    id: item.so_number,
+                                                    so_number:
+                                                        item.shipment_orders
+                                                            ?.so_number,
+                                                },
+                                            }"
+                                        >
+                                            <i
+                                                class="bi bi-file-earmark-text fw-bold"
+                                            ></i>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-else>
                                     <td colspan="17">
                                         <p class="text-center">
                                             No orders to display.
                                         </p>
                                     </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-body">
+                        <div class="row my-3">
+                            <div class="col-6 border-end">
+                                <p class="text-milung text-center my-auto">
+                                    Filter Range Total Value:
+                                    <span class="fw-bold">US$xxxx.xx</span>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-milung text-center my-auto">
+                                    Total Order Value:
+                                    <span class="fw-bold"
+                                        >US${{ totalvalue }}</span
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-end">
+                            <button class="btn btn-warning px-5 me-2 fw-bold">
+                                Payment
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive" v-show="!isLoading">
+                        <!-- Table with stripped rows -->
+                        <table class="table table-striped table-hover">
+                            <thead style="color: #009de1" class="text-center">
+                                <tr style="">
+                                    <th class="text-nowrap">
+                                        Supplier Invoice#
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Supplier Invoice Date
+                                    </th>
+                                    <th class="text-nowrap">ML Invoice#</th>
+                                    <th class="text-nowrap">Account Payable</th>
+                                    <th class="text-nowrap">Settle Amount</th>
+                                    <th class="text-nowrap">Settle Date</th>
+                                    <th class="text-nowrap">
+                                        Outstanding Amount
+                                    </th>
+                                    <th class="text-nowrap">Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr
+                                    v-for="(item, index) in invoice"
+                                    :key="index"
+                                    v-if="invoice.length > 0"
+                                ></tr>
+                                <tr v-else>
+                                    <td colspan="17">
+                                        <p class="text-center">
+                                            No data to display.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-body w-35" v-show="!isLoading">
+                        <span
+                            class="fw-bold fs-6 text-uppercase"
+                            style="color: #14245c"
+                            >General Outstanding account Payable:</span
+                        >
+
+                        <!-- Table with stripped rows -->
+                        <table class="table table-striped table-hover">
+                            <thead style="color: #009de1" class="text-center">
+                                <tr style="">
+                                    <th class="text-nowrap">Supplier ID</th>
+                                    <th class="text-nowrap">
+                                        Outstanding Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr
+                                    v-for="(item, index) in invoice"
+                                    :key="index"
+                                    v-if="invoice.length > 0"
+                                ></tr>
+                                <tr v-else>
+                                    <td colspan="17">
+                                        <p class="text-center">
+                                            No data to display.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="color: #009de1"
+                                        class="text-start fw-bold"
+                                    >
+                                        Total:
+                                    </td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -137,7 +311,10 @@ export default {
             suppliers: [],
             selectedsupplierId: "",
             so: [],
+            orders: [],
+            invoice: [],
             selectedsoId: "",
+            selectedOrderIds: [],
         };
     },
     created() {
@@ -156,13 +333,29 @@ export default {
             }
         },
     },
+    computed: {
+        totalvalue() {
+            return this.orders.reduce(
+                (sum, item) =>
+                    parseInt(sum) + (parseFloat(item.totalvalue) || 0),
+                0
+            );
+        },
+    },
     methods: {
         async fetchSOs(supplierId) {
             NProgress.start();
+
             try {
                 const response = await axios.get(`/api/so/${supplierId}`);
-                this.so = response.data;
-                console.log(this.so);
+                this.orders = response.data;
+
+                this.so = response.data.map(
+                    (order) => order.shipment_orders.so_number
+                );
+
+                this.so = this.so.flat();
+                console.log(this.orders, this.so);
 
                 NProgress.done();
             } catch (error) {
@@ -191,4 +384,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.w-35 {
+    width: 35% !important;
+}
+</style>

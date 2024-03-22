@@ -46,6 +46,10 @@ class Order extends Model
     }
     public function shipmentOrders()
     {
-        return $this->belongsTo(ShipmentOrder::class,'so_number');
+        return $this->belongsTo(ShipmentOrder::class,'so_number')->select('id','so_number');
+    }
+    public function information()
+    {
+        return $this->hasOne(Information::class,'shipment_order_id','so_number')->select('id','invoice','shipment_order_id');
     }
 }
