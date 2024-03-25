@@ -301,12 +301,9 @@
 <script>
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Multiselect from 'vue-multiselect'
 
 export default {
-    components: {
-        Multiselect,
-    },
+
     props: {
         mode: String, // "create" or "edit"
         user: {

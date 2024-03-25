@@ -459,12 +459,10 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import FileInputWithName from './FileInputWithName.vue';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Multiselect from 'vue-multiselect'
 
 export default {
     components: {
         FileInputWithName,
-        Multiselect,
         ProgressModal
     },
     props: {

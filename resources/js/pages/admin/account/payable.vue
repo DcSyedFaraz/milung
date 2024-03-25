@@ -206,9 +206,89 @@
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-warning px-5 me-2 fw-bold">
+                            <button
+                                class="btn btn-warning px-5 me-2 fw-bold"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                            >
                                 Payment
                             </button>
+                            <!-- Modal -->
+                            <div
+                                class="modal fade"
+                                id="exampleModal"
+                                tabindex="-1"
+                                aria-labelledby="exampleModalLabel"
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="row my-3">
+                                                <div class="col-12">
+                                                    <p
+                                                        class="m-0 text-milung text-uppercase fw-bold text-center"
+                                                    >
+                                                        Please Upload the
+                                                        remittance slip here
+                                                    </p>
+                                                    <hr class="m-0" />
+                                                </div>
+
+                                                <div class="col-12 mt-5">
+                                                    <div
+                                                        class="input-group mb-3"
+                                                    >
+                                                        <input
+                                                            type="file"
+                                                            class="form-control  "
+                                                            id="inputGroupFile02"
+                                                            accept="image/*,.pdf"
+                                                        />
+                                                        <label
+                                                            class="input-group-text border-start-0" style="background-color: white;"
+                                                            for="inputGroupFile02"
+                                                            ><span class="badge rounded-pill bg-primary"
+                                                                >Browse</span
+                                                            ></label
+                                                        >
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="input-group">
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Amount"
+                                                            class="form-control"
+                                                        />
+                                                        <select
+                                                            class="form-select mx-2"
+                                                            id="inputGroupSelect02"
+                                                        >
+                                                            <option selected hidden>
+                                                                Choose...
+                                                            </option>
+                                                            <option value="Partial Payment">
+                                                                Partial Payment
+                                                            </option>
+                                                            <option value="Fill Payment">
+                                                                Fill Payment
+                                                            </option>
+                                                        </select>
+                                                        <button
+                                                            class="btn btn-warning"
+                                                            type="button"
+                                                            id="button-addon1"
+                                                        >
+                                                            Send
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body table-responsive" v-show="!isLoading">
@@ -299,12 +379,9 @@
 <script>
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import Multiselect from "vue-multiselect";
 
 export default {
-    components: {
-        Multiselect,
-    },
+
     data() {
         return {
             isLoading: true,

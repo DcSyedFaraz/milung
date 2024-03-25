@@ -5,28 +5,19 @@ import app from './Layouts/app.vue';
 import router from './router';
 import store from './store';
 import VueGoodTablePlugin from 'vue-good-table';
-import VuePaginate from 'vue-paginate';
-// import the styles
-import 'vue-good-table/dist/vue-good-table.css'
-// import DataTable from 'datatables.net-vue3';
-// import DataTablesCore from 'datatables.net';
-import 'datatables.net-select';
-import 'datatables.net-responsive';
-import 'jszip';
-import 'pdfmake';
-import 'datatables.net-bs5';
-import 'datatables.net-buttons-bs5';
-import 'datatables.net-buttons/js/buttons.html5.mjs';
-import 'datatables.net-buttons/js/buttons.print.mjs';
-import Select2 from 'vue3-select2-component';
-import $ from 'jquery';
-import 'select2';
+import VueApexCharts from "vue3-apexcharts";
+import Multiselect from 'vue-multiselect';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 
 
 const Myapp = createApp(app)
+Myapp.use(VueApexCharts);
 Myapp.use(router)
-Myapp.use(VuePaginate)
+Myapp.component('multiselect', Multiselect)
 Myapp.use(store)
+Myapp.component('VueDatePicker', VueDatePicker)
 Myapp.use(VueGoodTablePlugin)
 // DataTable.use(DataTablesCore);
 Myapp.mount('#app');

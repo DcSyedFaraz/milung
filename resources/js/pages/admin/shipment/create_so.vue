@@ -98,11 +98,8 @@
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect'
 export default {
-    components: {
-        Multiselect,
-    },
+    
     data() {
         return {
             so: {},

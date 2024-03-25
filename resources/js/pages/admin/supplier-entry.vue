@@ -196,7 +196,6 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import './index';
-import Multiselect from 'vue-multiselect'
 
 // import 'select2'; // Import the Select2 library
 // import 'select2/dist/css/select2.min.css';
@@ -206,7 +205,6 @@ window.jQuery = window.$ = $;
 
 export default {
 
-    components: { Multiselect },
     // components: { Select2 },
     data() {
         return {

@@ -120,7 +120,6 @@
 <script>
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Multiselect from 'vue-multiselect'
 export default {
     data() {
         return {
@@ -129,9 +128,6 @@ export default {
             orders: [],
             submitting: false
         }
-    },
-    components: {
-        Multiselect,
     },
     methods: {
         toggleEditMode(index) {

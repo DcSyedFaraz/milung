@@ -452,8 +452,7 @@
 import ImageSelector from './product/imageselector.vue';
 import fileinput from './product/file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import Multiselect from 'vue-multiselect'
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 import './index';
 
 
@@ -464,7 +463,6 @@ export default {
         ImageSelector,
         fileinput,
         VueDatePicker,
-        Multiselect
     },
     data() {
         return {

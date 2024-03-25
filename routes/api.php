@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\supplier\SupplierShipmentController;
@@ -79,6 +80,10 @@ Route::group(['middleware' => []], function () {
 
     // Finance
     Route::get('so/{id}', [ShipmentController::class, 'SupplierSo']);
+
+    // Statistics
+    Route::get('statfilter', [StatController::class, 'statfilter']);
+    Route::post('statfilter', [StatController::class, 'statfilterSearch']);
 
 
     // Doc Routes

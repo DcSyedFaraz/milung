@@ -403,10 +403,10 @@
                 <!-- End Profile Page Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="pages-faq.html">
-                        <i class="bi bi-bar-chart-line"></i>
-                        <span>Statistic</span>
-                    </a>
+                    <router-link :to="{ name: 'statistics' }" active-class="active" class="nav-link collapsed">
+                        <i class="bi bi-bar-chart-line"></i><span>Statistics</span>
+                    </router-link>
+
                 </li>
 
                 <!-- End Login Page Nav -->
