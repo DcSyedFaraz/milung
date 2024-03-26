@@ -35,6 +35,9 @@
 .text-milung {
     color: #14245c !important;
 }
+.text-blue {
+    color: #009de1 !important;
+}
 .form-check-input:checked {
     background-color: #41b400 !important;
     border-color: #41b400 !important;

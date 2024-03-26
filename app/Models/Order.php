@@ -20,6 +20,11 @@ class Order extends Model
         'safetySheetFiles' => 'array',
     ];
 
+    public function getQuantityUnitAttribute($value)
+    {
+        // Extract numeric part from the quantity_sold attribute
+        return (int) $value;
+    }
     public function product_group()
     {
         return $this->belongsTo(ProductGroup::class, 'group');
