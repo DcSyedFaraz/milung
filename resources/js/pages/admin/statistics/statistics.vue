@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-12 mt-5">
                             Average Unit Sales Amount:
-                            <span class="fw-bold">US$xxx</span>
+                            <span class="fw-bold">US${{ sales.avg }}</span>
                         </div>
                     </div>
                     <div
@@ -107,14 +107,41 @@
                         </div>
                         <div class="col-12 mt-5">
                             Average Unit Sales Amount:
-                            <span class="fw-bold">US$xxx</span>
+                            <span class="fw-bold">US${{ purchase.avg }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6 border rounded-2">
+        <div class="row  justify-content-evenly">
+            <div class="col-12">
+                <div class="form-check form-switch">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="pieChartSwitch"
+                        v-model="showPieChart"
+                    />
+                    <label class="form-check-label" for="pieChartSwitch">
+                        Toggle Pie Chart
+                    </label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="barChartSwitch"
+                        v-model="showBarChart"
+                    />
+                    <label class="form-check-label" for="barChartSwitch">
+                        Toggle Bar Chart
+                    </label>
+                </div>
+            </div>
+            <div class="col-5 my-3 border rounded-2" v-if="showPieChart">
                 <p class="text-blue fw-bold">
                     Top Product Group By Quantity in Date Range / Supplier /
                     Buyer
@@ -125,7 +152,7 @@
                     :series="chartSeries"
                 ></apexchart>
             </div>
-            <div class="col-6 border rounded-2">
+            <div class="col-5 my-3 border rounded-2" v-if="showBarChart">
                 <p class="text-blue fw-bold">
                     Top Product Group By Ravenue in Date Range / Supplier /
                     Buyer
@@ -147,6 +174,8 @@ import "nprogress/nprogress.css";
 export default {
     data() {
         return {
+            showPieChart: true,
+            showBarChart: true,
             selected: {},
             sales: [],
             purchase: [],
@@ -302,10 +331,14 @@ export default {
 
             try {
                 const response = await axios.post("/api/statfilter", formData);
+
                 this.sales.price = response.data.buyers || "xxx";
                 this.purchase.price = response.data.supplier || "xxx";
                 this.sales.qty = response.data.buyersqty || "xxx";
                 this.purchase.qty = response.data.supplierqty || "xxx";
+                this.sales.avg = response.data.buyersavg || "xxx";
+                this.purchase.avg = response.data.supplieravg || "xxx";
+
                 if (response.data.product) {
                     const productData = response.data.product;
                     this.formatChartData(productData);

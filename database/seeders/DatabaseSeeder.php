@@ -3,23 +3,37 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use DB;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        $this->call([
-            PermissionTableSeeder::class
+        try {
+             $this->call([
+            PermissionTableSeeder::class,
         ]);
-        // \App\Models\User::factory(10)->create();
+        $this->seedSupplierProfiles();
+            // $this->call([OtherSeeder::class]); // Example of calling additional seeders
+        } catch (\Exception $e) {
+            // Handle errors gracefully
+            echo "Seeding failed: " . $e->getMessage();
+        }
+    }
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+    private function seedSupplierProfiles()
+    {
+        try {
+            $sql = file_get_contents(base_path('database/seeders/milung.sql'));
+            $sql1 = file_get_contents(base_path('database/seeders/supplier_profiles.sql'));
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            DB::statement($sql);
+            DB::statement($sql1);
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        } catch (\Exception $e) {
+            // Handle file reading errors
+            echo "Error reading SQL file: " . $e->getMessage();
+        }
     }
 }

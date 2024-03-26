@@ -72,10 +72,12 @@ class StatController extends Controller
         if ($request->buyerid) {
             $data['buyers'] = Order::where('buyer', $request->buyerid)->sum('totalvalue');
             $data['buyersqty'] = Order::where('buyer', $request->buyerid)->sum('quantity_unit');
+            $data['buyersavg'] = Order::where('buyer', $request->buyerid)->average('sellingprice');
         }
         if ($request->supplierid) {
             $data['supplier'] = Order::where('supplier', $request->supplierid)->sum('totalvalue');
             $data['supplierqty'] = Order::where('supplier', $request->supplierid)->sum('quantity_unit');
+            $data['supplieravg'] = Order::where('supplier', $request->supplierid)->average('sellingprice');
         }
         return $data;
     }
