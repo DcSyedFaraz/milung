@@ -1,27 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\supplier;
 
 use App\Http\Controllers\Controller;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class SuppProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function price_inquiry(Request $request)
     {
-
+        // $id = Auth::id();
+        $id = 3;
         // dd($request->all());
 
         $validatedData = $request->validate([
+            'supplier_ids' => 'array|exists:users,id',
             'buyer' => 'required|exists:users,id',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
@@ -42,10 +45,6 @@ class ProductController extends Controller
         ]);
 
         $priceInquiry = PriceInquiry::create($validatedData);
-
-        foreach ($request->supplier_ids as $supplier_id) {
-            $priceInquiry->inquirysuppliers()->create(['user_id' => $supplier_id]);
-        }
 
         // Handle file uploads
         if ($request->hasFile('file')) {
@@ -73,7 +72,7 @@ class ProductController extends Controller
             return $value !== null && $value !== 'undefined';
         });
 
-        Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+        $priceInquiry->user_id = $id;
 
         $priceInquiry->save();
 
@@ -175,9 +174,17 @@ class ProductController extends Controller
     }
     public function price_inquiry_get()
     {
-        $prod = PriceInquiry::orderby('created_at', 'desc')->get();
+        // $id = Auth::id();
+        $id = 3;
+        $priceInquiries = PriceInquiry::
+            whereHas('inquirysuppliers', function ($query) use ($id) {
+                $query->where('user_id', $id);
+            })
+            ->get();
 
-        return response()->json($prod, JsonResponse::HTTP_OK);
+
+
+        return response()->json($priceInquiries, JsonResponse::HTTP_OK);
     }
     public function PriceDelete($id)
     {

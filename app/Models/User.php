@@ -63,6 +63,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(BuyerProfile::class);
     }
+    public function inquirySupplier()
+    {
+        return $this->hasMany(InquirySupplier::class);
+    }
 
     // public function roles()
     // {

@@ -15,4 +15,8 @@ class PriceInquiry extends Model
         'capacity' => 'array',
         'supplier_ids' => 'array',
     ];
+    public function inquirysuppliers()
+    {
+        return $this->hasMany(InquirySupplier::class);
+    }
 }

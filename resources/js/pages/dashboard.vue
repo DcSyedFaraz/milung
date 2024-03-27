@@ -323,22 +323,6 @@
                         :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
                     </router-link>
-                    <!-- <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span><i
-                        class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                        <li>
-                            <router-link :to="{ name: 'price_inquiry' }" :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
-                                <i class="bi bi-circle"></i><span>Price Inquiry</span>
-                            </router-link>
-                        </li>
-                        <li>
-                            <a href="tables-data.html">
-                                <i class="bi bi-circle"></i><span>Data Tables</span>
-                            </a>
-                        </li>
-                    </ul> -->
                 </li>
                 <!-- End Tables Nav -->
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\supplier\SupplierShipmentController;
+use App\Http\Controllers\supplier\SuppProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Http\Request;
@@ -101,7 +102,14 @@ Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershi
 Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
 Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
+Route::group(['prefix' => 'supplier'], function () {
+    //price_inquiry
+    Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry']);
+    Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry']);
+    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
+    Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete']);
 
+});
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
