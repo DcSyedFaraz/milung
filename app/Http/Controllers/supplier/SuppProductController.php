@@ -186,6 +186,29 @@ class SuppProductController extends Controller
 
         return response()->json($priceInquiries, JsonResponse::HTTP_OK);
     }
+    public function price_inquiry_getOne($id)
+    {
+        // $userid = Auth::id();
+        $userId = 3; // Assuming the user ID is hardcoded for demonstration
+
+        $priceInquiry = PriceInquiry::where('id', $id)->with('product_group')
+            ->whereHas('inquirysuppliers', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->first();
+
+        // if ($priceInquiry->file && $priceInquiry->file != null) {
+        //     $thumbnailUrl = \Storage::url('files/'.$priceInquiry->file) . '?thumbnail=true';
+        //     $priceInquiry->thumbnail_url = $thumbnailUrl;
+        // }
+
+        if (!$priceInquiry) {
+            return response()->json(['error' => 'Price inquiry not found or not assigned to the user.'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($priceInquiry, JsonResponse::HTTP_OK);
+    }
+
     public function PriceDelete($id)
     {
         // dd($id);

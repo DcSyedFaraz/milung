@@ -104,9 +104,10 @@ Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppl
 
 Route::group(['prefix' => 'supplier'], function () {
     //price_inquiry
+    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
+    Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne']);
     Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry']);
     Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry']);
-    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
     Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete']);
 
 });

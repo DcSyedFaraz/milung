@@ -31,7 +31,7 @@ const supplierRoutes = [
         // meta: { requiresAdmin: true },
     },
     {
-        path: "price_inquiry_entry",
+        path: "price_inquiry_entry/:id",
         name: "supplier_price_inquiry_entry",
         component: price_inquiry_entry,
         // meta: { requiresAdmin: true },
