@@ -182,10 +182,10 @@
                             </div>
                         </div>
                         <div class="col-12 my-2">
-                            <div class="row ms-2">
+                            <div class="row me-5 justify-content-end">
                                 <button
-                                    type="button"
-                                    style="background-color: aqua !important"
+                                    type="submit"
+                                    style="background-color: #009de1 !important"
                                     class="btn btn-sm fw-bold btn-milung m-2 col-3"
                                 >
                                     Quote ML
@@ -193,6 +193,105 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">
+                        Supplier Inquiry Quote
+                    </h3>
+                    <table class="table table-striped table-hover">
+                        <thead style="color: #009de1" class="text-center">
+                            <tr style="">
+                                <th class="text-nowrap">Product Capacity</th>
+                                <th class="text-nowrap">Quantity</th>
+                                <th class="text-nowrap">Currency</th>
+                                <th class="text-nowrap">EXW Price</th>
+                                <th class="text-nowrap">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr
+                                v-for="(row, index) in supplieData"
+                                :key="index"
+                            >
+                                <td class="text-nowrap">
+                                    {{ row.capacity }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ row.quantity }}
+                                </td>
+                                <td class="text-nowrap">USD</td>
+                                <td
+                                    class="text-nowrap"
+                                    style="width: 13% !important"
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        class="form-control"
+                                        v-model="row.exw"
+                                        placeholder="EXW"
+                                    />
+                                </td>
+                                <td v-show="index === 0" :rowspan="totalRows">
+                                    <textarea
+                                        cols="30"
+                                        class="form-control"
+                                        :rows="totalRows"
+                                        v-model="data.remarks"
+                                        placeholder="Enter your comments or suggestions here..."
+                                        style="
+                                            font-size: 14px;
+                                            padding: 5px;
+                                            color: #333;
+                                        "
+                                    ></textarea>
+                                </td>
+                            </tr>
+                            <!-- <template
+                                v-for="(row, index) in exwData"
+                                :key="index"
+                            >
+                                <tr>
+                                    <td class="text-nowrap">
+                                        {{ row.capacity }}
+                                    </td>
+                                    <td class="text-nowrap">
+                                        {{ row.quantity }}
+                                    </td>
+                                    <td class="text-nowrap">USD</td>
+                                    <td
+                                        class="text-nowrap"
+                                        style="width: 13% !important"
+                                    >
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            class="form-control"
+                                            v-model="row.exw"
+                                            placeholder="EXW"
+                                        />
+                                    </td>
+                                    <td
+                                        v-show="index === 0"
+                                        :rowspan="totalRows"
+                                    >
+                                        <textarea
+                                            cols="30"
+                                            class="form-control"
+                                            :rows="totalRows"
+                                            v-model="data.remarks"
+                                            placeholder="Enter your comments or suggestions here..."
+                                            style="
+                                                font-size: 14px;
+                                                padding: 5px;
+                                                color: #333;
+                                            "
+                                        ></textarea>
+                                    </td>
+                                </tr>
+                            </template> -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </form>
@@ -209,27 +308,14 @@ export default {
     },
     data() {
         return {
-            materials:
-                this.mode === "create"
-                    ? [{ quantity: "" }]
-                    : this.user && this.user.pcs
-                    ? this.user.pcs.map((quantity) => ({ quantity }))
-                    : [{ quantity: "" }],
-            capacity:
-                this.mode === "create"
-                    ? [{ quantity: "", unit: "" }]
-                    : this.user && this.user.capacity
-                    ? this.user.capacity.map((capacity) => {
-                          const [quantity, unit] = capacity
-                              .match(/(\d+)([a-zA-Z]+)/)
-                              .slice(1); // Extract quantity and unit from combined value
-                          return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
-                      })
-                    : [{ quantity: "" }],
             groups: [],
             user: {},
             imageLoaded: false,
             supplier_profiles: [],
+            data: {
+                exw: [],
+            },
+            supplieData: {},
         };
     },
     methods: {
@@ -255,7 +341,18 @@ export default {
                 .get("/api/supplier/price_inquiry_get/" + inquiryid) // Replace '/api/product-groups' with your API endpoint
                 .then((response) => {
                     this.user = response.data;
+                    this.supplieData = response.data.inquirysuppliers;
                     this.loadImageFromPath(this.user.file, this.$refs.canvas);
+
+                    if (this.user.file1 != null) {
+                        this.loadImageFromPath(
+                            this.user.file1,
+                            this.$refs.canvas1
+                        );
+                    }
+                    if (this.user.remarks != null) {
+                        this.data.remarks = this.user.remarks.remarks
+                    }
 
                     console.log(response.data);
                     NProgress.done();
@@ -371,59 +468,48 @@ export default {
         async onSubmit() {
             NProgress.start();
             try {
+                const hasEmptyExw = this.supplieData.some((row) => {
+                    // Trim whitespace from exw price
+                    return row.exw.toString().trim() === "";
+                });
+                if (hasEmptyExw) {
+                    // If any exw field is empty, show validation error
+                    toastr.error("Please fill all EXW fields.");
+                    NProgress.done();
+                    return;
+                }
                 const formData = new FormData();
-                formData.append("buyer", this.buyer);
-                formData.append("inquiry_number", this.inquiry_number);
-                formData.append("article", this.article);
-                formData.append("group", this.group);
-                formData.append("name", this.name);
-                formData.append("description", this.description);
-                formData.append("cargo", this.cargo);
-                this.cargo_place.forEach((place) => {
-                    formData.append("cargo_place[]", place);
-                });
-                formData.append("incoterm", this.incoterm);
-                formData.append("urgent", this.urgent ? "true" : "false");
-                formData.append("method", this.method);
-                formData.append("color", this.color);
-                formData.append("packaging", this.packaging);
-                formData.append("requirements", this.requirements);
-                formData.append("status", this.status);
-                formData.append("file", this.$refs.fileInput.files[0]);
-                formData.append("file1", this.$refs.fileInput1.files[0]);
 
-                this.selectedSupplierIds.forEach((id) => {
-                    formData.append("supplier_ids[]", id);
-                });
-
-                for (let i = 0; i < this.materials.length; i++) {
-                    formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                // Append image file
+                // console.log(this.$refs.fileInput1.files[0]);
+                if (this.$refs.fileInput1.files[0] !== undefined) {
+                    formData.append("image", this.$refs.fileInput1.files[0]);
                 }
-
-                this.capacity.forEach((caps, index) => {
-                    const capacityString = `${caps.quantity}${caps.unit}`;
-                    formData.append(`capacity[${index}]`, capacityString);
-                });
-                console.log(formData);
-                const url =
-                    this.mode === "edit"
-                        ? `/api/supplier/update_price_inquiry/${this.user.id}`
-                        : "/api/supplier/price_inquiry";
-                // const method = this.mode === 'edit' ? 'put' : 'post';
-                const method = "post";
-                const response = await axios[method](url, formData);
-
-                if (response.status === 201 || response.status === 200) {
-                    NProgress.done();
-                    toastr.success(response.data.message);
-                    this.$router.push({ name: "price_inquiry" });
-                    if (this.mode === "edit") {
-                        this.$emit("record-updated");
+                // Append other form data
+                formData.append("remarks", this.data.remarks);
+                this.supplieData.forEach((item, index) => {
+                    for (let key in item) {
+                        formData.append(`price[${index}][${key}]`, item[key]);
                     }
+                });
+
+                console.log(formData);
+                const inquiryid = this.$route.params.id;
+                const responce = await axios.post(
+                    "/api/supplier/update_price_inquiry/" + inquiryid,
+                    formData
+                );
+                console.log(responce.data);
+
+                if (responce.status === 201) {
+                    toastr.success(responce.data.message);
+
+                    this.$router.push({ name: "supplier_price_inquiry" });
                 } else {
-                    NProgress.done();
-                    toastr.error("Something is not correct");
+                    // Handle other status codes or unexpected responses
+                    toastr.error("Unexpected response from the server");
                 }
+                NProgress.done();
             } catch (error) {
                 NProgress.done();
                 if (error.response && error.response.status === 422) {
@@ -436,7 +522,11 @@ export default {
             }
         },
     },
-    computed: {},
+    computed: {
+        totalRows() {
+            return this.user.capacity.length * this.user.pcs.length;
+        },
+    },
     mounted() {
         NProgress.configure({ showSpinner: false });
         this.fetchInquiry();

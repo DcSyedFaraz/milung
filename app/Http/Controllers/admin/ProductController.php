@@ -43,8 +43,18 @@ class ProductController extends Controller
 
         $priceInquiry = PriceInquiry::create($validatedData);
 
-        foreach ($request->supplier_ids as $supplier_id) {
-            $priceInquiry->inquirysuppliers()->create(['user_id' => $supplier_id]);
+        foreach ($request->supplier_ids as $index => $supplier_id) {
+            foreach ($request->pcs as $pcsIndex => $pcsValue) {
+                foreach ($request->capacity as $capacityIndex => $capacityValue) {
+
+                    $priceInquiry->inquirysuppliers()->create([
+                        'user_id' => $supplier_id,
+                        'quantity' => $pcsValue,
+                        'capacity' => $capacityValue,
+                    ]);
+                }
+
+            }
         }
 
         // Handle file uploads

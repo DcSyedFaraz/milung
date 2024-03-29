@@ -19,6 +19,10 @@ class PriceInquiry extends Model
     {
         return $this->hasMany(InquirySupplier::class);
     }
+    public function remarks()
+    {
+        return $this->hasMany(SupplierRemarks::class);
+    }
     public function product_group()
     {
         return $this->belongsTo(ProductGroup::class, 'group')->select('id','group_name');
