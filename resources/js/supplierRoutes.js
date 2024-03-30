@@ -2,6 +2,10 @@ import DefaultAdmin from "./pages/admin/default.vue";
 import supplier_order_price_inquiry from "./pages/supplier/order/order_price_inquiry.vue";
 import packinglist from "./pages/supplier/shipment/packinglist.vue";
 
+// Order
+import order_list from "./pages/supplier/order/order_list.vue";
+
+// Price Inquiry
 import price_inquiry from "./pages/supplier/price_inquiry/price_inquiry.vue";
 import price_inquiry_entry from "./pages/supplier/price_inquiry/price_inquiry_entry.vue";
 
@@ -22,6 +26,12 @@ const supplierRoutes = [
         path: "packinglist",
         name: "packinglist",
         component: packinglist,
+        // meta: { requiresSupplier: true },
+    },
+    {
+        path: "order_list",
+        name: "supplier_order_list",
+        component: order_list,
         // meta: { requiresSupplier: true },
     },
     {

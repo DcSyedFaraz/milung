@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
+use App\Http\Controllers\supplier\SupplierOrderController;
 use App\Http\Controllers\supplier\SupplierShipmentController;
 use App\Http\Controllers\supplier\SuppProductController;
 use App\Http\Controllers\UserController;
@@ -103,6 +104,10 @@ Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppli
 Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
 Route::group(['prefix' => 'supplier'], function () {
+
+    // Order
+    Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
+
     //price_inquiry
     Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
     Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne']);
