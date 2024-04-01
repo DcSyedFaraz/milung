@@ -577,7 +577,7 @@ export default {
             this.orders[0].packagingprinting.splice(index, 1);
         },
         updateFiles(payload) {
-            console.log(payload.label);
+            console.log(payload);
 
             switch (payload.label) {
                 case 'Logo File':
@@ -782,6 +782,7 @@ export default {
                     }
                     if (this.orders[0].quantity_unit) {
                         const quantityString = this.orders[0].quantity_unit;
+                        console.log(quantityString);
                         const quantity = parseInt(quantityString.split('units')[0]);
                         this.orders[0].quantity = quantity;
                     }

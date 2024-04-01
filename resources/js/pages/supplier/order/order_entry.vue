@@ -1,265 +1,253 @@
 <template>
     <section class="section">
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
-
             <div class="container">
                 <div class="row my-5">
-                    <h3 class="text-milung mb-4 fw-bold text-uppercase">Order Overview</h3>
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">
+                        Order Overview
+                    </h3>
                     <div class="col-md-4">
-                        <h4 class="text-milung mb-4 fw-bold ">I. Order Information</h4>
+                        <h4 class="text-milung mb-4 fw-bold">
+                            I. Order Information
+                        </h4>
 
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Article Number:</p>
+                                <p for="v-model" class="my-auto">Status:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].article" class="form-control ">
+                                {{ orders[0].status }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto ">Status:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Buyer Order No:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <select class="fw-bold form-control" v-model="orders[0].status">
-                                    <option value="New Order">New Order</option>
-                                    <option value="Printview Confirmation">Printview Confirmation</option>
-                                    <option value="Printview Reject">Printview Reject</option>
-                                    <option value="Order Confirm">Order Confirm</option>
-                                    <option value="Cargo Ready">Cargo Ready</option>
-                                    <option value="Shipment Approval">Shipment Approval</option>
-                                    <option value="Export/Import">Export/Import</option>
-                                    <option value="Delivered">Delivered</option>
-
-                                </select>
+                                {{ orders[0].buyerorder }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Order No:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Order Reference:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].buyerorder" class="form-control ">
+                                {{ orders[0].reference }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Order Reference:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Related inquiry No:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].reference" class="form-control ">
+                                {{ orders[0].inquiry }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Related inquiry No:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Milung Order No:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].inquiry" class="form-control ">
+                                {{ orders[0].milungorder }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Milung Order No:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Order Date:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].milungorder" class="form-control ">
+                                {{ orders[0].orderdate }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4">
+                                <p for="v-model" class="my-auto fs-7">
+                                    Order Remarks:
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                {{ orders[0].orderremarks }}
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4">
+                                <p for="v-model" class="my-auto fs-7">
+                                    QC Remarks:
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                {{ orders[0].qcremarks }}
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Supplier ID:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Product Group:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].supplier" class="form-control ">
+                                {{ orders[0].product_group?.group_name }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Order Date:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Fty item No:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders[0].orderdate" class="form-control ">
+                                {{ orders[0].ftyitem }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Product Name:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="email" v-model="orders[0].buyeremail" class="form-control ">
+                                {{ orders[0].productname }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Product Color: (Pantone if applicable)
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].buyer" class="form-control ">
+                                {{ orders[0].productcolor }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="my-auto fs-7">Order Remarks:</p>
-                            </div>
-                            <div class="col-8">
-                                <textarea v-model="orders[0].orderremarks" class="form-control" cols="30"
-                                    rows="5"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="my-auto fs-7">QC Remarks:</p>
-                            </div>
-                            <div class="col-8">
-                                <textarea v-model="orders[0].qcremarks" class="form-control" cols="30" rows="5"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Group:</p>
-                            </div>
-                            <div class="col-8">
-                                <select class=" form-control" v-model="orders[0].group">
-                                    <option selected disabled>Select a product group</option>
-                                    <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
-                                        {{ group1.group_name }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Fty item No:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].ftyitem" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Name:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].productname" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Color: (Pantone if applicable)</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].productcolor" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 mt-2">
-                                <p for="v-model" class=" fs-7">Product Capacity:</p>
+                                <p for="v-model" class="fs-7">
+                                    Product Capacity:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(caps, indexs) in orders[0].capacity" :="indexs">
-                                    <input type="number" class="form-control" v-model="caps.quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-control mx-2" v-model="caps.unit">
-                                        <option selected value="GB">GB</option>
-                                        <option value="mAh">mAh</option>
-                                    </select>
-                                    <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button" @click="addcapacity(indexs)"
-                                            v-if="indexs === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button" @click="removecapacity(indexs)"
-                                            v-if="indexs !== 0 && orders[0].capacity.length > 1">-</button>
-                                    </div>
-                                </div>
-
+                                <span
+                                    class="my-4"
+                                    v-for="item in orders[0].capacity"
+                                >
+                                    {{ item }}<br />
+                                </span>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Accessories:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Accessories:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].accessories" class="form-control ">
+                                {{ orders[0].accessories }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Printing Method:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Product Printing Method:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].printingmethod" class="form-control ">
+                                {{ orders[0].printingmethod }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Logo Pantone Color:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Logo Pantone Color:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].logocolor" class="form-control ">
+                                {{ orders[0].logocolor }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Packaging:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Packaging:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].packaging" class="form-control ">
+                                {{ orders[0].packaging }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Packaging Printing: <br> (if applicable)</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Packaging Printing: <br />
+                                    (if applicable)
+                                </p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" v-model="orders[0].packagingprinting[0]" class="form-control">
-                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"
-                                        @click="addInput">+1c Label</button>
-                                </div>
-                                <div v-for="(input, index) in orders[0].packagingprinting" :key="index">
-                                    <div class="input-group mt-2" v-if="index > 0">
-                                        <input type="text" class="form-control"
-                                            v-model="orders[0].packagingprinting[index]">
-                                        <button class="btn btn-outline-danger" type="button"
-                                            @click="removeInput(index)">Remove</button>
-                                    </div>
+                                    <span
+                                        class="my-1"
+                                        v-for="item in orders[0]
+                                            .packagingprinting"
+                                    >
+                                        {{ item }}<br />
+                                    </span>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="col-md-4">
-                        <div class="d-flex col-12 my-2 ">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-8 my-auto">
-                                <p for="v-model my-auto">Buyer Product Photo/Print View:</p>
+                                <p for="v-model my-auto">
+                                    Buyer Product Photo/Print View:
+                                </p>
                             </div>
                             <div class="col-4">
-                                <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">
-                                    Import
-                                </button>
-                                <!-- <button>submit</button> -->
-                                <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
+                                <!-- {{ orders[0].files }} s -->
+                                <a v-if="orders[0].files"
+                                    :href="
+                                        '/storage/' +
+                                        orders[0].files[0]?.filepath
+                                    "
+                                    download
+                                    class="btn btn-sm px-4 btn-milung"
+                                >
+                                    Export
+                                </a>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2 ">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-8 my-aut">
-                                <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
+                                <canvas
+                                    ref="canvas"
+                                    width="353"
+                                    height="300"
+                                    class="border border-2"
+                                ></canvas>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-3 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Quantity:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Quantity:
+                                </p>
                             </div>
                             <div class="col-9">
-                                <div class="input-group my-2">
-                                    <input type="number" class="form-control" v-model="orders[0].quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-control" v-model="orders[0].unit">
-                                        <option selected value="units">units</option>
-                                        <!-- <option value="mAh">mAh</option> -->
-                                    </select>
+                                <div class="input-group my-4">
+                                    {{ orders[0].quantity_unit }} Units
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex col-12 my-2">
+                        <!-- <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Log File:</p>
                             </div>
@@ -272,160 +260,180 @@
                                     <button type="button" class="btn px-4 btn-milung" >
                                         Import
                                     </button>
-                                    <button type="button" class="btn px-4 mx-2 btn-primary my-2">
+                                    <button type="button" class="btn px-4 mx-2 btn-primary my-4">
                                         Export
                                     </button>
                                 </div>
                             </div>
                         </div> -->
-                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles" :fileData="orders[0].logoFiles"
-                            @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles"
-                            :fileData="orders[0].safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Manual" :files="orders[0].manualFiles" :fileData="orders[0].manualFiles"
-                            @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles"
-                            :fileData="orders[0].labelFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <!-- <FileInputWithName
+                            label="Logo File"
+                            :files="orders[0].logoFiles"
+                            :fileData="orders[0].logoFiles"
+                            @export-file="exportFile"
+                        />
+                        <FileInputWithName
+                            label="Label File"
+                            :files="orders[0].safetySheetFiles"
+                            :fileData="orders[0].safetySheetFiles"
+                            @export-file="exportFile"
+                        />
+                        <FileInputWithName
+                            label="Manual"
+                            :files="orders[0].manualFiles"
+                            :fileData="orders[0].manualFiles"
+                            @export-file="exportFile"
+                        />
+                        <FileInputWithName
+                            label="Safety Sheet"
+                            :files="orders[0].labelFiles"
+                            :fileData="orders[0].labelFiles"
+                            @export-file="exportFile"
+                        /> -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-3 my-auto">
+                                <p class="my-auto fs-7">Logo File:</p>
+                            </div>
+                            <div class="col-9">
+                                <div class="col-12">
+                                    {{ orders[0].logoFiles.filename }}
+                                </div>
+                                <div class="col-12">
+                                    <a
+                                        :href="
+                                            '/storage/' +
+                                            orders[0].logoFiles.filepath
+                                        "
+                                        :download="orders[0].logoFiles.filename"
+                                        class="btn px-4 mx-2 btn-primary my-2"
+                                    >
+                                        Export
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- <FileInputWithName label="Label File2" v-model="orders[0].multiFiles2"
                             @update:files="updateFiles1" @export-file="exportFile" /> -->
-
-
                     </div>
                     <div class="col-md-4">
-                        <h4 class="text-milung mb-4 fw-bold ">II. Price:</h4>
-                        <div class="d-flex col-12 my-2">
+                        <h4 class="text-milung mb-4 fw-bold">II. Price:</h4>
+
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Byuing Price:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Selling Price:
+                                </p>
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
-                                    <input type="text" class="form-control" disabled v-model="orders[0].buyingprice">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">USD</span>
-                                    </div>
-                                </div>
+                                {{ orders[0].sellingprice }} USD
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Selling Price:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Total Order Value:
+                                </p>
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
-                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="orders[0].sellingprice">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">USD</span>
-                                    </div>
-                                </div>
+                                {{ orders[0].sellingprice }} USD
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <h5 class="text-milung mb-4 fw-bold mt-3">
+                            III. Delivery/Shipping Information:
+                        </h5>
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4">
+                                <p for="v-model" class="fs-7">HS Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ orders[0].product_group?.hs_de }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4">
+                                <p for="v-model" class="fs-7">HS-CN Code:</p>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ orders[0].product_group?.hs_cn }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Total Order Value:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Latest SendOut Date:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
-                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="orders[0].totalvalue">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">USD</span>
-                                    </div>
-                                </div>
+                                <p class="px-2 my-auto">
+                                    {{ orders[0].sendoutdate }}
+                                </p>
                             </div>
                         </div>
-                        <h5 class="text-milung mb-4 fw-bold mt-3">III. Delivery/Shipping Information:</h5>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS Code:</p>
-                            </div>
-                            <div class="col-8">
-                                <p>{{ selectedProductGroupCode.hs_de }}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS-CN Code:</p>
-                            </div>
-                            <div class="col-8">
-                                <p>{{ selectedProductGroupCode.hs_cn }}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Latest SendOut Date:</p>
+                                <p for="v-model" class="my-auto fs-7">
+                                    Notice:
+                                </p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders[0].sendoutdate" class="form-control ">
+                                <span
+                                    class="my-4"
+                                    v-for="item in orders[0].notice"
+                                >
+                                    {{ item }}<br />
+                                </span>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Notice:</p>
-                            </div>
-                            <div class="col-8">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="Fix Date"
-                                        v-model="orders[0].notice">
-                                    <label class="form-check-label">
-                                        Fix Date
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="PV to Customer"
-                                        v-model="orders[0].notice">
-                                    <label class="form-check-label">
-                                        PV to Customer
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
+                        <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].so_number" class="form-control ">
+                                {{
+                                    orders[0].shipment_orders?.so_number ??
+                                    "not provided yet"
+                                }}
                             </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">ATC#:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].atc_number" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Shipping Document#:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].ship_doc" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Incoterm#:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].incoterm" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2 bg-danger">
-                            <p>
-                                XD Page not cleared
-                            </p>
-                        </div>
-                        <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
-                            <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
                         </div>
 
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">
+                                    Shipping Document#:
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                <p class="px-2 my-auto">
+                                    {{ orders[0].ship_doc }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">
+                                    Incoterm#:
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                {{ orders[0].incoterm }}
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-4 bg-danger">
+                            <p>XD Page not cleared</p>
+                        </div>
+                        <div class="d-flex col-12 my-4">
+                            <button
+                                class="btn btn-warning mx-2"
+                                name="action"
+                                value="create"
+                            >
+                                Cargo Ready
+                            </button>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </form>
@@ -437,17 +445,17 @@
 // import { ref } from 'vue';
 // import useForm from 'laravel-precognition-vue';
 import ProgressModal from "../progress/ProgressModal.vue";
-import './../index';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
-import FileInputWithName from './FileInputWithName.vue';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
+import "./../index";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+import FileInputWithName from "./FileInputWithName.vue";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 export default {
     components: {
         FileInputWithName,
-        ProgressModal
+        ProgressModal,
     },
     props: {
         isEditing: {
@@ -455,6 +463,7 @@ export default {
             default: false,
         },
     },
+
     data() {
         return {
             showProgress: false,
@@ -463,18 +472,16 @@ export default {
             groups: [],
             orders: [
                 {
-
                     packagingprinting: [],
                     logoFiles: [],
                     safetySheetFiles: [],
                     manualFiles: [],
                     labelFiles: [],
                     notice: [],
-                    capacity: [{ quantity: '', unit: '' }],
-                }
+                    capacity: [{ quantity: "", unit: "" }],
+                },
             ],
-
-        }
+        };
     },
     // setup(props) {
     //     console.log(props);
@@ -506,55 +513,20 @@ export default {
     },
     methods: {
         addInput() {
-            this.orders[0].packagingprinting.push('');
+            this.orders[0].packagingprinting.push("");
         },
         removeInput(index) {
             this.orders[0].packagingprinting.splice(index, 1);
         },
-        updateFiles(payload) {
-            console.log(payload.label);
-
-            switch (payload.label) {
-                case 'Logo File':
-                    if (!Array.isArray(this.orders[0].logoFiles)) {
-                        this.orders[0].logoFiles = [];
-                    }
-                    this.orders[0].logoFiles.push(payload);
-                    break;
-                case 'Label File':
-                    if (!Array.isArray(this.orders[0].labelFiles)) {
-                        this.orders[0].labelFiles = [];
-                    }
-                    this.orders[0].labelFiles.push(payload);
-                    break;
-                case 'Manual':
-                    if (!Array.isArray(this.orders[0].manualFiles)) {
-                        this.orders[0].manualFiles = [];
-                    }
-                    this.orders[0].manualFiles.push(payload);
-                    break;
-                case 'Safety Sheet':
-                    if (!Array.isArray(this.orders[0].safetySheetFiles)) {
-                        this.orders[0].safetySheetFiles = [];
-                    }
-                    this.orders[0].safetySheetFiles.push(payload);
-                    break;
-                default:
-                    break;
-            }
-        },
 
         exportFile(file) {
             // Access the file and file name here
-            console.log('File:', file.file);
-            console.log('File name:', file.name);
-        },
-        importImage() {
-            this.$refs.fileInput.click();
+            console.log("File:", file.file);
+            console.log("File name:", file.name);
         },
         handleValidationErrors(validationErrors) {
             // Assuming you have a function to display toastr error messages
-            validationErrors.forEach(message => {
+            validationErrors.forEach((message) => {
                 toastr.error(message);
             });
             // for (const key in validationErrors) {
@@ -572,7 +544,7 @@ export default {
             this.orders[0].files = file;
             if (file) {
                 const canvas = this.$refs.canvas;
-                const ctx = canvas.getContext('2d');
+                const ctx = canvas.getContext("2d");
                 ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
 
                 const reader = new FileReader();
@@ -589,14 +561,12 @@ export default {
                             newWidth = (img.width * newHeight) / img.height;
                         }
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-
                     };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
-                console.log('event', this.file);
+                console.log("event", this.file);
                 this.loadImageFromPath(this.file, this.$refs.canvas);
             }
         },
@@ -607,13 +577,13 @@ export default {
                     url: url,
                     data: data,
                     headers: {
-                        'Content-Type': 'multipart/form-data' // Set the correct Content-Type header for FormData
-                    }
+                        "Content-Type": "multipart/form-data", // Set the correct Content-Type header for FormData
+                    },
                 })
-                    .then(response => {
+                    .then((response) => {
                         resolve(response);
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         reject(error);
                     });
             });
@@ -624,23 +594,30 @@ export default {
             NProgress.start();
             console.log(this.orders);
             if (this.isEditing) {
-                this.orders[0].linked_order = event.submitter.getAttribute('value');
+                this.orders[0].linked_order =
+                    event.submitter.getAttribute("value");
             }
-            let method = 'post';
-            let url = this.isEditing ? `/api/orderentry/${this.orders[0].id}` : '/api/orderentry';
+            let method = "post";
+            let url = this.isEditing
+                ? `/api/orderentry/${this.orders[0].id}`
+                : "/api/orderentry";
 
             this.handleApiCall(method, url, this.orders[0])
-                .then(response => {
+                .then((response) => {
                     setTimeout(() => {
                         this.showProgress = false;
                     }, 1000);
                     // Handle successful order update or creation
                     console.log(response);
                     NProgress.done();
-                    toastr.success(this.isEditing ? 'Order updated successfully' : 'Order added successfully');
-                    this.$router.push({ name: 'order_list' });
+                    toastr.success(
+                        this.isEditing
+                            ? "Order updated successfully"
+                            : "Order added successfully"
+                    );
+                    this.$router.push({ name: "order_list" });
                 })
-                .catch(error => {
+                .catch((error) => {
                     setTimeout(() => {
                         this.showProgress = false;
                     }, 1000);
@@ -651,32 +628,17 @@ export default {
                         this.handleValidationErrors(validationErrors);
                     } else {
                         console.error(error);
-                        toastr.error(this.isEditing ? 'An error occurred while updating the order' : 'An error occurred while adding the order');
+                        toastr.error(
+                            this.isEditing
+                                ? "An error occurred while updating the order"
+                                : "An error occurred while adding the order"
+                        );
                     }
-                });
-        },
-        addcapacity() {
-            this.orders[0].capacity.push({ quantity: '' });
-        },
-        removecapacity(index) {
-            this.orders[0].capacity.splice(index, 1);
-        },
-        fetchProductGroups() {
-            NProgress.start();
-            axios.get('/api/product_group_get')
-                .then(response => {
-                    this.groups = response.data;
-                    console.log(response);
-                    NProgress.done();
-                })
-                .catch(error => {
-                    console.error(error);
-                    NProgress.done();
                 });
         },
 
         loadImageFromPath(imageFileName, canvas) {
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
 
             // Construct the URL to the file in the storage folder
@@ -695,36 +657,28 @@ export default {
                     newWidth = (img.width * newHeight) / img.height;
                 }
                 ctx.drawImage(img, 0, 0, newWidth, newHeight);
-                console.log('Image loaded and drawn onto the canvas successfully.');
+                console.log(
+                    "Image loaded and drawn onto the canvas successfully."
+                );
             };
             img.src = imageUrl;
         },
         fetchorder(orderId) {
             NProgress.start();
-            axios.get(`/api/orderentry/${orderId}`)
-                .then(response => {
+
+            axios
+                .get(`/api/supplier/orderentry/${orderId}`)
+                .then((response) => {
                     this.orders[0] = response.data;
                     console.log(this.orders[0]);
-                    // Pre-fill capacity if it exists
-                    if (this.orders[0].capacity) {
-                        this.orders[0].capacity = this.orders[0].capacity.map(capacity => {
-                            const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
-                            return { quantity: parseInt(quantity), unit };
-                        });
-                    } else {
-                        // If capacity doesn't exist, initialize it with default values
-                        this.orders[0].capacity = [{ quantity: '', unit: '' }];
-                    }
-                    if (this.orders[0].quantity_unit) {
-                        const quantityString = this.orders[0].quantity_unit;
-                        const quantity = parseInt(quantityString.split('units')[0]);
-                        this.orders[0].quantity = quantity;
-                    }
-                    console.log('files ', this.orders[0].files[0]['filepath']);
-                    this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
+                    console.log("files ", this.orders[0].files[0]["filepath"]);
+                    this.loadImageFromPath(
+                        this.orders[0].files[0]["filepath"],
+                        this.$refs.canvas
+                    );
                     NProgress.done();
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error(error);
                     NProgress.done();
                 });
@@ -738,33 +692,12 @@ export default {
             //
         }
         NProgress.configure({ showSpinner: false });
-        this.fetchProductGroups();
-        this.$refs.fileInput.addEventListener('change', this.loadImage);
     },
-    beforeUnmount() {
-        this.$refs.fileInput.removeEventListener('change', this.loadImage);
-    },
-    computed: {
-        selectedGroup() {
-            return this.groups.find(group => group.id === this.orders[0].group);
-        },
-        selectedProductGroupCode() {
-            const selectedGroup = this.selectedGroup;
-            // console.log('hi ', selectedGroup);
-            if (!selectedGroup) {
-                return '';
-            }
-            return selectedGroup; // or any other HS code property you want to display
-        },
-        formattedCapacity() {
-            return this.orders[0].capacity.map(caps => `${caps.quantity}${caps.unit}`);
-        },
-    },
-}
+};
 </script>
 
 <style>
-@import url('./../style.css');
+@import url("./../style.css");
 
 #main {
     padding: 20px 0px !important;

@@ -17,4 +17,9 @@ class SupplierOrderController extends Controller
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->where('supplier', $id)->orderby('created_at', 'desc')->get();
         return response()->json($order, JsonResponse::HTTP_OK);
     }
+    public function orderentrygetID($id)
+    {
+        $order = Order::where('id', $id)->with('product_group','shipmentOrders')->first();
+        return response()->json($order, JsonResponse::HTTP_OK);
+    }
 }

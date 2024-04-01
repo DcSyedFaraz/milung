@@ -25,7 +25,7 @@ export default {
     emits: ['export-file', 'update:files'],
     props: {
         label: { type: String, required: true, },
-        files: { type: Array, required: true, },
+        files: { type: Object, required: true, },
         fileData: { type: Object, required: false, },
 
     },
@@ -65,6 +65,7 @@ export default {
             const fileName = fileInput.name;
             this.file = fileInput;
             this.fileNames = fileName;
+            console.log(fileName);
             this.$emit('update:files', { file: this.file, fileName: this.fileNames, label: this.label });
         },
         exportFile() {

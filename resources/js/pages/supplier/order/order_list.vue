@@ -94,7 +94,7 @@
                                     <td>
                                         <router-link
                                             :to="{
-                                                name: 'order_edit',
+                                                name: 'supplier_order_edit',
                                                 params: { id: order.id },
                                             }"
                                             class="text-success mx-2"
