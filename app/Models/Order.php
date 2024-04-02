@@ -37,6 +37,10 @@ class Order extends Model
     {
         return $this->hasOne(OrderSupplier::class);
     }
+    public function printview()
+    {
+        return $this->hasOne(Printview::class);
+    }
     public function packinglist()
     {
         return $this->hasOne(PackingList::class);

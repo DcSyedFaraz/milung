@@ -780,9 +780,10 @@ export default {
                         // If capacity doesn't exist, initialize it with default values
                         this.orders[0].capacity = [{ quantity: '', unit: '' }];
                     }
-                    if (this.orders[0].quantity_unit) {
-                        const quantityString = this.orders[0].quantity_unit;
-                        console.log(quantityString);
+                    if (this.orders[0].quantity_units) {
+                        const quantityString = this.orders[0].quantity_units;
+                        console.log(this.orders[0].quantity_units);
+
                         const quantity = parseInt(quantityString.split('units')[0]);
                         this.orders[0].quantity = quantity;
                     }

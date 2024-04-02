@@ -213,7 +213,8 @@
                             </div>
                             <div class="col-4">
                                 <!-- {{ orders[0].files }} s -->
-                                <a v-if="orders[0].files"
+                                <a
+                                    v-if="orders[0].files"
                                     :href="
                                         '/storage/' +
                                         orders[0].files[0]?.filepath
@@ -291,21 +292,159 @@
                             @export-file="exportFile"
                         /> -->
                         <div class="d-flex col-12 my-2">
-                            <div class="col-3 my-auto">
-                                <p class="my-auto fs-7">Logo File:</p>
+                            <div class="col-3">
+                                <p class="fs-7">Logo File:</p>
                             </div>
                             <div class="col-9">
-                                <div class="col-12">
-                                    {{ orders[0].logoFiles.filename }}
+                                <div
+                                    class="col-12"
+                                    :class="{
+                                        'text-muted':
+                                            orders[0].logoFiles?.filename ==
+                                            null,
+                                        'fst-italic':
+                                            orders[0].logoFiles?.filename ==
+                                            null,
+                                    }"
+                                >
+                                    {{
+                                        orders[0].logoFiles?.filename ??
+                                        "not uploaded yet"
+                                    }}
                                 </div>
-                                <div class="col-12">
+                                <div
+                                    class="col-12 d-flex justify-content-end"
+                                    v-if="orders[0].logoFiles?.filename"
+                                >
                                     <a
                                         :href="
                                             '/storage/' +
-                                            orders[0].logoFiles.filepath
+                                            orders[0].logoFiles?.filepath
                                         "
-                                        :download="orders[0].logoFiles.filename"
-                                        class="btn px-4 mx-2 btn-primary my-2"
+                                        :download="
+                                            orders[0].logoFiles?.filename
+                                        "
+                                        class="btn px-4 mx-2 btn-primary my-2 me-5"
+                                    >
+                                        Export
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-3">
+                                <p class="fs-7">Label File:</p>
+                            </div>
+                            <div class="col-9">
+                                <div
+                                    class="col-12"
+                                    :class="{
+                                        'text-muted':
+                                            orders[0].labelFiles?.filename ==
+                                            null,
+                                        'fst-italic':
+                                            orders[0].labelFiles?.filename ==
+                                            null,
+                                    }"
+                                >
+                                    {{
+                                        orders[0].labelFiles?.filename ??
+                                        "not uploaded yet"
+                                    }}
+                                </div>
+                                <div
+                                    class="col-12 d-flex justify-content-end"
+                                    v-if="orders[0].labelFiles?.filename"
+                                >
+                                    <a
+                                        :href="
+                                            '/storage/' +
+                                            orders[0].labelFiles?.filepath
+                                        "
+                                        :download="
+                                            orders[0].labelFiles?.filename
+                                        "
+                                        class="btn px-4 mx-2 btn-primary my-2 me-5"
+                                    >
+                                        Export
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-3">
+                                <p class="fs-7">Manual:</p>
+                            </div>
+                            <div class="col-9">
+                                <div
+                                    class="col-12"
+                                    :class="{
+                                        'text-muted':
+                                            orders[0].manualFiles?.filename ==
+                                            null,
+                                        'fst-italic':
+                                            orders[0].manualFiles?.filename ==
+                                            null,
+                                    }"
+                                >
+                                    {{
+                                        orders[0].manualFiles?.filename ??
+                                        "not uploaded yet"
+                                    }}
+                                </div>
+                                <div
+                                    class="col-12 d-flex justify-content-end"
+                                    v-if="orders[0].manualFiles?.filename"
+                                >
+                                    <a
+                                        :href="
+                                            '/storage/' +
+                                            orders[0].manualFiles?.filepath
+                                        "
+                                        :download="
+                                            orders[0].manualFiles?.filename
+                                        "
+                                        class="btn px-4 mx-2 btn-primary my-2 me-5"
+                                    >
+                                        Export
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-3">
+                                <p class="fs-7">Safety Sheet:</p>
+                            </div>
+                            <div class="col-9">
+                                <div
+                                    class="col-12"
+                                    :class="{
+                                        'text-muted':
+                                            orders[0].safetySheetFiles
+                                                ?.filename == null,
+                                        'fst-italic':
+                                            orders[0].safetySheetFiles
+                                                ?.filename == null,
+                                    }"
+                                >
+                                    {{
+                                        orders[0].safetySheetFiles?.filename ??
+                                        "not uploaded yet"
+                                    }}
+                                </div>
+                                <div
+                                    class="col-12 d-flex justify-content-end"
+                                    v-if="orders[0].safetySheetFiles?.filename"
+                                >
+                                    <a
+                                        :href="
+                                            '/storage/' +
+                                            orders[0].safetySheetFiles?.filepath
+                                        "
+                                        :download="
+                                            orders[0].safetySheetFiles?.filename
+                                        "
+                                        class="btn px-4 mx-2 btn-primary my-2 me-5"
                                     >
                                         Export
                                     </a>
@@ -338,7 +477,11 @@
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
-                                {{ orders[0].sellingprice }} USD
+                                {{
+                                    orders[0].sellingprice *
+                                    orders[0].quantity_unit
+                                }}
+                                USD
                             </div>
                         </div>
                         <h5 class="text-milung mb-4 fw-bold mt-3">
@@ -424,7 +567,9 @@
                         <div class="d-flex col-12 my-4 bg-danger">
                             <p>XD Page not cleared</p>
                         </div>
-                        <div class="d-flex col-12 my-4">
+                        <div
+                            class="d-flex col-12 my-4 d-flex justify-content-end"
+                        >
                             <button
                                 class="btn btn-warning mx-2"
                                 name="action"
@@ -438,6 +583,9 @@
             </div>
         </form>
         <progress-modal :show="showProgress"></progress-modal>
+        <div class="container" v-if="isEditing">
+            <printview :id="orders[0].id" />
+        </div>
     </section>
 </template>
 
@@ -448,13 +596,13 @@ import ProgressModal from "../progress/ProgressModal.vue";
 import "./../index";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import FileInputWithName from "./FileInputWithName.vue";
+import printview from "./printview.vue";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
 export default {
     components: {
-        FileInputWithName,
+        printview,
         ProgressModal,
     },
     props: {
@@ -512,18 +660,6 @@ export default {
         // },
     },
     methods: {
-        addInput() {
-            this.orders[0].packagingprinting.push("");
-        },
-        removeInput(index) {
-            this.orders[0].packagingprinting.splice(index, 1);
-        },
-
-        exportFile(file) {
-            // Access the file and file name here
-            console.log("File:", file.file);
-            console.log("File name:", file.name);
-        },
         handleValidationErrors(validationErrors) {
             // Assuming you have a function to display toastr error messages
             validationErrors.forEach((message) => {
@@ -671,7 +807,7 @@ export default {
                 .then((response) => {
                     this.orders[0] = response.data;
                     console.log(this.orders[0]);
-                    console.log("files ", this.orders[0].files[0]["filepath"]);
+                    console.log("files ", this.orders[0].files);
                     this.loadImageFromPath(
                         this.orders[0].files[0]["filepath"],
                         this.$refs.canvas

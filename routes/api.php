@@ -108,6 +108,9 @@ Route::group(['prefix' => 'supplier'], function () {
     // Order
     Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
     Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID']);
+    Route::post('printview/{id}', [SupplierOrderController::class, 'printview']);
+    Route::get('printview/{id}', [SupplierOrderController::class, 'printviewget']);
+    Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo']);
 
     //price_inquiry
     Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);

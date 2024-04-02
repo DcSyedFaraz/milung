@@ -231,7 +231,7 @@ class OrderController extends Controller
         }
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
-        unset($data['quantity'], $data['unit']);
+        unset($data['quantity'], $data['unit'], $data['quantity_units']);
 
         $data['capacity'] = array_map(function ($entry) {
             return $entry['quantity'] . $entry['unit'];
@@ -267,6 +267,8 @@ class OrderController extends Controller
     public function orderentrygetID($id)
     {
         $order = Order::findOrFail($id);
+        // dd($order->getRawOriginal('quantity_unit'));
+        $order->quantity_units = $order->getRawOriginal('quantity_unit');
         return response()->json($order, JsonResponse::HTTP_OK);
     }
     public function orderentry(Request $request)
@@ -315,7 +317,7 @@ class OrderController extends Controller
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
         unset($data['quantity'], $data['unit']);
-
+        // dd($data['quantity_unit']);
         $data['capacity'] = array_map(function ($entry) {
             return $entry['quantity'] . $entry['unit'];
         }, $data['capacity']);
