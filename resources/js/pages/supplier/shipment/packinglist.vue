@@ -14,9 +14,9 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex col-2 my-2 ">
+            <!-- <div class="d-flex col-2 my-2 ">
                 <button class="btn btn-warning mx-2 px-5" name="action" value="save">Save </button>
-            </div>
+            </div> -->
 
         </div>
     </div>

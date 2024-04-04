@@ -1,14 +1,17 @@
 import DefaultAdmin from "./pages/admin/default.vue";
-import supplier_order_price_inquiry from "./pages/supplier/order/order_price_inquiry.vue";
-import packinglist from "./pages/supplier/shipment/packinglist.vue";
 
 // Order
 import order_list from "./pages/supplier/order/order_list.vue";
 import order_entry from "./pages/supplier/order/order_entry.vue";
+import supplier_order_price_inquiry from "./pages/supplier/order/order_price_inquiry.vue";
 
 // Price Inquiry
 import price_inquiry from "./pages/supplier/price_inquiry/price_inquiry.vue";
 import price_inquiry_entry from "./pages/supplier/price_inquiry/price_inquiry_entry.vue";
+
+// Shipment
+import packinglist from "./pages/supplier/shipment/packinglist.vue";
+import shipment_overview from "./pages/supplier/shipment/shipment_overview.vue";
 
 const supplierRoutes = [
     {
@@ -25,6 +28,11 @@ const supplierRoutes = [
         path: "packinglist",
         name: "packinglist",
         component: packinglist,
+    },
+    {
+        path: "shipment_overview",
+        name: "supplier_shipment_overview",
+        component: shipment_overview,
     },
     {
         path: "order_list",

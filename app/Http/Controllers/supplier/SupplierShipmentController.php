@@ -14,18 +14,27 @@ class SupplierShipmentController extends Controller
 {
     public function suppliershipments()
     {
-        $id = 8;
+        $id = 3;
         // $id = Auth::user()->id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->select('id', 'so_number')->get();
         return response()->json($shipment, JsonResponse::HTTP_OK);
     }
+    public function shipments()
+    {
+        $id = 3;
+        // $id = Auth::user()->id;
+        $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
+            $query->where('supplier', $id);
+        })->get();
+        return response()->json($shipment, JsonResponse::HTTP_OK);
+    }
     public function suppliershipment($id)
     {
         // dd($id);
         // $userid = Auth::user()->id;
-        $userid = 8;
+        $userid = 3;
         $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')->with('product_group', 'packinglist')->get();
         return response()->json($shipment, JsonResponse::HTTP_OK);
     }

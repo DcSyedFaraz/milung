@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\supplier;
 
 use App\Http\Controllers\Controller;
+use App\Models\MassCargo;
 use App\Models\Order;
 use App\Models\Printview;
 use Auth;
@@ -82,6 +83,52 @@ class SupplierOrderController extends Controller
     }
     public function masscargo(Request $request, $id)
     {
-        dd($request->all(), $id);
+        $validator = Validator::make($request->all(), [
+            'cargo_product' => 'nullable|image',
+            'cargo_packaging' => 'nullable|image',
+            'cargo_accessories' => 'nullable|image',
+            'cargo_reason' => 'nullable|string',
+        ]);
+        // dd($request->all(), $id);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+
+
+        $MassCargo = MassCargo::where('order_id', $id)->first();
+
+        if ($MassCargo) {
+            $MassCargo->reason = $request->input('cargo_reason');
+
+            if ($request->hasFile('cargo_product')) {
+                $MassCargo->product = $request->file('cargo_product')->store('orders/images', 'public');
+            }
+
+            if ($request->hasFile('cargo_packaging')) {
+                $MassCargo->packaging = $request->file('cargo_packaging')->store('orders/images', 'public');
+            }
+
+            if ($request->hasFile('cargo_accessories')) {
+                $MassCargo->accessories = $request->file('cargo_accessories')->store('orders/images', 'public');
+            }
+
+            $MassCargo->save();
+        } else {
+            if (!$request->hasFile('cargo_product') && !$request->hasFile('cargo_packaging') && !$request->hasFile('cargo_accessories')) {
+                return response()->json(['errors' => 'At least one file must be uploaded.'], 422);
+            }
+            $MassCargo = MassCargo::create([
+                'order_id' => $id,
+                'cargo_reason' => $request->input('cargo_reason'),
+                'cargo_product' => $request->hasFile('cargo_product') ? $request->file('cargo_product')->store('orders/images', 'public') : null,
+                'cargo_packaging' => $request->hasFile('cargo_packaging') ? $request->file('cargo_packaging')->store('orders/images', 'public') : null,
+                'cargo_accessories' => $request->hasFile('cargo_accessories') ? $request->file('cargo_accessories')->store('orders/images', 'public') : null,
+            ]);
+        }
+
+
+        return response()->json(['message' => 'MassCargo saved successfully.'], 200);
     }
 }

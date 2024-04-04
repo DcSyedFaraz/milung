@@ -105,6 +105,7 @@ Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppl
 
 Route::group(['prefix' => 'supplier'], function () {
 
+    Route::get('shipments', [SupplierShipmentController::class, 'shipments']);
     // Order
     Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
     Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID']);

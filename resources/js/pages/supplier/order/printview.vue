@@ -292,7 +292,9 @@ export default {
                     );
                 }
 
-                this.formData.append("reason", this.reason);
+                if (this.reason) {
+                    this.formData.append("reason", this.reason);
+                }
                 console.log(this.formData);
 
                 const response = await axios.post(
@@ -349,28 +351,30 @@ export default {
         },
         async CargoApiRequest() {
             try {
-                if (this.$refs.productInput.files[0]) {
+                if (this.$refs.cargo_productInput.files[0]) {
                     this.cargoData.append(
                         "cargo_product",
-                        this.$refs.productInput.files[0]
+                        this.$refs.cargo_productInput.files[0]
                     );
                 }
 
-                if (this.$refs.packagingInput.files[0]) {
+                if (this.$refs.cargo_packagingInput.files[0]) {
                     this.cargoData.append(
                         "cargo_packaging",
-                        this.$refs.packagingInput.files[0]
+                        this.$refs.cargo_packagingInput.files[0]
                     );
                 }
 
-                if (this.$refs.accessoriesInput.files[0]) {
+                if (this.$refs.cargo_accessoriesInput.files[0]) {
                     this.cargoData.append(
                         "cargo_accessories",
-                        this.$refs.accessoriesInput.files[0]
+                        this.$refs.cargo_accessoriesInput.files[0]
                     );
                 }
+                if (this.cargo_reason) {
+                    this.cargoData.append("cargo_reason", this.cargo_reason);
+                }
 
-                this.cargoData.append("cargo_reason", this.cargo_reason);
                 console.log(this.cargoData);
 
                 const response = await axios.post(
@@ -378,8 +382,21 @@ export default {
                     this.cargoData
                 );
                 console.log(response);
+                toastr.success(response.data.message);
             } catch (error) {
+                NProgress.done();
                 console.error(error);
+
+                if (error.response && error.response.status === 422) {
+                    toastr.error(error.response.data.errors);
+                }
+                if (error.response && error.response.status === 400) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error("An error occurred while updating the order");
+                }
             }
         },
 

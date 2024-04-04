@@ -344,7 +344,7 @@
                         :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'supplier_order_list' }"
-                                :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
+                                :class="{ active: $route.name === 'order_entry' || $route.name === 'supplier_order_edit' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
@@ -367,7 +367,7 @@
                     <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'packinglist' }"
+                            <router-link class="nav-link" :to="{ name: 'supplier_shipment_overview' }" :class="{ active: $route.name === 'packinglist'}"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Shipment Overview</span>
                             </router-link>
@@ -433,7 +433,7 @@ export default {
         isAnyShipmentRouteActive() {
             const activeRoutes = [
                 '/supplier/packinglist',
-                // '/supplier/dashboard/1',
+                '/supplier/shipment_overview',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
@@ -443,7 +443,7 @@ export default {
             const activeRoutes = [
                 '/supplier/order_list',
                 '/supplier/order_entry',
-                '/edit-order/:id',
+                '/supplier/edit-order/:id',
                 '/supplier/order_price_inquiry',
             ];
 
