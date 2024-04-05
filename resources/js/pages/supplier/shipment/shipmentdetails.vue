@@ -204,7 +204,6 @@ export default {
     data() {
         return {
             so: this.soData,
-            buyer: this.soData.shipment ? this.soData.shipment : {},
             supplier: this.soData.shipmentsupplier
                 ? this.soData.shipmentsupplier
                 : {},
@@ -213,18 +212,16 @@ export default {
     methods: {
         async save() {
             console.log(this.so);
-            console.log(this.buyer);
             console.log(this.supplier);
-            const formData = {
-                shipment_order: this.so,
-                buyer: this.buyer,
-                supplier: this.supplier,
-            };
+            // const formData = {
+            //     shipment_order: this.so,
+            //     supplier: this.supplier,
+            // };
 
             try {
                 const response = await axios.post(
-                    `/api/shipment/${this.so.id}`,
-                    formData,
+                    `/api/supplier/shipment/${this.so.id}`,
+                    this.supplier,
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",

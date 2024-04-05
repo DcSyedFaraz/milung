@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\PackingList;
 use App\Models\ShipmentOrder;
+use App\Models\ShipmentSupplier;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,8 +28,51 @@ class SupplierShipmentController extends Controller
         // $id = Auth::user()->id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
-        })->get();
+        })->with('shipmentsupplier')->get();
         return response()->json($shipment, JsonResponse::HTTP_OK);
+    }
+    public function shipment(Request $request, $id)
+    {
+        // dd($request->all());
+        $userid = 3;
+        // $userid = Auth::id();
+        $supplier = $request->all();
+
+        $validatedData = \Validator::make($request->all(), [
+            'ship_date' => 'required|date',
+            'mode_delivery' => 'required|string',
+            'waybill' => 'required|string',
+            'courier' => 'required|string',
+            'flight' => 'required|string',
+            'vessel' => 'required|string',
+            'train' => 'required|string',
+            'delivery' => 'required|date',
+            'remarks' => 'required|string',
+            'shipment_order_id' => 'required|integer|exists:shipment_orders,id'
+        ]);
+
+
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()->all()], 422);
+        }
+        // dd($data);
+
+        ShipmentSupplier::updateOrCreate(
+            ['shipment_order_id' => $id, 'user_id' => $userid],
+            [
+                'ship_date' => $supplier['ship_date'],
+                'mode_delivery' => $supplier['mode_delivery'],
+                'waybill' => $supplier['waybill'],
+                'courier' => $supplier['courier'],
+                'flight' => $supplier['flight'],
+                'vessel' => $supplier['vessel'],
+                'train' => $supplier['train'],
+                'delivery' => $supplier['delivery'],
+                'remarks' => $supplier['remarks'],
+            ]
+        );
+
+        return response()->json(['message' => 'Shipment Overview updated successfully']);
     }
     public function suppliershipment($id)
     {
@@ -41,7 +85,7 @@ class SupplierShipmentController extends Controller
     public function suppliershipmentUpdate($id, Request $request)
     {
 
-        $userId = 8;
+        $userId = 3;
         // $userId = Auth::user()->id;
 
         try {
