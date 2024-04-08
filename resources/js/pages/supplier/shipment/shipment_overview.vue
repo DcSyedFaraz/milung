@@ -54,11 +54,11 @@
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <!-- <input class="form-check-input" type="checkbox" :value="ship.id"
+                                            <input class="form-check-input" type="checkbox" :value="ship.id"
                                                 id="flexCheckDefault" v-model="selectedshipIds">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                            </label> -->
-                                            {{ ship.so_number }}
+                                                {{ ship.so_number }}
+                                            </label>
                                         </div>
                                     </td>
                                     <td
@@ -76,49 +76,9 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" :to="{ name: 'packinglist'}"
-                                            >
+                                        <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
-                                        <!-- Button trigger modal -->
-                                        <!-- <button type="button" class="btn btn-light text-primary fw-bold"
-                                            data-bs-toggle="modal" :data-bs-target="`#exampleModal${ship.id}`">
-                                            <i class="bi bi-file-earmark-text fw-bold"></i>
-                                        </button>-->
-
-                                        <!-- Modal -->
-                                        <!-- <div class="modal fade" :id="`exampleModal${ship.id}`" tabindex="-1"
-                                            ref="modalRef" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Choose Document
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <ul class="">
-                                                            <li>
-                                                                <router-link :to="{ name: 'information' }"
-                                                                    @click="toggleModal('exampleModal' + ship.id, 'information')"
-                                                                    data-bs-dismiss="modal">
-                                                                    <i class="bi bi-circle"></i> <span>
-                                                                        Information</span>
-                                                                </router-link>
-                                                            </li>
-
-
-                                                        </ul>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                     </td>
 
 
@@ -165,6 +125,11 @@
                                 </li>
                             </ul>
                         </nav>
+                        <div class="col-12 d-flex justify-content-end">
+                            <button class="btn btn-warning me-2 fw-bold" @click="createReceiptNote">
+                                Create Receipt Note
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -247,6 +212,39 @@ export default {
         });
     },
     methods: {
+        async createReceiptNote() {
+            // Collect the selected shipment IDs
+            const selectedShipIds = this.selectedshipIds;
+
+            if (selectedShipIds.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select at least one shipment.',
+                });
+                return;
+            }
+
+            try {
+                
+                const response = await axios.post('/api/supplier/receipt-note', { shipIds: selectedShipIds });
+                const data = response.data;
+                const serializedData = JSON.stringify(response.data);
+                this.$router.push({ name: 'supplier_receiptnote', params: { data: serializedData } });
+
+
+                // Clear the selected shipment IDs
+                // Clear the selected shipment IDs
+                this.selectedshipIds = [];
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error creating receipt note.',
+                });
+                console.error('Error creating receipt note:', error);
+            }
+        },
         handleRecordUpdated() {
             this.accordionOpen = {};
             // Refresh the data in the parent component

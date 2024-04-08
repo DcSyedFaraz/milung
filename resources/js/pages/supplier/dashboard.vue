@@ -367,8 +367,8 @@
                     <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'supplier_shipment_overview' }" :class="{ active: $route.name === 'packinglist'}"
-                                active-class="active">
+                            <router-link class="nav-link" :to="{ name: 'supplier_shipment_overview' }"
+                                :class="{ active: $route.name === 'packinglist' }" active-class="active">
                                 <i class="bi bi-bag"></i><span>Shipment Overview</span>
                             </router-link>
                         </li>
@@ -377,21 +377,13 @@
                 </li>
                 <!-- End Icons Nav -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="users-profile.html">
-                        <i class="bi bi-cash-coin"></i>
-                        <span>Finance</span>
-                    </a>
+
+                    <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" active-class="active">
+                        <i class="bi bi-cash-coin"></i><span>Finance</span>
+                    </router-link>
                 </li>
                 <!-- End Profile Page Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="pages-faq.html">
-                        <i class="bi bi-bar-chart-line"></i>
-                        <span>Statistic</span>
-                    </a>
-                </li>
-
-                <!-- End Login Page Nav -->
             </ul>
         </aside>
         <!-- End Sidebar-->

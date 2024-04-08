@@ -12,6 +12,11 @@ import price_inquiry_entry from "./pages/supplier/price_inquiry/price_inquiry_en
 // Shipment
 import packinglist from "./pages/supplier/shipment/packinglist.vue";
 import shipment_overview from "./pages/supplier/shipment/shipment_overview.vue";
+import receiptnote from "./pages/supplier/shipment/receipt-note.vue";
+
+// Finance
+import recievables from "./pages/supplier/finance/recievables.vue";
+
 
 const supplierRoutes = [
     {
@@ -33,6 +38,11 @@ const supplierRoutes = [
         path: "shipment_overview",
         name: "supplier_shipment_overview",
         component: shipment_overview,
+    },
+    {
+        path: "receiptnote/:data*",
+        name: "supplier_receiptnote",
+        component: receiptnote,
     },
     {
         path: "order_list",
@@ -57,6 +67,11 @@ const supplierRoutes = [
         path: "price_inquiry_entry/:id",
         name: "supplier_price_inquiry_entry",
         component: price_inquiry_entry,
+    },
+    {
+        path: "recievables",
+        name: "supplier_recievables",
+        component: recievables,
     },
 ];
 

@@ -145,12 +145,12 @@ export default {
     data() {
         return {
             isLoading: true,
+            searchQuery: '',
             bank_name: '',
             file: null,
             inquiry: [],
             accordionOpen: {},
             currentPage: 1,
-            searchQuery: ''
         };
     },
     watch: {

@@ -87,7 +87,7 @@
                             item.packinglist?.wcm
                         }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'hcm')">{{
-                                        item.packinglist?.hcm
+                            item.packinglist?.hcm
                                         }} </td>
                                     <td>{{ calculateVolume(item) }}</td>
 
@@ -167,7 +167,7 @@ export default {
             console.log(updatedItem);
             this.orders[index].editable = false;
             // Implement your API call to save the updated data
-            if(!updatedItem.packinglist){
+            if (!updatedItem.packinglist) {
                 toastr.error("Please fill in all packing list fields.");
                 return
             }

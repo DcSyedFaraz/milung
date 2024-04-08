@@ -31,6 +31,17 @@ class SupplierShipmentController extends Controller
         })->with('shipmentsupplier')->get();
         return response()->json($shipment, JsonResponse::HTTP_OK);
     }
+    public function receipt_note(Request $request)
+    {
+        // dd($request->all());
+        // $userId = Auth::id();
+        $userId = 3;
+        $orders = Order::whereIn('so_number', $request->shipIds)
+            ->where('supplier', $userId)->with('product_group', 'packinglist')->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')
+            ->get();
+        // dd($orders);
+        return response()->json($orders, JsonResponse::HTTP_OK);
+    }
     public function shipment(Request $request, $id)
     {
         // dd($request->all());
