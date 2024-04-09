@@ -368,7 +368,7 @@
                         :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'supplier_shipment_overview' }"
-                                :class="{ active: $route.name === 'packinglist' }" active-class="active">
+                                :class="{ active: $route.name === 'packinglist' || $route.name === 'supplier_receiptnote' }" active-class="active">
                                 <i class="bi bi-bag"></i><span>Shipment Overview</span>
                             </router-link>
                         </li>
@@ -426,6 +426,7 @@ export default {
             const activeRoutes = [
                 '/supplier/packinglist',
                 '/supplier/shipment_overview',
+                '/supplier/receiptnote/:data*/:soNumbers',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

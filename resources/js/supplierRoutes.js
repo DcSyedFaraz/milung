@@ -40,7 +40,7 @@ const supplierRoutes = [
         component: shipment_overview,
     },
     {
-        path: "receiptnote/:data*",
+        path: "receiptnote/:data*/:soNumbers",
         name: "supplier_receiptnote",
         component: receiptnote,
     },

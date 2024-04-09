@@ -54,7 +54,7 @@
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" :value="ship.id"
+                                            <input class="form-check-input" type="checkbox" :value="ship"
                                                 id="flexCheckDefault" v-model="selectedshipIds">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{ ship.so_number }}
@@ -214,7 +214,7 @@ export default {
     methods: {
         async createReceiptNote() {
             // Collect the selected shipment IDs
-            const selectedShipIds = this.selectedshipIds;
+            const selectedShipIds = this.selectedshipIds.map(ship => ship.id);
 
             if (selectedShipIds.length === 0) {
                 Swal.fire({
@@ -224,13 +224,27 @@ export default {
                 });
                 return;
             }
+            if (selectedShipIds.length > 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select only one shipment.',
+                });
+                return;
+            }
 
             try {
-                
+
                 const response = await axios.post('/api/supplier/receipt-note', { shipIds: selectedShipIds });
                 const data = response.data;
-                const serializedData = JSON.stringify(response.data);
-                this.$router.push({ name: 'supplier_receiptnote', params: { data: serializedData } });
+                const serializedData = JSON.stringify(data);
+
+                const soNumber = this.selectedshipIds[0].so_number;
+                // const soNumbers = this.selectedshipIds.map(ship => ship.so_number);
+                const params = { data: serializedData, soNumbers: soNumber };
+
+                // navigate to the next route page with the params object
+                this.$router.push({ name: 'supplier_receiptnote', params: params });
 
 
                 // Clear the selected shipment IDs

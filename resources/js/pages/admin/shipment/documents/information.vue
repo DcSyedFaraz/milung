@@ -14,9 +14,7 @@
                 </div>
                 <div class="col-12">
                     <div class="row mx-6 mt-4">
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-milung"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-milung">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Invoice No: <br />
@@ -32,9 +30,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-warning"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-warning">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Date: <br />
@@ -42,9 +38,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-orange"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-orange">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Prepred By: <br />
@@ -59,111 +53,57 @@
                         <div class="col-6">
                             <div class="col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >invoice#:</label
-                                    >
-                                    <input
-                                        type="text"
-                                        v-model="info.invoice"
-                                        class="form-control"
-                                    />
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">invoice#:</label>
+                                    <input type="text" v-model="info.invoice" class="form-control" />
                                 </div>
                             </div>
                             <div class="d-flex col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >Shipper:</label
-                                    >
-                                    <textarea
-                                        v-model="info.shipper"
-                                        class="form-control"
-                                        cols="58"
-                                        rows="6"
-                                    ></textarea>
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">Shipper:</label>
+                                    <textarea v-model="info.shipper" class="form-control" cols="58" rows="6"></textarea>
                                 </div>
                             </div>
                             <div class="d-flex col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >consignee:</label
-                                    >
-                                    <textarea
-                                        v-model="info.consignee"
-                                        class="form-control"
-                                        cols="58"
-                                        rows="6"
-                                    ></textarea>
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">consignee:</label>
+                                    <textarea v-model="info.consignee" class="form-control" cols="58"
+                                        rows="6"></textarea>
                                 </div>
                             </div>
                             <div class="col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >notify party:</label
-                                    >
-                                    <input
-                                        type="text"
-                                        v-model="info.party"
-                                        class="form-control"
-                                    />
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">notify
+                                        party:</label>
+                                    <input type="text" v-model="info.party" class="form-control" />
                                 </div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="d-flex col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >carton mark:</label
-                                    >
-                                    <textarea
-                                        v-model="info.carton"
-                                        class="form-control"
-                                        cols="58"
-                                        rows="6"
-                                    ></textarea>
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">carton
+                                        mark:</label>
+                                    <textarea v-model="info.carton" class="form-control" cols="58" rows="6"></textarea>
                                 </div>
                             </div>
                             <div class="col-11 my-4">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >port of loading:</label
-                                    >
-                                    <input
-                                        type="text"
-                                        v-model="info.loading"
-                                        class="form-control"
-                                    />
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">port of
+                                        loading:</label>
+                                    <input type="text" v-model="info.loading" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-11 my-3">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >final destination:</label
-                                    >
-                                    <input
-                                        type="text"
-                                        v-model="info.destination"
-                                        class="form-control"
-                                    />
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">final
+                                        destination:</label>
+                                    <input type="text" v-model="info.destination" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-11 my-2">
                                 <div class="">
-                                    <label
-                                        class="form-label text-milung fw-bold text-uppercase fs-5"
-                                        >payment:</label
-                                    >
-                                    <input
-                                        type="text"
-                                        v-model="info.payment"
-                                        class="form-control"
-                                    />
+                                    <label class="form-label text-milung fw-bold text-uppercase fs-5">payment:</label>
+                                    <input type="text" v-model="info.payment" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-11 my-4 d-flex justify-content-end">
@@ -184,12 +124,7 @@
                             </p>
                         </div>
                         <div class="col-8">
-                            <input
-                                type="text"
-                                disabled
-                                v-model="info.shipment_order"
-                                class="form-control"
-                            />
+                            <input type="text" disabled v-model="info.shipment_order" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -203,11 +138,7 @@
                             </p>
                         </div>
                         <div class="col-8">
-                            <input
-                                type="text"
-                                v-model="info.courier"
-                                class="form-control"
-                            />
+                            <input type="text" v-model="info.courier" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -221,11 +152,7 @@
                             </p>
                         </div>
                         <div class="col-8">
-                            <input
-                                type="text"
-                                v-model="info.tracking"
-                                class="form-control"
-                            />
+                            <input type="text" v-model="info.tracking" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -246,37 +173,20 @@
                 <div class="card">
                     <div class="card-header">
                         <div class=""></div>
-                        <div
-                            class="d-flex justify-content-between align-items-center mx-3"
-                        >
+                        <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span
-                                    class="fw-bold fs-4 text-uppercase"
-                                    style="color: #14245c"
-                                    >III Packing List:</span
-                                >
+                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">III Packing
+                                    List:</span>
                             </span>
 
                             <div class="col-4 d-flex">
                                 <div class="col-12 d-flex">
                                     <div class="col-12">
                                         <div class="input-group">
-                                            <span
-                                                class="input-group-text"
-                                                id="basic-addon1"
-                                                ><i
-                                                    style="color: #41b400"
-                                                    class="bx bx-filter-alt fw-bold fs-4"
-                                                ></i
-                                            ></span>
-                                            <input
-                                                type="text"
-                                                name="search"
-                                                class="form-control"
-                                                v-model="searchQuery"
-                                                ref="search"
-                                                placeholder="Write here to filter..."
-                                            />
+                                            <span class="input-group-text" id="basic-addon1"><i style="color: #41b400"
+                                                    class="bx bx-filter-alt fw-bold fs-4"></i></span>
+                                            <input type="text" name="search" class="form-control" v-model="searchQuery"
+                                                ref="search" placeholder="Write here to filter..." />
                                         </div>
                                     </div>
                                 </div>
@@ -287,10 +197,7 @@
                     <div class="card-body rounded-top table-responsive">
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
-                            <thead
-                                style="color: #009de1"
-                                class="text-center fs-7"
-                            >
+                            <thead style="color: #009de1" class="text-center fs-7">
                                 <tr style="">
                                     <th class="text-nowrap">Supplier ID</th>
                                     <th class="text-nowrap">Carton No.</th>
@@ -319,104 +226,74 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-for="(item, index) in dataToDisplay"
-                                    :key="index"
-                                    v-if="dataToDisplay.length > 0"
-                                    class="text-center"
-                                >
+                                <tr v-for="(item, index) in dataToDisplay" :key="index" v-if="dataToDisplay.length > 0"
+                                    class="text-center">
                                     <td class="fw-bold">
                                         {{ item.supplierid?.userid }}
                                     </td>
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="
-                                            updateData(index, $event, 'carton')
-                                        "
-                                    >
+                                    <td :contenteditable="item.editable" @input="
+        updateData(index, $event, 'carton')
+        ">
                                         {{ item.carton }}
                                     </td>
-                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.order_id }}</td>
                                     <td>
                                         {{
-                                            item.orders?.product_group
-                                                ?.group_name
-                                        }}
+        item.orders?.product_group
+            ?.group_name
+    }}
                                     </td>
                                     <td>{{ item.orders?.quantity_unit }}</td>
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="
-                                            updateData(index, $event, 'qty')
-                                        "
-                                    >
+                                    <td :contenteditable="item.editable" @input="
+        updateData(index, $event, 'qty')
+        ">
                                         {{ item.qty }}
                                     </td>
                                     <td>
                                         {{
-                                            calculateTotal(
-                                                item.qty,
-                                                item.orders?.quantity_unit
-                                            )
-                                        }}
+        calculateTotal(
+            item.qty,
+            item.orders?.quantity_unit
+        )
+    }}
                                     </td>
 
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="updateData(index, $event, 'nw')"
-                                    >
+                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'nw')">
                                         {{ item.nw }}
                                     </td>
                                     <td>{{ item.nw * item.qty }}</td>
 
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="updateData(index, $event, 'gw')"
-                                    >
+                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'gw')">
                                         {{ item.gw }}
                                     </td>
                                     <td>{{ item.gw * item.qty }}</td>
 
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="
-                                            updateData(index, $event, 'lcm')
-                                        "
-                                    >
+                                    <td :contenteditable="item.editable" @input="
+        updateData(index, $event, 'lcm')
+        ">
                                         {{ item.lcm }}
                                     </td>
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="
-                                            updateData(index, $event, 'wcm')
-                                        "
-                                    >
+                                    <td :contenteditable="item.editable" @input="
+        updateData(index, $event, 'wcm')
+        ">
                                         {{ item.wcm }}
                                     </td>
-                                    <td
-                                        :contenteditable="item.editable"
-                                        @input="
-                                            updateData(index, $event, 'hcm')
-                                        "
-                                    >
+                                    <td :contenteditable="item.editable" @input="
+        updateData(index, $event, 'hcm')
+        ">
                                         {{ item.hcm }}
                                     </td>
                                     <td>{{ calculateVolume(item) }}</td>
 
                                     <td>
                                         <template v-if="!item.editable">
-                                            <button
-                                                @click="toggleEditMode(index)"
-                                                class="btn btn-light text-success btn-sm"
-                                            >
+                                            <button @click="toggleEditMode(index)"
+                                                class="btn btn-light text-success btn-sm">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button
-                                                @click="saveItem(index)"
-                                                class="btn btn-light text-danger btn-sm"
-                                            >
+                                            <button @click="saveItem(index)" class="btn btn-light text-danger btn-sm">
                                                 <i class="bi bi-save2"></i>
                                             </button>
                                         </template>
@@ -431,20 +308,13 @@
                                 </tr>
 
                                 <td colspan="17" class="fs-4">
-                                    <span class="text-milung fw-bold"
-                                        >Provisional Customes Clearance
-                                        Code:</span
-                                    ><span class="fw-bold">N325</span>
+                                    <span class="text-milung fw-bold">Provisional Customes Clearance
+                                        Code:</span><span class="fw-bold">N325</span>
                                 </td>
                             </tbody>
                             <span>
-                                <table
-                                    class="table table-striped table-hover mt-5"
-                                >
-                                    <thead
-                                        style="color: #009de1"
-                                        class="text-center"
-                                    >
+                                <table class="table table-striped table-hover mt-5">
+                                    <thead style="color: #009de1" class="text-center">
                                         <tr style="">
                                             <th class="text-nowrap">
                                                 H.S Code
@@ -455,21 +325,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr
-                                            v-for="item in packinglst"
-                                            class="text-center"
-                                        >
+                                        <tr v-for="item in packinglst" class="text-center">
                                             <td>
                                                 {{
-                                                    item.orders?.product_group
-                                                        ?.hs_de
-                                                }}
+        item.orders?.product_group
+            ?.hs_de
+    }}
                                             </td>
                                             <td>
                                                 {{
-                                                    item.orders?.product_group
-                                                        ?.group_name
-                                                }}
+            item.orders?.product_group
+                ?.group_name
+        }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -479,45 +346,22 @@
                             <hr class="w-10"> -->
                             <tbody class="w-full border-top border-3">
                                 <tr class="fw-bold">
-                                    <td
-                                        class="text-blue"
-                                        colspan="5"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" colspan="5" style="color: #009de1">
                                         Total:
                                     </td>
-                                    <td
-                                        class="text-blue"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" style="color: #009de1">
                                         {{ totalQtys }}
                                     </td>
-                                    <td
-                                        class="text-blue"
-                                        colspan="2"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" colspan="2" style="color: #009de1">
                                         {{ totalTotalQty }}
                                     </td>
-                                    <td
-                                        class="text-blue"
-                                        colspan="2"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" colspan="2" style="color: #009de1">
                                         {{ totalnw }}
                                     </td>
-                                    <td
-                                        class="text-blue"
-                                        colspan="4"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" colspan="4" style="color: #009de1">
                                         {{ totalgw }}
                                     </td>
-                                    <td
-                                        class="text-blue"
-                                        colspan="1"
-                                        style="color: #009de1"
-                                    >
+                                    <td class="text-blue" colspan="1" style="color: #009de1">
                                         {{ totalVolumes }}
                                     </td>
                                 </tr>
@@ -542,11 +386,7 @@
                         </p>
                     </div>
                     <div class="col-4">
-                        <input
-                            type="number"
-                            v-model="info.extra"
-                            class="form-control"
-                        />
+                        <input type="number" v-model="info.extra" class="form-control" />
                     </div>
                 </div>
             </div>
@@ -556,32 +396,26 @@
                 <!-- Adjust padding for consistency -->
             </div>
             <div class="col-2">
-                <router-link
-                    :to="{
-                        name: 'cibd',
-                        params: {
-                            id: info.id,
-                            so_number: info.shipment_order,
-                        },
-                    }"
-                    class="btn btn-milung px-4 fs-7"
-                >
+                <router-link :to="{
+        name: 'cibd',
+        params: {
+            id: info.id,
+            so_number: info.shipment_order,
+        },
+    }" class="btn btn-milung px-4 fs-7">
                     <span>Generate CIBD</span>
                 </router-link>
                 <!-- <button ></button> -->
             </div>
 
             <div class="col-2">
-                <router-link
-                    :to="{
-                        name: 'ci',
-                        params: {
-                            id: info.id,
-                            so_number: info.shipment_order,
-                        },
-                    }"
-                    class="btn bg-blue px-4 fs-7"
-                >
+                <router-link :to="{
+        name: 'ci',
+        params: {
+            id: info.id,
+            so_number: info.shipment_order,
+        },
+    }" class="btn bg-blue px-4 fs-7">
                     <span>Generate CI</span>
                 </router-link>
             </div>

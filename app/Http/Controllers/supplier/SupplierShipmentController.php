@@ -39,6 +39,10 @@ class SupplierShipmentController extends Controller
         $orders = Order::whereIn('so_number', $request->shipIds)
             ->where('supplier', $userId)->with('product_group', 'packinglist')->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')
             ->get();
+            foreach ($orders as $order) {
+                // $order->userid = Auth::user()->userid;
+                $order->userid = 'Supplier01';
+            }
         // dd($orders);
         return response()->json($orders, JsonResponse::HTTP_OK);
     }
@@ -129,8 +133,9 @@ class SupplierShipmentController extends Controller
             // dd($quantityUnit);
 
             $PackingList = PackingList::updateOrCreate(
-                ['user_id' => $userId, 'order_id' => $id, 'shipment_order_id' => $request->so_number],
+                ['order_id' => $id, 'shipment_order_id' => $request->so_number],
                 [
+                    'user_id' => $userId,
                     'carton' => $data['carton'],
                     'qty' => $data['qty'],
                     'totalqty' => $data['qty'] * $quantityUnit,
