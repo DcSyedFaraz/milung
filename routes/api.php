@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
+use App\Http\Controllers\buyer\BuyerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\supplier\SupplierOrderController;
@@ -103,6 +104,11 @@ Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershi
 Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
 Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
+Route::group(['prefix' => 'buyer'], function () {
+
+    Route::get('product/{id}', [BuyerController::class, 'product']);
+
+});
 Route::group(['prefix' => 'supplier'], function () {
 
     // Shipment

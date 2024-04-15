@@ -1,0 +1,431 @@
+<template>
+    <section class="section">
+
+        <div class="container">
+
+            <div class="row my-5">
+                <div class="col-md-6">
+                    <h3 class="text-milung fw-bold text-uppercase">1. Product Information</h3>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Article Number:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.article }}</div>
+                    </div>
+
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Name:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.name }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Description:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.description }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Group:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.product_group?.group_name }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Cargo Classification:</p>
+                        </div>
+                        <div class="col-8">
+                            <div class="d-flex">
+                                <span v-if="product.cargo == 'general'" class="badge bg-primary">General Cargo</span>
+                                <span v-else-if="product.cargo == 'danger'" class="badge bg-primary">Danger Goods</span>
+
+                            </div>
+                            <div class="d-flex my-2">
+                                <span v-if="product.cargo_place.includes('china')"
+                                    class="badge bg-success me-2">Mainland China</span>
+                                <span v-if="product.cargo_place.includes('hongkong')" class="badge bg-success">Hong
+                                    Kong</span>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Color:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.color }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4 ">
+                            <p for="v-model" class="">Product Material:</p>
+                        </div>
+                        <div class="col-5">
+                            {{ product.material }} mm
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4 ">
+                            <p for="v-model" class="">Product Size (L*W*H)/(L*Dia):</p>
+                        </div>
+                        <div class="col-5">
+                            {{ product.size }} mm
+                        </div>
+                    </div>
+
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4 ">
+                            <p for="v-model" class="" style="font-size: 0.9rem!important;">Product Net Weight
+                                (Product
+                                Only
+                                per
+                                pcs):</p>
+                        </div>
+                        <div class="col-5">
+                            {{ product.weight }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Specifications:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.specification }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Product Memory Storage (if
+                                applicable):
+                            </p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.memory }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Product Features:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.feature }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Specify Accrssories (i.e
+                                Cable,Manual,etc):
+                            </p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.accessory }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Accessories Total Net Weight
+                                (Accessories
+                                Only per pc):</p>
+                        </div>
+                        <div class="col-4">
+                            {{ product.accessory_weight }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4 ">
+                            <p for="v-model" class=" fs-7">HS Code:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.product_group?.hs_de }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4 ">
+                            <p for="v-model" class=" fs-7">HS-CN Code:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.product_group?.hs_cn }}
+                        </div>
+                    </div>
+                    <h3 class="text-milung fw-bold text-uppercase">3. Battery Details</h3>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Battey Type:</p>
+                        </div>
+                        <div class="col-8">{{ product.battery_type }}</div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Battey Rated Capacity:</p>
+                        </div>
+                        <div class="col-8">
+                            <div class="d-flex">
+                                {{ product.rated }}
+                                {{ product.capacity }} mAh/Wh
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">Battey Nominal Voltage:</p>
+                        </div>
+                        <div class="col-8">{{ product.voltage }}</div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">No. of Battey Contained:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.pcs }} pcs
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">No. of Battey Contained:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.mAh }} mAh
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">No. of Battey Contained:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.mm }} mm
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">No. of Battey Contained:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.gram }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">MSDS IATA Edition No.:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.edition }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">MSDS Expiry Date:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.msds_expiry }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model">UN38.3 Expiry Date:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.un_expiry }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">CN Air Safety Report Expiry Date:
+                            </p>
+                        </div>
+                        <div class="col-8 ">
+                            {{ product.air_safety_expiry }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">CN Sea Safety Report Expiry Date:
+                            </p>
+                        </div>
+                        <div class="col-8 ">
+                            {{ product.sea_safety_expiry }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">CN Train Safety Report Expiry
+                                Date:
+                            </p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.train_safety_expiry }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-milung fw-bold text-uppercase">2. Product Photo</h3>
+                    <div class="d-flex col-11 my-2">
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
+                                Report:
+                                (CE,ROHS,RED,REACH,LFGB,FSC,etc.)</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.certificate }}
+                        </div>
+                    </div>
+                    <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-4">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Standart Printing Method:</p>
+                        </div>
+                        <div class="col-8">
+                            {{ product.printing_method }}
+                        </div>
+                    </div>
+                    <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight <br>
+                                (not include product) -Paper:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.unit_packaging_paper }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight <br>
+                                (not include product) -Plastic:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.unit_packaging_plastic }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight <br>
+                                (not include product) -Metal:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.unit_packaging_metal }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight <br>
+                                (not include product) -Others:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.unit_packaging_others }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model">Specify Packaging Material:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.packaging_material }}
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model" style="font-size: 0.9rem!important;">Total Packaging Net Weight:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.packaging_weight }} g
+                        </div>
+                    </div>
+                    <div class="d-flex col-11 my-2">
+                        <div class="col-6">
+                            <p for="v-model">Standard Packaging:</p>
+                        </div>
+                        <div class="col-6">
+                            {{ product.standart_packaging }}
+                        </div>
+                    </div>
+                    <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex p-4" style="background-color: #14245c;">
+            <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
+            <div class="col-6 d-flex">
+                <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new"
+                    v-model="product.quoteExpiredDate" mode='single' format="dd-mm-yyyy"></VueDatePicker>
+                <button class="btn btn-warning mx-2 fw-bold" type="reset">Reset</button>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
+
+
+
+export default {
+    components: {
+        VueDatePicker,
+    },
+    data() {
+        return {
+            product: {},
+        };
+    },
+    // mounted() {
+    //     this.fetchProduct();
+    // },
+    created() {
+        this.fetchProduct();
+    },
+    methods: {
+        async fetchProduct() {
+            NProgress.start();
+            try {
+                const productId = this.$route.params.id;
+                const response = await axios.get(`/api/buyer/product/${productId}`);
+                this.product = response.data;
+                console.log(this.product);
+
+                NProgress.done();
+            } catch (error) {
+
+                console.error(error);
+                NProgress.done();
+            }
+        },
+
+
+
+
+    },
+};
+</script>
+
+<style scoped>
+.dp-custom-cell {
+    border-radius: 50%;
+}
+
+.dp__input_icon {
+    color: #009de1 !important;
+}
+
+.rotate-icon {
+    transform: rotate(180deg);
+}
+</style>

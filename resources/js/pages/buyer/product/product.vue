@@ -6,19 +6,24 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span> <br>
+                                <!-- <span class="">Overview on all Suppliers</span> -->
+                            </span>
                             <div class="col-4 d-flex">
-                                <div class="col-6">
+                                <div class="col-12">
 
-                                    <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                        ref="search" placeholder="Write here..." />
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1"><i style="color: #41b400;"
+                                                class="bx bx-filter-alt fw-bold fs-4"></i></span>
+                                        <input type="text" name="search" class="form-control " v-model="searchQuery"
+                                            ref="search" placeholder="Write here to filter..." />
+                                    </div>
                                 </div>
-                                <div class="col-6 mx-2">
+                                <!-- <div class="col-6 mx-2">
                                     <router-link :to="{ name: 'productEntry' }"
                                         class="btn btn-warning fw-bold text-dark">Add New
                                         Product</router-link>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -37,7 +42,7 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  display " id="">
-                            <thead style="color: white; background-color: #14245c" class="">
+                            <thead style="color: white; background-color: #14245c" class="text-center">
                                 <tr class="rounded-top-new" style="">
                                     <th>
                                         Article#
@@ -49,32 +54,29 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
+                            <tbody v-for="product in dataToDisplay" :key="product.id" class="text-center">
                                 <tr>
-                                    <td>{{ user.article }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.description }}</td>
-                                    <td>{{ user.product_group?.group_name }}</td>
+                                    <td>{{ product.article }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.description }}</td>
+                                    <td>{{ product.product_group?.group_name }}</td>
 
                                     <td>
                                         <span
-                                            :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
-                                            {{ user.status === 'active' ? 'Active' : 'InActive' }}
+                                            :class="{ 'badge': true, 'bg-success-new': product.status === 'active', 'bg-danger': product.status !== 'active' }">
+                                            {{ product.status === 'active' ? 'Active' : 'InActive' }}
                                         </span>
                                     </td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
+                                        <!-- <button @click="toggleAccordion(product)" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[product.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link :to="{ name: 'buyer_productEdit', params: { id: product.id } }" class="text-dark">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
-                                                class="bi bi-trash"></i>
-                                        </a>
                                     </td>
                                 </tr>
                                 <transition name="fade">
@@ -108,7 +110,6 @@
 </template>
 
 <script>
-import './index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -125,7 +126,7 @@ export default {
     data() {
         return {
             isLoading: true,
-            users: [],
+            products: [],
             accordionOpen: {},
             currentPage: 1,
             searchQuery: ''
@@ -133,26 +134,26 @@ export default {
     },
     watch: {
         data(newVal) {
-            this.users = newVal;
+            this.products = newVal;
         }
     },
     computed: {
-        filteredUsers() {
-            return this.users.filter(user => {
-                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.article.toLowerCase().includes(this.searchQuery.toLowerCase());
+        filteredproducts() {
+            return this.products.filter(product => {
+                return product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || product.article.toLowerCase().includes(this.searchQuery.toLowerCase());
             });
         },
         totalPages() {
-            return Math.ceil(this.users.length / this.perPage)
+            return Math.ceil(this.products.length / this.perPage)
         },
         paginatedData() {
             const start = (this.currentPage - 1) * this.perPage
             const end = start + this.perPage
-            return this.users.slice(start, end)
+            return this.products.slice(start, end)
         },
         dataToDisplay() {
             if (this.searchQuery) {
-                return this.filteredUsers;
+                return this.filteredproducts;
             } else {
                 return this.paginatedData;
             }
@@ -162,14 +163,14 @@ export default {
 
     },
     created() {
-        this.fetchUsers().then(() => {
+        this.fetchproducts().then(() => {
             setTimeout(() => {
                 this.isLoading = false;
             }, 1000); // Delay of 1 second
         });
     },
     methods: {
-        showToast(type,message) {
+        showToast(type, message) {
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -179,13 +180,13 @@ export default {
                 title: message
             });
         },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+        toggleAccordion(product) {
+            this.accordionOpen[product.id] = !this.accordionOpen[product.id];
         },
         changePage(page) {
             this.currentPage = page
         },
-        async updateUser(id) {
+        async updateproduct(id) {
             // const formData = {
 
             // };
@@ -193,63 +194,30 @@ export default {
             // Send formData to your API
             // console.log('Form Data:', formData);
             try {
-                // const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
+                // const response = await axios.put(`/api/updateproducts/${id}`, [this.updateproduct, formData]);
 
                 if (response.status === 200) {
-                    toastr.success('User updated successfully');
-                    this.$router.push({ name: 'user' });
+                    toastr.success('product updated successfully');
+                    this.$router.push({ name: 'product' });
                 }
             } catch (error) {
                 if (error.response.status === 422) {
                     toastr.error('Please fix the validation errors and try again');
                 } else {
-                    toastr.error('An error occurred while updating the user');
+                    toastr.error('An error occurred while updating the product');
                 }
             }
         },
-        async fetchUsers() {
+        async fetchproducts() {
             try {
                 const response = await axios.get('/api/products');
-                this.users = response.data;
+                this.products = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching products:', error);
                 toastr.error('Error fetching data');
-            }
-        },
-        async deleteUser(userId) {
-            // Display SweetAlert confirmation dialog
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this product!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            });
-
-            if (result.isConfirmed) {
-                // User confirmed, proceed with the deletion
-                try {
-                    await axios.delete(`/api/prodDelete/${userId}`);
-
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Product deleted successfully',
-                    });
-                } catch (error) {
-                    console.error('Error deleting user:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error deleting product',
-                    });
-                }
             }
         },
 
@@ -258,8 +226,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('./style.css');
-
 .rotate-icon {
     transform: rotate(180deg);
 }

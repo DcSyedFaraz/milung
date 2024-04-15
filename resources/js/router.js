@@ -28,7 +28,7 @@ const routes = [
         path: "/buyer",
         name: "buyer",
         component: buyer,
-        meta: { requiresBuyer: true },
+        // meta: { requiresBuyer: true },
         children: buyerRoutes,
         redirect: "/buyer/dashboard",
     },

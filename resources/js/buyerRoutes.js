@@ -1,18 +1,25 @@
-import DefaultAdmin from "./pages/admin/default.vue";
-import User from "./pages/admin/user.vue";
+import DefaultAdmin from "./pages/buyer/default.vue";
+
+// Product
+import product from "./pages/buyer/product/product.vue";
+import productEdit from "./pages/buyer/product/product-edit.vue";
 
 const buyerRoutes = [
     {
         path: "dashboard",
-        name: "admins1",
+        name: "buyer",
         component: DefaultAdmin,
         // meta: { requiresAdmin: true },
     },
     {
-        path: "dashboard/1",
-        name: "admins11",
-        component: User,
-        // meta: { requiresAdmin: true },
+        path: "product",
+        name: "buyer_product",
+        component: product,
+    },
+    {
+        path: "productEdit/:id",
+        name: "buyer_productEdit",
+        component: productEdit,
     },
 ];
 

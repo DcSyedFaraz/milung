@@ -27,7 +27,7 @@
                                 <p for="v-model">Status:</p>
                             </div>
                             <div class="col-8">
-                                <select v-model="status" class="form-control">
+                                <select v-model="status" class="form-select">
                                     <option value="active">Active</option>
                                     <option value="inactive">InActive</option>
                                 </select>

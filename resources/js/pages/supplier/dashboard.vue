@@ -257,45 +257,6 @@
                 </li>
                 <!-- End Dashboard Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }"
-                        data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-person-gear"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
-                        :class="{ 'show': isAnyChildRouteActive() }">
-                        <li>
-                            <router-link :to="{ name: 'admins' }" active-class="active">
-                                <i class="bi bi-circle"></i><span>Modal</span>
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link :to="{ name: 'admins1' }" active-class="active">
-                                <i class="bi bi-circle"></i><span>Modal1</span>
-                            </router-link>
-                        </li>
-                        <li>
-                            <a href="components-pagination.html">
-                                <i class="bi bi-circle"></i><span>Pagination</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-progress.html">
-                                <i class="bi bi-circle"></i><span>Progress</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-spinners.html">
-                                <i class="bi bi-circle"></i><span>Spinners</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="components-tooltips.html">
-                                <i class="bi bi-circle"></i><span>Tooltips</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <!-- End Components Nav -->
 
                 <li class="nav-item">
