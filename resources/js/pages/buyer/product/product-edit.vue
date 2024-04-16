@@ -48,11 +48,11 @@
                                 <span v-else-if="product.cargo == 'danger'" class="badge bg-primary">Danger Goods</span>
 
                             </div>
-                            <div class="d-flex my-2">
-                                <span v-if="product.cargo_place.includes('china')"
+                            <div class="d-flex my-2" v-if="product.cargo_place">
+                                <span v-if="product.cargo_place.split(',').includes('china')"
                                     class="badge bg-success me-2">Mainland China</span>
-                                <span v-if="product.cargo_place.includes('hongkong')" class="badge bg-success">Hong
-                                    Kong</span>
+                                <span v-if="product.cargo_place.split(',').includes('hongkong')"
+                                    class="badge bg-success">Hong Kong</span>
                             </div>
 
 
@@ -350,8 +350,60 @@
                             {{ product.standart_packaging }}
                         </div>
                     </div>
-                    <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
 
+                    <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
+                    <div class="d-flex my-2">
+                        <div class="col-3 mt-3">Safety Sheet:</div>
+                        <div class="col-5 mt-2" v-if="product">
+                            <input type="text" :value="parsefileName(product.safety_sheet)" disabled
+                                class="form-control w-full">
+                        </div>
+                        <div class="col-4" v-if="product">
+                            <a :href="parsefilePath(product.safety_sheet)"
+                                :download="parsefileName(product.safety_sheet)"
+                                class="btn-sm btn btn-light rotate-icon"><i
+                                    class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
+                        </div>
+                    </div>
+                     <div class="d-flex my-2">
+                        <div class="col-3 mt-3">Manual:</div>
+                        <div class="col-5 mt-2" v-if="product">
+                            <input type="text" :value="parsefileName(product.manual)" disabled
+                                class="form-control w-full">
+                        </div>
+                        <div class="col-4" v-if="product">
+                            <a :href="parsefilePath(product.manual)"
+                                :download="parsefileName(product.manual)"
+                                class="btn-sm btn btn-light rotate-icon"><i
+                                    class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
+                        </div>
+                    </div>
+                    <div class="d-flex my-2">
+                        <div class="col-3 mt-3">Product Label:</div>
+                        <div class="col-5 mt-2" v-if="product">
+                            <input type="text" :value="parsefileName(product.product_label)" disabled
+                                class="form-control w-full">
+                        </div>
+                        <div class="col-4" v-if="product">
+                            <a :href="parsefilePath(product.product_label)"
+                                :download="parsefileName(product.product_label)"
+                                class="btn-sm btn btn-light rotate-icon"><i
+                                    class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
+                        </div>
+                    </div>
+                    <div class="d-flex my-2">
+                        <div class="col-3 mt-3">Packaging Label:</div>
+                        <div class="col-5 mt-2" v-if="product">
+                            <input type="text" :value="parsefileName(product.packaging_label)" disabled
+                                class="form-control w-full">
+                        </div>
+                        <div class="col-4" v-if="product">
+                            <a :href="parsefilePath(product.packaging_label)"
+                                :download="parsefileName(product.packaging_label)"
+                                class="btn-sm btn btn-light rotate-icon"><i
+                                    class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -393,6 +445,16 @@ export default {
         this.fetchProduct();
     },
     methods: {
+        parsefileName(fileData) {
+            if (!fileData) return '';
+            const file = JSON.parse(fileData);
+            return file ? file.name : '';
+        },
+        parsefilePath(fileData) {
+            if (!fileData) return '';
+            const file = JSON.parse(fileData);
+            return file ? '/storage/' + file.path : '';
+        },
         async fetchProduct() {
             NProgress.start();
             try {

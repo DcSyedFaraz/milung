@@ -54,8 +54,8 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="product in dataToDisplay" :key="product.id" class="text-center">
-                                <tr>
+                            <tbody class="text-center">
+                                <tr v-for="product in dataToDisplay" :key="product.id">
                                     <td>{{ product.article }}</td>
                                     <td>{{ product.name }}</td>
                                     <td>{{ product.description }}</td>
@@ -73,15 +73,13 @@
                                             :class="{ 'rotate-icon': accordionOpen[product.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'buyer_productEdit', params: { id: product.id } }" class="text-dark">
+                                        <router-link :to="{ name: 'buyer_productEdit', params: { id: product.id } }"
+                                            class="text-dark">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
                                     </td>
                                 </tr>
-                                <transition name="fade">
-
-                                </transition>
 
                             </tbody>
                         </table>

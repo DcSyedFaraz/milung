@@ -298,19 +298,34 @@ class ProductController extends Controller
             }
 
             // Save other files
-            $safetySheetPath = $request->file('safety_sheet') ? $request->file('safety_sheet')->store('safety_sheets', 'public') : null;
-            $manualPath = $request->file('manual') ? $request->file('manual')->store('manuals', 'public') : null;
-            $productLabelPath = $request->file('product_label') ? $request->file('product_label')->store('product_labels', 'public') : null;
-            $packagingLabelPath = $request->file('packaging_label') ? $request->file('packaging_label')->store('packaging_labels', 'public') : null;
+            // $safetySheetPath = $request->file('safety_sheet') ? $request->file('safety_sheet')->store('safety_sheets', 'public') : null;
+            // $manualPath = $request->file('manual') ? $request->file('manual')->store('manuals', 'public') : null;
+            // $productLabelPath = $request->file('product_label') ? $request->file('product_label')->store('product_labels', 'public') : null;
+            // $packagingLabelPath = $request->file('packaging_label') ? $request->file('packaging_label')->store('packaging_labels', 'public') : null;
 
-            // Attach file paths to the product
-            $product->update([
-                'safety_sheet' => $safetySheetPath,
-                'manual' => $manualPath,
-                'product_label' => $productLabelPath,
-                'packaging_label' => $packagingLabelPath,
-                'user_id' => auth()->user()->id ?? '',
-            ]);
+            // Define an array of file fields
+            $fileFields = [
+                ['field' => 'safety_sheet', 'path' => 'safety_sheets', 'key' => 'safety_sheet'],
+                ['field' => 'manual', 'path' => 'manuals', 'key' => 'manual'],
+                ['field' => 'product_label', 'path' => 'product_labels', 'key' => 'product_label'],
+                ['field' => 'packaging_label', 'path' => 'packaging_labels', 'key' => 'packaging_label'],
+            ];
+
+            // Loop through the file fields
+            foreach ($fileFields as $fileField) {
+                $file = $request->file($fileField['field']);
+                $path = $file ? $file->store($fileField['path'], 'public') : null;
+                $originalName = $file ? $file->getClientOriginalName() : null;
+
+                // Attach file paths to the product
+                $product->{$fileField['key']} = ['path' => $path, 'name' => $originalName];
+            }
+
+            // Attach user_id to the product
+            $product->user_id = auth()->user()->id ?? '';
+
+            // Save the product
+            $product->save();
 
 
             return response()->json(['message' => 'Product saved successfully'], 201);
