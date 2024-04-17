@@ -37,7 +37,7 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  display " id="">
-                            <thead style="color: white; background-color: #14245c" class="">
+                            <thead style="color: white; background-color: #14245c" class="text-center">
                                 <tr class="rounded-top-new" style="">
                                     <th>
                                         Article#
@@ -49,8 +49,8 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
-                                <tr>
+                            <tbody class="text-center">
+                                <tr v-for="user in dataToDisplay" :key="user.id">
                                     <td>{{ user.article }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.description }}</td>
@@ -77,9 +77,6 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
-
-                                </transition>
 
                             </tbody>
                         </table>
@@ -169,7 +166,7 @@ export default {
         });
     },
     methods: {
-        showToast(type,message) {
+        showToast(type, message) {
             Swal.fire({
                 toast: true,
                 position: 'top-end',

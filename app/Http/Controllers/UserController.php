@@ -68,7 +68,7 @@ class UserController extends Controller
             'product_group' => function ($query) {
                 $query->select('id', 'group_name');
             }
-        ])->get();
+        ])->orderby('created_at','desc')->get();
         return response()->json($products, JsonResponse::HTTP_OK);
     }
     public function supplier()

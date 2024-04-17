@@ -36,7 +36,6 @@ Route::group(['middleware' => []], function () {
     Route::get('buyer', [UserController::class, 'buyer']);
     Route::get('supplierOrder', [UserController::class, 'supplierOrder']);
     Route::get('buyerOrder', [UserController::class, 'buyerOrder']);
-    Route::get('products', [UserController::class, 'products']);
     Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
 
     // Adding Users
@@ -93,7 +92,9 @@ Route::group(['middleware' => []], function () {
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
 
     Route::post('statement', [ProductController::class, 'statement']);
+    
     // Adding Products
+    Route::get('products', [UserController::class, 'products']);
     Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
     Route::post('addprod', [ProductController::class, 'addprod']);
 });
@@ -104,11 +105,14 @@ Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershi
 Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
 Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
+// <-- Buyer Routes -->
 Route::group(['prefix' => 'buyer'], function () {
 
     Route::get('product/{id}', [BuyerController::class, 'product']);
 
 });
+
+// <-- Supplier Routes -->
 Route::group(['prefix' => 'supplier'], function () {
 
     // Shipment

@@ -268,6 +268,7 @@ class ProductController extends Controller
                 'un_expiry' => 'nullable|date',
                 'air_safety_expiry' => 'nullable|date',
                 'sea_safety_expiry' => 'nullable|date',
+                'quoteExpiredDate' => 'required|date',
                 'train_safety_expiry' => 'nullable|date',
                 'certificate' => 'nullable|string|max:255',
                 'printing_method' => 'nullable|string|max:255',

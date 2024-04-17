@@ -269,7 +269,40 @@
                 <div class="col-md-6">
                     <h3 class="text-milung fw-bold text-uppercase">2. Product Photo</h3>
                     <div class="d-flex col-11 my-2">
+                        <div class="col-12">
+                            <div v-if="product.images !== null && product.images?.length > 0"
+                                class="carousel-container">
+
+                                <!-- Bootstrap Carousel -->
+                                <div id="imageCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                        <li v-for="(image, index) in product.images" :key="index"
+                                            :data-bs-target="'#imageCarousel'" :data-bs-slide-to="index"
+                                            :class="{ 'active': index === 0 }"></li>
+                                    </ol>
+                                    <div class="carousel-inner">
+                                        <div v-for="(image, index) in product.images" :key="index"
+                                            :class="{ 'carousel-item': true, 'active': index === 0 }">
+                                            <img :src="'/storage/' + image.path" class="d-block w-100"
+                                                style="height: 300px; object-fit: cover;" alt="Image">
+                                        </div>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button v-if="product.images !== null && product.images?.length > 0" @click="downloadAllImages"
+                        class="btn btn-primary">Download All Images</button>
                     <div class="d-flex col-11 my-2">
                         <div class="col-4">
                             <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
@@ -358,22 +391,21 @@
                             <input type="text" :value="parsefileName(product.safety_sheet)" disabled
                                 class="form-control w-full">
                         </div>
-                        <div class="col-4" v-if="product">
+                        <div class="col-4" v-if="parsefileName(product.safety_sheet) !== null">
                             <a :href="parsefilePath(product.safety_sheet)"
                                 :download="parsefileName(product.safety_sheet)"
                                 class="btn-sm btn btn-light rotate-icon"><i
                                     class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
                         </div>
                     </div>
-                     <div class="d-flex my-2">
+                    <div class="d-flex my-2">
                         <div class="col-3 mt-3">Manual:</div>
                         <div class="col-5 mt-2" v-if="product">
                             <input type="text" :value="parsefileName(product.manual)" disabled
                                 class="form-control w-full">
                         </div>
-                        <div class="col-4" v-if="product">
-                            <a :href="parsefilePath(product.manual)"
-                                :download="parsefileName(product.manual)"
+                        <div class="col-4" v-if="parsefileName(product.manual) !== null">
+                            <a :href="parsefilePath(product.manual)" :download="parsefileName(product.manual)"
                                 class="btn-sm btn btn-light rotate-icon"><i
                                     class="bi bi-arrow-up-right-square fs-2 text-success"></i></a>
                         </div>
@@ -384,7 +416,7 @@
                             <input type="text" :value="parsefileName(product.product_label)" disabled
                                 class="form-control w-full">
                         </div>
-                        <div class="col-4" v-if="product">
+                        <div class="col-4" v-if="parsefileName(product.product_label) !== null">
                             <a :href="parsefilePath(product.product_label)"
                                 :download="parsefileName(product.product_label)"
                                 class="btn-sm btn btn-light rotate-icon"><i
@@ -397,7 +429,7 @@
                             <input type="text" :value="parsefileName(product.packaging_label)" disabled
                                 class="form-control w-full">
                         </div>
-                        <div class="col-4" v-if="product">
+                        <div class="col-4" v-if="parsefileName(product.packaging_label) !== null">
                             <a :href="parsefilePath(product.packaging_label)"
                                 :download="parsefileName(product.packaging_label)"
                                 class="btn-sm btn btn-light rotate-icon"><i
@@ -409,11 +441,9 @@
             </div>
         </div>
         <div class="container d-flex p-4" style="background-color: #14245c;">
-            <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
-            <div class="col-6 d-flex">
-                <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new"
-                    v-model="product.quoteExpiredDate" mode='single' format="dd-mm-yyyy"></VueDatePicker>
-                <button class="btn btn-warning mx-2 fw-bold" type="reset">Reset</button>
+            <div class="text-uppercase text-white col-3 fw-bolder my-auto">8. Quote Expire Date:</div>
+            <div class="col-6 d-flex ">
+                <p class="my-auto text-white">{{ product.quoteExpiredDate }}</p>
             </div>
         </div>
     </section>
@@ -445,15 +475,43 @@ export default {
         this.fetchProduct();
     },
     methods: {
+        downloadAllImages() {
+            const images = this.product.images;
+            if (images && images.length > 0) {
+                images.forEach(image => {
+                    const link = document.createElement('a');
+                    link.href = '/storage/' + image.path;
+                    link.download = image.name;
+                    link.click();
+                });
+            }
+        },
         parsefileName(fileData) {
-            if (!fileData) return '';
-            const file = JSON.parse(fileData);
-            return file ? file.name : '';
+            if (typeof fileData !== 'string' || fileData[0] !== '{') {
+                return '';
+            }
+
+            try {
+                const file = JSON.parse(fileData);
+                return file ? file.name : '';
+            } catch (error) {
+                console.error(error);
+                return '';
+            }
         },
         parsefilePath(fileData) {
-            if (!fileData) return '';
-            const file = JSON.parse(fileData);
-            return file ? '/storage/' + file.path : '';
+            if (typeof fileData !== 'string' || fileData[0] !== '{') {
+                return '';
+            }
+
+            try {
+                const file = JSON.parse(fileData);
+                return file ? '/storage/' + file.path : '';
+            } catch (error) {
+                console.error(error);
+                return '';
+            }
+
         },
         async fetchProduct() {
             NProgress.start();

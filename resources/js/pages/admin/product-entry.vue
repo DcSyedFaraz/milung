@@ -86,7 +86,8 @@
                                         </label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place" value="china">
+                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
+                                            value="china">
                                         <label class="form-check-label" for="flexCheckDefault2">
                                             Mainland China
                                         </label>
@@ -128,7 +129,8 @@
 
                         <div class="d-flex col-11 my-2">
                             <div class="col-4 ">
-                                <p for="v-model" class="" style="font-size: 0.9rem!important;">Product Net Weight (Product
+                                <p for="v-model" class="" style="font-size: 0.9rem!important;">Product Net Weight
+                                    (Product
                                     Only
                                     per
                                     pcs):</p>
@@ -300,7 +302,8 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Air Safety Report Expiry Date:</p>
+                                <p for="v-model" style="font-size: 0.9rem!important;">CN Air Safety Report Expiry Date:
+                                </p>
                             </div>
                             <div class="col-8 ">
                                 <input type="date" v-model="air_safety_expiry" class="form-control">
@@ -308,7 +311,8 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Sea Safety Report Expiry Date:</p>
+                                <p for="v-model" style="font-size: 0.9rem!important;">CN Sea Safety Report Expiry Date:
+                                </p>
                             </div>
                             <div class="col-8 ">
                                 <input type="date" v-model="sea_safety_expiry" class="form-control">
@@ -316,7 +320,8 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Train Safety Report Expiry Date:
+                                <p for="v-model" style="font-size: 0.9rem!important;">CN Train Safety Report Expiry
+                                    Date:
                                 </p>
                             </div>
                             <div class="col-8">
@@ -331,7 +336,8 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing Report:
+                                <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
+                                    Report:
                                     (CE,ROHS,RED,REACH,LFGB,FSC,etc.)</p>
                             </div>
                             <div class="col-8">
@@ -430,7 +436,8 @@
                         <fileinput label="Manual:" inputName="manual" @file-uploaded="handleFileUploaded"></fileinput>
                         <fileinput label="Product Label:" inputName="product_label" @file-uploaded="handleFileUploaded">
                         </fileinput>
-                        <fileinput label="Packaging Label:" inputName="packaging_label" @file-uploaded="handleFileUploaded">
+                        <fileinput label="Packaging Label:" inputName="packaging_label"
+                            @file-uploaded="handleFileUploaded">
                         </fileinput>
 
                     </div>
@@ -439,8 +446,8 @@
             <div class="container d-flex p-4" style="background-color: #14245c;">
                 <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
                 <div class="col-6 d-flex">
-                    <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new" v-model="quoteExpiredDate"
-                        mode='single' format="dd-mm-yyyy"></VueDatePicker>
+                    <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new" v-model="Dates"
+                        mode='single' format="dd-MM-yyyy" @input="sendDateOnly"></VueDatePicker>
                     <button class="btn btn-warning mx-2 fw-bold" type="reset">Reset</button>
                 </div>
             </div>
@@ -468,6 +475,7 @@ export default {
         return {
             productOptions: [],
             quoteExpiredDate: '',
+            Dates: '',
             article: '',
             name: '',
             description: '',
@@ -492,6 +500,7 @@ export default {
             mm: 0,
             gram: 0,
             edition: '',
+            status: '',
             msds_expiry: '',
             un_expiry: '',
             air_safety_expiry: '',
@@ -518,8 +527,10 @@ export default {
     mounted() {
         this.fetchProductOptions();
     },
-    created() {
-        // this.fetchUsers();
+    watch: {
+        Dates: function (newDate, oldDate) {
+            this.sendDateOnly();
+        }
     },
     methods: {
         async fetchProductOptions() {
@@ -539,28 +550,30 @@ export default {
             // Update selectedImages in parent component
             console.log('new  ', images);
             this.selectedImages = images;
-
-
-
         },
-
-
-
+        sendDateOnly() {
+            // Extract date part from quoteExpiredDate
+            const selectedDate = new Date(this.Dates);
+            const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
+            this.quoteExpiredDate = formattedDate;
+            // Now you can send the formattedDate to your backend
+            console.log('Selected Date:', this.quoteExpiredDate);
+        },
         async submitForm() {
-            console.log("Form submitted with images:", this.selectedImages);
+            console.log("Form submitted with images:", this.quoteExpiredDate);
 
             // Create a new FormData object
             const formData = new FormData();
 
             // Define an array of field names
             const formFields = [
-                'article','status', 'name', 'description', 'cargo', 'cargo_place', 'color',
+                'article', 'status', 'name', 'description', 'cargo', 'cargo_place', 'color',
                 'material', 'size', 'weight', 'specification', 'memory', 'feature', 'accessory',
                 'accessory_weight', 'battery_type', 'rated', 'capacity', 'voltage', 'pcs',
                 'mAh', 'mm', 'gram', 'edition', 'msds_expiry', 'un_expiry', 'air_safety_expiry',
                 'sea_safety_expiry', 'train_safety_expiry', 'certificate', 'printing_method',
                 'unit_packaging_paper', 'unit_packaging_plastic', 'unit_packaging_metal',
-                'unit_packaging_others', 'packaging_material', 'packaging_weight', 'standart_packaging'
+                'unit_packaging_others', 'packaging_material', 'packaging_weight', 'standart_packaging', 'quoteExpiredDate'
             ];
             formData.append('group', this.group.id);
             // Append form fields to FormData dynamically

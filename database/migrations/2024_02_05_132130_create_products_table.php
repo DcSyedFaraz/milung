@@ -41,6 +41,7 @@ Schema::create('products', function (Blueprint $table) {
     $table->string('edition')->nullable();
     $table->date('msds_expiry')->nullable();
     $table->date('un_expiry')->nullable();
+    $table->string('quoteExpiredDate')->nullable();
     $table->date('air_safety_expiry')->nullable();
     $table->date('sea_safety_expiry')->nullable();
     $table->date('train_safety_expiry')->nullable();
