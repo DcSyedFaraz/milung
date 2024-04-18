@@ -117,8 +117,7 @@ class ProductController extends Controller
         // Find the PriceInquiry record by ID
         $priceInquiry = PriceInquiry::findOrFail($id);
 
-        // Update the fields with the validated data
-        $priceInquiry->update($validatedData);
+
 
         // Handle file uploads if necessary
         if ($request->hasFile('file')) {
@@ -134,20 +133,49 @@ class ProductController extends Controller
             $priceInquiry->file1 = $fileName1;
         }
 
-        // Save materials data
+        // Original values
+        $originalPcs = $priceInquiry->pcs;
+        $originalCapacity = $priceInquiry->capacity;
+
+        // Filter and update pcs
         $pcs = $request->input('pcs');
-        $priceInquiry->pcs = array_filter($pcs, function ($value) {
+        $filteredPcs = array_filter($pcs, function ($value) {
             return $value !== null;
         });
+        $priceInquiry->pcs = $filteredPcs;
 
-        // Save capacity data
+        // Filter and update capacity
         $capacity = $request->input('capacity');
-        $priceInquiry->capacity = array_filter($capacity, function ($value) {
+        $filteredCapacity = array_filter($capacity, function ($value) {
             return $value !== null && $value !== 'undefined';
         });
+        $priceInquiry->capacity = $filteredCapacity;
 
+        // Check if there are new values
+        $hasNewPcs = !empty(array_diff($filteredPcs, $originalPcs));
+        $hasNewCapacity = !empty(array_diff($filteredCapacity, $originalCapacity));
+        // dd($hasNewPcs,$hasNewCapacity);
         // Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+        if ($hasNewPcs || $hasNewCapacity) {
+            $priceInquiry->inquirysuppliers()->delete();
 
+            foreach ($request->supplier_ids as $index => $supplier_id) {
+                foreach ($request->pcs as $pcsIndex => $pcsValue) {
+                    foreach ($request->capacity as $capacityIndex => $capacityValue) {
+
+                        $priceInquiry->inquirysuppliers()->create([
+                            'user_id' => $supplier_id,
+                            'quantity' => $pcsValue,
+                            'capacity' => $capacityValue,
+                        ]);
+                    }
+
+                }
+            }
+        }
+
+        // Update the fields with the validated data
+        $priceInquiry->update($validatedData);
         $priceInquiry->save();
 
         // Return a success response

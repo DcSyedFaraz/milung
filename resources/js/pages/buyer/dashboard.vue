@@ -1,4 +1,5 @@
 <template>
+
     <body>
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
@@ -34,7 +35,8 @@
                     <!-- End Search Icon-->
 
                     <li class="nav-item dropdown pe-3">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
+                            data-bs-toggle="dropdown">
                             <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
                         </a><!-- End Profile Iamge Icon -->
@@ -256,7 +258,8 @@
                 <!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }"
+                        data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-database"></i><span>Database</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
@@ -271,22 +274,10 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span><i
-                            class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="tables-general.html">
-                                <i class="bi bi-circle"></i><span>General Tables</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="tables-data.html">
-                                <i class="bi bi-circle"></i><span>Data Tables</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <router-link class="nav-link" :to="{ name: 'buyer_price_inquiry' }"
+                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }" active-class="active">
+                        <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
+                    </router-link>
                 </li>
                 <!-- End Tables Nav -->
 
@@ -381,8 +372,8 @@
 <script>
 import './../admin/index';
 export default {
-  methods: {
-    isAnyChildRouteActive() {
+    methods: {
+        isAnyChildRouteActive() {
             const activeRoutes = [
                 '/buyer/product',
                 '/buyer/productEdit/:id',
@@ -391,17 +382,17 @@ export default {
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
 
         },
-    logout() {
-      // Dispatch the logout action from Vuex store
-      this.$store.dispatch('logout');
+        logout() {
+            // Dispatch the logout action from Vuex store
+            this.$store.dispatch('logout');
 
-      // Redirect the user to the login page or another route
-      this.$router.push({ name: 'login' });
+            // Redirect the user to the login page or another route
+            this.$router.push({ name: 'login' });
+        },
     },
-  },
 };
 </script>
 
-<style  scoped>
+<style scoped>
 @import './../admin/style.css';
 </style>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\buyer\BuyerController;
+use App\Http\Controllers\buyer\InquiryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\supplier\SupplierOrderController;
@@ -92,7 +93,7 @@ Route::group(['middleware' => []], function () {
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
 
     Route::post('statement', [ProductController::class, 'statement']);
-    
+
     // Adding Products
     Route::get('products', [UserController::class, 'products']);
     Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
@@ -108,7 +109,20 @@ Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppl
 // <-- Buyer Routes -->
 Route::group(['prefix' => 'buyer'], function () {
 
+    // Product
     Route::get('product/{id}', [BuyerController::class, 'product']);
+
+    // Price Inquiry
+    Route::resource('price_inquiry', InquiryController::class)->except([
+        'update'
+    ]);
+
+    // Define a custom route for the update action using POST method
+    Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
+
+    // Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
+    // Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
+    // Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
 });
 
