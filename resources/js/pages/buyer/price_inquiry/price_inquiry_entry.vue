@@ -25,7 +25,7 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-control" v-model="inquiry.group">
+                                <select class=" form-select" v-model="inquiry.group">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
                                         {{ group1.group_name }}
@@ -124,7 +124,7 @@
                                 <div class="input-group my-2" v-for="(caps, indexs) in capacity" :key="indexs">
                                     <input type="number" class="form-control" v-model="capacity[indexs].quantity"
                                         @input="updateInquiryCapacity">
-                                    <select style="color: #41b400;" class="fw-bold form-control mx-2"
+                                    <select style="color: #41b400;" class="fw-bold form-select mx-2"
                                         v-model="capacity[indexs].unit">
                                         <option value="GB">GB</option>
                                         <option value="mAh">mAh</option>
@@ -175,7 +175,7 @@
                             <div class="col-4">
                                 <p for="v-model" class="my-1">Status:</p>
                             </div>
-                            <div class="col-8"><select class="fw-bold form-control" v-model="inquiry.status">
+                            <div class="col-8"><select class="fw-bold form-select" v-model="inquiry.status">
                                     <option value="ML Checking">ML Checking</option>
                                     <option value="ML Replied">ML Replied</option>
                                     <option value="ML Follow Up">ML Follow Up</option>

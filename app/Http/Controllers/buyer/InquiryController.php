@@ -55,6 +55,11 @@ class InquiryController extends Controller
             'capacity' => 'required|array',
         ]);
 
+        $userid = 2;
+        // $userid = Auth::id();
+        // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
+        $validatedData['buyer'] = $userid;
+
         $priceInquiry = PriceInquiry::create($validatedData);
 
         if ($request->hasFile('file1')) {
@@ -162,6 +167,13 @@ class InquiryController extends Controller
      */
     public function destroy($id)
     {
-        //
+         try {
+            $user = PriceInquiry::findOrFail($id);
+            $user->delete();
+
+            return response()->json(['message' => 'Inquiry deleted successfully'], 200);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }
