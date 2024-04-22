@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\buyer\BuyerController;
+use App\Http\Controllers\buyer\BuyerOrderController;
 use App\Http\Controllers\buyer\InquiryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
@@ -120,9 +121,8 @@ Route::group(['prefix' => 'buyer'], function () {
     // Define a custom route for the update action using POST method
     Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
 
-    // Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
-    // Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
-    // Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
+    //Orders
+    Route::resource('order', BuyerOrderController::class);
 
 });
 

@@ -8,6 +8,10 @@ import productEdit from "./pages/buyer/product/product-edit.vue";
 import price_inquiry from "./pages/buyer/price_inquiry/price_inquiry.vue";
 import price_inquiry_entry from "./pages/buyer/price_inquiry/price_inquiry_entry.vue";
 
+// Order
+import order_list from "./pages/buyer/order/order_list.vue";
+import order_entry from "./pages/buyer/order/order_entry.vue";
+
 const buyerRoutes = [
     {
         path: "dashboard",
@@ -40,6 +44,19 @@ const buyerRoutes = [
         component: price_inquiry_entry,
         props: {
             mode: "edit",
+        },
+    },
+    {
+        path: "order_list",
+        name: "buyer_order_list",
+        component: order_list,
+    },
+    {
+        path: "order_entry/:id",
+        name: "buyer_order_entry",
+        component: order_entry,
+        props: {
+            isEditing: true,
         },
     },
 ];

@@ -282,26 +282,10 @@
                 <!-- End Tables Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-bag"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="charts-chartjs.html">
-                                <i class="bi bi-circle"></i><span>Chart.js</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="charts-apexcharts.html">
-                                <i class="bi bi-circle"></i><span>ApexCharts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="charts-echarts.html">
-                                <i class="bi bi-circle"></i><span>ECharts</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <router-link class="nav-link" :to="{ name: 'buyer_order_list' }"
+                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }" active-class="active">
+                        <i class="bi bi-bag"></i><span>Order</span>
+                    </router-link>
                 </li>
                 <!-- Shipment -->
 

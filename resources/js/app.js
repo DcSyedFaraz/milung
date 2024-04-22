@@ -9,6 +9,10 @@ import VueApexCharts from "vue3-apexcharts";
 import Multiselect from 'vue-multiselect';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+// PrimeVue
+import PrimeVue from 'primevue/config';
+import 'primevue/resources/themes/aura-light-green/theme.css'
+
 
 
 
@@ -17,6 +21,7 @@ Myapp.use(VueApexCharts);
 Myapp.use(router)
 Myapp.component('multiselect', Multiselect)
 Myapp.use(store)
+Myapp.use(PrimeVue)
 Myapp.component('VueDatePicker', VueDatePicker)
 Myapp.use(VueGoodTablePlugin)
 // DataTable.use(DataTablesCore);
