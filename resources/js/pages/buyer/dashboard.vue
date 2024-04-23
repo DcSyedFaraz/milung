@@ -283,7 +283,7 @@
 
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'buyer_order_list' }"
-                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }" active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_order_entry' }" active-class="active">
                         <i class="bi bi-bag"></i><span>Order</span>
                     </router-link>
                 </li>

@@ -6,12 +6,7 @@
                 <p class="text-milung fw-bold">
                     Buyer Product Photo/Printview:
                 </p>
-                <canvas
-                    ref="canvas"
-                    width="353"
-                    height="300"
-                    class="border border-2"
-                ></canvas>
+                <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
             </div>
 
             <div class="col-4">
@@ -19,27 +14,10 @@
 
                 <span class="d-flex justify-content-between">
                     <p class="text-milung fw-bold">Product:</p>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        ref="productInput"
-                        style="display: none"
-                        @change="handleUpload('product', $event)"
-                    />
-                    <button
-                        class="btn btn-primary btn-sm mb-2"
-                        @click="triggerUpload('productInput')"
-                    >
-                        Upload
-                    </button>
+
                 </span>
 
-                <canvas
-                    ref="productCanvas"
-                    width="353"
-                    height="300"
-                    class="border border-2"
-                ></canvas>
+                <canvas ref="productCanvas" width="353" height="300" class="border border-2"></canvas>
             </div>
 
             <div class="col-4">
@@ -47,81 +25,40 @@
                     <div class="col-12">
                         <span class="d-flex justify-content-between">
                             <p class="text-milung fw-bold">Packaging:</p>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref="packagingInput"
-                                style="display: none"
-                                @change="handleUpload('packaging', $event)"
-                            />
-                            <button
-                                class="btn btn-primary btn-sm mb-2"
-                                @click="triggerUpload('packagingInput')"
-                            >
-                                Upload
-                            </button>
+
                         </span>
 
-                        <canvas
-                            ref="packagingCanvas"
-                            width="353"
-                            height="124"
-                            class="border border-2"
-                        ></canvas>
+                        <canvas ref="packagingCanvas" width="353" height="124" class="border border-2"></canvas>
                     </div>
                     <div class="col-12">
                         <span class="d-flex justify-content-between">
                             <p class="text-milung fw-bold">Accessories:</p>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref="accessoriesInput"
-                                style="display: none"
-                                @change="handleUpload('accessories', $event)"
-                            />
-                            <button
-                                class="btn btn-primary btn-sm mb-2"
-                                @click="triggerUpload('accessoriesInput')"
-                            >
-                                Upload
-                            </button>
+
                         </span>
 
-                        <canvas
-                            ref="accessoriesCanvas"
-                            width="353"
-                            height="124"
-                            class="border border-2"
-                        ></canvas>
+                        <canvas ref="accessoriesCanvas" width="353" height="124" class="border border-2"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mt-3 justify-content-between">
             <div class="col-4">
-                <label for="price" class="form-label text-milung fw-bold"
-                    >Reason For Reject:</label
-                ><br />
-                <textarea
-                    v-model="reason"
-                    cols="30"
-                    rows="6"
-                    class="form-control"
-                ></textarea>
+                <label for="price" class="form-label text-milung fw-bold">Reason For Reject:</label><br />
+                <textarea v-model="reason" cols="30" rows="6" class="form-control"></textarea>
             </div>
             <div class="col-4 my-auto mx-auto">
                 <div class="">
-                    <button
-                        class="btn btn-success px-5"
-                        @click="sendApiRequest"
-                    >
+                    <button class="btn btn-success px-5" @click="sendApiRequest">
                         Send
                     </button>
+                    <button class="btn btn-milung px-5 mx-2" @click="downloadImages"> Download Images
+                    </button>
+
                 </div>
             </div>
         </div>
     </section>
-    <section class="bg-halfwhite my-5">
+    <!-- <section class="bg-halfwhite my-5">
         <div class="row">
             <div class="col-4">
                 <p class="text-milung fw-bold text-uppercase">
@@ -233,7 +170,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 </template>
 
 <script>
@@ -242,11 +179,12 @@ import "nprogress/nprogress.css";
 export default {
     props: {
         id: { type: Number, required: true },
+        image: { type: Array, },
     },
     data() {
         return {
             reason: "",
-            cargo_reason: "",
+            data: null,
             formData: new FormData(),
             cargoData: new FormData(),
         };
@@ -271,26 +209,7 @@ export default {
         async sendApiRequest() {
             NProgress.start();
             try {
-                if (this.$refs.productInput.files[0]) {
-                    this.formData.append(
-                        "product",
-                        this.$refs.productInput.files[0]
-                    );
-                }
-
-                if (this.$refs.packagingInput.files[0]) {
-                    this.formData.append(
-                        "packaging",
-                        this.$refs.packagingInput.files[0]
-                    );
-                }
-
-                if (this.$refs.accessoriesInput.files[0]) {
-                    this.formData.append(
-                        "accessories",
-                        this.$refs.accessoriesInput.files[0]
-                    );
-                }
+                
 
                 if (this.reason) {
                     this.formData.append("reason", this.reason);
@@ -320,26 +239,54 @@ export default {
                 }
             }
         },
+        downloadImages() {
+            // Define an array containing the URLs of the images to download
+            const imageUrls = [
+                `/storage/${this.data.product}`,
+                `/storage/${this.data.packaging}`,
+                `/storage/${this.data.accessories}`
+            ];
+
+            // Loop through the array and initiate downloads for each image
+            imageUrls.forEach(url => {
+                this.downloadImage(url);
+            });
+        },
+        downloadImage(url) {
+            console.log(url);
+            // Create an anchor element dynamically
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', ''); // Add the 'download' attribute to force download
+            document.body.appendChild(link);
+
+            // Trigger a click event on the anchor element to initiate the download
+            link.click();
+
+            // Remove the anchor element from the DOM
+            document.body.removeChild(link);
+        },
         fetchprintview() {
             NProgress.start();
             const orderId = this.$route.params.id;
             axios
                 .get(`/api/supplier/printview/${orderId}`)
                 .then((response) => {
-                    const data = response.data;
+                    this.data = response.data;
                     // console.log(data);
 
-                    this.reason = data.reason;
+                    this.reason = this.data.reason;
                     this.loadImageFromPath(
-                        data.product,
+                        this.data.product,
                         this.$refs.productCanvas
                     );
+
                     this.loadImageFromPath(
-                        data.packaging,
+                        this.data.packaging,
                         this.$refs.packagingCanvas
                     );
                     this.loadImageFromPath(
-                        data.accessories,
+                        this.data.accessories,
                         this.$refs.accessoriesCanvas
                     );
                     NProgress.done();
@@ -441,7 +388,7 @@ export default {
 
             // Construct the URL to the file in the storage folder
             const imageUrl = `/storage/${imageFileName}`;
-            // console.log(imageUrl, ctx);
+            console.log(imageUrl, ctx);
 
             const img = new Image();
             img.onload = () => {
@@ -464,6 +411,13 @@ export default {
     },
     mounted() {
         this.fetchprintview();
+
+        setTimeout(() => {
+            if (this.image && this.image.length > 0) {
+                console.log(this.image[0].filepath);
+                this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
+            }
+        }, 1000);
     },
 };
 </script>

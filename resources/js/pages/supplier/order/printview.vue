@@ -242,6 +242,7 @@ import "nprogress/nprogress.css";
 export default {
     props: {
         id: { type: Number, required: true },
+        image: { type: Array, },
     },
     data() {
         return {
@@ -464,6 +465,13 @@ export default {
     },
     mounted() {
         this.fetchprintview();
+
+        setTimeout(() => {
+        if (this.image && this.image.length > 0) {
+            console.log(this.image[0].filepath);
+            this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
+        }
+    }, 1000);
     },
 };
 </script>

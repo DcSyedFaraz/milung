@@ -14,7 +14,6 @@
                                 <div class="col-12 d-flex">
                                     <div class="col-12">
                                         <div class="card flex justify-content-center">
-                                            <Button label="Check" icon="pi pi-check" />
                                         </div>
                                         <div class="input-group">
                                             <span class="input-group-text" id="basic-addon1"><i style="color: #41b400"
@@ -109,7 +108,7 @@
                             :globalFilterFields="['id', 'sendoutdate', 'updated_at', 'created_at', 'status']">
 
                             <template #header>
-                                <div class="flex justify-content-between">
+                                <div class="d-flex justify-content-end">
 
                                     <IconField iconPosition="left">
                                         <InputIcon>
@@ -138,8 +137,22 @@
                             </Column>
                             <Column field="sendoutdate" header="Latest SendOut Date" sortable style="width: 20%">
                             </Column>
+                            <Column field="actions" header="Actions" style="width: 10%">
+                                <template #body="{ data }">
+                                    <div class="d-flex justify-content-center">
+
+                                        <router-link :to="{
+                                                name: 'buyer_order_entry',
+                                                params: { id: data.id },
+                                            }" class="text-success mx-2">
+                                            <i class="bi bi-pencil"></i>
+                                        </router-link>
+
+                                    </div>
+                                </template>
+                            </Column>
                         </DataTable>
-                        <nav>
+                        <!-- <nav>
                             <ul class="pagination d-flex justify-content-center">
                                 <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
                                     <a class="page-link" href="#" @click.prevent="
@@ -160,7 +173,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </nav>
+                        </nav> -->
                     </div>
                 </div>
             </div>
@@ -366,12 +379,14 @@ td {
 th {
     color: #009de1 !important;
 }
- .rounded-top-new {
-        border-top-left-radius: 2.25rem !important;
-        border-top-right-radius: 2.25rem !important;
-    }
 
-    .rounded-bottom-new {
-        border-bottom-left-radius: 2.25rem !important;
-        border-bottom-right-radius: 2.25rem !important;
-    }</style>
+.rounded-top-new {
+    border-top-left-radius: 2.25rem !important;
+    border-top-right-radius: 2.25rem !important;
+}
+
+.rounded-bottom-new {
+    border-bottom-left-radius: 2.25rem !important;
+    border-bottom-right-radius: 2.25rem !important;
+}
+</style>
