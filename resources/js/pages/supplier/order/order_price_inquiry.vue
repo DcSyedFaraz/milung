@@ -249,7 +249,7 @@ export default {
                     return
                 }
 
-                const response = await axios.post('/api/supplier/placeAll', data);
+                const response = await axios.post('/api/supplier/supplier/placeAll', data);
 
                 // Handle the API response as needed
                 console.log(response.data);
@@ -294,7 +294,7 @@ export default {
         async fetchorders() {
             NProgress.start();
             try {
-                const response = await axios.get('/api/SupplierOrder');
+                const response = await axios.get('/api/supplier/SupplierOrder');
                 this.orders = response.data;
                 // this.pagination.totalItems = response.data.total;
 

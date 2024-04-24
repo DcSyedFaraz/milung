@@ -46,12 +46,16 @@
                 <label for="price" class="form-label text-milung fw-bold">Reason For Reject:</label><br />
                 <textarea v-model="reason" cols="30" rows="6" class="form-control"></textarea>
             </div>
-            <div class="col-4 my-auto mx-auto">
+            <div class="col-6 my-auto mx-auto">
                 <div class="">
-                    <button class="btn btn-success px-5" @click="sendApiRequest">
-                        Send
+                    <button class="btn btn-success px-3" value="approve" @click="sendApiRequest('approve')">
+                        Approve
                     </button>
-                    <button class="btn btn-milung px-5 mx-2" @click="downloadImages"> Download Images
+                    <button class="btn btn-danger mx-2 px-3" value="reject" @click="sendApiRequest('reject')">
+                        Reject
+                    </button>
+
+                    <button v-if="data && data.product && data.packaging && data.accessories" class="btn btn-milung" @click="downloadImages"> Download Images
                     </button>
 
                 </div>
@@ -179,7 +183,7 @@ import "nprogress/nprogress.css";
 export default {
     props: {
         id: { type: Number, required: true },
-        image: { type: Array, },
+        image: { type: File, },
     },
     data() {
         return {
@@ -206,18 +210,25 @@ export default {
                 }
             }
         },
-        async sendApiRequest() {
+        async sendApiRequest(action) {
             NProgress.start();
             try {
-                
 
-                if (this.reason) {
+                if (action === 'reject') {
+                    if (!this.reason) {
+                        toastr.error('Please provide a reason for rejection');
+                        NProgress.done();
+                        return;
+                    }
                     this.formData.append("reason", this.reason);
                 }
-                console.log(this.formData);
+
+                this.formData.append("action", action);
+
+                console.log(action);
 
                 const response = await axios.post(
-                    "/api/supplier/printview/" + this.id,
+                    "/api/buyer/printview/" + this.id,
                     this.formData
                 );
                 NProgress.done();

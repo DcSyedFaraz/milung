@@ -99,7 +99,7 @@
 
 <script>
 export default {
-    
+
     data() {
         return {
             so: {},
@@ -126,7 +126,7 @@ export default {
     },
     methods: {
         fetchSuppliers() {
-            axios.get('/api/supplierOrder')
+            axios.get('/api/supplier/supplierOrder')
                 .then(response => {
                     this.suppliers = response.data;
                     // console.log(this.suppliers);

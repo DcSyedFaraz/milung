@@ -15,7 +15,7 @@ class OrderController extends Controller
 {
     public function orderentryget()
     {
-        $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->with('buyerid','supplierid')->orderby('created_at', 'desc')->get();
+        $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->with('buyerid', 'supplierid')->orderby('created_at', 'desc')->get();
         return response()->json($order, JsonResponse::HTTP_OK);
     }
     public function placeAll(Request $request)
@@ -74,7 +74,7 @@ class OrderController extends Controller
             return response()->json(['errors' => 'Request Is Empty'], 422);
         }
 
-    //    return $data;
+        //    return $data;
         foreach ($data as $orderData) {
             $orderId = $orderData['orderId'];
 
@@ -169,7 +169,7 @@ class OrderController extends Controller
             ->toArray();
 
         // Retrieve orders where the order_id is present in the array of order_ids
-        $orders = Order::whereIn('id', $orderIds)->with('product_group','orderSuppliersOnly')
+        $orders = Order::whereIn('id', $orderIds)->with('product_group', 'orderSuppliersOnly')
             ->get();
         foreach ($orders as $order) {
             // dd($order->files);
@@ -255,6 +255,7 @@ class OrderController extends Controller
 
         if ($data['linked_order'] === 'create') {
             $data['linked_order'] = $data['id'];
+            unset($data['id']);
             $order = Order::create($data);
         } else {
             $data['linked_order'] = null;

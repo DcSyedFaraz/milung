@@ -402,8 +402,8 @@
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders[0].so_number" class="form-control "> -->
                                 <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
-                                track-by="id">
-                            </multiselect>
+                                    track-by="id">
+                                </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -436,7 +436,6 @@
                             </p>
                         </div>
                         <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
                             <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
                         </div>
 
@@ -524,52 +523,21 @@ export default {
         }
     },
     methods: {
-        fetchSuppliers() {
-            axios.get('/api/supplier/supplierOrder')
-                .then(response => {
-                    this.suppliers = response.data;
-                    // console.log(this.suppliers);
-                    const selectedSupplierId = Number(this.orders[0].supplier);
-                    const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
-                    if (selectedSupplier) {
-                        this.selectedSupplierId = selectedSupplier;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-
-        fetchBuyers() {
-            axios.get('/api/buyerOrder')
-                .then(response => {
-                    this.buyers = response.data;
-                    // console.log(this.buyers);
-                    const selectedbuyerIds = Number(this.orders[0].buyer);
-                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
-                    if (selectedbuyer) {
-                        this.selectedBuyerId = selectedbuyer;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-        fetchSO() {
-            axios.get('/api/shipmentsget')
-                .then(response => {
-                    this.so = response.data;
-                    console.log(this.so);
-                    // const selectedbuyerIds = Number(this.orders[0].buyer);
-                    const selectedso = this.so.find(sos => sos.id === this.orders[0].so_number);
-                    if (selectedso) {
-                        this.selectedsoId = selectedso;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
+        // fetchSO() {
+        //     axios.get('/api/shipmentsget')
+        //         .then(response => {
+        //             this.so = response.data;
+        //             console.log(this.so);
+        //             // const selectedbuyerIds = Number(this.orders[0].buyer);
+        //             const selectedso = this.so.find(sos => sos.id === this.orders[0].so_number);
+        //             if (selectedso) {
+        //                 this.selectedsoId = selectedso;
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //         });
+        // },
         addInput() {
             this.orders[0].packagingprinting.push('');
         },
@@ -692,7 +660,7 @@ export default {
                 this.orders[0].linked_order = event.submitter.getAttribute('value');
             }
             let method = 'post';
-            let url = this.isEditing ? `/api/orderentry/${this.orders[0].id}` : '/api/orderentry';
+            let url = `/api/buyer/ordercreate`;
 
             this.handleApiCall(method, url, this.orders[0])
                 .then(response => {
@@ -702,7 +670,7 @@ export default {
                     // Handle successful order update or creation
                     console.log(response);
                     NProgress.done();
-                    toastr.success(this.isEditing ? 'Order updated successfully' : 'Order added successfully');
+                    toastr.success('Order added successfully');
                     this.$router.push({ name: 'order_list' });
                 })
                 .catch(error => {
@@ -728,7 +696,7 @@ export default {
         },
         fetchProductGroups() {
             NProgress.start();
-            axios.get('/api/product_group_get')
+            axios.get('/api/buyer/product_group_get')
                 .then(response => {
                     this.groups = response.data;
                     console.log(response);
@@ -766,7 +734,7 @@ export default {
         },
         fetchorder(orderId) {
             NProgress.start();
-            axios.get(`/api/orderentry/${orderId}`)
+            axios.get(`/api/buyer/orderentry/${orderId}`)
                 .then(response => {
                     this.orders[0] = response.data;
                     console.log(this.orders[0]);
@@ -805,9 +773,6 @@ export default {
 
         }
         NProgress.configure({ showSpinner: false });
-        this.fetchSuppliers();
-        this.fetchBuyers();
-        this.fetchSO();
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
     },

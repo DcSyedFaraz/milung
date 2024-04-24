@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('printviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->string('buyerproduct')->nullable();
+            $table->string('action')->nullable();
             $table->string('product')->nullable();
             $table->string('packaging')->nullable();
             $table->string('accessories')->nullable();

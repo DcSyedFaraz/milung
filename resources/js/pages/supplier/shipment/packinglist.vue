@@ -171,7 +171,7 @@ export default {
                 toastr.error("Please fill in all packing list fields.");
                 return
             }
-            axios.post('/api/suppliershipments/' + updatedItem.id, updatedItem)
+            axios.post('/api/supplier/suppliershipments/' + updatedItem.id, updatedItem)
                 .then(response => {
                     console.log(response);
                     toastr.success(response.data.message);
@@ -210,7 +210,7 @@ export default {
             }
         },
         fetchSO() {
-            axios.get('/api/suppliershipments')
+            axios.get('/api/supplier/suppliershipments')
                 .then(response => {
                     this.so = response.data;
                     console.log(this.so);
@@ -237,7 +237,7 @@ export default {
     watch: {
         'info.so_no': function (newVal, oldVal) {
             if (newVal !== null) {
-                axios.get('/api/suppliershipments/' + newVal.id)
+                axios.get('/api/supplier/suppliershipments/' + newVal.id)
                     .then(response => {
                         console.log(response.data);
                         this.orders = response.data;

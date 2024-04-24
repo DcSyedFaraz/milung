@@ -468,9 +468,9 @@
                             </div>
                             <div class="col-8">
                                 {{
-            orders[0].shipment_orders?.so_number ??
-            "not provided yet"
-        }}
+                                orders[0].shipment_orders?.so_number ??
+                                "not provided yet"
+                                }}
                             </div>
                         </div>
 
@@ -496,12 +496,12 @@
                                 {{ orders[0].incoterm }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-4 bg-danger">
+                        <!-- <div class="d-flex col-12 my-4 bg-danger">
                             <p>XD Page not cleared</p>
-                        </div>
-                        <div class="d-flex col-12 my-4 d-flex justify-content-end">
-                            <button class="btn btn-warning mx-2" name="action" value="create">
-                                Cargo Ready
+                        </div> -->
+                        <div class="d-flex col-12 my-4 d-flex justify-content-center">
+                            <button class="btn btn-warning px-3 mx-2" name="action">
+                                Save
                             </button>
                         </div>
                     </div>
@@ -626,71 +626,52 @@ export default {
                 this.loadImageFromPath(this.file, this.$refs.canvas);
             }
         },
-        handleApiCall(method, url, data) {
-            return new Promise((resolve, reject) => {
-                axios({
-                    method: method,
-                    url: url,
-                    data: data,
-                    headers: {
-                        "Content-Type": "multipart/form-data", // Set the correct Content-Type header for FormData
-                    },
-                })
-                    .then((response) => {
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    });
-            });
-        },
 
-        onSubmit() {
+        async onSubmit() {
             this.showProgress = true;
             NProgress.start();
-            console.log(this.orders);
-            if (this.isEditing) {
-                this.orders[0].linked_order =
-                    event.submitter.getAttribute("value");
-            }
-            let method = "post";
-            let url = this.isEditing
-                ? `/api/orderentry/${this.orders[0].id}`
-                : "/api/orderentry";
+            console.log(this.orders[0].files);
 
-            this.handleApiCall(method, url, this.orders[0])
-                .then((response) => {
-                    setTimeout(() => {
-                        this.showProgress = false;
-                    }, 1000);
-                    // Handle successful order update or creation
-                    console.log(response);
-                    NProgress.done();
-                    toastr.success(
+
+            try {
+                const formData = new FormData();
+                formData.append("files",this.orders[0].files);
+
+                // console.log(action);
+
+                const response = await axios.post(
+                    `/api/buyer/orderentry/${this.orders[0].id}`,
+                    formData
+                );
+                NProgress.done();
+
+                console.log(response);
+
+                toastr.success('Product Photo Uploaded Successfully.');
+
+                setTimeout(() => {
+                    this.showProgress = false;
+                }, 1000);
+
+                this.$router.push({ name: "buyer_order_list" });
+            } catch (error) {
+                setTimeout(() => {
+                    this.showProgress = false;
+                }, 1000);
+                NProgress.done();
+
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error(
                         this.isEditing
-                            ? "Order updated successfully"
-                            : "Order added successfully"
+                            ? "An error occurred while updating the order"
+                            : "An error occurred while adding the order"
                     );
-                    this.$router.push({ name: "order_list" });
-                })
-                .catch((error) => {
-                    setTimeout(() => {
-                        this.showProgress = false;
-                    }, 1000);
-                    NProgress.done();
-
-                    if (error.response && error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        this.handleValidationErrors(validationErrors);
-                    } else {
-                        console.error(error);
-                        toastr.error(
-                            this.isEditing
-                                ? "An error occurred while updating the order"
-                                : "An error occurred while adding the order"
-                        );
-                    }
-                });
+                }
+            };
         },
 
         loadImageFromPath(imageFileName, canvas) {

@@ -11,6 +11,7 @@ import price_inquiry_entry from "./pages/buyer/price_inquiry/price_inquiry_entry
 // Order
 import order_list from "./pages/buyer/order/order_list.vue";
 import order_entry from "./pages/buyer/order/order_entry.vue";
+import order_create from "./pages/buyer/order/order_create.vue";
 
 const buyerRoutes = [
     {
@@ -50,6 +51,11 @@ const buyerRoutes = [
         path: "order_list",
         name: "buyer_order_list",
         component: order_list,
+    },
+    {
+        path: "order_create",
+        name: "buyer_order_create",
+        component: order_create,
     },
     {
         path: "order_entry/:id",

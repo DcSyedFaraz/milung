@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class=""></div>
-                        <div class="d-flex justify-content-between align-items-center mx-3">
+                        <!-- <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
                                 <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Order List:</span>
                             </span>
@@ -24,7 +24,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- // Loader -->
@@ -108,14 +108,22 @@
                             :globalFilterFields="['id', 'sendoutdate', 'updated_at', 'created_at', 'status']">
 
                             <template #header>
-                                <div class="d-flex justify-content-end">
 
-                                    <IconField iconPosition="left">
-                                        <InputIcon>
-                                            <i style="color: #41b400" class="bx bx-filter-alt fw-bold fs-4"></i>
-                                        </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
-                                    </IconField>
+                                <div class="d-flex">
+                                    <span class="me-auto">
+                                        <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Order List:</span>
+                                    </span>
+                                    <div class="">
+                                        <IconField iconPosition="left">
+                                            <InputIcon>
+                                                <i style="color: #41b400" class="bx bx-filter-alt fw-bold fs-4"></i>
+                                            </InputIcon>
+                                            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+                                        </IconField>
+                                        <router-link :to="{ name: 'buyer_order_create' }"
+                                        class="btn btn-warning fw-bold text-dark">Create New
+                                    </router-link>
+                                    </div>
                                 </div>
                             </template>
 

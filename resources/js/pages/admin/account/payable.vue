@@ -445,7 +445,7 @@ export default {
         async fetchSupplier() {
             NProgress.start();
             try {
-                const response = await axios.get("/api/supplierOrder");
+                const response = await axios.get("/api/supplier/supplierOrder");
                 this.suppliers = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(this.suppliers);

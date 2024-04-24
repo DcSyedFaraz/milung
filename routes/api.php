@@ -32,6 +32,70 @@ Route::post('register', [UserController::class, 'register']);
 
 Route::group(['middleware' => []], function () {
 
+
+});
+
+
+
+
+// <-- Buyer Routes -->
+Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer']], function () {
+
+    // Product
+    Route::get('product/{id}', [BuyerController::class, 'product']);
+    Route::get('product_group_get', [ProductController::class, 'product_group_get']);
+    Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all']);
+
+    // Price Inquiry
+    Route::resource('price_inquiry', InquiryController::class)->except([
+        'update'
+    ]);
+    Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
+
+    //Orders
+    Route::resource('order', BuyerOrderController::class)->except([
+        'update'
+    ]);
+    Route::get('orderentry/{id}', [BuyerOrderController::class, 'orderentrygetID']);
+    Route::post('orderentry/{id}', [BuyerOrderController::class, 'update']);
+    Route::post('ordercreate', [BuyerOrderController::class, 'update']);
+    Route::get('printview/{id}', [BuyerOrderController::class, 'printviewget']);
+    Route::post('printview/{id}', [BuyerOrderController::class, 'printview']);
+
+});
+
+// <-- Supplier Routes -->
+Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Supplier']], function () {
+
+    // Shipment
+    Route::get('shipments', [SupplierShipmentController::class, 'shipments']);
+    Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment']);
+    Route::post('receipt-note', [SupplierShipmentController::class, 'receipt_note']);
+
+    // Order
+    Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
+    Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID']);
+    Route::post('printview/{id}', [SupplierOrderController::class, 'printview']);
+    Route::get('printview/{id}', [SupplierOrderController::class, 'printviewget']);
+    Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo']);
+    Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
+    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
+
+    //price_inquiry
+    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
+    Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne']);
+    Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry']);
+    Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry']);
+    Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete']);
+
+    // Supplier Routes
+    Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershipments']);
+    Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
+    Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
+
+});
+Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
+
     // Fetching Users
     Route::get('users', [UserController::class, 'users']);
     Route::get('supplier', [UserController::class, 'supplier']);
@@ -99,59 +163,6 @@ Route::group(['middleware' => []], function () {
     Route::get('products', [UserController::class, 'products']);
     Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete']);
     Route::post('addprod', [ProductController::class, 'addprod']);
-});
 
-
-// Supplier Routes
-Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershipments']);
-Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
-Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
-
-// <-- Buyer Routes -->
-Route::group(['prefix' => 'buyer'], function () {
-
-    // Product
-    Route::get('product/{id}', [BuyerController::class, 'product']);
-
-    // Price Inquiry
-    Route::resource('price_inquiry', InquiryController::class)->except([
-        'update'
-    ]);
-
-    // Define a custom route for the update action using POST method
-    Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
-
-    //Orders
-    Route::resource('order', BuyerOrderController::class);
-
-});
-
-// <-- Supplier Routes -->
-Route::group(['prefix' => 'supplier'], function () {
-
-    // Shipment
-    Route::get('shipments', [SupplierShipmentController::class, 'shipments']);
-    Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment']);
-    Route::post('receipt-note', [SupplierShipmentController::class, 'receipt_note']);
-
-    // Order
-    Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
-    Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID']);
-    Route::post('printview/{id}', [SupplierOrderController::class, 'printview']);
-    Route::get('printview/{id}', [SupplierOrderController::class, 'printviewget']);
-    Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo']);
-
-    //price_inquiry
-    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
-    Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne']);
-    Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry']);
-    Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry']);
-    Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete']);
-
-});
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
-    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
 });
 
