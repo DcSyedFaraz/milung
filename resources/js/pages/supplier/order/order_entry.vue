@@ -130,15 +130,16 @@
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
-                            <div class="col-4 mt-2">
-                                <p for="v-model" class="fs-7">
+                            <div class="col-4 my-auto">
+                                <p class="fs-7">
                                     Product Capacity:
                                 </p>
                             </div>
                             <div class="col-8">
-                                <span class="my-4" v-for="item in orders[0].capacity">
-                                    {{ item }}<br />
-                                </span>
+                                <ul class="">
+                                    <li v-for="item in orders[0].capacity">{{ item }}</li>
+                                </ul>
+
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
@@ -183,17 +184,17 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
-                                    Packaging Printing: <br />
+                                <p class="my-auto fs-7">
+                                    Packaging Printing: <br>
                                     (if applicable)
                                 </p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <span class="my-1" v-for="item in orders[0]
-            .packagingprinting">
-                                        {{ item }}<br />
-                                    </span>
+                                    <ul class="my-1">
+                                        <li v-for="item in orders[0].packagingprinting">{{ item }}</li>
+                                    </ul>
+
                                 </div>
                             </div>
                         </div>

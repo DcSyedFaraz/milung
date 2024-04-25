@@ -54,7 +54,7 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
 
     //Orders
     Route::resource('order', BuyerOrderController::class)->except([
-        'update'
+        'update','create'
     ]);
     Route::get('orderentry/{id}', [BuyerOrderController::class, 'orderentrygetID']);
     Route::post('orderentry/{id}', [BuyerOrderController::class, 'update']);
@@ -135,6 +135,7 @@ Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
     Route::delete('orderDelete/{id}', [OrderController::class, 'orderDelete']);
     Route::post('placeAll', [OrderController::class, 'placeAll']);
     Route::get('shipmentsget', [ShipmentController::class, 'shipmentsget']);
+    Route::get('Suppliers', [OrderController::class, 'Suppliers']);
 
     //Shipment
     Route::post('create_so', [ShipmentController::class, 'create_so']);

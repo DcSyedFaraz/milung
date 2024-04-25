@@ -13,7 +13,7 @@
 
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto">Status:</p>
+                                <p class="my-auto">Status:</p>
                             </div>
                             <div class="col-8">
                                 {{ orders[0].status }}
@@ -21,7 +21,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Buyer Order No:
                                 </p>
                             </div>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Order Reference:
                                 </p>
                             </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Related inquiry No:
                                 </p>
                             </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Milung Order No:
                                 </p>
                             </div>
@@ -61,7 +61,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Order Date:
                                 </p>
                             </div>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Order Remarks:
                                 </p>
                             </div>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     QC Remarks:
                                 </p>
                             </div>
@@ -91,7 +91,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Product Group:
                                 </p>
                             </div>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Fty item No:
                                 </p>
                             </div>
@@ -111,7 +111,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Product Name:
                                 </p>
                             </div>
@@ -121,7 +121,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Product Color: (Pantone if applicable)
                                 </p>
                             </div>
@@ -130,20 +130,21 @@
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
-                            <div class="col-4 mt-2">
-                                <p for="v-model" class="fs-7">
+                            <div class="col-4 my-auto">
+                                <p class="fs-7">
                                     Product Capacity:
                                 </p>
                             </div>
                             <div class="col-8">
-                                <span class="my-4" v-for="item in orders[0].capacity">
-                                    {{ item }}<br />
-                                </span>
+                                <ul class="">
+                                    <li v-for="item in orders[0].capacity">{{ item }}</li>
+                                </ul>
+
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Accessories:
                                 </p>
                             </div>
@@ -153,7 +154,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Product Printing Method:
                                 </p>
                             </div>
@@ -163,7 +164,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Logo Pantone Color:
                                 </p>
                             </div>
@@ -173,7 +174,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Packaging:
                                 </p>
                             </div>
@@ -183,17 +184,17 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
-                                    Packaging Printing: <br />
+                                <p class="my-auto fs-7">
+                                    Packaging Printing: <br>
                                     (if applicable)
                                 </p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <span class="my-1" v-for="item in orders[0]
-            .packagingprinting">
-                                        {{ item }}<br />
-                                    </span>
+                                    <ul class="my-1">
+                                        <li v-for="item in orders[0].packagingprinting">{{ item }}</li>
+                                    </ul>
+
                                 </div>
                             </div>
                         </div>
@@ -220,7 +221,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-3 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Quantity:
                                 </p>
                             </div>
@@ -230,49 +231,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex col-12 my-4">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Log File:</p>
-                            </div>
-                            <div class="col-8">
-                                <div class="col-12">
 
-                                    <input type="text" v-model="orders[0].logfile" class="form-control ">
-                                </div>
-                                <div class="col-12  justify-content-between">
-                                    <button type="button" class="btn px-4 btn-milung" >
-                                        Import
-                                    </button>
-                                    <button type="button" class="btn px-4 mx-2 btn-primary my-4">
-                                        Export
-                                    </button>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <FileInputWithName
-                            label="Logo File"
-                            :files="orders[0].logoFiles"
-                            :fileData="orders[0].logoFiles"
-                            @export-file="exportFile"
-                        />
-                        <FileInputWithName
-                            label="Label File"
-                            :files="orders[0].safetySheetFiles"
-                            :fileData="orders[0].safetySheetFiles"
-                            @export-file="exportFile"
-                        />
-                        <FileInputWithName
-                            label="Manual"
-                            :files="orders[0].manualFiles"
-                            :fileData="orders[0].manualFiles"
-                            @export-file="exportFile"
-                        />
-                        <FileInputWithName
-                            label="Safety Sheet"
-                            :files="orders[0].labelFiles"
-                            :fileData="orders[0].labelFiles"
-                            @export-file="exportFile"
-                        /> -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-3">
                                 <p class="fs-7">Logo File:</p>
@@ -363,10 +322,7 @@
                             </div>
                             <div class="col-9">
                                 <div class="col-12" :class="{
-            'text-muted':
-                orders[0].safetySheetFiles
-                    ?.filename == null,
-            'fst-italic':
+            'text-muted': orders[0].safetySheetFiles?.filename == null, 'fst-italic':
                 orders[0].safetySheetFiles
                     ?.filename == null,
         }">
@@ -395,7 +351,7 @@
 
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Selling Price:
                                 </p>
                             </div>
@@ -406,7 +362,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Total Order Value:
                                 </p>
                             </div>
@@ -424,7 +380,7 @@
                         </h5>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4">
-                                <p for="v-model" class="fs-7">HS Code:</p>
+                                <p class="fs-7">HS Code:</p>
                             </div>
                             <div class="col-8">
                                 <p>{{ orders[0].product_group?.hs_de }}</p>
@@ -432,7 +388,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4">
-                                <p for="v-model" class="fs-7">HS-CN Code:</p>
+                                <p class="fs-7">HS-CN Code:</p>
                             </div>
                             <div class="col-8">
                                 <p>{{ orders[0].product_group?.hs_cn }}</p>
@@ -440,7 +396,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Latest SendOut Date:
                                 </p>
                             </div>
@@ -452,7 +408,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Notice:
                                 </p>
                             </div>
@@ -464,19 +420,20 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">SO#:</p>
+                                <p class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                {{
-                                orders[0].shipment_orders?.so_number ??
-                                "not provided yet"
-                                }}
+                                <span v-if="orders[0].shipment_orders && orders[0].shipment_orders.so_number"
+                                    :class="{ 'text-muted italic': !orders[0].shipment_orders.so_number }">
+                                    {{ orders[0].shipment_orders.so_number }}
+                                </span>
+                                <span v-else class="text-muted fst-italic">not provided yet</span>
                             </div>
                         </div>
 
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Shipping Document#:
                                 </p>
                             </div>
@@ -488,7 +445,7 @@
                         </div>
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">
+                                <p class="my-auto fs-7">
                                     Incoterm#:
                                 </p>
                             </div>
@@ -509,7 +466,7 @@
             </div>
         </form>
         <progress-modal :show="showProgress"></progress-modal>
-        <div class="container" v-if="isEditing">
+        <div class="container" v-if="showPrintView">
             <printview :id="orders[0].id" :image="orders[0].files" />
         </div>
     </section>
@@ -540,6 +497,7 @@ export default {
 
     data() {
         return {
+            showPrintView: false,
             showProgress: false,
             inputs: [],
             files: [],
@@ -635,7 +593,7 @@ export default {
 
             try {
                 const formData = new FormData();
-                formData.append("files",this.orders[0].files);
+                formData.append("files", this.orders[0].files);
 
                 // console.log(action);
 
@@ -704,15 +662,17 @@ export default {
             NProgress.start();
 
             axios
-                .get(`/api/supplier/orderentry/${orderId}`)
+                .get(`/api/buyer/orderentry/${orderId}`)
                 .then((response) => {
                     this.orders[0] = response.data;
                     console.log(this.orders[0]);
                     console.log("files ", this.orders[0].files);
-                    this.loadImageFromPath(
-                        this.orders[0].files[0]["filepath"],
-                        this.$refs.canvas
-                    );
+                    if (this.orders[0].files) {
+                        this.loadImageFromPath(
+                            this.orders[0].files[0]["filepath"],
+                            this.$refs.canvas
+                        );
+                    }
                     NProgress.done();
                 })
                 .catch((error) => {
@@ -722,12 +682,13 @@ export default {
         },
     },
     mounted() {
-        if (this.isEditing) {
-            const orderId = this.$route.params.id;
-            this.fetchorder(orderId);
-            // console.log(this.orders[0]);
-            //
-        }
+        const orderId = this.$route.params.id;
+        this.fetchorder(orderId);
+
+        setTimeout(() => {
+            this.showPrintView = true;
+        }, 1000);
+
         this.$refs.fileInput.addEventListener('change', this.loadImage);
         NProgress.configure({ showSpinner: false });
     },

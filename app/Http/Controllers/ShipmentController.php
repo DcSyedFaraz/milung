@@ -18,13 +18,13 @@ class ShipmentController extends Controller
     public function information($id)
     {
         $data = Information::where('shipment_order_id',$id)->with('user')->first();
-        return response()->json($data, JsonResponse::HTTP_OK);
+        return response()->json($data, 200);
     }
     public function SupplierSo($id)
     {
         $data = Order::where('supplier',$id)->with('shipmentOrders','information')->select('id','status','sendoutdate','so_number','totalvalue')->get();
 
-        return response()->json($data, JsonResponse::HTTP_OK);
+        return response()->json($data, 200);
     }
     public function create_doc(Request $request)
     {
@@ -159,7 +159,7 @@ class ShipmentController extends Controller
     public function shipmentget()
     {
         $shipment = ShipmentOrder::with('user', 'shipment', 'shipmentsupplier')->get();
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($shipment, 200);
     }
     public function shipmentgetid($id)
     {
@@ -175,12 +175,12 @@ class ShipmentController extends Controller
         //     'totalTotalQty' => $totalTotalQty,
         // ];
 
-        return response()->json($result, JsonResponse::HTTP_OK);
+        return response()->json($result, 200);
     }
     public function shipmentsget()
     {
         $shipment = ShipmentOrder::select('id', 'so_number')->get();
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($shipment, 200);
     }
     public function soDelete($id)
     {
@@ -189,7 +189,7 @@ class ShipmentController extends Controller
 
         return response()->json([
             "message" => "Record deleted Successfully",
-        ], JsonResponse::HTTP_OK);
-        // return response()->json($shipment, JsonResponse::HTTP_OK);
+        ], 200);
+        // return response()->json($shipment, 200);
     }
 }

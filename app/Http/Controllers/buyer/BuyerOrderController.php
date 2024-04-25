@@ -19,15 +19,15 @@ class BuyerOrderController extends Controller
         // $id = Auth::id();
         $id = 2;
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'status', 'group')->where('buyer', $id)->orderby('created_at', 'desc')->get();
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
     }
 
     public function orderentrygetID($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('product_group')->findOrFail($id);
         // dd($order->getRawOriginal('quantity_unit'));
         $order->quantity_units = $order->getRawOriginal('quantity_unit');
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
     }
 
     public function printviewget($id)
@@ -70,18 +70,104 @@ class BuyerOrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        //    dd($data);
+
+        $validatedData = Validator::make($data, [
+            'group' => 'required|string',
+            'buyerorder' => 'required|string',
+            'reference' => 'required|string',
+            'inquiry' => 'required|string',
+            'milungorder' => 'required|string',
+            'orderdate' => 'required|date',
+            'buyeremail' => 'required|email',
+            'ftyitem' => 'required|string',
+            'productname' => 'required|string',
+            'productcolor' => 'required|string',
+            'accessories' => 'required|string',
+            'printingmethod' => 'required|string',
+            'logocolor' => 'required|string',
+            'packaging' => 'required|string',
+            'packagingprinting' => 'required',
+            'quantity' => 'required|string',
+            'buyingprice' => 'nullable|integer',
+            'sellingprice' => 'nullable|integer',
+            'totalvalue' => 'nullable|integer',
+            'sendoutdate' => 'required|date',
+            'atc_number' => 'required|string',
+            'ship_doc' => 'required|string',
+            'incoterm' => 'required|string',
+            'orderremarks' => 'required|string',
+            'status' => 'required|string',
+            'unit' => 'required|string',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()->all()], 422);
+        }
+
+        $data['quantity_unit'] = $data['quantity'] . $data['unit'];
+        unset($data['quantity'], $data['unit'], $data['quantity_units']);
+
+        $data['capacity'] = array_map(function ($entry) {
+            return $entry['quantity'] . $entry['unit'];
+        }, $data['capacity']);
+
+        if (isset($data['files'])) {
+            $file = $data['files'];
+            if ($file) {
+                $fileNames = [];
+                $fileName = time() . $file->getClientOriginalName();
+                $filePath = $file->storeAs('orders/files', $fileName, 'public');
+                $fileNames[] = ['filename' => $fileName, 'filepath' => $filePath];
+            }
+            $data['files'] = $fileNames;
+
+        }
+        $this->saveFiles($data, 'labelFiles');
+        $this->saveFiles($data, 'logoFiles');
+        $this->saveFiles($data, 'manualFiles');
+        $this->saveFiles($data, 'safetySheetFiles');
+
+
+        $data['linked_order'] = null;
+        $data['buyer'] = \Auth::id();
+        $order = Order::create($data);
+
+
+
+        return response()->json($order, 200);
+    }
+
+    private function saveFiles(&$data, $key)
+    {
+        if (!isset($data[$key])) {
+            return;
+        }
+        if (isset($data[$key][0])) {
+            $file = $data[$key][0];
+        } else {
+            unset($data[$key]);
+            return;
+
+        }
+        unset($data[$key]);
+
+        if (!$file['file']) {
+            return;
+        }
+
+        $fileName = Str::random(10) . '.' . $file['file']->getClientOriginalExtension();
+        $filePath = $file['file']->storeAs('orders/' . $key, $fileName, 'public');
+        $data[$key] = ['filename' => $file['fileName'], 'filepath' => $filePath];
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+
 
     /**
      * Display the specified resource.

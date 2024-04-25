@@ -111,18 +111,24 @@
 
                                 <div class="d-flex">
                                     <span class="me-auto">
-                                        <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Order List:</span>
+                                        <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Order
+                                            List:</span>
                                     </span>
-                                    <div class="">
-                                        <IconField iconPosition="left">
-                                            <InputIcon>
-                                                <i style="color: #41b400" class="bx bx-filter-alt fw-bold fs-4"></i>
-                                            </InputIcon>
-                                            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
-                                        </IconField>
-                                        <router-link :to="{ name: 'buyer_order_create' }"
-                                        class="btn btn-warning fw-bold text-dark">Create New
-                                    </router-link>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <IconField iconPosition="left">
+                                                <InputIcon>
+                                                    <i style="color: #41b400" class="bx bx-filter-alt fw-bold fs-4"></i>
+                                                </InputIcon>
+                                                <InputText v-model="filters['global'].value"
+                                                    placeholder="Keyword Search" />
+                                            </IconField>
+                                        </div>
+                                        <div class="col-4">
+                                            <router-link :to="{ name: 'buyer_order_create' }"
+                                                class="btn btn-warning fw-bold text-dark">Create New
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
                             </template>
@@ -138,7 +144,7 @@
                                     {{ created_at(data.updated_at) }}
                                 </template>
                             </Column>
-                            <Column field="created_at" header="Date Modified" :sortable="true">
+                            <Column field="created_at" header="Date Created" :sortable="true">
                                 <template #body="{ data }">
                                     {{ created_at(data.created_at) }}
                                 </template>
@@ -150,9 +156,9 @@
                                     <div class="d-flex justify-content-center">
 
                                         <router-link :to="{
-                                                name: 'buyer_order_entry',
-                                                params: { id: data.id },
-                                            }" class="text-success mx-2">
+                        name: 'buyer_order_entry',
+                        params: { id: data.id },
+                    }" class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 

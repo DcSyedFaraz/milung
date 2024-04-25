@@ -55,7 +55,8 @@
                         Reject
                     </button>
 
-                    <button v-if="data && data.product && data.packaging && data.accessories" class="btn btn-milung" @click="downloadImages"> Download Images
+                    <button v-if="data && data.product && data.packaging && data.accessories" class="btn btn-milung"
+                        @click="downloadImages"> Download Images
                     </button>
 
                 </div>
@@ -182,8 +183,8 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 export default {
     props: {
-        id: { type: Number, required: true },
-        image: { type: File, },
+        id: { type: Number, },
+        image: { type: Array},
     },
     data() {
         return {
@@ -281,7 +282,7 @@ export default {
             NProgress.start();
             const orderId = this.$route.params.id;
             axios
-                .get(`/api/supplier/printview/${orderId}`)
+                .get(`/api/buyer/printview/${orderId}`)
                 .then((response) => {
                     this.data = response.data;
                     // console.log(data);
@@ -307,56 +308,56 @@ export default {
                     NProgress.done();
                 });
         },
-        async CargoApiRequest() {
-            try {
-                if (this.$refs.cargo_productInput.files[0]) {
-                    this.cargoData.append(
-                        "cargo_product",
-                        this.$refs.cargo_productInput.files[0]
-                    );
-                }
+        // async CargoApiRequest() {
+        //     try {
+        //         if (this.$refs.cargo_productInput.files[0]) {
+        //             this.cargoData.append(
+        //                 "cargo_product",
+        //                 this.$refs.cargo_productInput.files[0]
+        //             );
+        //         }
 
-                if (this.$refs.cargo_packagingInput.files[0]) {
-                    this.cargoData.append(
-                        "cargo_packaging",
-                        this.$refs.cargo_packagingInput.files[0]
-                    );
-                }
+        //         if (this.$refs.cargo_packagingInput.files[0]) {
+        //             this.cargoData.append(
+        //                 "cargo_packaging",
+        //                 this.$refs.cargo_packagingInput.files[0]
+        //             );
+        //         }
 
-                if (this.$refs.cargo_accessoriesInput.files[0]) {
-                    this.cargoData.append(
-                        "cargo_accessories",
-                        this.$refs.cargo_accessoriesInput.files[0]
-                    );
-                }
-                if (this.cargo_reason) {
-                    this.cargoData.append("cargo_reason", this.cargo_reason);
-                }
+        //         if (this.$refs.cargo_accessoriesInput.files[0]) {
+        //             this.cargoData.append(
+        //                 "cargo_accessories",
+        //                 this.$refs.cargo_accessoriesInput.files[0]
+        //             );
+        //         }
+        //         if (this.cargo_reason) {
+        //             this.cargoData.append("cargo_reason", this.cargo_reason);
+        //         }
 
-                console.log(this.cargoData);
+        //         console.log(this.cargoData);
 
-                const response = await axios.post(
-                    "/api/supplier/masscargo/" + this.id,
-                    this.cargoData
-                );
-                console.log(response);
-                toastr.success(response.data.message);
-            } catch (error) {
-                NProgress.done();
-                console.error(error);
+        //         const response = await axios.post(
+        //             "/api/supplier/masscargo/" + this.id,
+        //             this.cargoData
+        //         );
+        //         console.log(response);
+        //         toastr.success(response.data.message);
+        //     } catch (error) {
+        //         NProgress.done();
+        //         console.error(error);
 
-                if (error.response && error.response.status === 422) {
-                    toastr.error(error.response.data.errors);
-                }
-                if (error.response && error.response.status === 400) {
-                    const validationErrors = error.response.data.errors;
-                    this.handleValidationErrors(validationErrors);
-                } else {
-                    console.error(error);
-                    toastr.error("An error occurred while updating the order");
-                }
-            }
-        },
+        //         if (error.response && error.response.status === 422) {
+        //             toastr.error(error.response.data.errors);
+        //         }
+        //         if (error.response && error.response.status === 400) {
+        //             const validationErrors = error.response.data.errors;
+        //             this.handleValidationErrors(validationErrors);
+        //         } else {
+        //             console.error(error);
+        //             toastr.error("An error occurred while updating the order");
+        //         }
+        //     }
+        // },
 
         handleUpload(refName, event) {
             const file = event.target.files[0];
@@ -423,12 +424,11 @@ export default {
     mounted() {
         this.fetchprintview();
 
-        setTimeout(() => {
-            if (this.image && this.image.length > 0) {
-                console.log(this.image[0].filepath);
-                this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
-            }
-        }, 1000);
+        // console.log('hi', this.image);
+        if (this.image && this.image.length > 0) {
+            this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
+        }
+
     },
 };
 </script>

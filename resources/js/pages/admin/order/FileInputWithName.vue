@@ -25,7 +25,7 @@ export default {
     emits: ['export-file', 'update:files'],
     props: {
         label: { type: String, required: true, },
-        files: { type: Object, required: true, },
+        files: { type: Object, required: false, },
         fileData: { type: Object, required: false, },
 
     },

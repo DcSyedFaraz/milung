@@ -8,14 +8,7 @@
                     <div class="col-md-4">
                         <h4 class="text-milung mb-4 fw-bold ">I. Order Information</h4>
 
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Article Number:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders[0].article" class="form-control ">
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto ">Status:</p>
@@ -66,17 +59,7 @@
                                 <input type="text" v-model="orders[0].milungorder" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Supplier ID:</p>
-                            </div>
-                            <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].supplier" class="form-control "> -->
-                                <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing"
-                                    :options="suppliers" field="id" label="userid" track-by="id">
-                                </multiselect>
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Order Date:</p>
@@ -93,17 +76,7 @@
                                 <input type="email" v-model="orders[0].buyeremail" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
-                            </div>
-                            <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].buyer" class="form-control "> -->
-                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
-                                    track-by="id">
-                                </multiselect>
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 ">
                                 <p for="v-model" class="my-auto fs-7">Order Remarks:</p>
@@ -113,15 +86,7 @@
                                     rows="5"></textarea>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="my-auto fs-7">QC Remarks:</p>
-                            </div>
-                            <div class="col-8">
-                                <textarea v-model="orders[0].qcremarks" class="form-control" cols="30"
-                                    rows="5"></textarea>
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Product Group:</p>
@@ -263,7 +228,7 @@
                                     <input type="number" class="form-control" v-model="orders[0].quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select"
                                         v-model="orders[0].unit">
-                                        <option selected value="units">units</option>
+                                        <option selected :value="units">units</option>
                                         <!-- <option value="mAh">mAh</option> -->
                                     </select>
                                 </div>
@@ -305,20 +270,7 @@
                     </div>
                     <div class="col-md-4">
                         <h4 class="text-milung mb-4 fw-bold ">II. Price:</h4>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Byuing Price:</p>
-                            </div>
-                            <div class="col-8">
-                                <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
-                                    <input type="text" class="form-control" disabled v-model="orders[0].buyingprice">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">USD</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Selling Price:</p>
@@ -395,17 +347,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">SO#:</p>
-                            </div>
-                            <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].so_number" class="form-control "> -->
-                                <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
-                                    track-by="id">
-                                </multiselect>
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">ATC#:</p>
@@ -430,13 +372,9 @@
                                 <input type="text" v-model="orders[0].incoterm" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2 bg-danger">
-                            <p>
-                                XD Page not cleared
-                            </p>
-                        </div>
+
                         <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
+                            <button class="btn btn-warning  ms-auto fw-bold" name="action" value="create">Create New Order</button>
                         </div>
 
                     </div>
@@ -656,11 +594,9 @@ export default {
             // this.showProgress = true;
             NProgress.start();
             console.log(this.orders);
-            if (this.isEditing) {
-                this.orders[0].linked_order = event.submitter.getAttribute('value');
-            }
+
             let method = 'post';
-            let url = `/api/buyer/ordercreate`;
+            let url = `/api/buyer/order`;
 
             this.handleApiCall(method, url, this.orders[0])
                 .then(response => {
@@ -671,7 +607,7 @@ export default {
                     console.log(response);
                     NProgress.done();
                     toastr.success('Order added successfully');
-                    this.$router.push({ name: 'order_list' });
+                    this.$router.push({ name: 'buyer_order_list' });
                 })
                 .catch(error => {
                     setTimeout(() => {
@@ -732,46 +668,46 @@ export default {
             };
             img.src = imageUrl;
         },
-        fetchorder(orderId) {
-            NProgress.start();
-            axios.get(`/api/buyer/orderentry/${orderId}`)
-                .then(response => {
-                    this.orders[0] = response.data;
-                    console.log(this.orders[0]);
-                    // Pre-fill capacity if it exists
-                    if (this.orders[0].capacity) {
-                        this.orders[0].capacity = this.orders[0].capacity.map(capacity => {
-                            const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
-                            return { quantity: parseInt(quantity), unit };
-                        });
-                    } else {
-                        // If capacity doesn't exist, initialize it with default values
-                        this.orders[0].capacity = [{ quantity: '', unit: '' }];
-                    }
-                    if (this.orders[0].quantity_units) {
-                        const quantityString = this.orders[0].quantity_units;
-                        console.log(this.orders[0].quantity_units);
+        // fetchorder(orderId) {
+        //     NProgress.start();
+        //     axios.get(`/api/buyer/orderentry/${orderId}`)
+        //         .then(response => {
+        //             this.orders[0] = response.data;
+        //             console.log(this.orders[0]);
+        //             // Pre-fill capacity if it exists
+        //             if (this.orders[0].capacity) {
+        //                 this.orders[0].capacity = this.orders[0].capacity.map(capacity => {
+        //                     const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
+        //                     return { quantity: parseInt(quantity), unit };
+        //                 });
+        //             } else {
+        //                 // If capacity doesn't exist, initialize it with default values
+        //                 this.orders[0].capacity = [{ quantity: '', unit: '' }];
+        //             }
+        //             if (this.orders[0].quantity_units) {
+        //                 const quantityString = this.orders[0].quantity_units;
+        //                 console.log(this.orders[0].quantity_units);
 
-                        const quantity = parseInt(quantityString.split('units')[0]);
-                        this.orders[0].quantity = quantity;
-                    }
-                    console.log('files ', this.orders[0].files[0]['filepath']);
-                    this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
-                    NProgress.done();
-                })
-                .catch(error => {
-                    console.error(error);
-                    NProgress.done();
-                });
-        },
+        //                 const quantity = parseInt(quantityString.split('units')[0]);
+        //                 this.orders[0].quantity = quantity;
+        //             }
+        //             console.log('files ', this.orders[0].files[0]['filepath']);
+        //             this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
+        //             NProgress.done();
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //             NProgress.done();
+        //         });
+        // },
     },
     mounted() {
-        if (this.isEditing) {
-            const orderId = this.$route.params.id;
-            this.fetchorder(orderId);
-            // console.log(this.orders[0]);
+        // if (this.isEditing) {
+        //     const orderId = this.$route.params.id;
+        //     this.fetchorder(orderId);
+        //     // console.log(this.orders[0]);
 
-        }
+        // }
         NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
         this.$refs.fileInput.addEventListener('change', this.loadImage);

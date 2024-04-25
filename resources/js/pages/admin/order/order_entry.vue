@@ -263,7 +263,7 @@
                                     <input type="number" class="form-control" v-model="orders[0].quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select"
                                         v-model="orders[0].unit">
-                                        <option selected value="units">units</option>
+                                        <option selected :value="units">units</option>
                                         <!-- <option value="mAh">mAh</option> -->
                                     </select>
                                 </div>
@@ -430,11 +430,11 @@
                                 <input type="text" v-model="orders[0].incoterm" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2 bg-danger">
+                        <!-- <div class="d-flex col-12 my-2 bg-danger">
                             <p>
                                 XD Page not cleared
                             </p>
-                        </div>
+                        </div> -->
                         <div class="d-flex col-12 my-2 ">
                             <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
                             <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
@@ -525,7 +525,7 @@ export default {
     },
     methods: {
         fetchSuppliers() {
-            axios.get('/api/supplier/supplierOrder')
+            axios.get('/api/Suppliers')
                 .then(response => {
                     this.suppliers = response.data;
                     // console.log(this.suppliers);

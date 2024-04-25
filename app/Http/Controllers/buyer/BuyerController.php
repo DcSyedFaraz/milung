@@ -13,6 +13,6 @@ class BuyerController extends Controller
     {
         // dd($id);
         $product = Products::where('id', $id)->with('product_group','images')->first();
-        return response()->json($product, JsonResponse::HTTP_OK);
+        return response()->json($product, 200);
     }
 }

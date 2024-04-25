@@ -18,13 +18,13 @@ class SupplierOrderController extends Controller
         // $id = Auth::id();
         $id = 3;
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->where('supplier', $id)->orderby('created_at', 'desc')->get();
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
     }
     public function orderentrygetID($id)
     {
         $order = Order::where('id', $id)->with('product_group', 'shipmentOrders', 'printview')->first();
         // dd($order);
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
     }
     public function printviewget($id)
     {

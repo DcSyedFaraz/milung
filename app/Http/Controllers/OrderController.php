@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderSupplier;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,12 @@ class OrderController extends Controller
     public function orderentryget()
     {
         $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->with('buyerid', 'supplierid')->orderby('created_at', 'desc')->get();
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
+    }
+    public function Suppliers()
+    {
+        $users = User::role('Supplier')->get();
+        return response()->json($users, 200);
     }
     public function placeAll(Request $request)
     {
@@ -157,7 +163,7 @@ class OrderController extends Controller
                 $order->thumbnail_url = $thumbnailUrl;
             }
         }
-        return response()->json($orders, JsonResponse::HTTP_OK);
+        return response()->json($orders, 200);
     }
     public function SupplierOrder()
     {
@@ -184,7 +190,7 @@ class OrderController extends Controller
             }
             $order->userid = $user->userid;
         }
-        return response()->json($orders, JsonResponse::HTTP_OK);
+        return response()->json($orders, 200);
     }
     public function orderUpdate(Request $request, $id)
     {
@@ -270,7 +276,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         // dd($order->getRawOriginal('quantity_unit'));
         $order->quantity_units = $order->getRawOriginal('quantity_unit');
-        return response()->json($order, JsonResponse::HTTP_OK);
+        return response()->json($order, 200);
     }
     public function orderentry(Request $request)
     {

@@ -20,7 +20,7 @@ class SupplierShipmentController extends Controller
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->select('id', 'so_number')->get();
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($shipment, 200);
     }
     public function shipments()
     {
@@ -29,7 +29,7 @@ class SupplierShipmentController extends Controller
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->with('shipmentsupplier')->get();
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($shipment, 200);
     }
     public function receipt_note(Request $request)
     {
@@ -44,7 +44,7 @@ class SupplierShipmentController extends Controller
                 $order->userid = 'Supplier01';
             }
         // dd($orders);
-        return response()->json($orders, JsonResponse::HTTP_OK);
+        return response()->json($orders, 200);
     }
     public function shipment(Request $request, $id)
     {
@@ -95,7 +95,7 @@ class SupplierShipmentController extends Controller
         // $userid = Auth::user()->id;
         $userid = 3;
         $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')->with('product_group', 'packinglist')->get();
-        return response()->json($shipment, JsonResponse::HTTP_OK);
+        return response()->json($shipment, 200);
     }
     public function suppliershipmentUpdate($id, Request $request)
     {

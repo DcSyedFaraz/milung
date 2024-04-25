@@ -196,7 +196,7 @@ class ProductController extends Controller
         // });
 
         // Return the formatted ProductGroup collection as JSON response
-        return response()->json($prod, JsonResponse::HTTP_OK);
+        return response()->json($prod, 200);
     }
     public function product_group_get_all()
     {
@@ -209,13 +209,13 @@ class ProductController extends Controller
         // });
 
         // Return the formatted ProductGroup collection as JSON response
-        return response()->json($prod, JsonResponse::HTTP_OK);
+        return response()->json($prod, 200);
     }
     public function price_inquiry_get()
     {
         $prod = PriceInquiry::orderby('created_at', 'desc')->get();
 
-        return response()->json($prod, JsonResponse::HTTP_OK);
+        return response()->json($prod, 200);
     }
     public function PriceDelete($id)
     {

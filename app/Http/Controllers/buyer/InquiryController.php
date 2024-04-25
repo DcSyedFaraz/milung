@@ -19,7 +19,7 @@ class InquiryController extends Controller
         $userid = 2;
         $prod = PriceInquiry::where('buyer', $userid)->orderby('created_at', 'desc')->get();
 
-        return response()->json($prod, JsonResponse::HTTP_OK);
+        return response()->json($prod, 200);
     }
 
     /**
@@ -97,7 +97,7 @@ class InquiryController extends Controller
         $userid = 2;
         $prod = PriceInquiry::where('buyer', $userid)->where('id', $id)->first();
 
-        return response()->json($prod, JsonResponse::HTTP_OK);
+        return response()->json($prod, 200);
     }
 
     /**

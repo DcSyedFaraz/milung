@@ -60,7 +60,7 @@ class UserController extends Controller
             $responseData[] = $userData;
         }
         // dd($responseData);
-        return response()->json($responseData, JsonResponse::HTTP_OK);
+        return response()->json($responseData, 200);
     }
     public function products()
     {
@@ -69,7 +69,7 @@ class UserController extends Controller
                 $query->select('id', 'group_name');
             }
         ])->orderby('created_at','desc')->get();
-        return response()->json($products, JsonResponse::HTTP_OK);
+        return response()->json($products, 200);
     }
     public function supplier()
     {
@@ -86,7 +86,7 @@ class UserController extends Controller
             $responseData[] = $user;
         }
 
-        return response()->json($responseData, JsonResponse::HTTP_OK);
+        return response()->json($responseData, 200);
     }
 
     public function buyers(Request $request)
@@ -172,19 +172,19 @@ class UserController extends Controller
 
 
         // dd($responseData);
-        return response()->json($users, JsonResponse::HTTP_OK);
+        return response()->json($users, 200);
     }
     public function supplierOrder()
     {
         $users = User::withRole('Supplier')->select('id', 'userid')->get();
 
-        return response()->json($users, JsonResponse::HTTP_OK);
+        return response()->json($users, 200);
     }
     public function buyerOrder()
     {
         $users = User::withRole('Buyer')->select('id', 'userid')->get();
 
-        return response()->json($users, JsonResponse::HTTP_OK);
+        return response()->json($users, 200);
     }
     public function addUser(Request $request)
     {
@@ -224,7 +224,7 @@ class UserController extends Controller
 
         $responseData = $userData;
         // // dd($responseData);
-        return response()->json($responseData, JsonResponse::HTTP_OK);
+        return response()->json($responseData, 200);
     }
     public function supplier_profiles($id)
     {

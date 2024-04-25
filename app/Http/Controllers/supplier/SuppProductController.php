@@ -128,7 +128,7 @@ class SuppProductController extends Controller
 
 
 
-        return response()->json($priceInquiries, JsonResponse::HTTP_OK);
+        return response()->json($priceInquiries, 200);
     }
     public function price_inquiry_getOne($id)
     {
@@ -155,7 +155,7 @@ class SuppProductController extends Controller
             return response()->json(['error' => 'Price inquiry not found or not assigned to the user.'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return response()->json($priceInquiry, JsonResponse::HTTP_OK);
+        return response()->json($priceInquiry, 200);
     }
 
 }
