@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\buyer\BuyerController;
 use App\Http\Controllers\buyer\BuyerOrderController;
+use App\Http\Controllers\buyer\BuyerShipmentController;
 use App\Http\Controllers\buyer\InquiryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShipmentController;
@@ -53,15 +54,15 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
 
     //Orders
-    Route::resource('order', BuyerOrderController::class)->except([
-        'update','create'
-    ]);
+    Route::resource('order', BuyerOrderController::class)->except(['update', 'create']);
     Route::get('orderentry/{id}', [BuyerOrderController::class, 'orderentrygetID']);
     Route::post('orderentry/{id}', [BuyerOrderController::class, 'update']);
     Route::post('ordercreate', [BuyerOrderController::class, 'update']);
     Route::get('printview/{id}', [BuyerOrderController::class, 'printviewget']);
     Route::post('printview/{id}', [BuyerOrderController::class, 'printview']);
 
+    Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create']);
+    Route::post('shipments/{id}', [BuyerShipmentController::class, 'update']);
 });
 
 // <-- Supplier Routes -->
@@ -94,6 +95,8 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
 
 });
+
+// <-- Admin Routes -->
 Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
 
     // Fetching Users

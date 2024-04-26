@@ -15,8 +15,8 @@ class SupplierShipmentController extends Controller
 {
     public function suppliershipments()
     {
-        $id = 3;
-        // $id = Auth::user()->id;
+        // $id = 3;
+        $id = Auth::user()->id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->select('id', 'so_number')->get();
@@ -24,8 +24,8 @@ class SupplierShipmentController extends Controller
     }
     public function shipments()
     {
-        $id = 3;
-        // $id = Auth::user()->id;
+        // $id = 3;
+        $id = Auth::user()->id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->with('shipmentsupplier')->get();
@@ -34,14 +34,14 @@ class SupplierShipmentController extends Controller
     public function receipt_note(Request $request)
     {
         // dd($request->all());
-        // $userId = Auth::id();
-        $userId = 3;
+        $userId = Auth::id();
+        // $userId = 3;
         $orders = Order::whereIn('so_number', $request->shipIds)
             ->where('supplier', $userId)->with('product_group', 'packinglist')->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')
             ->get();
             foreach ($orders as $order) {
-                // $order->userid = Auth::user()->userid;
-                $order->userid = 'Supplier01';
+                $order->userid = Auth::user()->userid;
+                // $order->userid = 'Supplier01';
             }
         // dd($orders);
         return response()->json($orders, 200);
@@ -49,8 +49,8 @@ class SupplierShipmentController extends Controller
     public function shipment(Request $request, $id)
     {
         // dd($request->all());
-        $userid = 3;
-        // $userid = Auth::id();
+        // $userid = 3;
+        $userid = Auth::id();
         $supplier = $request->all();
 
         $validatedData = \Validator::make($request->all(), [
@@ -92,16 +92,16 @@ class SupplierShipmentController extends Controller
     public function suppliershipment($id)
     {
         // dd($id);
-        // $userid = Auth::user()->id;
-        $userid = 3;
+        $userid = Auth::user()->id;
+        // $userid = 3;
         $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')->with('product_group', 'packinglist')->get();
         return response()->json($shipment, 200);
     }
     public function suppliershipmentUpdate($id, Request $request)
     {
 
-        $userId = 3;
-        // $userId = Auth::user()->id;
+        // $userId = 3;
+        $userId = Auth::user()->id;
 
         try {
             \DB::beginTransaction();
@@ -171,13 +171,13 @@ class SupplierShipmentController extends Controller
     {
 
         // dd($request->all());
-        $userId = 8;
+        // $userId = 8;
 
-        // if (Auth::user()->hasRole('admin')) {
-        //     $userId = $request->input('user_id');
-        // } else {
-        //     $userId = Auth::user()->id;
-        // }
+        if (Auth::user()->hasRole('admin')) {
+            $userId = $request->input('user_id');
+        } else {
+            $userId = Auth::user()->id;
+        }
 
         try {
             \DB::beginTransaction();

@@ -13,6 +13,9 @@ import order_list from "./pages/buyer/order/order_list.vue";
 import order_entry from "./pages/buyer/order/order_entry.vue";
 import order_create from "./pages/buyer/order/order_create.vue";
 
+// Shipment
+import shipment_overview from "./pages/buyer/shipment/shipment_overview.vue";
+
 const buyerRoutes = [
     {
         path: "dashboard",
@@ -64,6 +67,11 @@ const buyerRoutes = [
         props: {
             isEditing: true,
         },
+    },
+    {
+        path: "shipment_overview",
+        name: "buyer_shipment_overview",
+        component: shipment_overview,
     },
 ];
 
