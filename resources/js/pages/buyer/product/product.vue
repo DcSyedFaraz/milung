@@ -208,7 +208,7 @@ export default {
         },
         async fetchproducts() {
             try {
-                const response = await axios.get('/api/products');
+                const response = await axios.get('/api/buyer/products');
                 this.products = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);

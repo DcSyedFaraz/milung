@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\buyer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Information;
 use App\Models\Order;
 use App\Models\PackingList;
 use App\Models\Shipment;
@@ -44,17 +45,30 @@ class BuyerShipmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $data = Information::where('shipment_order_id',$id)->with('user')->first();
+        return response()->json($data, 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $packing = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
+        $shipment = ShipmentOrder::findOrFail($id)->select('id','buyerid','incoterm')->first();
+        $data = Shipment::where('shipment_order_id',$id)->where('user_id',$shipment->buyerid)->select('id','atc_no')->first();
+
+        $result = compact('packing', 'data','shipment');
+        // dd($result);
+        // $data = [
+        //     'shipment' => $shipment,
+        //     'totalQty' => $totalQty,
+        //     'totalTotalQty' => $totalTotalQty,
+        // ];
+
+        return response()->json($result, 200);
     }
 
     /**

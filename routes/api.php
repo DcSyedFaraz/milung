@@ -43,6 +43,7 @@ Route::group(['middleware' => []], function () {
 Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer']], function () {
 
     // Product
+    Route::get('products', [UserController::class, 'products']);
     Route::get('product/{id}', [BuyerController::class, 'product']);
     Route::get('product_group_get', [ProductController::class, 'product_group_get']);
     Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all']);
@@ -61,6 +62,7 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     Route::get('printview/{id}', [BuyerOrderController::class, 'printviewget']);
     Route::post('printview/{id}', [BuyerOrderController::class, 'printview']);
 
+    // Shipments
     Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create']);
     Route::post('shipments/{id}', [BuyerShipmentController::class, 'update']);
 });

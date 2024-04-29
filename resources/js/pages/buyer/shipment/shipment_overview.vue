@@ -76,9 +76,10 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }">
-                                            <i class="bi bi-file-earmark-text fw-bold"></i>
-                                        </router-link>
+                                        <router-link class="btn btn-light text-black" :to="{ name: 'buyer_information', params: { id: ship.id, so_number: ship.so_number }  }"
+                                        >
+                                        <i class="bi bi-file-earmark-text fw-bold"></i>
+                                    </router-link>
                                     </td>
 
 

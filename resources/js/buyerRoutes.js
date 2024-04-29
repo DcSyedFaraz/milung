@@ -15,6 +15,9 @@ import order_create from "./pages/buyer/order/order_create.vue";
 
 // Shipment
 import shipment_overview from "./pages/buyer/shipment/shipment_overview.vue";
+import information from "./pages/buyer/shipment/documents/information.vue";
+import cibd from "./pages/buyer/shipment/documents/cibd.vue";
+import ci from "./pages/buyer/shipment/documents/ci.vue";
 
 const buyerRoutes = [
     {
@@ -72,6 +75,21 @@ const buyerRoutes = [
         path: "shipment_overview",
         name: "buyer_shipment_overview",
         component: shipment_overview,
+    },
+    {
+        path: "information/:id/:so_number",
+        name: "buyer_information",
+        component: information,
+    },
+    {
+        path: "documents/cibd/:id/:so_number",
+        name: "buyer_cibd",
+        component: cibd,
+    },
+    {
+        path: "documents/ci/:id/:so_number",
+        name: "buyer_ci",
+        component: ci,
     },
 ];
 

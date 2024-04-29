@@ -290,7 +290,7 @@
                 <!-- Shipment -->
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'buyer_shipment_overview' }"
-                        :class="{ active: this.$route.name === 'buyer_shipment_overview' || this.$route.name === 'buyer_shipment_overview' }" active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_shipment_overview' || this.$route.name === 'buyer_information' || this.$route.name === 'buyer_cibd' || this.$route.name === 'buyer_ci' }" active-class="active">
                         <i class="bi bi-box2"></i><span>Shipment</span>
                     </router-link>
                 </li>
