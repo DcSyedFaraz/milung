@@ -19,6 +19,9 @@ import information from "./pages/buyer/shipment/documents/information.vue";
 import cibd from "./pages/buyer/shipment/documents/cibd.vue";
 import ci from "./pages/buyer/shipment/documents/ci.vue";
 
+// Accounts
+import payable from "./pages/buyer/account/payable.vue";
+
 const buyerRoutes = [
     {
         path: "dashboard",
@@ -90,6 +93,11 @@ const buyerRoutes = [
         path: "documents/ci/:id/:so_number",
         name: "buyer_ci",
         component: ci,
+    },
+    {
+        path: "accounts/payable",
+        name: "buyer_payable",
+        component: payable,
     },
 ];
 

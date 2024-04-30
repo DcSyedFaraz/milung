@@ -17,13 +17,27 @@ class ShipmentController extends Controller
 {
     public function information($id)
     {
-        $data = Information::where('shipment_order_id',$id)->with('user')->first();
+        $data = Information::where('shipment_order_id', $id)->with('user')->first();
         return response()->json($data, 200);
     }
     public function SupplierSo($id)
     {
-        $data = Order::where('supplier',$id)->with('shipmentOrders','information')->select('id','status','sendoutdate','so_number','totalvalue')->get();
+        $data['order'] = Order::where('supplier', $id)->with('shipmentOrders', 'information')->whereNotNull('so_number')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        $distinctSoNumbers = collect(); // Initialize an empty collection
 
+        $data['order']->each(function ($order) use ($distinctSoNumbers) {
+            $order->shipmentOrders->each(function ($shipmentOrder) use ($order, $distinctSoNumbers) {
+                // Check if the so_number already exists in the collection
+                if (!$distinctSoNumbers->contains('so_number', $shipmentOrder->so_number)) {
+                    // If not, add it to the collection
+                    $distinctSoNumbers->push([
+                        'id' => $shipmentOrder->id,
+                        'so_number' => $shipmentOrder->so_number,
+                    ]);
+                }
+            });
+        });
+        $data['so'] = $distinctSoNumbers->toArray();
         return response()->json($data, 200);
     }
     public function create_doc(Request $request)
@@ -60,7 +74,7 @@ class ShipmentController extends Controller
 
             return response()->json(['message' => 'Information updated successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error occurred while updating information'.$e->getMessage()], 500);
+            return response()->json(['message' => 'Error occurred while updating information' . $e->getMessage()], 500);
         }
     }
     public function shipment(Request $request, $id)
@@ -164,10 +178,10 @@ class ShipmentController extends Controller
     public function shipmentgetid($id)
     {
         $packing = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
-        $shipment = ShipmentOrder::findOrFail($id)->select('id','buyerid','incoterm')->first();
-        $data = Shipment::where('shipment_order_id',$id)->where('user_id',$shipment->buyerid)->select('id','atc_no')->first();
+        $shipment = ShipmentOrder::findOrFail($id)->select('id', 'buyerid', 'incoterm')->first();
+        $data = Shipment::where('shipment_order_id', $id)->where('user_id', $shipment->buyerid)->select('id', 'atc_no')->first();
 
-        $result = compact('packing', 'data','shipment');
+        $result = compact('packing', 'data', 'shipment');
         // dd($result);
         // $data = [
         //     'shipment' => $shipment,

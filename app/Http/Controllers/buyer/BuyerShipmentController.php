@@ -29,9 +29,32 @@ class BuyerShipmentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function buyerSos()
     {
-        //
+        $data['order'] = Order::where('buyer', auth()->id())->whereNotNull('so_number')->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        $distinctSoNumbers = collect(); // Initialize an empty collection
+
+        $data['order']->each(function ($order) use ($distinctSoNumbers) {
+            $order->shipmentOrders->each(function ($shipmentOrder) use ($order, $distinctSoNumbers) {
+                // Check if the so_number already exists in the collection
+                if (!$distinctSoNumbers->contains('so_number', $shipmentOrder->so_number)) {
+                    // If not, add it to the collection
+                    $distinctSoNumbers->push([
+                        'id' => $shipmentOrder->id,
+                        'so_number' => $shipmentOrder->so_number,
+                    ]);
+                }
+            });
+        });
+        $data['so'] = $distinctSoNumbers->toArray();
+        // dd($data);
+        return response()->json($data, 200);
+    }
+    public function buyerSo($id)
+    {
+        $data = Order::where('buyer', auth()->id())->where('so_number', $id)->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        // dd($data);
+        return response()->json($data, 200);
     }
 
     /**
@@ -47,7 +70,7 @@ class BuyerShipmentController extends Controller
      */
     public function show($id)
     {
-        $data = Information::where('shipment_order_id',$id)->with('user')->first();
+        $data = Information::where('shipment_order_id', $id)->with('user')->first();
         return response()->json($data, 200);
     }
 
@@ -57,10 +80,10 @@ class BuyerShipmentController extends Controller
     public function edit($id)
     {
         $packing = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
-        $shipment = ShipmentOrder::findOrFail($id)->select('id','buyerid','incoterm')->first();
-        $data = Shipment::where('shipment_order_id',$id)->where('user_id',$shipment->buyerid)->select('id','atc_no')->first();
+        $shipment = ShipmentOrder::findOrFail($id)->select('id', 'buyerid', 'incoterm')->first();
+        $data = Shipment::where('shipment_order_id', $id)->where('user_id', $shipment->buyerid)->select('id', 'atc_no')->first();
 
-        $result = compact('packing', 'data','shipment');
+        $result = compact('packing', 'data', 'shipment');
         // dd($result);
         // $data = [
         //     'shipment' => $shipment,

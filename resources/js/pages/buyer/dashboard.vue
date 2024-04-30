@@ -275,7 +275,8 @@
 
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'buyer_price_inquiry' }"
-                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }" active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }"
+                        active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
                     </router-link>
                 </li>
@@ -283,24 +284,27 @@
 
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'buyer_order_list' }"
-                        :class="{ active: this.$route.name === 'buyer_order_create' || this.$route.name === 'buyer_order_entry' }" active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_order_create' || this.$route.name === 'buyer_order_entry' }"
+                        active-class="active">
                         <i class="bi bi-bag"></i><span>Order</span>
                     </router-link>
                 </li>
                 <!-- Shipment -->
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'buyer_shipment_overview' }"
-                        :class="{ active: this.$route.name === 'buyer_shipment_overview' || this.$route.name === 'buyer_information' || this.$route.name === 'buyer_cibd' || this.$route.name === 'buyer_ci' }" active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_shipment_overview' || this.$route.name === 'buyer_information' || this.$route.name === 'buyer_cibd' || this.$route.name === 'buyer_ci' }"
+                        active-class="active">
                         <i class="bi bi-box2"></i><span>Shipment</span>
                     </router-link>
                 </li>
 
                 <!-- End Icons Nav -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="users-profile.html">
-                        <i class="bi bi-cash-coin"></i>
-                        <span>Finance</span>
-                    </a>
+                    <router-link class="nav-link" :to="{ name: 'buyer_payable' }"
+                        :class="{ active: this.$route.name === 'buyer_payable' }"
+                        active-class="active">
+                        <i class="bi bi-cash-coin"></i><span>Finance</span>
+                    </router-link>
                 </li>
                 <!-- End Profile Page Nav -->
 

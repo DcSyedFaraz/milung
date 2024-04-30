@@ -263,7 +263,7 @@
                                     <input type="number" class="form-control" v-model="orders[0].quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select"
                                         v-model="orders[0].unit">
-                                        <option selected :value="units">units</option>
+                                        <option selected value="units">units</option>
                                         <!-- <option value="mAh">mAh</option> -->
                                     </select>
                                 </div>

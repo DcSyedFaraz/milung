@@ -65,6 +65,10 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     // Shipments
     Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create']);
     Route::post('shipments/{id}', [BuyerShipmentController::class, 'update']);
+
+    // Finance
+    Route::get('so', [BuyerShipmentController::class, 'buyerSos']);
+    Route::get('so/{id}', [BuyerShipmentController::class, 'buyerSo']);
 });
 
 // <-- Supplier Routes -->

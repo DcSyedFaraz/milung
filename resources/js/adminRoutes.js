@@ -181,13 +181,11 @@ const adminRoutes = [
         path: "accounts/payable",
         name: "payable",
         component: payable,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "statistics",
         name: "statistics",
         component: statistics,
-        // meta: { requiresAdmin: true },
     },
 ];
 
