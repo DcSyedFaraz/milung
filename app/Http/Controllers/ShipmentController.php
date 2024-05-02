@@ -42,8 +42,8 @@ class ShipmentController extends Controller
     }
     public function create_doc(Request $request)
     {
-        // dd($request->all());
         $data = $request->all();
+        // dd($data);
         $validatedData = \Validator::make($data, [
             'shipment_order_id' => 'required|exists:shipment_orders,id',
             'invoice' => 'required|string',
@@ -62,11 +62,12 @@ class ShipmentController extends Controller
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()->all()], 422);
         }
-        // $data['user_id'] = Auth::id();
-        $data['user_id'] = 1;
-        unset($data['shipment_order']);
+        $data['user_id'] = Auth::id();
+        // $data['user_id'] = 1;
+        unset($data['shipment_order'],$data['user']);
         try {
             // Find or create the Information instance based on the shipment_order_id
+            $data['totalpayable'] = Order::where('so_number',$data['shipment_order_id'])->sum('totalvalue') + ($data['extra'] ?? 0);
             Information::updateOrCreate(
                 ['shipment_order_id' => $data['shipment_order_id']],
                 $data
@@ -154,7 +155,7 @@ class ShipmentController extends Controller
 
         $validatedData = \Validator::make($data, [
             'buyerid' => 'required|exists:users,id',
-            'supplierid' => 'required|exists:users,id',
+            // 'supplierid' => 'required|exists:users,id',
             'method' => 'required|string',
             'port' => 'required|string',
             'destination' => 'required|string',

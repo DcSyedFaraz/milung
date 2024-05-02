@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\PackingList;
+use App\Models\SettleAmount;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
 use App\Models\Shipmentbuyer;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BuyerShipmentController extends Controller
@@ -26,12 +28,23 @@ class BuyerShipmentController extends Controller
         return response()->json($shipment, 200);
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
     public function buyerSos()
     {
         $data['order'] = Order::where('buyer', auth()->id())->whereNotNull('so_number')->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+
+        $data['invoice'] = Information::whereHas('orders', function ($query) {
+            $query->where('buyer', auth()->id());
+        })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
+
+        // foreach ($data['invoice'] as $invoice) {
+        //     $invoice->payable = $invoice->orders->sum('totalvalue') + $invoice->extra;
+        // }
+        // return $data;
+        // return $new = Information::with('orders')->get();
         $distinctSoNumbers = collect(); // Initialize an empty collection
 
         $data['order']->each(function ($order) use ($distinctSoNumbers) {
@@ -62,7 +75,105 @@ class BuyerShipmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $rules = [
+            'infoIds' => 'required',
+            'amount' => 'required|numeric',
+            'paymentType' => 'required',
+            'file' => 'required|file',
+        ];
+
+        // Custom validation callback for validating the amount based on payment type
+        $validator = \Validator::make($request->all(), $rules, [
+            'amount' => 'Amount validation failed.',
+        ])->after(function ($validator) use ($request) {
+            $paymentType = $request->input('paymentType');
+            $amount = $request->input('amount');
+            $infoIds = explode(',', $request->input('infoIds'));
+
+            foreach ($infoIds as $invoiceId) {
+                if (!Information::where('id', $invoiceId)->exists()) {
+                    $validator->errors()->add('infoIds', 'One or more invoice IDs are invalid.');
+                    break;
+                }
+            }
+
+            if ($paymentType === 'Full Payment') {
+                // If Full Payment, validate amount against the sum of totalvalue
+                $totalValueSum = Information::whereIn('id', $infoIds)->select('totalpayable');
+                // dump($totalValueSum);
+                if ($amount != $totalValueSum) {
+                    $validator->errors()->add('amount', 'Amount should be equal to the sum of payable amount of selected invoice/s for Full Payment.');
+                }
+            } elseif ($paymentType === 'Partial Payment') {
+                $totalValueSum = Information::whereIn('id', $infoIds)->sum('totalpayable');
+                if ($amount > $totalValueSum) {
+                    $validator->errors()->add('amount', 'Amount for Partial Payment should be less than or equal to the sum of payable amount of selected invoice/s.');
+                }
+            }
+
+
+        });
+        // Check if validation fails
+        if ($validator->fails()) {
+            // If fails, return back with errors
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = $request->all();
+        $infoIds = explode(',', $data['infoIds']);
+        $amount = $data['amount'];
+        $paymentType = $data['paymentType'];
+        $shipIds = explode(',', $data['shipIds']);
+
+        $slipFile = null;
+        if ($request->hasFile('file')) {
+            $slipFile = $request->file('file');
+            $fileName = time() . $slipFile->getClientOriginalName();
+            $slipPath = $slipFile->storeAs('orders/remittance', $fileName, 'public');
+        }
+
+        $remainingAmounts = [];
+        foreach ($infoIds as $infoId) {
+            $totalpayable = Information::find($infoId)->totalpayable;
+            $remainingAmount = max(0, $totalpayable - $amount);
+            $remainingAmounts[$infoId] = $remainingAmount;
+            $amount = max(0, $amount - ($totalpayable - $remainingAmount));
+
+
+        }
+        // dd($remainingAmounts);
+
+        $combinedIds = array_combine($infoIds, $shipIds);
+        // Loop through each combination of order and shipment IDs
+        foreach ($combinedIds as $infoId => $shipId) {
+            // dd($infoId, $shipId);
+
+            $status = ($remainingAmounts[$infoId] == 0) ? 'Full Payment' : 'Partial Payment';
+            $totalpayable = Information::find($infoId)->totalpayable;
+
+            $SettleAmount = SettleAmount::updateOrCreate(
+                [
+                    'information_id' => $infoId,
+                    'shipment_order_id' => $shipId,
+                    'user_id' => auth()->id(),
+                ],
+                [
+                    'settle_amount' => $totalpayable,
+                    'outstanding_amount' => $remainingAmounts[$infoId],
+                    'settle_date' => Carbon::now(),
+                    'status' => $status,
+
+                ]
+            );
+            if ($slipFile) {
+                $SettleAmount->slip = $slipPath;
+                $SettleAmount->save();
+            }
+
+        }
+
+
+        return response()->json($SettleAmount, 200);
     }
 
     /**

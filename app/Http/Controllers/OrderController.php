@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Information;
 use App\Models\Order;
 use App\Models\OrderSupplier;
 use App\Models\User;
@@ -266,6 +267,7 @@ class OrderController extends Controller
         } else {
             $data['linked_order'] = null;
             $order = $existingOrder->update($data);
+           
         }
 
 

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('shipment_order_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('invoice')->nullable();
+            $table->decimal('totalpayable', 10, 2)->nullable();
             $table->string('party')->nullable();
             $table->string('loading')->nullable();
             $table->string('destination')->nullable();

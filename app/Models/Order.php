@@ -59,6 +59,10 @@ class Order extends Model
     }
     public function information()
     {
-        return $this->hasOne(Information::class,'shipment_order_id','so_number')->select('id','invoice','shipment_order_id');
+        return $this->hasOne(Information::class,'shipment_order_id','so_number')->select('id','invoice','shipment_order_id','created_at');
+    }
+    public function settleamount()
+    {
+        return $this->hasOne(SettleAmount::class,'order_id');
     }
 }
