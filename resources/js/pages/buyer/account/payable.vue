@@ -129,10 +129,11 @@
                                         Outstanding Amount
                                     </th>
                                     <th class="text-nowrap">Remarks</th>
+                                    <th class="text-nowrap">Remittance Slip</th>
                                 </tr>
                             </thead>
                             <tbody class="text-center" v-for="(item, index) in invoice" :key="index"
-                                v-if="invoice.length > 0" @click="toggleAccordion(index)">
+                                v-if="invoice">
                                 <tr>
                                     <td>
                                         <div class="form-check">
@@ -146,25 +147,88 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td>{{ created_at(item.created_at) }}</td>
-                                    <td>USD {{ item.totalpayable }}</td>
-                                    <td
+                                    <td @click="toggleAccordion(index)">{{ created_at(item.created_at) }}</td>
+
+                                    <td @click="toggleAccordion(index)">USD {{ item.totalpayable }}</td>
+
+                                    <td @click="toggleAccordion(index)"
                                         :class="{ 'text-muted': item.settleamount?.settle_amount == null, 'fst-italic': item.settleamount?.settle_amount == null }">
                                         {{ item.settleamount?.settle_amount ?? 'null' }}</td>
-                                    <td
+
+                                    <td @click="toggleAccordion(index)"
                                         :class="{ 'text-muted': item.settleamount?.settle_date == null, 'fst-italic': item.settleamount?.settle_date == null }">
                                         {{ item.settleamount?.settle_date ?? 'null' }}</td>
-                                    <td
-                                        :class="{ 'text-muted': item.settleamount?.outstanding_amount == null, 'fst-italic': item.settleamount?.outstanding_amount == null }">
+
+                                    <td @click="toggleAccordion(index)"
+                                        :class="{ 'text-muted': item.settleamount?.outstanding_amount == null, 'fst-italic': item.settleamount?.outstanding_amount == null, 'text-danger': item.settleamount?.outstanding_amount > 0 }">
                                         {{ item.settleamount?.outstanding_amount ?? item.totalvalue }}</td>
+
                                     <td>
-                                        <input type="text" :value="item.settleamount?.remarks" class="form-control">
+                                        <input type="text" v-model="remarks[item.id]" class="form-control">
                                     </td>
+                                    <td>
+                                        <a v-if="item.settleamount?.slip" :href="'/storage/' +
+                                            item.settleamount?.slip" download
+                                            class="btn px-4 mx-2 btn-outline-primary  ">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
+                                        </a>
+                                        <p v-else class="fst-italic text-muted">
+                                            Not provided
+                                        </p>
+                                    </td>
+
                                 </tr>
                                 <tr v-if="accordionIndex === index">
                                     <td colspan="8">
+                                        <div class="">
 
-                                        {{ item.orders }}
+                                            <div class="" v-for="(order, index) in item.orders" :key="index">
+
+                                                <div class="row border">
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Number:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.id }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Quantity:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.quantity_unit }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Unit Price:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.sellingprice }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Total Value:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.totalvalue }}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -179,6 +243,9 @@
                         </table>
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end">
+                                <button class="btn btn-danger px-5 me-2 fw-bold" @click="reject">
+                                    Reject
+                                </button>
                                 <button class="btn btn-warning px-5 me-2 fw-bold" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">
                                     Payment
@@ -261,6 +328,7 @@ export default {
             paymentType: "",
             amount: "",
             so: [],
+            remarks: {},
             orders: [],
             invoice: [],
             selectedsoId: "",
@@ -293,9 +361,45 @@ export default {
         },
     },
     methods: {
-        
+
         toggleAccordion(index) {
             this.accordionIndex = this.accordionIndex === index ? null : index;
+        },
+        async reject() {
+            try {
+                console.log(this.selectedINFOIds);
+                const formData = new FormData();
+                formData.append('infoIds', this.selectedINFOIds.join(','));
+
+                const shipIds = [];
+                this.invoice.forEach((item) => {
+                    if (this.selectedINFOIds.includes(item.id)) {
+                        shipIds.push(item.shipment_order_id);
+                    }
+                });
+                formData.append('shipIds', shipIds);
+
+                const response = await axios.post('/api/buyer/reject', formData);
+
+                if (response.data) {
+                    this.selectedINFOIds = [];
+                    this.fetchSOs();
+                    // handle success
+                    toastr.success('Invoice/s rejected successfully');
+                } else {
+                    // handle error
+                    console.log('Error sending payment data:', response);
+                }
+            } catch (error) {
+                // handle error
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error('Error sending payment data');
+                }
+            }
         },
         async sendPaymentData() {
             try {
@@ -314,6 +418,10 @@ export default {
                     }
                 });
                 formData.append('shipIds', shipIds);
+                formData.append('remarks', JSON.stringify(this.remarks));
+
+
+
 
                 const response = await axios.post('/api/buyer/payment', formData);
 

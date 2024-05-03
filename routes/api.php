@@ -70,6 +70,7 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     Route::get('so', [BuyerShipmentController::class, 'buyerSos']);
     Route::get('so/{id}', [BuyerShipmentController::class, 'buyerSo']);
     Route::post('payment', [BuyerShipmentController::class, 'store']);
+    Route::post('reject', [BuyerShipmentController::class, 'reject']);
 });
 
 // <-- Supplier Routes -->

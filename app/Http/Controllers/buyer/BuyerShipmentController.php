@@ -34,17 +34,18 @@ class BuyerShipmentController extends Controller
      */
     public function buyerSos()
     {
-        $data['order'] = Order::where('buyer', auth()->id())->whereNotNull('so_number')->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        $data['order'] = Order::where('buyer', auth()->id())->whereHas('shipmentOrders')->where(function ($query) {
+            $query->whereDoesntHave('settleamount')
+                ->orWhereHas('settleamount', function ($query) {
+                    $query->where('status', '!=', 'full payment');
+                });
+        })->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
 
-        $data['invoice'] = Information::whereHas('orders', function ($query) {
-            $query->where('buyer', auth()->id());
-        })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
+        // $data['invoice'] = Information::whereHas('orders', function ($query) {
+        //     $query->where('buyer', auth()->id());
+        // })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
+        $data['invoice'] = [];
 
-        // foreach ($data['invoice'] as $invoice) {
-        //     $invoice->payable = $invoice->orders->sum('totalvalue') + $invoice->extra;
-        // }
-        // return $data;
-        // return $new = Information::with('orders')->get();
         $distinctSoNumbers = collect(); // Initialize an empty collection
 
         $data['order']->each(function ($order) use ($distinctSoNumbers) {
@@ -65,7 +66,12 @@ class BuyerShipmentController extends Controller
     }
     public function buyerSo($id)
     {
-        $data = Order::where('buyer', auth()->id())->where('so_number', $id)->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        $data = Order::where('buyer', auth()->id())->where('so_number', $id)->where(function ($query) {
+            $query->whereDoesntHave('settleamount')
+                ->orWhereHas('settleamount', function ($query) {
+                    $query->where('status', '!=', 'full payment');
+                });
+        })->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
         // dd($data);
         return response()->json($data, 200);
     }
@@ -100,8 +106,8 @@ class BuyerShipmentController extends Controller
 
             if ($paymentType === 'Full Payment') {
                 // If Full Payment, validate amount against the sum of totalvalue
-                $totalValueSum = Information::whereIn('id', $infoIds)->select('totalpayable');
-                // dump($totalValueSum);
+                $totalValueSum = Information::whereIn('id', $infoIds)->sum('totalpayable');
+                // dd($totalValueSum);
                 if ($amount != $totalValueSum) {
                     $validator->errors()->add('amount', 'Amount should be equal to the sum of payable amount of selected invoice/s for Full Payment.');
                 }
@@ -124,6 +130,7 @@ class BuyerShipmentController extends Controller
         $amount = $data['amount'];
         $paymentType = $data['paymentType'];
         $shipIds = explode(',', $data['shipIds']);
+        $remarks = json_decode($data['remarks'], true);
 
         $slipFile = null;
         if ($request->hasFile('file')) {
@@ -147,7 +154,7 @@ class BuyerShipmentController extends Controller
         // Loop through each combination of order and shipment IDs
         foreach ($combinedIds as $infoId => $shipId) {
             // dd($infoId, $shipId);
-
+            $remark = $remarks[$infoId];
             $status = ($remainingAmounts[$infoId] == 0) ? 'Full Payment' : 'Partial Payment';
             $totalpayable = Information::find($infoId)->totalpayable;
 
@@ -162,6 +169,7 @@ class BuyerShipmentController extends Controller
                     'outstanding_amount' => $remainingAmounts[$infoId],
                     'settle_date' => Carbon::now(),
                     'status' => $status,
+                    'remarks' => $remark,
 
                 ]
             );
@@ -169,6 +177,66 @@ class BuyerShipmentController extends Controller
                 $SettleAmount->slip = $slipPath;
                 $SettleAmount->save();
             }
+
+        }
+
+
+        return response()->json($SettleAmount, 200);
+    }
+    public function reject(Request $request)
+    {
+        // dd($request->all());
+        $rules = [
+            'infoIds' => 'required',
+        ];
+
+        // Custom validation callback for validating the amount based on payment type
+        $validator = \Validator::make($request->all(), $rules, [
+            'amount' => 'Amount validation failed.',
+        ])->after(function ($validator) use ($request) {
+            $infoIds = explode(',', $request->input('infoIds'));
+
+            foreach ($infoIds as $invoiceId) {
+                if (!Information::where('id', $invoiceId)->exists()) {
+                    $validator->errors()->add('infoIds', 'One or more invoice IDs are invalid.');
+                    break;
+                }
+            }
+
+        });
+        // Check if validation fails
+        if ($validator->fails()) {
+            // If fails, return back with errors
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $data = $request->all();
+        $infoIds = explode(',', $data['infoIds']);
+        $shipIds = explode(',', $data['shipIds']);
+
+
+        // dd($remainingAmounts);
+
+        $combinedIds = array_combine($infoIds, $shipIds);
+        // Loop through each combination of order and shipment IDs
+        foreach ($combinedIds as $infoId => $shipId) {
+            // dd($infoId, $shipId);
+
+            $totalpayable = Information::find($infoId)->totalpayable;
+
+            $SettleAmount = SettleAmount::updateOrCreate(
+                [
+                    'information_id' => $infoId,
+                    'shipment_order_id' => $shipId,
+                    'user_id' => auth()->id(),
+                ],
+                [
+                    'settle_amount' => $totalpayable,
+                    'outstanding_amount' => $totalpayable,
+                    'status' => 'reject',
+                    'settle_date' => null,
+
+                ]
+            );
 
         }
 

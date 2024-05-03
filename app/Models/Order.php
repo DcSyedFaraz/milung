@@ -63,6 +63,7 @@ class Order extends Model
     }
     public function settleamount()
     {
-        return $this->hasOne(SettleAmount::class,'order_id');
+        return $this->hasOne(SettleAmount::class,'shipment_order_id','so_number');
     }
+
 }

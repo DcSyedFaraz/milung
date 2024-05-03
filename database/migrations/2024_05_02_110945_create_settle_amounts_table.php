@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('outstanding_amount')->nullable();
             $table->string('status')->nullable();
             $table->string('slip')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
