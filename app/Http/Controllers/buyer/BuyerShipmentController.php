@@ -41,10 +41,10 @@ class BuyerShipmentController extends Controller
                 });
         })->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
 
-        // $data['invoice'] = Information::whereHas('orders', function ($query) {
-        //     $query->where('buyer', auth()->id());
-        // })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
-        $data['invoice'] = [];
+        $data['invoice'] = Information::whereHas('orders', function ($query) {
+            $query->where('buyer', auth()->id());
+        })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
+        // $data['invoice'] = [];
 
         $distinctSoNumbers = collect(); // Initialize an empty collection
 
@@ -154,7 +154,7 @@ class BuyerShipmentController extends Controller
         // Loop through each combination of order and shipment IDs
         foreach ($combinedIds as $infoId => $shipId) {
             // dd($infoId, $shipId);
-            $remark = $remarks[$infoId];
+            $remark = $remarks[$infoId] ?? null;
             $status = ($remainingAmounts[$infoId] == 0) ? 'Full Payment' : 'Partial Payment';
             $totalpayable = Information::find($infoId)->totalpayable;
 

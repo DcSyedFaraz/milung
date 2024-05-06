@@ -26,4 +26,12 @@ class ShipmentOrder extends Model
     {
         return $this->hasOne(ShipmentSupplier::class);
     }
+    public function settleamount()
+    {
+        return $this->hasOne(SettleAmount::class);
+    }
+    public function information()
+    {
+        return $this->hasOne(Information::class);
+    }
 }

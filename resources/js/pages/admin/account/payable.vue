@@ -8,86 +8,59 @@
                             <div class="col-6">
                                 <div class="d-flex col-11 my-2">
                                     <div class="col-3 my-auto">
-                                        <p
-                                            class="fw-bold text-milung text-uppercase my-auto"
-                                        >
+                                        <p class="fw-bold text-milung text-uppercase my-auto">
                                             Supplier ID:
                                         </p>
                                     </div>
                                     <div class="col-7">
                                         <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                        <multiselect
-                                            v-model="selectedsupplierId"
-                                            :options="suppliers"
-                                            field="id"
-                                            label="userid"
-                                            track-by="id"
-                                        >
+                                        <multiselect v-model="selectedsupplierId" :options="suppliers" field="id"
+                                            label="userid" track-by="id">
                                         </multiselect>
                                     </div>
                                 </div>
                                 <div class="d-flex col-11 my-2">
                                     <div class="col-3 my-auto">
-                                        <p
-                                            class="fw-bold text-milung text-uppercase my-auto"
-                                        >
+                                        <p class="fw-bold text-milung text-uppercase my-auto">
                                             so#:
                                         </p>
                                     </div>
                                     <div class="col-7">
                                         <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                        <multiselect
-                                            v-model="selectedsoId"
-                                            :options="so"
-                                        >
+                                        <multiselect v-model="selectedsoId" :options="so">
                                         </multiselect>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div
-                                    class="d-flex col-11 my-2 justify-content-end"
-                                >
+                                <div class="d-flex col-11 my-2 justify-content-end">
                                     <div class="col-4 my-auto">
                                         <p class="text-milung my-auto">
                                             Reciept/Delivery Note:
                                         </p>
                                     </div>
                                     <div class="col-5">
-                                        <input
-                                            type="text"
-                                            v-model="so.buyerid"
-                                            class="form-control"
-                                        />
+                                        <input type="text" v-model="so.buyerid" class="form-control" />
                                     </div>
                                 </div>
-                                <div
-                                    class="d-flex col-11 my-2 justify-content-end"
-                                >
+                                <div class="d-flex col-11 my-2 justify-content-end">
                                     <div class="col-4 my-auto">
                                         <p class="fw-bold my-auto">
                                             ML User Only:
                                         </p>
                                     </div>
                                     <div class="col-5">
-                                        <button
-                                            class="btn btn-warning px-5 fw-bold"
-                                        >
+                                        <button class="btn btn-warning px-5 fw-bold">
                                             Approved
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="d-flex justify-content-between align-items-center mx-3"
-                        >
+                        <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span
-                                    class="fw-bold fs-4 text-uppercase"
-                                    style="color: #14245c"
-                                    >Outstanding payment order list:</span
-                                >
+                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Outstanding payment
+                                    order list:</span>
                             </span>
                         </div>
                     </div>
@@ -95,19 +68,13 @@
                     <!-- // Loader -->
                     <div class="card-body rounded-top" v-if="isLoading">
                         <div class="d-flex justify-content-center">
-                            <div
-                                class="spinner-border text-warning"
-                                role="status"
-                            >
+                            <div class="spinner-border text-warning" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
                     <!-- // Loader -->
-                    <div
-                        class="card-body border-bottom border-3 rounded-top table-responsive"
-                        v-else
-                    >
+                    <div class="card-body border-bottom border-3 rounded-top table-responsive" v-else>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
                             <thead style="color: #009de1" class="text-center">
@@ -127,24 +94,12 @@
                             </thead>
 
                             <tbody class="text-center">
-                                <tr
-                                    v-for="(item, index) in orders"
-                                    :key="index"
-                                    v-if="orders.length > 0"
-                                >
+                                <tr v-for="(item, index) in orders" :key="index" v-if="orders.length > 0">
                                     <td>
                                         <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                :value="item.id"
-                                                id="flexCheckDefault"
-                                                v-model="selectedOrderIds"
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                for="flexCheckDefault"
-                                            >
+                                            <input class="form-check-input" type="checkbox" :value="item.id"
+                                                id="flexCheckDefault" v-model="selectedOrderIds" />
+                                            <label class="form-check-label" for="flexCheckDefault">
                                                 {{ item.id }}
                                             </label>
                                         </div>
@@ -157,22 +112,16 @@
                                     <td>{{ item.information?.invoice }}</td>
                                     <td>{{ item.totalvalue }}</td>
                                     <td>
-                                        <router-link
-                                            class="fw-bold"
-                                            style="color: #009de1 !important"
-                                            :to="{
-                                                name: 'information',
-                                                params: {
-                                                    id: item.so_number,
-                                                    so_number:
-                                                        item.shipment_orders
-                                                            ?.so_number,
-                                                },
-                                            }"
-                                        >
-                                            <i
-                                                class="bi bi-file-earmark-text fw-bold"
-                                            ></i>
+                                        <router-link class="fw-bold" style="color: #009de1 !important" :to="{
+                                            name: 'information',
+                                            params: {
+                                                id: item.so_number,
+                                                so_number:
+                                                    item.shipment_orders
+                                                        ?.so_number,
+                                            },
+                                        }">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
                                     </td>
                                 </tr>
@@ -197,38 +146,26 @@
                             <div class="col-6">
                                 <p class="text-milung text-center my-auto">
                                     Total Order Value:
-                                    <span class="fw-bold"
-                                        >US${{ totalvalue }}</span
-                                    >
+                                    <span class="fw-bold">US${{ totalvalue }}</span>
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button
-                                class="btn btn-warning px-5 me-2 fw-bold"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                            >
+                            <button class="btn btn-warning px-5 me-2 fw-bold" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
                                 Payment
                             </button>
                             <!-- Modal -->
-                            <div
-                                class="modal fade"
-                                id="exampleModal"
-                                tabindex="-1"
-                                aria-labelledby="exampleModalLabel"
-                                aria-hidden="true"
-                            >
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-body">
                                             <div class="row my-3">
                                                 <div class="col-12">
-                                                    <p
-                                                        class="m-0 text-milung text-uppercase fw-bold text-center"
-                                                    >
+                                                    <p class="m-0 text-milung text-uppercase fw-bold text-center">
                                                         Please Upload the
                                                         remittance slip here
                                                     </p>
@@ -236,35 +173,20 @@
                                                 </div>
 
                                                 <div class="col-12 mt-5">
-                                                    <div
-                                                        class="input-group mb-3"
-                                                    >
-                                                        <input
-                                                            type="file"
-                                                            class="form-control  "
-                                                            id="inputGroupFile02"
-                                                            accept="image/*,.pdf"
-                                                        />
-                                                        <label
-                                                            class="input-group-text border-start-0" style="background-color: white;"
-                                                            for="inputGroupFile02"
-                                                            ><span class="badge rounded-pill bg-primary"
-                                                                >Browse</span
-                                                            ></label
-                                                        >
+                                                    <div class="input-group mb-3">
+                                                        <input type="file" class="form-control  " id="inputGroupFile02"
+                                                            accept="image/*,.pdf" />
+                                                        <label class="input-group-text border-start-0"
+                                                            style="background-color: white;"
+                                                            for="inputGroupFile02"><span
+                                                                class="badge rounded-pill bg-primary">Browse</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="input-group">
-                                                        <input
-                                                            type="number"
-                                                            placeholder="Amount"
-                                                            class="form-control"
-                                                        />
-                                                        <select
-                                                            class="form-select mx-2"
-                                                            id="inputGroupSelect02"
-                                                        >
+                                                        <input type="number" placeholder="Amount"
+                                                            class="form-control" />
+                                                        <select class="form-select mx-2" id="inputGroupSelect02">
                                                             <option selected hidden>
                                                                 Choose...
                                                             </option>
@@ -275,11 +197,8 @@
                                                                 Fill Payment
                                                             </option>
                                                         </select>
-                                                        <button
-                                                            class="btn btn-warning"
-                                                            type="button"
-                                                            id="button-addon1"
-                                                        >
+                                                        <button class="btn btn-warning" type="button"
+                                                            id="button-addon1">
                                                             Send
                                                         </button>
                                                     </div>
@@ -313,11 +232,7 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr
-                                    v-for="(item, index) in invoice"
-                                    :key="index"
-                                    v-if="invoice.length > 0"
-                                ></tr>
+                                <tr v-for="(item, index) in invoice" :key="index" v-if="invoice.length > 0"></tr>
                                 <tr v-else>
                                     <td colspan="17">
                                         <p class="text-center">
@@ -329,11 +244,8 @@
                         </table>
                     </div>
                     <div class="card-body w-35" v-show="!isLoading">
-                        <span
-                            class="fw-bold fs-6 text-uppercase"
-                            style="color: #14245c"
-                            >General Outstanding account Payable:</span
-                        >
+                        <span class="fw-bold fs-6 text-uppercase" style="color: #14245c">General Outstanding account
+                            Payable:</span>
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
@@ -346,11 +258,7 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr
-                                    v-for="(item, index) in invoice"
-                                    :key="index"
-                                    v-if="invoice.length > 0"
-                                ></tr>
+                                <tr v-for="(item, index) in invoice" :key="index" v-if="invoice.length > 0"></tr>
                                 <tr v-else>
                                     <td colspan="17">
                                         <p class="text-center">
@@ -359,10 +267,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td
-                                        style="color: #009de1"
-                                        class="text-start fw-bold"
-                                    >
+                                    <td style="color: #009de1" class="text-start fw-bold">
                                         Total:
                                     </td>
                                     <td></td>

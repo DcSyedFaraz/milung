@@ -622,15 +622,6 @@ export default {
             validationErrors.forEach(message => {
                 toastr.error(message);
             });
-            // for (const key in validationErrors) {
-            //     if (validationErrors.hasOwnProperty(key)) {
-            //         const messages = validationErrors[key];
-            //         // Display each validation error message
-            //         messages.forEach(message => {
-            //             toastr.error(message);
-            //         });
-            //     }
-            // }
         },
         loadImage(event) {
             const file = event.target.files[0];

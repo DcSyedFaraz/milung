@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductGroup;
 use App\Models\Products;
+use App\Models\ShipmentOrder;
 use App\Models\SupplierProfile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -68,7 +69,7 @@ class UserController extends Controller
             'product_group' => function ($query) {
                 $query->select('id', 'group_name');
             }
-        ])->orderby('created_at','desc')->get();
+        ])->orderby('created_at', 'desc')->get();
         return response()->json($products, 200);
     }
     public function supplier()
@@ -170,8 +171,6 @@ class UserController extends Controller
     {
         $users = User::withRole('Buyer')->with('buyerProfile')->get();
 
-
-        // dd($responseData);
         return response()->json($users, 200);
     }
     public function supplierOrder()
@@ -185,6 +184,26 @@ class UserController extends Controller
         $users = User::withRole('Buyer')->select('id', 'userid')->get();
 
         return response()->json($users, 200);
+    }
+    public function buyerFinance()
+    {
+        $data['users'] = User::withRole('Buyer')->select('id', 'userid')->get();
+
+        $data['sales'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', \DB::raw('SUM(information.totalpayable) as total_payable_per_buyer'))
+            ->join('information', 'shipment_orders.id', '=', 'information.shipment_order_id')
+            ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
+            ->groupBy('shipment_orders.buyerid', 'users.userid')
+            ->having(\DB::raw('SUM(information.totalpayable)'), '>', 0)
+            ->get();
+
+        $data['remaining'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', \DB::raw('SUM(settle_amounts.outstanding_amount) as total_outstanding_per_buyer'))
+            ->join('settle_amounts', 'shipment_orders.id', '=', 'settle_amounts.shipment_order_id')
+            ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
+            ->groupBy('shipment_orders.buyerid', 'users.userid')
+            ->having(\DB::raw('SUM(settle_amounts.outstanding_amount)'), '>', 0)
+            ->get();
+
+        return response()->json($data, 200);
     }
     public function addUser(Request $request)
     {

@@ -20,6 +20,12 @@ class ShipmentController extends Controller
         $data = Information::where('shipment_order_id', $id)->with('user')->first();
         return response()->json($data, 200);
     }
+    public function invoice($id)
+    {
+        // dd($id);
+        $data = ShipmentOrder::where('buyerid', $id)->with('settleamount','information','shipment')->whereHas('information')->get();
+        return response()->json($data, 200);
+    }
     public function SupplierSo($id)
     {
         $data['order'] = Order::where('supplier', $id)->with('shipmentOrders', 'information')->whereNotNull('so_number')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
@@ -64,10 +70,10 @@ class ShipmentController extends Controller
         }
         $data['user_id'] = Auth::id();
         // $data['user_id'] = 1;
-        unset($data['shipment_order'],$data['user']);
+        unset($data['shipment_order'], $data['user']);
         try {
             // Find or create the Information instance based on the shipment_order_id
-            $data['totalpayable'] = Order::where('so_number',$data['shipment_order_id'])->sum('totalvalue') + ($data['extra'] ?? 0);
+            $data['totalpayable'] = Order::where('so_number', $data['shipment_order_id'])->sum('totalvalue') + ($data['extra'] ?? 0);
             Information::updateOrCreate(
                 ['shipment_order_id' => $data['shipment_order_id']],
                 $data

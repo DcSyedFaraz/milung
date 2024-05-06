@@ -366,16 +366,19 @@
                 </li>
                 <!-- End Icons Nav -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#Finance" data-bs-toggle="collapse" href="#"
-                        :class="{ active: this.$route.name === 'Transaction' }">
+                    <a class="nav-link collapsed" data-bs-target="#Finance"  data-bs-toggle="collapse" href="#"
+                        :class="{ active: this.$route.name === 'Transaction' || this.$route.name === 'receivable' }">
                         <i class="bi bi-cash-coin"></i>
                         <span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="Finance" class="nav-content collapse" data-bs-parent="#sidebar-nav"
-                        :class="{ show: this.$route.name === 'Transaction' }">
+                        :class="{ show: this.$route.name === 'Transaction' || this.$route.name === 'receivable' }">
                         <li>
                             <router-link :to="{ name: 'Transaction' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Transaction</span>
+                            </router-link>
+                            <router-link :to="{ name: 'receivable' }" active-class="active">
+                                <i class="bi bi-circle"></i><span>Accounts Receivable</span>
                             </router-link>
                             <router-link :to="{ name: 'payable' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Accounts Payable</span>

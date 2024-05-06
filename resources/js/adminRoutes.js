@@ -27,8 +27,11 @@ import create_so from "./pages/admin/shipment/create_so.vue";
 import information from "./pages/admin/shipment/documents/information.vue";
 import cibd from "./pages/admin/shipment/documents/cibd.vue";
 import ci from "./pages/admin/shipment/documents/ci.vue";
+
 // Accounts
 import payable from "./pages/admin/account/payable.vue";
+import receivable from "./pages/admin/account/receivable.vue";
+
 // Statistics
 import statistics from "./pages/admin/statistics/statistics.vue";
 
@@ -181,6 +184,11 @@ const adminRoutes = [
         path: "accounts/payable",
         name: "payable",
         component: payable,
+    },
+    {
+        path: "accounts/receivable",
+        name: "receivable",
+        component: receivable,
     },
     {
         path: "statistics",
