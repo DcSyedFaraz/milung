@@ -162,6 +162,7 @@ Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
     Route::get('so/{id}', [ShipmentController::class, 'SupplierSo']);
     Route::get('invoice/{id}', [ShipmentController::class, 'invoice']);
     Route::get('buyerFinance', [UserController::class, 'buyerFinance']);
+    Route::post('rcvablesave/{id}', [ShipmentController::class, 'rcvablesave']);
 
     // Statistics
     Route::get('statfilter', [StatController::class, 'statfilter']);

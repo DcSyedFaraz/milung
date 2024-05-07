@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('slip')->nullable();
             $table->string('remarks')->nullable();
+            $table->string('admin_slip')->nullable();
+            $table->string('admin_remarks')->nullable();
             $table->timestamps();
         });
     }

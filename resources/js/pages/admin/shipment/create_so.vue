@@ -32,17 +32,7 @@
                                     </multiselect>
                                 </div>
                             </div>
-                            <div class="d-flex col-11 my-2">
-                                <div class="col-5 my-auto">
-                                    <p for="v-model my-auto">Supplier ID:</p>
-                                </div>
-                                <div class="col-7">
-                                    <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                    <multiselect v-model="selectedsupplierId" :options="suppliers" field="id"
-                                        label="userid" track-by="id">
-                                    </multiselect>
-                                </div>
-                            </div>
+
 
 
                             <div class="d-flex col-11 my-2">
@@ -112,21 +102,17 @@ export default {
     },
     mounted() {
         this.fetchBuyers();
-        this.fetchSuppliers();
     },
     watch: {
         selectedBuyerId(newValue) {
             // console.log(newValue);
             this.so.buyerid = newValue.id;
         },
-        selectedsupplierId(newValue) {
-            // console.log(newValue);
-            this.so.supplierid = newValue.id;
-        },
+       
     },
     methods: {
         fetchSuppliers() {
-            axios.get('/api/supplier/supplierOrder')
+            axios.get('/api/supplierOrder')
                 .then(response => {
                     this.suppliers = response.data;
                     // console.log(this.suppliers);

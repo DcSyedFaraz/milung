@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\PackingList;
+use App\Models\SettleAmount;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
 use App\Models\ShipmentSupplier;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -23,28 +25,82 @@ class ShipmentController extends Controller
     public function invoice($id)
     {
         // dd($id);
-        $data = ShipmentOrder::where('buyerid', $id)->with('settleamount','information','shipment')->whereHas('information')->get();
+        $data = ShipmentOrder::where('buyerid', $id)->with('settleamount', 'information', 'shipment')->whereHas('information')->get();
         return response()->json($data, 200);
     }
     public function SupplierSo($id)
     {
-        $data['order'] = Order::where('supplier', $id)->with('shipmentOrders', 'information')->whereNotNull('so_number')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
-        $distinctSoNumbers = collect(); // Initialize an empty collection
+        $data = Order::where('supplier', $id)->with('shipmentOrders', 'information')->whereNotNull('so_number')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
+        // $distinctSoNumbers = collect(); // Initialize an empty collection
 
-        $data['order']->each(function ($order) use ($distinctSoNumbers) {
-            $order->shipmentOrders->each(function ($shipmentOrder) use ($order, $distinctSoNumbers) {
-                // Check if the so_number already exists in the collection
-                if (!$distinctSoNumbers->contains('so_number', $shipmentOrder->so_number)) {
-                    // If not, add it to the collection
-                    $distinctSoNumbers->push([
-                        'id' => $shipmentOrder->id,
-                        'so_number' => $shipmentOrder->so_number,
-                    ]);
-                }
-            });
-        });
-        $data['so'] = $distinctSoNumbers->toArray();
+        // $data['order']->each(function ($order) use ($distinctSoNumbers) {
+        //     $order->shipmentOrders->each(function ($shipmentOrder) use ($order, $distinctSoNumbers) {
+        //         // Check if the so_number already exists in the collection
+        //         if (!$distinctSoNumbers->contains('so_number', $shipmentOrder->so_number)) {
+        //             // If not, add it to the collection
+        //             $distinctSoNumbers->push([
+        //                 'id' => $shipmentOrder->id,
+        //                 'so_number' => $shipmentOrder->so_number,
+        //             ]);
+        //         }
+        //     });
+        // });
+        // $data['so'] = $distinctSoNumbers->toArray();
         return response()->json($data, 200);
+    }
+    public function rcvablesave(Request $request, $id)
+    {
+        // dd($data);
+        // Validate the data
+        try {
+            $validatedData = $request->validate([
+                'settle_amount' => 'nullable|numeric',
+                'remarks' => 'required|string',
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+        // Get the totalpayable from the information table based on the $id
+        // Fetch information
+        $information = Information::where('shipment_order_id', $id)->firstOrFail();
+        $totalPayable = $information->totalpayable;
+
+        // Fetch buyer ID
+        $buyer = ShipmentOrder::findOrFail($id)->buyerid;
+
+        // Fetch/settle date
+        $settle = SettleAmount::where('shipment_order_id', $id)->first();
+        $date = $settle ? $settle->settle_date : now();
+
+        // Calculate/settle amount
+        $amount = isset($validatedData['settle_amount']) ? $validatedData['settle_amount'] : ($settle ? $settle->settle_amount : null);
+
+        // Calculate outstanding amount
+        $outstandingAmount = $totalPayable - $amount;
+
+        // Handle file upload
+        $slipPath = null;
+        if ($request->hasFile('image')) {
+            $slipFile = $request->file('image');
+            $fileName = time() . $slipFile->getClientOriginalName();
+            $slipPath = $slipFile->storeAs('orders/remittance', $fileName, 'public');
+        }
+
+        // Update or create the record in settle_amounts table
+        $settleAmount = SettleAmount::updateOrCreate(
+            ['information_id' => $information->id, 'shipment_order_id' => $id],
+            [
+                'settle_amount' => $amount,
+                'admin_remarks' => $validatedData['remarks'],
+                'settle_date' => $date,
+                'admin_slip' => $slipPath,
+                'outstanding_amount' => $outstandingAmount,
+                'user_id' => $buyer,
+            ]
+        );
+
+        return response()->json($settleAmount, 200);
     }
     public function create_doc(Request $request)
     {
