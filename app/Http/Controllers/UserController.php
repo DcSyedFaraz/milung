@@ -321,6 +321,7 @@ class UserController extends Controller
         // if ($role != implode(',', $user->getRoleNames()->toArray())) {
         //     $user->syncRoles($role);
         // }
+        
         $user->syncPermissions($data['permissions']);
 
         return response()->json([

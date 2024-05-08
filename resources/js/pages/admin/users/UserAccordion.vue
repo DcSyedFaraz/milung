@@ -328,8 +328,8 @@ export default {
                 .then(response => {
                     if (response.status === 200) {
                         toastr.success('User updated successfully');
-                        this.accordionOpen = {};
-                        this.fetchUsers();
+                        
+                        this.$emit('update:success', true);
                     }
                 })
                 .catch(error => {

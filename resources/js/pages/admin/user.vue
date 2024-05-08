@@ -67,7 +67,8 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <UserAccordion :user="user" :is-open="accordionOpen[user.id]" />
+                                <UserAccordion :user="user" :is-open="accordionOpen[user.id]"
+                                    @update:success="handleUpdateSuccess" />
                                 <!-- <transition name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
@@ -362,101 +363,101 @@ export default {
                 roles: '',
                 permissions: [],
             },
-            admin: {
-                selectAll: false,
-                checkboxes: [
-                    { id: 'issueNewLoginIdPassword', label: 'Issue New Login ID & Password, Reset Password' },
-                    { id: 'setAccessAuthority', label: 'Right to set Access Authority' },
-                    { id: 'userManagement', label: 'User Management (can edit or delete users)' },
-                ],
-            },
-            selectAll: false,
-            items: [
-                { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
-                { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty', value: 'bestPurchase' },
-                { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'salesRevenue' },
-                { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
-            ],
+            // admin: {
+            //     selectAll: false,
+            //     checkboxes: [
+            //         { id: 'issueNewLoginIdPassword', label: 'Issue New Login ID & Password, Reset Password' },
+            //         { id: 'setAccessAuthority', label: 'Right to set Access Authority' },
+            //         { id: 'userManagement', label: 'User Management (can edit or delete users)' },
+            //     ],
+            // },
+            // selectAll: false,
+            // items: [
+            //     { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
+            //     { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty', value: 'bestPurchase' },
+            //     { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'salesRevenue' },
+            //     { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
+            // ],
             staticsitems: [],
             adminitems: [],
             operationitems: [],
             financeitems: [],
             operationsSelectAll: false,
-            operation: {
-                selectAll: false,
-                checkboxes: [
-                    { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
-                    { id: 'editSupplierEntry', label: 'Edit Supplier Entry' },
-                    { id: 'setEditSupplierIDCode', label: 'Set/Edit Supplier ID Code' },
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
-                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
-                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
-                    { id: 'uploadPrintview', label: 'Upload Printview' },
-                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
-                    { id: 'addProductEntry', label: 'Add Product Entry' },
-                    { id: 'editProductEntry', label: 'Edit Product Entry' },
-                    { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
-                    { id: 'createProductGroup', label: 'Create Product Group' },
-                    { id: 'accessNotifyImportExportFunctionForMinorEKPrice', label: 'Access/Notify/Import/Export Function for Minor EK Price' },
-                    { id: 'createPriceInquiry', label: 'Create Price Inquiry' },
-                    { id: 'orderGeneralSinglePage', label: 'Order General & Single Page' },
-                    { id: 'createNewOrder', label: 'Create New Order' },
-                    { id: 'editOrderDetails', label: 'Edit Order Details' },
-                    { id: 'voidOrder', label: 'Void Order' },
-                    { id: 'milungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
-                    { id: 'confirmRejectPrintview', label: 'Printview Confirm/Reject Button' },
-                    { id: 'massCargoPhotoApproval', label: 'Mass Cargo Photo Approval' },
-                    { id: 'createSONumber', label: 'Create SO Number' },
-                    { id: 'shipmentOverview', label: 'Shipment Overview' },
-                    { id: 'editShipmentOverview', label: 'Edit Shipment Overview' },
-                    { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
-                ],
-            },
-            supplier: {
-                selectAll: false,
-                checkboxes: [
-                    { id: 'priceInquiry', label: 'Price Inquiry' },
-                    { id: 'supplierOrderPriceQuote', label: 'Supplier Order Price Quote' },
-                    { id: 'supplierOrderConfirmationNotification', label: 'Supplier Order Confirmation Notification' },
-                    { id: 'supplierOrderGeneralSinglePage', label: 'Supplier Order General & Single Page' },
-                    { id: 'uploadPrintview', label: 'Upload Printview' },
-                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
-                    { id: 'uploadMassCargoPhoto', label: 'Upload Mass Cargo Photo' },
-                    { id: 'shipmentOverview', label: 'Shipment Overview' },
-                    { id: 'createReceiptNote', label: 'Create Receipt Note' },
-                    { id: 'inputPackingList', label: 'Input and Generate Packing List (CSV optional)' },
-                    { id: 'supplierAccountsReceivable', label: 'Supplier Accounts Receivable' },
-                ],
-            },
-            buyer: {
-                selectAll: false,
-                checkboxes: [
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
-                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
-                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
-                    { id: 'editBuyerOrder', label: 'Edit Buyer Order' },
-                    { id: 'confirmRejectPrintview', label: 'Confirm/Reject Printview' },
-                    { id: 'buyerShipmentOverview', label: 'Buyer Shipment Overview' },
-                    { id: 'addATCNumber', label: 'Add ATC Number' },
-                    { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
-                    { id: 'buyerAccountPayable', label: 'Buyer Account Payable' },
-                    { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty' },
-                    { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty' },
-                    { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
-                    { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
-                    { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
-                ],
-            },
-            finance: {
-                selectAll: false,
-                checkboxes: [
-                    { id: 'transactionOverview', label: 'Transaction Overview', value: 'transactionOverview' },
-                    { id: 'accountPayable', label: 'Account Payable', value: 'accountPayable' },
-                    { id: 'accountReceivable', label: 'Account Receivable', value: 'accountReceivable' },
-                ],
-            },
+            // operation: {
+            //     selectAll: false,
+            //     checkboxes: [
+            //         { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
+            //         { id: 'editSupplierEntry', label: 'Edit Supplier Entry' },
+            //         { id: 'setEditSupplierIDCode', label: 'Set/Edit Supplier ID Code' },
+            //         { id: 'transactionOverview', label: 'Transaction Overview' },
+            //         { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
+            //         { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
+            //         { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+            //         { id: 'uploadPrintview', label: 'Upload Printview' },
+            //         { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+            //         { id: 'addProductEntry', label: 'Add Product Entry' },
+            //         { id: 'editProductEntry', label: 'Edit Product Entry' },
+            //         { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
+            //         { id: 'createProductGroup', label: 'Create Product Group' },
+            //         { id: 'accessNotifyImportExportFunctionForMinorEKPrice', label: 'Access/Notify/Import/Export Function for Minor EK Price' },
+            //         { id: 'createPriceInquiry', label: 'Create Price Inquiry' },
+            //         { id: 'orderGeneralSinglePage', label: 'Order General & Single Page' },
+            //         { id: 'createNewOrder', label: 'Create New Order' },
+            //         { id: 'editOrderDetails', label: 'Edit Order Details' },
+            //         { id: 'voidOrder', label: 'Void Order' },
+            //         { id: 'milungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
+            //         { id: 'confirmRejectPrintview', label: 'Printview Confirm/Reject Button' },
+            //         { id: 'massCargoPhotoApproval', label: 'Mass Cargo Photo Approval' },
+            //         { id: 'createSONumber', label: 'Create SO Number' },
+            //         { id: 'shipmentOverview', label: 'Shipment Overview' },
+            //         { id: 'editShipmentOverview', label: 'Edit Shipment Overview' },
+            //         { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
+            //     ],
+            // },
+            // supplier: {
+            //     selectAll: false,
+            //     checkboxes: [
+            //         { id: 'priceInquiry', label: 'Price Inquiry' },
+            //         { id: 'supplierOrderPriceQuote', label: 'Supplier Order Price Quote' },
+            //         { id: 'supplierOrderConfirmationNotification', label: 'Supplier Order Confirmation Notification' },
+            //         { id: 'supplierOrderGeneralSinglePage', label: 'Supplier Order General & Single Page' },
+            //         { id: 'uploadPrintview', label: 'Upload Printview' },
+            //         { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+            //         { id: 'uploadMassCargoPhoto', label: 'Upload Mass Cargo Photo' },
+            //         { id: 'shipmentOverview', label: 'Shipment Overview' },
+            //         { id: 'createReceiptNote', label: 'Create Receipt Note' },
+            //         { id: 'inputPackingList', label: 'Input and Generate Packing List (CSV optional)' },
+            //         { id: 'supplierAccountsReceivable', label: 'Supplier Accounts Receivable' },
+            //     ],
+            // },
+            // buyer: {
+            //     selectAll: false,
+            //     checkboxes: [
+            //         { id: 'transactionOverview', label: 'Transaction Overview' },
+            //         { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
+            //         { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
+            //         { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+            //         { id: 'editBuyerOrder', label: 'Edit Buyer Order' },
+            //         { id: 'confirmRejectPrintview', label: 'Confirm/Reject Printview' },
+            //         { id: 'buyerShipmentOverview', label: 'Buyer Shipment Overview' },
+            //         { id: 'addATCNumber', label: 'Add ATC Number' },
+            //         { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
+            //         { id: 'buyerAccountPayable', label: 'Buyer Account Payable' },
+            //         { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty' },
+            //         { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty' },
+            //         { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
+            //         { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
+            //         { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
+            //     ],
+            // },
+            // finance: {
+            //     selectAll: false,
+            //     checkboxes: [
+            //         { id: 'transactionOverview', label: 'Transaction Overview', value: 'transactionOverview' },
+            //         { id: 'accountPayable', label: 'Account Payable', value: 'accountPayable' },
+            //         { id: 'accountReceivable', label: 'Account Receivable', value: 'accountReceivable' },
+            //     ],
+            // },
             users: [],
             accordionOpen: {},
             currentPage: 1
@@ -488,46 +489,46 @@ export default {
         });
     },
     methods: {
-        handleCheckboxChange(user, value) {
-            const index = user.permissions.indexOf(value);
-            if (index === -1) {
-                // If not found, add to permissions
-                user.permissions.push(value);
-                this.updateuser.permissions = user.permissions;
-            } else {
-                // If found, remove from permissions
-                user.permissions.splice(index, 1);
-                this.updateuser.permissions = user.permissions;
-            }
-            // You can also console.log the updated permissions here to verify the changes
-            console.log('Updated Permissions:', this.updateuser.permissions);
-        },
+        // handleCheckboxChange(user, value) {
+        //     const index = user.permissions.indexOf(value);
+        //     if (index === -1) {
+        //         // If not found, add to permissions
+        //         user.permissions.push(value);
+        //         this.updateuser.permissions = user.permissions;
+        //     } else {
+        //         // If found, remove from permissions
+        //         user.permissions.splice(index, 1);
+        //         this.updateuser.permissions = user.permissions;
+        //     }
+        //     // You can also console.log the updated permissions here to verify the changes
+        //     console.log('Updated Permissions:', this.updateuser.permissions);
+        // },
         isPermissionChecked(value, checkboxModel) {
             return checkboxModel.includes(value);
         },
 
-        populateUpdateUser(user) {
-            this.updateuser.id = user.id;
-            this.updateuser.name = user.name;
-            this.updateuser.email = user.email;
-            this.updateuser.status = user.status;
-            this.updateuser.userid = user.userid;
-            this.updateuser.roles = user.roles;
-            this.updateuser.permissions = user.permissions;
+        // populateUpdateUser(user) {
+        //     this.updateuser.id = user.id;
+        //     this.updateuser.name = user.name;
+        //     this.updateuser.email = user.email;
+        //     this.updateuser.status = user.status;
+        //     this.updateuser.userid = user.userid;
+        //     this.updateuser.roles = user.roles;
+        //     this.updateuser.permissions = user.permissions;
 
-            // Populate the permissions based on the user's current permissions
-            user.permissions.forEach(permission => {
-                if (this.items.some(item => item.value === permission)) {
-                    this.staticsitems.push(permission);
-                } else if (this.admin.checkboxes.some(item => item.id === permission)) {
-                    this.adminitems.push(permission);
-                } else if (this.operation.checkboxes.some(item => item.id === permission)) {
-                    this.operationitems.push(permission);
-                } else if (this.finance.checkboxes.some(item => item.value === permission)) {
-                    this.financeitems.push(permission);
-                }
-            });
-        },
+        //     // Populate the permissions based on the user's current permissions
+        //     user.permissions.forEach(permission => {
+        //         if (this.items.some(item => item.value === permission)) {
+        //             this.staticsitems.push(permission);
+        //         } else if (this.admin.checkboxes.some(item => item.id === permission)) {
+        //             this.adminitems.push(permission);
+        //         } else if (this.operation.checkboxes.some(item => item.id === permission)) {
+        //             this.operationitems.push(permission);
+        //         } else if (this.finance.checkboxes.some(item => item.value === permission)) {
+        //             this.financeitems.push(permission);
+        //         }
+        //     });
+        // },
 
         financeselect() {
             if (this.financeSelectAll) {
@@ -553,40 +554,46 @@ export default {
         changePage(page) {
             this.currentPage = page
         },
-        async updateUser(id, user) {
-            const formData = {
-                staticsitems: this.staticsitems,
-                adminitems: this.adminitems,
-                operationitems: this.operationitems,
-                financeitems: this.financeitems,
-            };
-            const allItems = Object.values(formData).flat();
+        // async updateUser(id, user) {
+        //     const formData = {
+        //         staticsitems: this.staticsitems,
+        //         adminitems: this.adminitems,
+        //         operationitems: this.operationitems,
+        //         financeitems: this.financeitems,
+        //     };
+        //     const allItems = Object.values(formData).flat();
 
-            // Send formData to your API
-            // console.log('Form Data:', formData);
-            try {
-                const response = await axios.put(`/api/updateusers/${id}`, {
-                    updateuser: this.updateuser,
-                    formData: allItems,
-                });
+        //     // Send formData to your API
+        //     // console.log('Form Data:', formData);
+        //     try {
+        //         const response = await axios.put(`/api/updateusers/${id}`, {
+        //             updateuser: this.updateuser,
+        //             formData: allItems,
+        //         });
 
-                if (response.status === 200) {
-                    toastr.success('User updated successfully');
-                    this.accordionOpen = {};
-                    this.fetchUsers();
-                }
-            } catch (error) {
-                if (error.response.status === 422) {
-                    // Validation error, display Toastr messages
-                    const errors = error.response.data.errors;
+        //         if (response.status === 200) {
+        //             toastr.success('User updated successfully');
+        //             this.accordionOpen = {};
+        //             this.fetchUsers();
+        //         }
+        //     } catch (error) {
+        //         if (error.response.status === 422) {
+        //             // Validation error, display Toastr messages
+        //             const errors = error.response.data.errors;
 
-                    errors.forEach(errorMessage => {
-                        toastr.error(errorMessage);
-                    });
-                } else {
-                    toastr.error('An error occurred while updating the user');
-                }
-            }
+        //             errors.forEach(errorMessage => {
+        //                 toastr.error(errorMessage);
+        //             });
+        //         } else {
+        //             toastr.error('An error occurred while updating the user');
+        //         }
+        //     }
+        // },
+        handleUpdateSuccess() {
+            // Close the accordion
+            this.accordionOpen = {};
+            // Refresh the records
+            this.fetchUsers();
         },
         async fetchUsers() {
             try {

@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
              $this->call([
             PermissionTableSeeder::class,
         ]);
-        $this->seedSupplierProfiles();
+        // $this->seedSupplierProfiles();
             // $this->call([OtherSeeder::class]); // Example of calling additional seeders
         } catch (\Exception $e) {
             // Handle errors gracefully

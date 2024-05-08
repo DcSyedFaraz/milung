@@ -4,7 +4,7 @@
         <button @click="logout">Logout</button>
     </div> -->
 
-    <body>
+    <body >
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
             <div class="d-flex align-items-center justify-content-between">
@@ -16,6 +16,7 @@
             <div class="heading-name">
                 <h2>Milung User Dashboard</h2>
                 <p>Welcome Back, Lets get back to Win</p>
+                <!-- <button type="button" @click="remountComponent">click</button> -->
             </div>
 
             <div class="search-bar">
@@ -250,9 +251,10 @@
         <!-- End Header -->
 
         <!-- ======= Sidebar ======= -->
-        <aside id="sidebar" class="sidebar">
+        <aside id="sidebar" class="sidebar" :key="componentKey">
             <div class="logo-img"><img src="../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
+                
                 <li class="nav-item" v-if="is('Admin')">
                     <router-link class="nav-link" :to="{ name: 'admins' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
@@ -431,6 +433,14 @@
 import './admin/index';
 
 export default {
+    data() {
+        return {
+            componentKey: 0
+        }
+    },
+    mounted() {
+        this.remountComponent();
+    },
     methods: {
         isAnyChildRouteActive() {
             const activeRoutes = [
@@ -440,6 +450,10 @@ export default {
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
 
+        },
+        remountComponent() {
+            // Incrementing the key value triggers a re-render
+            this.componentKey++;
         },
         isAnyOrderRouteActive() {
             const activeRoutes = [
