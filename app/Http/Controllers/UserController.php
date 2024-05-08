@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -60,6 +61,10 @@ class UserController extends Controller
 
             $responseData[] = $userData;
         }
+        // $admin = auth()->user();
+        // $permission = Permission::create(['name' => 'edit articles', 'guard_name' => 'web']);
+
+        // $admin->givePermissionTo($permission);
         // dd($responseData);
         return response()->json($responseData, 200);
     }
@@ -278,6 +283,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->updateuser;
+        // dd($data);
         $validator = Validator::make($data, [
             'status' => 'required',
             'name' => 'required',

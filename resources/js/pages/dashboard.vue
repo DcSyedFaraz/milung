@@ -39,7 +39,8 @@
                     <!-- End Search Icon-->
 
                     <li class="nav-item dropdown pe-3">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
+                            data-bs-toggle="dropdown">
                             <img src="./../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
                         </a><!-- End Profile Iamge Icon -->
@@ -252,7 +253,7 @@
         <aside id="sidebar" class="sidebar">
             <div class="logo-img"><img src="../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
-                <li class="nav-item">
+                <li class="nav-item" v-if="is('Admin')">
                     <router-link class="nav-link" :to="{ name: 'admins' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
                         <span>Summary</span>
@@ -283,8 +284,8 @@
                 <!-- End Components Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyDataRouteActive() }" data-bs-target="#forms-nav"
-                        data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyDataRouteActive() }"
+                        data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-database"></i><span>Database</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
@@ -296,14 +297,14 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'Databuyer' }" :class="{ active: this.$route.name === 'buyerEntry' }"
-                                active-class="active">
+                            <router-link :to="{ name: 'Databuyer' }"
+                                :class="{ active: this.$route.name === 'buyerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'product' }" :class="{ active: this.$route.name === 'productEntry' }"
-                                active-class="active">
+                            <router-link :to="{ name: 'product' }"
+                                :class="{ active: this.$route.name === 'productEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
@@ -328,10 +329,12 @@
 
                 <li class="nav-item">
 
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }"
+                        data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-bag"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyOrderRouteActive() }">
+                    <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                        :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'order_list' }"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
@@ -339,8 +342,7 @@
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
                             <router-link class="nav-link" :to="{ name: 'order_price_inquiry' }"
-                                :class="{ active: $route.name === 'order_price_inquiry' }"
-                                active-class="active">
+                                :class="{ active: $route.name === 'order_price_inquiry' }" active-class="active">
                                 <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
                             </router-link>
                         </li>
@@ -350,10 +352,12 @@
                 <!-- Shipment -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }"
+                        data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" :class="{ 'show': isAnyShipmentRouteActive() }">
+                    <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                        :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'shipment_overview' }"
                                 :class="{ active: $route.name === 'information' || $route.name === 'create_so' }"
@@ -366,7 +370,7 @@
                 </li>
                 <!-- End Icons Nav -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#Finance"  data-bs-toggle="collapse" href="#"
+                    <a class="nav-link collapsed" data-bs-target="#Finance" data-bs-toggle="collapse" href="#"
                         :class="{ active: this.$route.name === 'Transaction' || this.$route.name === 'receivable' || this.$route.name === 'payable' }">
                         <i class="bi bi-cash-coin"></i>
                         <span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>

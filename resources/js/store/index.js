@@ -66,5 +66,13 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
+// axios.get('/api/get-permissions', {
+//     headers: {
+//       Authorization: `Bearer ${localStorage.getItem('token')}`
+//     }).then(
+//     response => {
+//         window.Laravel.jsPermissions = response.data;
+//         console.log(response.data);
+//     }
+// );
 export default store; // Export the store instance

@@ -12,8 +12,8 @@
                         </div>
                     </div>
 
-                     <!-- // Loader -->
-                     <div class="card-body rounded-top" v-if="isLoading">
+                    <!-- // Loader -->
+                    <div class="card-body rounded-top" v-if="isLoading">
 
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border text-warning" role="status">
@@ -67,13 +67,13 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
+                                <UserAccordion :user="user" :is-open="accordionOpen[user.id]" />
+                                <!-- <transition name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
                                             <div>
-                                                <!-- <p>Additional information about user {{ user.name }}</p> -->
                                                 <div class="">
-                                                    <form @submit.prevent="updateUser(user.id)">
+                                                    <form @submit.prevent="updateUser(user.id, user)">
                                                         <div class="col-12 px-3" style="background-color: #e2f2f9;">
                                                             <div class="row">
                                                                 <div class="mb-3 col-4">
@@ -83,16 +83,18 @@
                                                                         v-model="updateuser.name">
                                                                 </div>
                                                                 <div class="mb-3 col-4">
-                                                                    <label for="registerEmail" class="form-label">Register
+                                                                    <label for="registerEmail"
+                                                                        class="form-label">Register
                                                                         Email</label>
                                                                     <input type="email" class="form-control"
                                                                         v-model="updateuser.email">
                                                                 </div>
 
                                                                 <div class="mb-3 col-2">
-                                                                    <label for="status" class="form-label">Status</label>
-                                                                    <select class="form-select" v-model="updateuser.status"
-                                                                        required>
+                                                                    <label for="status"
+                                                                        class="form-label">Status</label>
+                                                                    <select class="form-select"
+                                                                        v-model="updateuser.status" required>
                                                                         <option value="active">Active</option>
                                                                         <option value="inactive">Inactive</option>
                                                                     </select>
@@ -107,119 +109,121 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">One Time
+                                                                    <label for="oneTimePassword" class="form-label">One
+                                                                        Time
                                                                         Use
                                                                         Password:</label>
                                                                     <input type="text" class="form-control">
                                                                 </div>
                                                                 <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">User ID
+                                                                    <label for="oneTimePassword" class="form-label">User
+                                                                        ID
                                                                         Contact Person:</label>
                                                                     <input type="tel" class="form-control">
                                                                 </div>
-                                                                <div class="mb-3 col-1" style="display: flex !important;">
+                                                                <div class="mb-3 col-1"
+                                                                    style="display: flex !important;">
                                                                     <button type="submit"
                                                                         class="btn btn-milung  align-self-end">Save</button>
                                                                 </div>
-                                                                <!-- <div class="mb-3 col-1">
-                                                                <button type="button" class="btn btn-primary">Submit</button>
-                                                            </div> -->
+
                                                             </div>
                                                         </div>
-                                                        <!-- {{ user.permissions }} -->
                                                         <div class="col-12 ">
                                                             <div class="row py-5">
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Admin</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="adminSelectAll"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                v-model="admin.selectAll"
                                                                                 @change="adminSelectAllChanged">
                                                                             <label class="form-check-label  "
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
                                                                     </div>
 
-                                                                    <div v-for="(adm, index) in adminCheckboxes"
+                                                                    <div v-for="(adm, index) in admin.checkboxes"
                                                                         :key="index" class="form-check">
-                                                                        <!-- {{ user.permissions.includes(adm.id) }} -->
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(adm.id)"
-                                                                            @change="handleCheckboxChange(user, adm.value)"
-                                                                            :value="adm.value">
+                                                                            @change="handleCheckboxChange(user, adm.id)"
+                                                                            :value="adm.id">
                                                                         <label class="form-check-label">{{ adm.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
 
                                                                 </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Operations </div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="operationsSelectAll"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                v-model="operation.selectAll"
                                                                                 @change="operationselect">
                                                                             <label class="form-check-label fs-6 "
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
                                                                     </div>
-                                                                    <div v-for="(ope, index) in operationsCheckboxes"
+                                                                    <div v-for="(ope, index) in operation.checkboxes"
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            :checked="user.permissions.includes(ope.value)"
-                                                                            @change="handleCheckboxChange(user, ope.value)"
-                                                                            :value="ope.value">
-                                                                        <!-- <input class="form-check-input" type="checkbox"
-                                                                            :checked="user.permissions.includes(ope.value)"
-                                                                            v-model="operationitems" :value="ope.value"> -->
+                                                                            :checked="user.permissions.includes(ope.id)"
+                                                                            @change="handleCheckboxChange(user, ope.id)"
+                                                                            :value="ope.id">
+
                                                                         <label class="form-check-label">{{ ope.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
                                                                 </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Finance</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="financeSelectAll"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                v-model="finance.selectAll"
                                                                                 @change="financeselect">
                                                                             <label class="form-check-label  "
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
                                                                     </div>
-                                                                    <div v-for="(fin, index) in financeCheckboxes"
+                                                                    <div v-for="(fin, index) in finance.checkboxes"
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :checked="user.permissions.includes(fin.value)"
                                                                             @change="handleCheckboxChange(user, fin.value)"
                                                                             :value="fin.value">
-                                                                        <!-- <input class="form-check-input" type="checkbox"
-                                                                            :checked="user.permissions.includes(fin.value)"
-                                                                            v-model="financeitems" :value="fin.value"> -->
+
                                                                         <label class="form-check-label">{{ fin.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
 
                                                                 </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Statics</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="selectAll" @change="selectAllItems"
-                                                                                value="true">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox" v-model="selectAll"
+                                                                                @change="selectAllItems" value="true">
                                                                             <label class="form-check-label  "
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
@@ -231,14 +235,65 @@
                                                                             :checked="user.permissions.includes(item.value)"
                                                                             :value="item.value"
                                                                             @change="handleCheckboxChange(user, item.value)">
-                                                                        <!-- <input class="form-check-input" type="checkbox"
-                                                                            :checked="user.permissions.includes(item.value)"
-                                                                            :value="item.value" v-model="staticsitems"> -->
-                                                                        <label class="form-check-label" :for="item.id">{{
-                                                                            item.label }}</label>
+
+                                                                        <label class="form-check-label"
+                                                                            :for="item.id">{{ item.label }}</label>
                                                                     </div>
 
                                                                 </div>
+                                                                <div class="col-12" v-if="user.roles[0] == 'Buyer'">
+                                                                    <div class="col-12 d-flex  mb-3">
+                                                                        <div class="fs-5 fw-bold col-1"
+                                                                            style="color: #14245c;">
+                                                                            Buyer</div>
+                                                                        <div class="form-check my-auto col-1">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                v-model="buyer.selectAll">
+                                                                            <label class="form-check-label  "
+                                                                                for="productEntry">Select All</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row px-2">
+                                                                        <div v-for="(fin, index) in buyer.checkboxes"
+                                                                            :key="index" class="form-check col-3">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                :checked="user.permissions.includes(fin.id)"
+                                                                                @change="handleCheckboxChange(user, fin.id)"
+                                                                                :value="fin.id">
+                                                                            <label class="form-check-label">{{ fin.label
+                                                                                }}</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12" v-if="user.roles[0] == 'Supplier'">
+                                                                    <div class="col-12 d-flex  mb-3">
+                                                                        <div class="fs-5 fw-bold col-1"
+                                                                            style="color: #14245c;">
+                                                                            Supplier</div>
+                                                                        <div class="form-check my-auto col-6">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                v-model="supplier.selectAll">
+                                                                            <label class="form-check-label  "
+                                                                                for="productEntry">Select All</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row px-2">
+                                                                        <div v-for="(fin, index) in supplier.checkboxes"
+                                                                            :key="index" class="form-check col-3">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                :checked="user.permissions.includes(fin.id)"
+                                                                                @change="handleCheckboxChange(user, fin.id)"
+                                                                                :value="fin.id">
+                                                                            <label class="form-check-label">{{ fin.label
+                                                                                }}</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                         </div>
 
@@ -246,11 +301,10 @@
 
                                                     </form>
                                                 </div>
-                                                <!-- Add more content here -->
                                             </div>
                                         </td>
                                     </tr>
-                                </transition>
+                                </transition> -->
 
                             </tbody>
                         </table>
@@ -282,16 +336,14 @@
 import './index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-
+import UserAccordion from './users/UserAccordion.vue'
 
 
 
 export default {
+    components: { UserAccordion },
     props: {
-        data: {
-            type: Array,
-            required: true
-        },
+
         perPage: {
             type: Number,
             default: 10
@@ -310,11 +362,14 @@ export default {
                 roles: '',
                 permissions: [],
             },
-            adminSelectAll: false,
-            adminCheckboxes: [
-                { id: 'idPassword', label: 'Issue New Login ID & Password to Vim Internal Staff', value: 'idPassword' },
-                { id: 'Authority', label: 'Right to set Access Authority', value: 'Authority' },
-            ],
+            admin: {
+                selectAll: false,
+                checkboxes: [
+                    { id: 'issueNewLoginIdPassword', label: 'Issue New Login ID & Password, Reset Password' },
+                    { id: 'setAccessAuthority', label: 'Right to set Access Authority' },
+                    { id: 'userManagement', label: 'User Management (can edit or delete users)' },
+                ],
+            },
             selectAll: false,
             items: [
                 { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
@@ -327,22 +382,81 @@ export default {
             operationitems: [],
             financeitems: [],
             operationsSelectAll: false,
-            operationsCheckboxes: [
-                { id: 'productEntry', label: 'Product Entry', value: 'productEntry', checked: false },
-                { id: 'createNewAN', label: 'Create New AN', value: 'createNewAN', checked: false },
-                { id: 'createNewOrder', label: 'Create New Order', value: 'createNewOrder', checked: false },
-                { id: 'productGroup', label: 'Product Group', value: 'productGroup', checked: false },
-                { id: 'confirmOrRejectPrintview', label: 'Confirm or Reject Printview', value: 'confirmOrRejectPrintview', checked: false },
-                { id: 'orderGeneralSinglePage', label: 'Order General & Single Page', value: 'orderGeneralSinglePage', checked: false },
-                { id: 'atcNumberInput', label: 'ATC Number Input', value: 'atcNumberInput', checked: false },
-                { id: 'exportShippingDocuments', label: 'Export Shipping Documents', value: 'exportShippingDocuments', checked: false },
-                { id: 'voidOrder', label: 'Void Order', value: 'voidOrder', checked: false },
-            ],
-            financeSelectAll: false,
-            financeCheckboxes: [
-                { id: 'accountPayable', label: 'Account Payable', value: 'accountPayable', checked: false },
-                { id: 'accountReceivable', label: 'Account Receivable', value: 'accountReceivable', checked: false },
-            ],
+            operation: {
+                selectAll: false,
+                checkboxes: [
+                    { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
+                    { id: 'editSupplierEntry', label: 'Edit Supplier Entry' },
+                    { id: 'setEditSupplierIDCode', label: 'Set/Edit Supplier ID Code' },
+                    { id: 'transactionOverview', label: 'Transaction Overview' },
+                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
+                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
+                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+                    { id: 'uploadPrintview', label: 'Upload Printview' },
+                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+                    { id: 'addProductEntry', label: 'Add Product Entry' },
+                    { id: 'editProductEntry', label: 'Edit Product Entry' },
+                    { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
+                    { id: 'createProductGroup', label: 'Create Product Group' },
+                    { id: 'accessNotifyImportExportFunctionForMinorEKPrice', label: 'Access/Notify/Import/Export Function for Minor EK Price' },
+                    { id: 'createPriceInquiry', label: 'Create Price Inquiry' },
+                    { id: 'orderGeneralSinglePage', label: 'Order General & Single Page' },
+                    { id: 'createNewOrder', label: 'Create New Order' },
+                    { id: 'editOrderDetails', label: 'Edit Order Details' },
+                    { id: 'voidOrder', label: 'Void Order' },
+                    { id: 'milungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
+                    { id: 'confirmRejectPrintview', label: 'Printview Confirm/Reject Button' },
+                    { id: 'massCargoPhotoApproval', label: 'Mass Cargo Photo Approval' },
+                    { id: 'createSONumber', label: 'Create SO Number' },
+                    { id: 'shipmentOverview', label: 'Shipment Overview' },
+                    { id: 'editShipmentOverview', label: 'Edit Shipment Overview' },
+                    { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
+                ],
+            },
+            supplier: {
+                selectAll: false,
+                checkboxes: [
+                    { id: 'priceInquiry', label: 'Price Inquiry' },
+                    { id: 'supplierOrderPriceQuote', label: 'Supplier Order Price Quote' },
+                    { id: 'supplierOrderConfirmationNotification', label: 'Supplier Order Confirmation Notification' },
+                    { id: 'supplierOrderGeneralSinglePage', label: 'Supplier Order General & Single Page' },
+                    { id: 'uploadPrintview', label: 'Upload Printview' },
+                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+                    { id: 'uploadMassCargoPhoto', label: 'Upload Mass Cargo Photo' },
+                    { id: 'shipmentOverview', label: 'Shipment Overview' },
+                    { id: 'createReceiptNote', label: 'Create Receipt Note' },
+                    { id: 'inputPackingList', label: 'Input and Generate Packing List (CSV optional)' },
+                    { id: 'supplierAccountsReceivable', label: 'Supplier Accounts Receivable' },
+                ],
+            },
+            buyer: {
+                selectAll: false,
+                checkboxes: [
+                    { id: 'transactionOverview', label: 'Transaction Overview' },
+                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
+                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
+                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+                    { id: 'editBuyerOrder', label: 'Edit Buyer Order' },
+                    { id: 'confirmRejectPrintview', label: 'Confirm/Reject Printview' },
+                    { id: 'buyerShipmentOverview', label: 'Buyer Shipment Overview' },
+                    { id: 'addATCNumber', label: 'Add ATC Number' },
+                    { id: 'exportShippingDocuments', label: 'Export Shipping Documents' },
+                    { id: 'buyerAccountPayable', label: 'Buyer Account Payable' },
+                    { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty' },
+                    { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty' },
+                    { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
+                    { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
+                    { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
+                ],
+            },
+            finance: {
+                selectAll: false,
+                checkboxes: [
+                    { id: 'transactionOverview', label: 'Transaction Overview', value: 'transactionOverview' },
+                    { id: 'accountPayable', label: 'Account Payable', value: 'accountPayable' },
+                    { id: 'accountReceivable', label: 'Account Receivable', value: 'accountReceivable' },
+                ],
+            },
             users: [],
             accordionOpen: {},
             currentPage: 1
@@ -379,12 +493,14 @@ export default {
             if (index === -1) {
                 // If not found, add to permissions
                 user.permissions.push(value);
+                this.updateuser.permissions = user.permissions;
             } else {
                 // If found, remove from permissions
                 user.permissions.splice(index, 1);
+                this.updateuser.permissions = user.permissions;
             }
             // You can also console.log the updated permissions here to verify the changes
-            console.log('Updated Permissions:', user.permissions);
+            console.log('Updated Permissions:', this.updateuser.permissions);
         },
         isPermissionChecked(value, checkboxModel) {
             return checkboxModel.includes(value);
@@ -398,14 +514,21 @@ export default {
             this.updateuser.userid = user.userid;
             this.updateuser.roles = user.roles;
             this.updateuser.permissions = user.permissions;
+
+            // Populate the permissions based on the user's current permissions
+            user.permissions.forEach(permission => {
+                if (this.items.some(item => item.value === permission)) {
+                    this.staticsitems.push(permission);
+                } else if (this.admin.checkboxes.some(item => item.id === permission)) {
+                    this.adminitems.push(permission);
+                } else if (this.operation.checkboxes.some(item => item.id === permission)) {
+                    this.operationitems.push(permission);
+                } else if (this.finance.checkboxes.some(item => item.value === permission)) {
+                    this.financeitems.push(permission);
+                }
+            });
         },
-        adminSelectAllChanged() {
-            if (this.adminSelectAll) {
-                this.adminitems = this.adminCheckboxes.map(item => item.value);
-            } else {
-                this.adminitems = [];
-            }
-        },
+
         financeselect() {
             if (this.financeSelectAll) {
                 this.financeitems = this.financeCheckboxes.map(item => item.value);
@@ -413,13 +536,7 @@ export default {
                 this.financeitems = [];
             }
         },
-        operationselect() {
-            if (this.operationsSelectAll) {
-                this.operationitems = this.operationsCheckboxes.map(item => item.value);
-            } else {
-                this.operationitems = [];
-            }
-        },
+
         selectAllItems() {
             if (this.selectAll) {
                 this.staticsitems = this.items.map(item => item.value);
@@ -436,7 +553,7 @@ export default {
         changePage(page) {
             this.currentPage = page
         },
-        async updateUser(id) {
+        async updateUser(id, user) {
             const formData = {
                 staticsitems: this.staticsitems,
                 adminitems: this.adminitems,
@@ -562,4 +679,5 @@ th {
 .rounded-bottom-new {
     border-bottom-left-radius: 2.25rem !important;
     border-bottom-right-radius: 2.25rem !important;
-}</style>
+}
+</style>

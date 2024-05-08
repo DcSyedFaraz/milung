@@ -15,6 +15,9 @@ import 'primevue/resources/themes/aura-light-green/theme.css'
 
 
 
+import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
+
+
 
 const Myapp = createApp(app)
 Myapp.use(VueApexCharts);
@@ -24,5 +27,7 @@ Myapp.use(store)
 Myapp.use(PrimeVue)
 Myapp.component('VueDatePicker', VueDatePicker)
 Myapp.use(VueGoodTablePlugin)
-// DataTable.use(DataTablesCore);
+Myapp.use(LaravelPermissionToVueJS)
 Myapp.mount('#app');
+
+

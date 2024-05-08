@@ -64,7 +64,7 @@
 
                     <!-- // Loader -->
                     <div class="card-body rounded-top" v-if="isLoading">
-                        
+
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border text-warning" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -157,10 +157,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 export default {
     name: "Transaction",
     props: {
-        data: {
-            type: Array,
-            required: true
-        },
+
         perPage: {
             type: Number,
             default: 10

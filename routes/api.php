@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,8 +32,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
-Route::group(['middleware' => []], function () {
-
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/get-permissions', function () {
+        return auth()->check()?auth()->user()->jsPermissions():0;
+    });
 
 });
 
@@ -63,7 +66,7 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     Route::post('printview/{id}', [BuyerOrderController::class, 'printview']);
 
     // Shipments
-    Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create','store']);
+    Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create', 'store']);
     Route::post('shipments/{id}', [BuyerShipmentController::class, 'update']);
 
     // Finance

@@ -273,10 +273,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
     props: {
-        data: {
-            type: Array,
-            required: true
-        },
+
         perPage: {
             type: Number,
             default: 10
