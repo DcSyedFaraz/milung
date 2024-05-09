@@ -109,16 +109,16 @@ export default {
                 this.email = "";
                 this.password = "";
 
-                axios.get('/api/get-permissions', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(response => {
-                    window.Laravel.jsPermissions = response.data;
-                    console.log(response.data);
-                }).catch(error => {
-                    console.error('Error fetching permissions:', error);
-                });
+                // axios.get('/api/get-permissions', {
+                //     headers: {
+                //         Authorization: `Bearer ${localStorage.getItem('token')}`
+                //     }
+                // }).then(response => {
+                //     window.Laravel.jsPermissions = response.data;
+                //     console.log(response.data);
+                // }).catch(error => {
+                //     console.error('Error fetching permissions:', error);
+                // });
 
                 this.redirectBasedOnRole(role);
 

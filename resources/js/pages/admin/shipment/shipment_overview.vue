@@ -25,7 +25,7 @@
                                         </div>
                                     </div> -->
                                     <div class="col-4 mx-2 align-items-end">
-                                        <router-link :to="{ name: 'create_so' }"
+                                        <router-link :to="{ name: 'create_so' }" v-if="can('createSONumber')"
                                             class="btn btn-warning fw-bold text-dark">Create SO#
                                         </router-link>
                                     </div>
@@ -88,7 +88,7 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" :to="{ name: 'information', params: { id: ship.id, so_number: ship.so_number }  }"
+                                        <router-link class="btn btn-light text-black" v-if="can('exportShippingDocuments')" :to="{ name: 'information', params: { id: ship.id, so_number: ship.so_number }  }"
                                             >
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
@@ -136,16 +136,16 @@
 
                                     <td>
                                         <button @click="toggleAccordion(ship)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[ship.id] }">
+                                            :class="{ 'rotate-icon': accordionOpen[ship.id] }" v-if="can('editShipmentOverview')">
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <a href="#" @click="deleteship(ship.id)" class="text-danger"><i
+                                        <a href="#" @click="deleteship(ship.id)" class="text-danger" v-if="can('editShipmentOverview')"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
+                                <transition name="fade" v-if="can('editShipmentOverview')">
                                     <tr v-show="accordionOpen[ship.id]">
                                         <td :colspan="7">
                                             <!-- <tr>hi</tr> -->

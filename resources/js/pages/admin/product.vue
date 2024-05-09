@@ -15,7 +15,7 @@
                                         ref="search" placeholder="Write here..." />
                                 </div>
                                 <div class="col-6 mx-2">
-                                    <router-link :to="{ name: 'productEntry' }"
+                                    <router-link :to="{ name: 'productEntry' }" v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
                                         class="btn btn-warning fw-bold text-dark">Add New
                                         Product</router-link>
                                 </div>

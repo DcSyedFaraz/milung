@@ -2,7 +2,7 @@ import DefaultAdmin from "./pages/admin/default.vue";
 
 import User from "./pages/admin/user.vue";
 import EditUser from "./pages/admin/user-edit.vue";
-import AddUser from "./pages/admin/add-user.vue";
+import AddUser from "./pages/admin/users/add-user.vue";
 import Datasupplier from "./pages/admin/supplier.vue";
 import Databuyer from "./pages/admin/buyer.vue";
 import buyerEntry from "./pages/admin/buyer-entry.vue";

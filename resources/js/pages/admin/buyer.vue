@@ -10,7 +10,7 @@
                                     class="">Overview on all Buyers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                            <router-link :to="{ name: 'buyerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
+                            <router-link :to="{ name: 'buyerEntry' }" v-if="can('addNewBuyerEntry')" class="btn btn-warning fw-bold text-dark">Add New
                                 Buyer</router-link>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                                     </td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
+                                        <button @click="toggleAccordion(user)" class="btn btn-light" v-if="can('editBuyerEntry')"
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button>
@@ -68,7 +68,7 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
+                                <transition name="fade" v-if="can('editBuyerEntry')">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
                                             <div>

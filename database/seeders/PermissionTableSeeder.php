@@ -20,6 +20,8 @@ class PermissionTableSeeder extends Seeder
     {
         $permissions = [
             "addNewSupplierEntry",
+            "addNewBuyerEntry",
+            "editBuyerEntry",
             "editSupplierEntry",
             "setEditSupplierIDCode",
             "transactionOverview",
@@ -75,6 +77,7 @@ class PermissionTableSeeder extends Seeder
 
         $roles = [
             'Admin',
+            'Internal',
             'Buyer',
             'Supplier',
         ];
@@ -94,6 +97,7 @@ class PermissionTableSeeder extends Seeder
 
         $userd = User::create($user);
         $userd->assignRole('Admin');
+        $userd->syncPermissions($permissions);
 
         $buy = [
             'userid' => 'Buyer01',
@@ -105,6 +109,8 @@ class PermissionTableSeeder extends Seeder
 
         $buyr = User::create($buy);
         $buyr->assignRole('Buyer');
+        $buyr->syncPermissions($permissions);
+
         $supp = [
             'userid' => 'Supplier01',
             'name' => 'supplier',
@@ -115,6 +121,8 @@ class PermissionTableSeeder extends Seeder
 
         $suppl = User::create($supp);
         $suppl->assignRole('Supplier');
+        $suppl->syncPermissions($permissions);
+
 
 
         // permission assig

@@ -212,21 +212,36 @@ class UserController extends Controller
     }
     public function addUser(Request $request)
     {
-        // dd($request);
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'userid' => 'required|unique:users,userid',
+            'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'status' => 'required|string|in:active,inactive',
-            'roles' => 'required|string|in:Admin,Buyer,Supplier',
+            'roles' => 'required|string|in:Admin,Buyer,Supplier,Internal',
             'password' => 'required|string|min:8',
+            'permissions' => 'nullable|array',
+            'contact_person' => 'nullable|string',
         ]);
+        // dd($request->all());
+        try {
+            $user = new User($validatedData);
+            $user->password = Hash::make($request->password);
+            $user->save();
+            $user->assignRole($validatedData['roles']);
 
-        $user = new User($validatedData);
-        $user->password = Hash::make($request->password);
-        $user->save();
-        $user->assignRole($validatedData['roles']);
-        return response()->json(['message' => 'Successfully created user!'], 201);
+            if ($validatedData['roles'] == 'Admin') {
+                $permissions = Permission::all();
+            } else {
+                $permissions = $request->permissions;
+            }
+
+            $user->syncPermissions($permissions);
+
+            return response()->json(['message' => 'Successfully created user!', 'data' => $permissions], 201);
+        } catch (\Exception $e) {
+            // Return error response if an exception occurs
+            return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -288,8 +303,9 @@ class UserController extends Controller
             'status' => 'required',
             'name' => 'required',
             'email' => 'required|email',
-            // 'buyer_id' => 'required',
-            // 'roles' => ['required', Rule::in(['Admin', 'Buyer', 'Supplier'])],
+            'password' => 'required|string|min:8',
+            'permissions' => 'nullable|array',
+            'contact_person' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -300,34 +316,38 @@ class UserController extends Controller
         }
 
 
-        // dd($data['permissions'], $id);
+        try {
 
-        $user = User::find($id);
+            $user = User::find($id);
 
-        if (!$user) {
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            $user->update($data);
+
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+                $user->save();
+            }
+            // $role = $data['roles'];
+
+            // if ($role != implode(',', $user->getRoleNames()->toArray())) {
+            //     $user->syncRoles($role);
+            // }
+
+            $user->syncPermissions($data['permissions']);
+
             return response()->json([
-                'message' => 'User not found',
-            ], 404);
+                'message' => 'User updated successfully',
+                'user' => $user,
+            ], 200);
+        } catch (\Exception $e) {
+            // Return error response if an exception occurs
+            return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
         }
-
-        $user->update([
-            'status' => $data['status'],
-            'name' => $data['name'],
-            'email' => $data['email'],
-        ]);
-
-        // $role = $data['roles'];
-
-        // if ($role != implode(',', $user->getRoleNames()->toArray())) {
-        //     $user->syncRoles($role);
-        // }
-        
-        $user->syncPermissions($data['permissions']);
-
-        return response()->json([
-            'message' => 'User updated successfully',
-            'user' => $user,
-        ], 200);
     }
 
     /**

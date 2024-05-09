@@ -4,7 +4,7 @@
         <button @click="logout">Logout</button>
     </div> -->
 
-    <body >
+    <body>
         <!-- ======= Header ======= -->
         <header id="header" class="header fixed-top d-flex align-items-center">
             <div class="d-flex align-items-center justify-content-between">
@@ -254,7 +254,7 @@
         <aside id="sidebar" class="sidebar" :key="componentKey">
             <div class="logo-img"><img src="../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
-                
+
                 <li class="nav-item" v-if="is('Admin')">
                     <router-link class="nav-link" :to="{ name: 'admins' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
@@ -264,7 +264,7 @@
                 <!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }"
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }" v-if="can('issueNewLoginIdPassword | setAccessAuthority | userManagement')"
                         data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-person-gear"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -293,25 +293,25 @@
                     <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyDataRouteActive() }">
                         <li>
-                            <router-link :to="{ name: 'Datasupplier' }"
+                            <router-link :to="{ name: 'Datasupplier' }" v-if="can('addNewSupplierEntry | editSupplierEntry | setEditSupplierIDCode')"
                                 :class="{ active: this.$route.name === 'supplerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Supplier</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'Databuyer' }"
+                            <router-link :to="{ name: 'Databuyer' }" v-if="can('editBuyerEntry | addNewBuyerEntry')"
                                 :class="{ active: this.$route.name === 'buyerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'product' }"
+                            <router-link :to="{ name: 'product' }" v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
                                 :class="{ active: this.$route.name === 'productEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'product_group' }"
+                            <router-link :to="{ name: 'product_group' }" v-if="can('createProductGroup')"
                                 :class="{ active: this.$route.name === 'product_group_entry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product Group</span>
                             </router-link>
@@ -322,7 +322,7 @@
                 <!-- End Forms Nav -->
 
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'price_inquiry' }"
+                    <router-link class="nav-link" :to="{ name: 'price_inquiry' }" v-if="can('createPriceInquiry')"
                         :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
                     </router-link>
@@ -338,12 +338,12 @@
                     <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'order_list' }"
+                            <router-link class="nav-link" :to="{ name: 'order_list' }" v-if="can('orderGeneralSinglePage')"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
-                            <router-link class="nav-link" :to="{ name: 'order_price_inquiry' }"
+                            <router-link class="nav-link" :to="{ name: 'order_price_inquiry' }" v-if="can('miLungOrderPriceEnquiry')"
                                 :class="{ active: $route.name === 'order_price_inquiry' }" active-class="active">
                                 <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
                             </router-link>
@@ -353,7 +353,7 @@
                 </li>
                 <!-- Shipment -->
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('shipmentOverview')">
                     <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }"
                         data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -380,13 +380,13 @@
                     <ul id="Finance" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ show: this.$route.name === 'Transaction' || this.$route.name === 'receivable' || this.$route.name === 'payable' }">
                         <li>
-                            <router-link :to="{ name: 'Transaction' }" active-class="active">
+                            <router-link :to="{ name: 'Transaction' }" active-class="active" v-if="can('transactionOverview')">
                                 <i class="bi bi-circle"></i><span>Transaction</span>
                             </router-link>
-                            <router-link :to="{ name: 'receivable' }" active-class="active">
+                            <router-link :to="{ name: 'receivable' }" active-class="active" v-if="can('accountReceivable')">
                                 <i class="bi bi-circle"></i><span>Accounts Receivable</span>
                             </router-link>
-                            <router-link :to="{ name: 'payable' }" active-class="active">
+                            <router-link :to="{ name: 'payable' }" active-class="active" v-if="can('accountPayable')">
                                 <i class="bi bi-circle"></i><span>Accounts Payable</span>
                             </router-link>
                         </li>
@@ -395,7 +395,7 @@
                 </li>
                 <!-- End Profile Page Nav -->
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('orderGeneralSinglePage')">
                     <router-link :to="{ name: 'statistics' }" active-class="active" class="nav-link collapsed">
                         <i class="bi bi-bar-chart-line"></i><span>Statistics</span>
                     </router-link>
@@ -452,8 +452,22 @@ export default {
 
         },
         remountComponent() {
-            // Incrementing the key value triggers a re-render
-            this.componentKey++;
+            axios.get('/api/get-permissions', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                window.Laravel.jsPermissions = response.data;
+                console.log(response.data);
+            }).catch(error => {
+                console.error('Error fetching permissions:', error);
+            });
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    // console.log('load');
+                    this.componentKey++;
+                });
+            }, 2000);
         },
         isAnyOrderRouteActive() {
             const activeRoutes = [

@@ -402,8 +402,8 @@
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders[0].so_number" class="form-control "> -->
                                 <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
-                                track-by="id">
-                            </multiselect>
+                                    track-by="id">
+                                </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -445,6 +445,9 @@
                 </div>
             </div>
         </form>
+        <div class="container" v-show="showPrintView" v-if="can('printviewConfirmRejectButton')">
+            <printview :id="orders[0].id" :image="orders[0].files" />
+        </div>
         <progress-modal :show="showProgress"></progress-modal>
     </section>
 </template>
@@ -457,13 +460,15 @@ import './../index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import FileInputWithName from './FileInputWithName.vue';
+import printview from "./printview.vue";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
     components: {
         FileInputWithName,
-        ProgressModal
+        ProgressModal,
+        printview
     },
     props: {
         isEditing: {
@@ -473,6 +478,7 @@ export default {
     },
     data() {
         return {
+            showPrintView: false,
             suppliers: [],
             so: [],
             selectedSupplierId: [],
@@ -792,7 +798,10 @@ export default {
         if (this.isEditing) {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);
-            // console.log(this.orders[0]);
+
+            setTimeout(() => {
+                this.showPrintView = true;
+            }, 1000);
 
         }
         NProgress.configure({ showSpinner: false });

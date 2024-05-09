@@ -32,11 +32,11 @@
                             <div class="row">
                                 <div class="mb-3 col-5">
                                     <label for="oneTimePassword" class="form-label">One Time Password:</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="user.password">
                                 </div>
                                 <div class="mb-3 col-5">
                                     <label for="oneTimePassword" class="form-label">User ID Contact Person:</label>
-                                    <input type="tel" class="form-control">
+                                    <input type="text" class="form-control" v-model="user.contact_person">
                                 </div>
                                 <div class="mb-3 col-1" style="display: flex !important;">
                                     <button type="submit" class="btn btn-milung  align-self-end">Save</button>
@@ -183,11 +183,9 @@ export default {
     props: {
         user: {
             type: Object,
-            required: true
         },
         isOpen: {
             type: Boolean,
-            required: true
         }
     },
     data() {
@@ -207,12 +205,8 @@ export default {
                     { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
                     { id: 'editSupplierEntry', label: 'Edit Supplier Entry' },
                     { id: 'setEditSupplierIDCode', label: 'Set/Edit Supplier ID Code' },
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
-                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
-                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
-                    { id: 'uploadPrintview', label: 'Upload Printview' },
-                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+                    { id: 'addNewBuyerEntry', label: 'Add New Buyer Entry' },
+                    { id: 'editBuyerEntry', label: 'Edit Buyer Entry' },
                     { id: 'addProductEntry', label: 'Add Product Entry' },
                     { id: 'editProductEntry', label: 'Edit Product Entry' },
                     { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
@@ -223,8 +217,8 @@ export default {
                     { id: 'createNewOrder', label: 'Create New Order' },
                     { id: 'editOrderDetails', label: 'Edit Order Details' },
                     { id: 'voidOrder', label: 'Void Order' },
-                    { id: 'milungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
-                    { id: 'confirmRejectPrintview', label: 'Printview Confirm/Reject Button' },
+                    { id: 'miLungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
+                    { id: 'printviewConfirmRejectButton', label: 'Printview Confirm or Reject Button' },
                     { id: 'massCargoPhotoApproval', label: 'Mass Cargo Photo Approval' },
                     { id: 'createSONumber', label: 'Create SO Number' },
                     { id: 'shipmentOverview', label: 'Shipment Overview' },
@@ -251,10 +245,10 @@ export default {
             buyer: {
                 selectAll: false,
                 checkboxes: [
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
+                    { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
                     { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
                     { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+                    { id: 'createNewBuyerOrder', label: 'Create New Buyer Order' },
                     { id: 'editBuyerOrder', label: 'Edit Buyer Order' },
                     { id: 'confirmRejectPrintview', label: 'Confirm/Reject Printview' },
                     { id: 'buyerShipmentOverview', label: 'Buyer Shipment Overview' },
@@ -266,7 +260,7 @@ export default {
                     { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
                     { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
                     { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
-                ],
+                ]
             },
             finance: {
                 selectAll: false,
@@ -328,7 +322,7 @@ export default {
                 .then(response => {
                     if (response.status === 200) {
                         toastr.success('User updated successfully');
-                        
+
                         this.$emit('update:success', true);
                     }
                 })

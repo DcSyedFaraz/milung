@@ -10,7 +10,7 @@
                                     class="">Overview on all Suppliers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                            <router-link :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
+                            <router-link v-if="can('editSupplierEntry | setEditSupplierIDCode')" :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
                                 Supplier</router-link>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                                     </td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
+                                        <button v-if="can('editSupplierEntry')" @click="toggleAccordion(user)" class="btn btn-light"
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button>
@@ -71,7 +71,7 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade">
+                                <transition v-if="can('editSupplierEntry | setEditSupplierIDCode')" name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
                                             <div>

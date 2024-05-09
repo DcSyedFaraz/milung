@@ -25,7 +25,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4 mx-2">
-                                        <router-link :to="{ name: 'order_entry' }"
+                                        <router-link :to="{ name: 'order_entry' }" v-if="can('orderGeneralSinglePage | createNewOrder')"
                                             class="btn btn-warning fw-bold text-dark">Create New
                                         </router-link>
                                     </div>
@@ -91,7 +91,7 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }"
+                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" v-if="can('editOrderDetails | voidOrder')"
                                             class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
