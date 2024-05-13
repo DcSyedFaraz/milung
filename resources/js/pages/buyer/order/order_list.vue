@@ -126,6 +126,7 @@
                                         </div>
                                         <div class="col-4">
                                             <router-link :to="{ name: 'buyer_order_create' }"
+                                                v-if="can('createNewBuyerOrder')"
                                                 class="btn btn-warning fw-bold text-dark">Create New
                                             </router-link>
                                         </div>
@@ -158,7 +159,7 @@
                                         <router-link :to="{
                         name: 'buyer_order_entry',
                         params: { id: data.id },
-                    }" class="text-success mx-2">
+                    }" class="text-success mx-2" v-if="can('editBuyerOrder')">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 

@@ -10,11 +10,20 @@ import adminRoutes from "./adminRoutes";
 import buyerRoutes from "./buyerRoutes";
 import supplierRoutes from "./supplierRoutes";
 
+// Notifications
+import allnotifications from "./pages/notifications/allnotifications.vue";
+
+
 const routes = [
     {
         path: "/",
         name: "login",
         component: login,
+    },
+    {
+        path: "/allnotifications",
+        name: "allnotifications",
+        component: allnotifications,
     },
     {
         path: "/admin",

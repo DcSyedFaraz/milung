@@ -12,6 +12,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 // PrimeVue
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/aura-light-green/theme.css'
+import Notifications from './pages/notifications.vue';
 
 
 
@@ -28,6 +29,7 @@ Myapp.use(PrimeVue)
 Myapp.component('VueDatePicker', VueDatePicker)
 Myapp.use(VueGoodTablePlugin)
 Myapp.use(LaravelPermissionToVueJS)
+Myapp.component('notifications', Notifications);
 Myapp.mount('#app');
 
 

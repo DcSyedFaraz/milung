@@ -73,7 +73,7 @@
         </div>
         <!-- Buyer shipment End -->
         <!-- Buyer shipment -->
-        <div class="row px-2 pb-5">
+        <div class="row px-2 pb-5" v-if="can('addATCNumber')">
             <h3 class="text-milung text-uppercase fw-bold">Buyer Shipment Information</h3>
             <div class="col-6">
                 <div class="d-flex col-12 my-2">
@@ -144,7 +144,7 @@
                         <input type="date" v-model="buyer.delivery" class="form-control ">
                     </div>
                 </div>
-                <div class="d-flex col-12 my-2">
+                <div class="d-flex col-12 my-2" >
                     <div class="col-4 my-auto">
                         <p for="v-model" class="my-auto ">ATC Number:</p>
                     </div>
@@ -152,7 +152,7 @@
                         <input type="text" v-model="buyer.atc_no" class="form-control ">
                     </div>
                 </div>
-                <div class="d-flex col-12 my-2 justify-content-end mt-5">
+                <div class="d-flex col-12 my-2 justify-content-end mt-5" v-if="can('addATCNumber')">
 
                     <button class="btn btn-success px-4" @click="save">Save</button>
                 </div>

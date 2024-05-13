@@ -315,7 +315,7 @@ export default {
         },
         fetchProductGroups() {
             NProgress.start();
-            axios.get('/api/product_group_get') // Replace '/api/product-groups' with your API endpoint
+            axios.get('/api/buyer/product_group_get') // Replace '/api/product-groups' with your API endpoint
                 .then(response => {
                     this.groups = response.data;
                     console.log(response);
@@ -464,15 +464,17 @@ export default {
                 for (let i = 0; i < this.inquiry.materials?.length; i++) {
                     formData.append(`pcs[${i}]`, this.inquiry.materials[i].quantity);
                 }
+                // console.log('bf',this.inquiry.capacity);
 
-                this.inquiry.capacity.forEach((caps, index) => {
+                this.capacity.forEach((caps, index) => {
+
                     const capacityString = `${caps.quantity}${caps.unit}`;
+                    // console.log('af', caps.quantity,caps.unit,capacityString);
                     formData.append(`capacity[${index}]`, capacityString);
                 });
                 console.log(this.inquiry, formData);
                 const url = this.mode === 'edit' ? `/api/buyer/price_inquiry/${this.inquiry.id}` : '/api/buyer/price_inquiry';
                 const method = this.mode === 'edit' ? 'post' : 'post';
-                // const method = this.mode === 'edit' ? 'PUT' : 'POST';
                 const response = await axios[method](url, formData);
 
                 if (response.status === 201 || response.status === 200) {

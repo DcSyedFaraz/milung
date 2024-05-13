@@ -511,7 +511,7 @@
             </div>
         </form>
         <progress-modal :show="showProgress"></progress-modal>
-        <div class="container" v-if="isEditing">
+        <div class="container" v-show="isEditing" v-if="can('uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')">
             <printview :id="orders[0].id" :image="orders[0].files" />
         </div>
     </section>
@@ -663,8 +663,8 @@ export default {
             }
             let method = "post";
             let url = this.isEditing
-                ? `/api/orderentry/${this.orders[0].id}`
-                : "/api/orderentry";
+                ? `/api/supplier/orderentry/${this.orders[0].id}`
+                : "/api/supplier/orderentry";
 
             this.handleApiCall(method, url, this.orders[0])
                 .then((response) => {

@@ -34,7 +34,7 @@
                     </li>
                     <!-- End Search Icon-->
 
-                    <li class="nav-item dropdown pe-3">
+                    <li class="nav-item dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                             data-bs-toggle="dropdown">
                             <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
@@ -42,7 +42,7 @@
                         </a><!-- End Profile Iamge Icon -->
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
-                            style="background-color: beige;">
+                           >
                             <li class="dropdown-header">
                                 <h6>Kevin Anderson</h6>
                                 <span>Web Designer</span>
@@ -82,7 +82,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" @click="logout">
+                                <a class="dropdown-item d-flex align-items-center" href="#" >
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </a>
@@ -90,153 +90,12 @@
                         </ul>
                         <!-- End Profile Dropdown Items -->
                     </li>
+                    <notifications />
                     <!-- End Profile Nav -->
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-bell"></i>
-                            <span class="badge badge-number">4</span> </a><!-- End Notification Icon -->
-
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
-                            style="background-color: beige;">
-                            <li class="dropdown-header">
-                                You have 4 new notifications
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-exclamation-circle text-warning"></i>
-                                <div>
-                                    <h4>Lorem Ipsum</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>30 min. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-x-circle text-danger"></i>
-                                <div>
-                                    <h4>Atque rerum nesciunt</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>1 hr. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-check-circle text-success"></i>
-                                <div>
-                                    <h4>Sit rerum fuga</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>2 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-info-circle text-primary"></i>
-                                <div>
-                                    <h4>Dicta reprehenderit</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>4 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li class="dropdown-footer">
-                                <a href="#">Show all notifications</a>
-                            </li>
-                        </ul>
-                        <!-- End Notification Dropdown Items -->
-                    </li>
-                    <!-- End Notification Nav -->
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-chat-left-text"></i>
-                            <span class="badge badge-number">3</span> </a><!-- End Messages Icon -->
-
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
-                            style="background-color: beige;">
-                            <li class="dropdown-header">
-                                You have 3 new messages
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-1.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Maria Hudson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>4 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-2.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Anna Nelson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>6 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-3.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>David Muldon</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>8 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="dropdown-footer">
-                                <a href="#">Show all messages</a>
-                            </li>
-                        </ul>
-                        <!-- End Messages Dropdown Items -->
+                    <li class="nav-item">
+                        <a class="nav-link nav-icon" href="#"  @click="logout">
+                            <i class="bi bi-door-open text-warning"></i>
+                        </a>
                     </li>
                     <!-- End Messages Nav -->
                 </ul>
@@ -246,7 +105,7 @@
         <!-- End Header -->
 
         <!-- ======= Sidebar ======= -->
-        <aside id="sidebar" class="sidebar">
+        <aside id="sidebar" class="sidebar" :key="componentKey">
             <div class="logo-img"><img src="../../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
@@ -259,7 +118,7 @@
 
                 <!-- End Components Nav -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-database"></i><span>Database</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -285,9 +144,9 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <!-- End Forms Nav -->
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('priceInquiry')" >
                     <router-link class="nav-link" :to="{ name: 'supplier_price_inquiry' }"
                         :class="{ active: this.$route.name === 'supplier_price_inquiry_entry' }" active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
@@ -295,7 +154,7 @@
                 </li>
                 <!-- End Tables Nav -->
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('supplierOrderPriceQuote | supplierOrderConfirmationNotification')" >
 
                     <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }"
                         data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -304,12 +163,12 @@
                     <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'supplier_order_list' }"
+                            <router-link class="nav-link" :to="{ name: 'supplier_order_list' }" v-if="can('supplierOrderConfirmationNotification | uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'supplier_order_edit' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
-                            <router-link class="nav-link" :to="{ name: 'supplier_order_price_inquiry' }"
+                            <router-link class="nav-link" :to="{ name: 'supplier_order_price_inquiry' }" v-if="can('supplierOrderPriceQuote')"
                                 :class="{ active: $route.name === 'supplier_order_price_inquiry' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
@@ -320,7 +179,7 @@
                 </li>
                 <!-- Shipment -->
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('shipmentOverview')" >
                     <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }"
                         data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -337,7 +196,7 @@
                     </ul>
                 </li>
                 <!-- End Icons Nav -->
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('supplierAccountsReceivable')" >
 
                     <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" active-class="active">
                         <i class="bi bi-cash-coin"></i><span>Finance</span>
@@ -373,7 +232,34 @@
 <script>
 import './../admin/index';
 export default {
+    data() {
+        return {
+            componentKey: 0
+        }
+    },
+    mounted() {
+        this.remountComponent();
+
+    },
     methods: {
+        remountComponent() {
+            axios.get('/api/get-permissions', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                window.Laravel.jsPermissions = response.data;
+                console.log(response.data);
+            }).catch(error => {
+                console.error('Error fetching permissions:', error);
+            });
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    // console.log('load');
+                    this.componentKey++;
+                });
+            }, 2000);
+        },
         isAnyChildRouteActive() {
             const activeRoutes = [
                 '/buyer/dashboard',

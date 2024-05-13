@@ -1,7 +1,7 @@
 <template>
     <!-- <div>
         <h1>Admin</h1>
-        <button @click="logout">Logout</button>
+        <button >Logout</button>
     </div> -->
 
     <body>
@@ -39,7 +39,7 @@
                     </li>
                     <!-- End Search Icon-->
 
-                    <li class="nav-item dropdown pe-3">
+                    <li class="nav-item dropdown ">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                             data-bs-toggle="dropdown">
                             <img src="./../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
@@ -47,7 +47,7 @@
                         </a><!-- End Profile Iamge Icon -->
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
-                            style="background-color: beige;">
+                           >
                             <li class="dropdown-header">
                                 <h6>Kevin Anderson</h6>
                                 <span>Web Designer</span>
@@ -87,7 +87,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" @click="logout">
+                                <a class="dropdown-item d-flex align-items-center" href="#" >
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </a>
@@ -97,13 +97,14 @@
                     </li>
                     <!-- End Profile Nav -->
 
-                    <li class="nav-item dropdown">
+                    <notifications />
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-bell"></i>
-                            <span class="badge badge-number">4</span> </a><!-- End Notification Icon -->
+                            <span class="badge badge-number">4</span> </a>
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
-                            style="background-color: beige;">
+                           >
                             <li class="dropdown-header">
                                 You have 4 new notifications
                                 <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
@@ -120,64 +121,26 @@
                                     <p>30 min. ago</p>
                                 </div>
                             </li>
-
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
 
-                            <li class="notification-item">
-                                <i class="bi bi-x-circle text-danger"></i>
-                                <div>
-                                    <h4>Atque rerum nesciunt</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>1 hr. ago</p>
-                                </div>
-                            </li>
 
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-check-circle text-success"></i>
-                                <div>
-                                    <h4>Sit rerum fuga</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>2 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-info-circle text-primary"></i>
-                                <div>
-                                    <h4>Dicta reprehenderit</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>4 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
                             <li class="dropdown-footer">
                                 <a href="#">Show all notifications</a>
                             </li>
                         </ul>
-                        <!-- End Notification Dropdown Items -->
-                    </li>
+                    </li> -->
+                    <!-- End Notification Dropdown Items -->
                     <!-- End Notification Nav -->
 
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-chat-left-text"></i>
-                            <span class="badge badge-number">3</span> </a><!-- End Messages Icon -->
+                            <span class="badge badge-number">3</span> </a>
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
-                            style="background-color: beige;">
+                           >
                             <li class="dropdown-header">
                                 You have 3 new messages
                                 <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
@@ -241,9 +204,13 @@
                                 <a href="#">Show all messages</a>
                             </li>
                         </ul>
-                        <!-- End Messages Dropdown Items -->
-                    </li>
+                    </li> -->
                     <!-- End Messages Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link nav-icon" href="#"  @click="logout">
+                            <i class="bi bi-door-open text-warning"></i>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- End Icons Navigation -->
@@ -264,7 +231,8 @@
                 <!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }" v-if="can('issueNewLoginIdPassword | setAccessAuthority | userManagement')"
+                    <a class="nav-link collapsed" :class="{ 'active': isAnyChildRouteActive() }"
+                        v-if="can('issueNewLoginIdPassword | setAccessAuthority | userManagement')"
                         data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-person-gear"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -293,7 +261,8 @@
                     <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyDataRouteActive() }">
                         <li>
-                            <router-link :to="{ name: 'Datasupplier' }" v-if="can('addNewSupplierEntry | editSupplierEntry | setEditSupplierIDCode')"
+                            <router-link :to="{ name: 'Datasupplier' }"
+                                v-if="can('addNewSupplierEntry | editSupplierEntry | setEditSupplierIDCode')"
                                 :class="{ active: this.$route.name === 'supplerEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Supplier</span>
                             </router-link>
@@ -305,7 +274,8 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'product' }" v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
+                            <router-link :to="{ name: 'product' }"
+                                v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
                                 :class="{ active: this.$route.name === 'productEntry' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
@@ -323,7 +293,8 @@
 
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'price_inquiry' }" v-if="can('createPriceInquiry')"
-                        :class="{ active: this.$route.name === 'price_inquiry_entry' }" active-class="active">
+                        :class="{ active: this.$route.name === 'price_inquiry_entry' || this.$route.name === 'price_inquiry_edit' }"
+                        active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
                     </router-link>
                 </li>
@@ -338,12 +309,14 @@
                     <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'order_list' }" v-if="can('orderGeneralSinglePage')"
+                            <router-link class="nav-link" :to="{ name: 'order_list' }"
+                                v-if="can('orderGeneralSinglePage')"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'order_edit' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
-                            <router-link class="nav-link" :to="{ name: 'order_price_inquiry' }" v-if="can('miLungOrderPriceEnquiry')"
+                            <router-link class="nav-link" :to="{ name: 'order_price_inquiry' }"
+                                v-if="can('miLungOrderPriceEnquiry')"
                                 :class="{ active: $route.name === 'order_price_inquiry' }" active-class="active">
                                 <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
                             </router-link>
@@ -380,10 +353,12 @@
                     <ul id="Finance" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ show: this.$route.name === 'Transaction' || this.$route.name === 'receivable' || this.$route.name === 'payable' }">
                         <li>
-                            <router-link :to="{ name: 'Transaction' }" active-class="active" v-if="can('transactionOverview')">
+                            <router-link :to="{ name: 'Transaction' }" active-class="active"
+                                v-if="can('transactionOverview')">
                                 <i class="bi bi-circle"></i><span>Transaction</span>
                             </router-link>
-                            <router-link :to="{ name: 'receivable' }" active-class="active" v-if="can('accountReceivable')">
+                            <router-link :to="{ name: 'receivable' }" active-class="active"
+                                v-if="can('accountReceivable')">
                                 <i class="bi bi-circle"></i><span>Accounts Receivable</span>
                             </router-link>
                             <router-link :to="{ name: 'payable' }" active-class="active" v-if="can('accountPayable')">
@@ -440,8 +415,11 @@ export default {
     },
     mounted() {
         this.remountComponent();
+
     },
     methods: {
+
+
         isAnyChildRouteActive() {
             const activeRoutes = [
                 '/admin/user',

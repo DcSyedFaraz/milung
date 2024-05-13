@@ -35,108 +35,107 @@ import receivable from "./pages/admin/account/receivable.vue";
 // Statistics
 import statistics from "./pages/admin/statistics/statistics.vue";
 
+// Notifications
+import allnotifications from "./pages/notifications/allnotifications.vue";
+
 const adminRoutes = [
     {
         path: "dashboard",
         name: "admins",
         component: DefaultAdmin,
-        // meta: { requiresAdmin: true },
+    },
+    {
+        path: "allnotifications",
+        name: "adminAllNotifications",
+        component: allnotifications,
     },
     {
         path: "user",
         name: "user",
         component: User,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "/edit-user/:id",
         name: "edit-user",
         component: EditUser,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "add-user",
         name: "add-user",
         component: AddUser,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "Datasupplier",
         name: "Datasupplier",
         component: Datasupplier,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "Databuyer",
         name: "Databuyer",
         component: Databuyer,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "buyerEntry",
         name: "buyerEntry",
         component: buyerEntry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "supplerEntry",
         name: "supplerEntry",
         component: supplerEntry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "product",
         name: "product",
         component: product,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "productEntry",
         name: "productEntry",
         component: productEntry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "Transaction",
         name: "Transaction",
         component: Transaction,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "product_group",
         name: "product_group",
         component: product_group,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "product_group_entry",
         name: "product_group_entry",
         component: product_group_entry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "price_inquiry",
         name: "price_inquiry",
         component: price_inquiry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "price_inquiry_entry",
         name: "price_inquiry_entry",
         component: price_inquiry_entry,
-        // meta: { requiresAdmin: true },
+    },
+    {
+        path: "price_inquiry_entry/:id",
+        name: "price_inquiry_edit",
+        component: price_inquiry_entry,
+        props: {
+            mode: "edit",
+        },
     },
     {
         path: "order_list",
         name: "order_list",
         component: order_list,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "/edit-order/:id",
         name: "order_edit",
         component: order_entry,
-        // meta: { requiresAdmin: true },
         props: {
             isEditing: true,
         },
@@ -145,25 +144,21 @@ const adminRoutes = [
         path: "order_entry",
         name: "order_entry",
         component: order_entry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "order_price_inquiry",
         name: "order_price_inquiry",
         component: order_price_inquiry,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "shipment_overview",
         name: "shipment_overview",
         component: shipment_overview,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "create_so",
         name: "create_so",
         component: create_so,
-        // meta: { requiresAdmin: true },
     },
     {
         path: "information/:id/:so_number",

@@ -189,6 +189,7 @@ export default {
     data() {
         return {
             reason: "",
+            cargo_reason: "",
             data: null,
             formData: new FormData(),
             cargoData: new FormData(),

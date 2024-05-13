@@ -63,40 +63,36 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id" v-if="dataToDisplay.length > 0">
+                            <tbody v-for="inquiry in dataToDisplay" :key="inquiry.id" v-if="dataToDisplay.length > 0">
                                 <tr style="border-bottom-color: snow !important;">
-                                    <td>{{ user.inquiry_number }}</td>
+                                    <td>{{ inquiry.inquiry_number }}</td>
                                     <td>
-                                        <span :class="statusBadge(user)">{{ user.status }}</span>
+                                        <span :class="statusBadge(inquiry)">{{ inquiry.status }}</span>
                                     </td>
-                                    <td>{{ updated_at(user) }}</td>
-                                    <td>{{ created_at(user) }}</td>
-                                    <td>{{ user.requirements }}</td>
+                                    <td>{{ updated_at(inquiry) }}</td>
+                                    <td>{{ created_at(inquiry) }}</td>
+                                    <td>{{ inquiry.requirements }}</td>
 
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
+                                        <!-- <button @click="toggleAccordion(inquiry)" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[inquiry.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link :to="{
+                                                name: 'price_inquiry_edit',
+                                                params: { id: inquiry.id },
+                                            }" class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
+                                        <a href="#" @click="deleteUser(inquiry.id)" class="text-dark"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
 
-                                <transition name="fade">
-                                    <tr v-show="accordionOpen[user.id]">
-                                        <td :colspan="7">
-                                            <PriceInquiry mode="edit" :user="user"
-                                                @record-updated="handleRecordUpdated" />
-                                        </td>
-                                    </tr>
-                                </transition>
+
 
                             </tbody>
                             <tbody v-else>
@@ -172,9 +168,9 @@ export default {
     computed: {
 
         filteredUsers() {
-            return this.users.filter(user => {
-                return user.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (user.requirements.toLowerCase().includes(this.searchQuery));
+            return this.users.filter(inquiry => {
+                return inquiry.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (inquiry.requirements.toLowerCase().includes(this.searchQuery));
 
             });
         },
@@ -210,8 +206,8 @@ export default {
             // Refresh the data in the parent component
             this.fetchUsers();
         },
-        statusBadge(user) {
-            switch (user.status) {
+        statusBadge(inquiry) {
+            switch (inquiry.status) {
                 case 'ML Checking':
                     return 'badge bg-primary';
                 case 'ML Replied':
@@ -226,28 +222,28 @@ export default {
                     return 'badge bg-secondary';
             }
         },
-        updated_at(user) {
-            if (user.updated_at) {
+        updated_at(inquiry) {
+            if (inquiry.updated_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(user.updated_at);
+                const parsedDateTime = parseISO(inquiry.updated_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
         },
-        created_at(user) {
-            if (user.created_at) {
+        created_at(inquiry) {
+            if (inquiry.created_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(user.created_at);
+                const parsedDateTime = parseISO(inquiry.created_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
         },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+        toggleAccordion(inquiry) {
+            this.accordionOpen[inquiry.id] = !this.accordionOpen[inquiry.id];
         },
         changePage(page) {
             this.currentPage = page
@@ -269,18 +265,18 @@ export default {
                 try {
                     await axios.delete(`/api/PriceDelete/${userId}`);
 
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
+                    // If successful, remove the inquiry from the local data
+                    this.users = this.users.filter(inquiry => inquiry.id !== userId);
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Inquiry deleted successfully',
                     });
                 } catch (error) {
-                    console.error('Error deleting user:', error);
+                    console.error('Error deleting inquiry:', error);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error deleting user',
+                        title: 'Error deleting inquiry',
                     });
                 }
             }

@@ -7,10 +7,12 @@ use App\Models\Products;
 use App\Models\ShipmentOrder;
 use App\Models\SupplierProfile;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
@@ -18,6 +20,35 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function index()
+    {
+        // $admin = User::role(['Admin', 'Internal'])->get();
+        //     $message = "created new noti ";
+        //     Notification::send($admin, new UserNotification($message,'Post'));
+        // broadcast(new UserNotification($message,'Post'))->toOthers();
+        $notifications['msg'] = auth()->user()->unreadnotifications()->latest()->take(3)->get();
+        $notifications['count'] = auth()->user()->unreadnotifications()->count();
+
+        return response()->json($notifications);
+    }
+    public function all_notifications()
+    {
+        // $admin = User::role(['Admin', 'Internal'])->get();
+        //     $message = "created new noti ";
+        //     Notification::send($admin, new UserNotification($message,'Post'));
+        // broadcast(new UserNotification($message,'Post'))->toOthers();
+        $notifications['msg'] = auth()->user()->notifications()->latest()->get();
+        // $notifications['count'] = auth()->user()->unreadnotifications()->count();
+
+        return response()->json($notifications);
+    }
+
+    public function markAsRead($id)
+    {
+        auth()->user()->notifications->where('id', $id)->markasread();
+
+        return response()->json(['message' => 'Notification marked as read.']);
+    }
     /**
      * Display a listing of the resource.
      */

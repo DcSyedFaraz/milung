@@ -12,7 +12,7 @@
                                 <p for="v-model">Buyer ID:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="buyer" class="form-control"> -->
+                                <!-- <input type="text" v-model="inquiry.buyer" class="form-control"> -->
                                 <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
                                     track-by="id">
                                 </multiselect>
@@ -22,52 +22,43 @@
                             <div class="col-4">
                                 <p for="v-model">Inquiry Number:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry_number" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.inquiry_number" class="form-control">
+                            </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Article Number:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="article" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.article" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-control" v-model="group" @change="fetchSupplierProfiles(group)">
+                                <select class=" form-control" v-model="inquiry.group"
+                                    @change="fetchSupplierProfiles(inquiry.group)">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
                                         {{ group1.group_name }}
                                     </option>
                                 </select>
-                                <!-- <input type="text" v-model="name" class="form-control"> -->
-                                <!-- <select class=" form-control" v-model="group">
-                                    <option value="Power bank">Power bank</option>
-                                    <option value="Mobile Storage">Mobile Storage</option>
-                                    <option value="Travel Adapter">Travel Adapter</option>
-                                    <option value="Wireless Charger">Wireless Charger</option>
-                                    <option value="RFID Card">RFID Card</option>
-                                    <option value="LED Lamp">LED Lamp</option>
-                                    <option value="Solar Panel">Solar Panel</option>
-                                    <option value="USB Cable">USB Cable</option>
-                                    <option value="Fan">Fan</option>
-                                    <option value="Charger">Charger</option>
-                                </select> -->
+
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Product Name:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="name" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.name" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Product Description/ Specification:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="description" class="form-control" cols="36" rows="10"></textarea>
+                                <textarea v-model="inquiry.description" class="form-control" cols="36"
+                                    rows="10"></textarea>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -77,13 +68,15 @@
                             <div class="col-8">
                                 <div class="d-flex">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" value="general" v-model="cargo">
+                                        <input class="form-check-input" type="radio" value="general"
+                                            v-model="inquiry.cargo">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             General Cargo
                                         </label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" value="danger" v-model="cargo">
+                                        <input class="form-check-input" type="radio" value="danger"
+                                            v-model="inquiry.cargo">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             Danger Goods
                                         </label>
@@ -113,7 +106,7 @@
                                 <p for="v-model">Incoterm:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="incoterm" class="form-control">
+                                <input type="text" v-model="inquiry.incoterm" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -122,7 +115,8 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group my-2" v-for="(material, index) in materials" :="index">
-                                    <input type="number" class="form-control" v-model="material.quantity" />
+                                    <input type="number" class="form-control" v-model="materials[index].quantity"
+                                        @input="updateInquiryMaterials" />
                                     <span class="input-group-text mx-2 fw-bold" style="color: #41b400;">Pcs</span>
                                     <div class="input-buttons">
                                         <button class="btn btn-warning btn ms-1" type="button"
@@ -141,9 +135,10 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group my-2" v-for="(caps, indexs) in capacity" :="indexs">
-                                    <input type="number" class="form-control" v-model="caps.quantity">
+                                    <input type="number" class="form-control" v-model="capacity[indexs].quantity"
+                                        @input="updateInquiryCapacity" />
                                     <select style="color: #41b400;" class="fw-bold form-control mx-2"
-                                        v-model="caps.unit">
+                                        v-model="capacity[indexs].unit">
                                         <option value="GB">GB</option>
                                         <option value="mAh">mAh</option>
                                     </select>
@@ -162,26 +157,28 @@
                             <div class="col-4">
                                 <p for="v-model">Printing Method:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="method" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.method" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Printing Color:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="color" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.color" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Standard Packaging:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="packaging" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="inquiry.packaging" class="form-control">
+                            </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Special Requirement:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="requirements" class="form-control" cols="36" rows="10"></textarea>
+                                <textarea v-model="inquiry.requirements" class="form-control" cols="36"
+                                    rows="10"></textarea>
                             </div>
                         </div>
                     </div>
@@ -191,7 +188,7 @@
                             <div class="col-4">
                                 <p for="v-model" class="my-1">Status:</p>
                             </div>
-                            <div class="col-8"><select class="fw-bold form-control" v-model="status">
+                            <div class="col-8"><select class="fw-bold form-control" v-model="inquiry.status">
                                     <option value="ML Checking">ML Checking</option>
                                     <option value="ML Replied">ML Replied</option>
                                     <option value="ML Follow Up">ML Follow Up</option>
@@ -207,7 +204,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
-                                    <input class="form-check-input " type="checkbox" v-model="urgent">
+                                    <input class="form-check-input " type="checkbox" v-model="inquiry.urgent">
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Urgent
                                     </label>
@@ -257,8 +254,8 @@
                                 <button type="button" style="background-color: aqua !important; "
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Quote Buyer</button>
 
-                                <button style="background-color: #bc7803 !important;"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button>
+                                <!-- <button style="background-color: #bc7803 !important;"
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button> -->
 
                                 <button type="button" style="background-color: #41b400 !important;"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
@@ -289,7 +286,7 @@
                         </div>
                         <div class="modal-footer">
                             <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                            <button class="btn btn-primary" data-bs-dismiss="modal">Create Inquiry</button>
                         </div>
                     </div>
                 </div>
@@ -306,49 +303,60 @@ export default {
 
     props: {
         mode: String, // "create" or "edit"
-        user: {
-            type: Object,
-            default: null
-        }
+
     },
     data() {
         return {
+            // materials: this.mode === 'create' ? [{ quantity: '' }] : this.user && this.user.pcs ? this.user.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }],
+            // capacity: this.mode === 'create' ? [{ quantity: '', unit: '' }] : this.user && this.user.capacity ? this.user.capacity.map(capacity => {
+            //     const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
+            //     return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+            // }) : [{ quantity: '' }],
+            // buyer: this.mode === 'create' ? '' : this.user ? this.user.buyer : '',
+            // inquiry_number: this.mode === 'create' ? '' : this.user ? this.user.inquiry_number : '',
+            // article: this.mode === 'create' ? '' : this.user ? this.user.article : '',
+            // group: this.mode === 'create' ? null : this.user ? this.user.group : null,
+            // name: this.mode === 'create' ? '' : this.user ? this.user.name : '',
+            // description: this.mode === 'create' ? '' : this.user ? this.user.description : '',
+            // cargo: this.mode === 'create' ? '' : this.user ? this.user.cargo : '',
+            // cargo_place: this.mode === 'create' ? [] : this.user ? this.user.cargo_place : [],
+            // incoterm: this.mode === 'create' ? '' : this.user ? this.user.incoterm : '',
+            // urgent: this.mode === 'create' ? false : this.user ? this.user.urgent : false,
+            // method: this.mode === 'create' ? '' : this.user ? this.user.method : '',
+            // color: this.mode === 'create' ? '' : this.user ? this.user.color : '',
+            // packaging: this.mode === 'create' ? '' : this.user ? this.user.packaging : '',
+            // requirements: this.mode === 'create' ? '' : this.user ? this.user.requirements : '',
+            // status: this.mode === 'create' ? '' : this.user ? this.user.status : '',
+            // file: this.mode === 'create' ? '' : this.user ? this.user.file : '',
+            // file1: this.mode === 'create' ? '' : this.user ? this.user.file1 : '',
+            inquiry: {
+                materials: [{ quantity: '' }], // Initialize with default values
+                capacity: [{ quantity: '', unit: '' }],
+            },
+            cargo_place: [],
+            materials: [{ quantity: '' }],
+            capacity: [{ quantity: '', unit: '' }],
             selectedBuyerId: [],
             buyers: [],
-            materials: this.mode === 'create' ? [{ quantity: '' }] : this.user && this.user.pcs ? this.user.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }],
-            capacity: this.mode === 'create' ? [{ quantity: '', unit: '' }] : this.user && this.user.capacity ? this.user.capacity.map(capacity => {
-                const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
-                return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
-            }) : [{ quantity: '' }],
-            buyer: this.mode === 'create' ? '' : this.user ? this.user.buyer : '',
-            inquiry_number: this.mode === 'create' ? '' : this.user ? this.user.inquiry_number : '',
-            article: this.mode === 'create' ? '' : this.user ? this.user.article : '',
-            groups: [],
-            group: this.mode === 'create' ? null : this.user ? this.user.group : null,
-            name: this.mode === 'create' ? '' : this.user ? this.user.name : '',
-            description: this.mode === 'create' ? '' : this.user ? this.user.description : '',
-            cargo: this.mode === 'create' ? '' : this.user ? this.user.cargo : '',
-            cargo_place: this.mode === 'create' ? [] : this.user ? this.user.cargo_place : [],
-            incoterm: this.mode === 'create' ? '' : this.user ? this.user.incoterm : '',
-            urgent: this.mode === 'create' ? false : this.user ? this.user.urgent : false,
-            method: this.mode === 'create' ? '' : this.user ? this.user.method : '',
-            color: this.mode === 'create' ? '' : this.user ? this.user.color : '',
-            packaging: this.mode === 'create' ? '' : this.user ? this.user.packaging : '',
-            requirements: this.mode === 'create' ? '' : this.user ? this.user.requirements : '',
-            status: this.mode === 'create' ? '' : this.user ? this.user.status : '',
-            file: this.mode === 'create' ? '' : this.user ? this.user.file : '',
-            file1: this.mode === 'create' ? '' : this.user ? this.user.file1 : '',
             imageLoaded: false,
+            groups: [],
             supplier_profiles: [],
         };
     },
     methods: {
+        updateInquiryMaterials() {
+            this.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
+        },
+        updateInquiryCapacity() {
+            // console.log(this.capacity);
+            this.inquiry.capacity = this.capacity.map(capacity => ({ quantity: capacity.quantity, unit: capacity.unit }));
+        },
         fetchBuyers() {
             axios.get('/api/buyerOrder')
                 .then(response => {
                     this.buyers = response.data;
                     console.log(this.buyers);
-                    const selectedbuyerIds = Number(this.buyer);
+                    const selectedbuyerIds = Number(this.inquiry.buyer);
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
                     if (selectedbuyer) {
                         this.selectedBuyerId = selectedbuyer;
@@ -505,23 +513,23 @@ export default {
             NProgress.start();
             try {
                 const formData = new FormData();
-                formData.append('buyer', this.buyer);
-                formData.append('inquiry_number', this.inquiry_number);
-                formData.append('article', this.article);
-                formData.append('group', this.group);
-                formData.append('name', this.name);
-                formData.append('description', this.description);
-                formData.append('cargo', this.cargo);
+                formData.append('buyer', this.inquiry.buyer);
+                formData.append('inquiry_number', this.inquiry.inquiry_number);
+                formData.append('article', this.inquiry.article);
+                formData.append('group', this.inquiry.group);
+                formData.append('name', this.inquiry.name);
+                formData.append('description', this.inquiry.description);
+                formData.append('cargo', this.inquiry.cargo);
                 this.cargo_place.forEach(place => {
                     formData.append('cargo_place[]', place);
                 });
-                formData.append('incoterm', this.incoterm);
-                formData.append('urgent', this.urgent ? 'true' : 'false');
-                formData.append('method', this.method);
-                formData.append('color', this.color);
-                formData.append('packaging', this.packaging);
-                formData.append('requirements', this.requirements);
-                formData.append('status', this.status);
+                formData.append('incoterm', this.inquiry.incoterm);
+                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false');
+                formData.append('method', this.inquiry.method);
+                formData.append('color', this.inquiry.color);
+                formData.append('packaging', this.inquiry.packaging);
+                formData.append('requirements', this.inquiry.requirements);
+                formData.append('status', this.inquiry.status);
                 formData.append('file', this.$refs.fileInput.files[0]);
                 formData.append('file1', this.$refs.fileInput1.files[0]);
 
@@ -529,8 +537,8 @@ export default {
                     formData.append('supplier_ids[]', id);
                 });
 
-                for (let i = 0; i < this.materials.length; i++) {
-                    formData.append(`pcs[${i}]`, this.materials[i].quantity);
+                for (let i = 0; i < this.inquiry.materials.length; i++) {
+                    formData.append(`pcs[${i}]`, this.inquiry.materials[i].quantity);
                 }
 
                 this.capacity.forEach((caps, index) => {
@@ -538,7 +546,8 @@ export default {
                     formData.append(`capacity[${index}]`, capacityString);
                 });
                 console.log(formData);
-                const url = this.mode === 'edit' ? `/api/update_price_inquiry/${this.user.id}` : '/api/price_inquiry';
+                const inquiryid = this.$route.params.id;
+                const url = this.mode === 'edit' ? `/api/update_price_inquiry/${inquiryid}` : '/api/price_inquiry';
                 // const method = this.mode === 'edit' ? 'put' : 'post';
                 const method = 'post';
                 const response = await axios[method](url, formData);
@@ -564,7 +573,56 @@ export default {
                     toastr.error('An error occurred while adding the user');
                 }
             }
-        }
+        },
+        fetchInquiry() {
+            const inquiryid = this.$route.params.id;
+            axios.get('/api/price_inquiry_get/' + inquiryid)
+                .then(response => {
+                    this.inquiry = response.data;
+                    console.log(this.inquiry);
+
+
+
+                    if (this.inquiry != null) {
+                        this.cargo_place = this.inquiry.cargo_place || [];
+                        this.loadImageFromPath(this.inquiry.file, this.$refs.canvas);
+
+                        if (this.inquiry.file1 != null) {
+                            this.loadImageFromPath(
+                                this.inquiry.file1,
+                                this.$refs.canvas1
+                            );
+                        }
+                        if (this.inquiry.file != null) {
+                            this.loadImageFromPath(
+                                this.inquiry.file,
+                                this.$refs.canvas
+                            );
+                        }
+
+                        this.materials = this.inquiry && this.inquiry.pcs ? this.inquiry.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }];
+                        this.capacity = this.inquiry && this.inquiry.capacity ? this.inquiry.capacity.map(capacity => {
+                            const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
+                            return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+                        }) : [{ quantity: '', unit: '' }];
+                    }
+
+                    if (this.inquiry.remarks != null) {
+                        this.data.remarks = this.inquiry.remarks.remarks
+                    }
+
+                    if (this.inquiry.group) {
+                        this.fetchSupplierProfiles(this.inquiry.group);
+                    }
+
+                    this.updateInquiryMaterials();
+                    this.updateInquiryCapacity();
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
 
     }, computed: {
         formattedCapacity() {
@@ -590,6 +648,9 @@ export default {
         this.$refs.fileInput1.addEventListener('change', this.loadImage1);
 
         // Trigger loadImage method if in edit mode and there's an existing image
+        if (this.mode === 'edit') {
+            this.fetchInquiry();
+        }
         if (this.mode === 'edit' && this.file) {
             this.loadImageFromPath(this.file, this.$refs.canvas);
         }

@@ -37,6 +37,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return auth()->check() ? auth()->user()->jsPermissions() : 0;
     });
 
+    // Notifications
+    Route::get('notifications', [UserController::class, 'index']);
+    Route::get('all-notifications', [UserController::class, 'all_notifications']);
+    Route::post('notifications/{id}', [UserController::class, 'markAsRead']);
 });
 
 
@@ -54,61 +58,65 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     // Price Inquiry
     Route::resource('price_inquiry', InquiryController::class)->except([
         'update'
-    ]);
-    Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update');
+    ])->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
+    Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update')->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
 
     //Orders
-    Route::resource('order', BuyerOrderController::class)->except(['update', 'create']);
-    Route::get('orderentry/{id}', [BuyerOrderController::class, 'orderentrygetID']);
-    Route::post('orderentry/{id}', [BuyerOrderController::class, 'update']);
-    Route::post('ordercreate', [BuyerOrderController::class, 'update']);
+    Route::resource('order', BuyerOrderController::class)->except(['update', 'create'])->middleware('can:createNewBuyerOrder');
+    Route::get('orderentry/{id}', [BuyerOrderController::class, 'orderentrygetID'])->middleware('can:editBuyerOrder');
+    Route::post('orderentry/{id}', [BuyerOrderController::class, 'update'])->middleware('can:editBuyerOrder');
+    // Route::post('ordercreate', [BuyerOrderController::class, 'update']);
     Route::get('printview/{id}', [BuyerOrderController::class, 'printviewget']);
-    Route::post('printview/{id}', [BuyerOrderController::class, 'printview']);
+    Route::post('printview/{id}', [BuyerOrderController::class, 'printview'])->middleware('can:confirmRejectPrintview');
 
     // Shipments
-    Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create', 'store']);
-    Route::post('shipments/{id}', [BuyerShipmentController::class, 'update']);
+    Route::resource('shipments', BuyerShipmentController::class)->except(['update', 'create', 'store'])->middleware('can:buyerShipmentOverview,exportShippingDocuments');
+    Route::post('shipments/{id}', [BuyerShipmentController::class, 'update'])->middleware('can:addATCNumber');
 
     // Finance
-    Route::get('so', [BuyerShipmentController::class, 'buyerSos']);
-    Route::get('so/{id}', [BuyerShipmentController::class, 'buyerSo']);
-    Route::post('payment', [BuyerShipmentController::class, 'store']);
-    Route::post('reject', [BuyerShipmentController::class, 'reject']);
+    Route::get('so', [BuyerShipmentController::class, 'buyerSos'])->middleware('can:buyerAccountPayable');
+    Route::get('so/{id}', [BuyerShipmentController::class, 'buyerSo'])->middleware('can:exportShippingDocuments');
+    Route::post('payment', [BuyerShipmentController::class, 'store'])->middleware('can:buyerAccountPayable');
+    Route::post('reject', [BuyerShipmentController::class, 'reject'])->middleware('can:buyerAccountPayable');
 });
 
 // <-- Supplier Routes -->
 Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Supplier']], function () {
 
     // Shipment
-    Route::get('shipments', [SupplierShipmentController::class, 'shipments']);
-    Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment']);
-    Route::post('receipt-note', [SupplierShipmentController::class, 'receipt_note']);
+    Route::get('shipments', [SupplierShipmentController::class, 'shipments'])->middleware('can:shipmentOverview');
+    Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment'])->middleware('can:shipmentOverview');
+    Route::post('receipt-note', [SupplierShipmentController::class, 'receipt_note'])->middleware('can:createReceiptNote');
 
     // Order
-    Route::get('orderentry', [SupplierOrderController::class, 'orderentryget']);
-    Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID']);
-    Route::post('printview/{id}', [SupplierOrderController::class, 'printview']);
+    Route::get('orderentry', [SupplierOrderController::class, 'orderentryget'])->middleware('can:supplierOrderConfirmationNotification,supplierOrderGeneralSinglePage');
+    Route::get('orderentry/{id}', [SupplierOrderController::class, 'orderentrygetID'])->middleware('can:supplierOrderConfirmationNotification,supplierOrderGeneralSinglePage');
+    Route::post('orderentry', [OrderController::class, 'orderentry'])->middleware('can:supplierOrderConfirmationNotification,supplierOrderGeneralSinglePage');
+    Route::post('orderentry/{id}', [OrderController::class, 'orderUpdate'])->middleware('can:supplierOrderConfirmationNotification,supplierOrderGeneralSinglePage');
+    Route::post('printview/{id}', [SupplierOrderController::class, 'printview'])->middleware('can:uploadPrintview');
     Route::get('printview/{id}', [SupplierOrderController::class, 'printviewget']);
-    Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo']);
-    Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder']);
-    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace']);
+    Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo'])->middleware('can:cargoReadyConfirmation,uploadMassCargoPhoto');
+    Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder'])->middleware('can:supplierOrderPriceQuote');
+    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace'])->middleware('can:supplierOrderPriceQuote');
 
     //price_inquiry
-    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get']);
-    Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne']);
-    Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry']);
-    Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry']);
-    Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete']);
+    Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get'])->middleware('can:priceInquiry');
+    Route::get('price_inquiry_get/{id}', [SuppProductController::class, 'price_inquiry_getOne'])->middleware('can:priceInquiry');
+    Route::post('price_inquiry', [SuppProductController::class, 'price_inquiry'])->middleware('can:priceInquiry');
+    Route::post('update_price_inquiry/{id}', [SuppProductController::class, 'update_price_inquiry'])->middleware('can:priceInquiry');
+    Route::delete('PriceDelete/{id}', [SuppProductController::class, 'PriceDelete'])->middleware('can:priceInquiry');
 
     // Supplier Routes
-    Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershipments']);
-    Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment']);
-    Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate']);
+    Route::get('suppliershipments', [SupplierShipmentController::class, 'suppliershipments'])->middleware('can:inputPackingList');
+    Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment'])->middleware('can:inputPackingList');
+    Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate'])->middleware('can:inputPackingList');
 
 });
 
 // <-- Admin Routes -->
-Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
+
+
 
     // Fetching Users
     Route::get('users', [UserController::class, 'users'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
@@ -137,6 +145,7 @@ Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
     Route::post('price_inquiry', [ProductController::class, 'price_inquiry'])->middleware('can:createPriceInquiry');
     Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
     Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
+    Route::get('price_inquiry_get/{id}', [ProductController::class, 'show']);
     Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
 
     //Orders

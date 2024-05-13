@@ -22,11 +22,19 @@ import ci from "./pages/buyer/shipment/documents/ci.vue";
 // Accounts
 import payable from "./pages/buyer/account/payable.vue";
 
+// Notifications
+import allnotifications from "./pages/notifications/allnotifications.vue";
+
 const buyerRoutes = [
     {
         path: "dashboard",
         name: "buyer",
         component: DefaultAdmin,
+    },
+    {
+        path: "allnotifications",
+        name: "buyerAllNotifications",
+        component: allnotifications,
     },
     {
         path: "product",

@@ -76,7 +76,7 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" :to="{ name: 'buyer_information', params: { id: ship.id, so_number: ship.so_number }  }"
+                                        <router-link class="btn btn-light text-black" v-if="can('exportShippingDocuments')" :to="{ name: 'buyer_information', params: { id: ship.id, so_number: ship.so_number }  }"
                                         >
                                         <i class="bi bi-file-earmark-text fw-bold"></i>
                                     </router-link>

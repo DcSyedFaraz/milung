@@ -17,12 +17,20 @@ import receiptnote from "./pages/supplier/shipment/receipt-note.vue";
 // Finance
 import recievables from "./pages/supplier/finance/recievables.vue";
 
+// Notifications
+import allnotifications from "./pages/notifications/allnotifications.vue";
+
 
 const supplierRoutes = [
     {
         path: "dashboard",
         name: "supplierdash",
         component: DefaultAdmin,
+    },
+    {
+        path: "allnotifications",
+        name: "supplierAllNotifications",
+        component: allnotifications,
     },
     {
         path: "order_price_inquiry",

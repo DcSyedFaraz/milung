@@ -67,8 +67,8 @@ class SuppProductController extends Controller
     public function update_price_inquiry(Request $request, $id)
     {
         // dd($request->all(), $request->price);
-        // $userId = Auth::id();
-        $userId = 3;
+        $userId = Auth::id();
+        // $userId = 3;
         $validatedData = $request->validate([
             'remarks' => 'required',
             'exws.*.quantity' => 'required|string',
@@ -132,8 +132,8 @@ class SuppProductController extends Controller
     }
     public function price_inquiry_getOne($id)
     {
-        // $userid = Auth::id();
-        $userId = 3; // Assuming the user ID is hardcoded for demonstration
+        $userId = Auth::id();
+        // $userId = 3; // Assuming the user ID is hardcoded for demonstration
 
         $priceInquiry = PriceInquiry::where('id', $id)->with([
             'product_group',

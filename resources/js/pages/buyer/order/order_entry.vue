@@ -466,7 +466,7 @@
             </div>
         </form>
         <progress-modal :show="showProgress"></progress-modal>
-        <div class="container" v-if="showPrintView">
+        <div class="container" v-show="showPrintView" v-if="can('confirmRejectPrintview')">
             <printview :id="orders[0].id" :image="orders[0].files" />
         </div>
     </section>

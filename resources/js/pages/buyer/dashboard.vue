@@ -34,15 +34,14 @@
                     </li>
                     <!-- End Search Icon-->
 
-                    <li class="nav-item dropdown pe-3">
+                    <li class="nav-item dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                             data-bs-toggle="dropdown">
                             <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
                             <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
                         </a><!-- End Profile Iamge Icon -->
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
-                            style="background-color: beige;">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li class="dropdown-header">
                                 <h6>Kevin Anderson</h6>
                                 <span>Web Designer</span>
@@ -82,7 +81,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" @click="logout">
+                                <a class="dropdown-item d-flex align-items-center" href="#" >
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </a>
@@ -91,154 +90,13 @@
                         <!-- End Profile Dropdown Items -->
                     </li>
                     <!-- End Profile Nav -->
+                    <notifications />
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-bell"></i>
-                            <span class="badge badge-number">4</span> </a><!-- End Notification Icon -->
-
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
-                            style="background-color: beige;">
-                            <li class="dropdown-header">
-                                You have 4 new notifications
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-exclamation-circle text-warning"></i>
-                                <div>
-                                    <h4>Lorem Ipsum</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>30 min. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-x-circle text-danger"></i>
-                                <div>
-                                    <h4>Atque rerum nesciunt</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>1 hr. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-check-circle text-success"></i>
-                                <div>
-                                    <h4>Sit rerum fuga</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>2 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-info-circle text-primary"></i>
-                                <div>
-                                    <h4>Dicta reprehenderit</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>4 hrs. ago</p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li class="dropdown-footer">
-                                <a href="#">Show all notifications</a>
-                            </li>
-                        </ul>
-                        <!-- End Notification Dropdown Items -->
+                    <li class="nav-item">
+                        <a class="nav-link nav-icon" href="#"  @click="logout">
+                            <i class="bi bi-door-open text-warning"></i>
+                        </a>
                     </li>
-                    <!-- End Notification Nav -->
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-chat-left-text"></i>
-                            <span class="badge badge-number">3</span> </a><!-- End Messages Icon -->
-
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
-                            style="background-color: beige;">
-                            <li class="dropdown-header">
-                                You have 3 new messages
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-1.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Maria Hudson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>4 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-2.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Anna Nelson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>6 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../../assets/img/messages-3.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>David Muldon</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>8 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="dropdown-footer">
-                                <a href="#">Show all messages</a>
-                            </li>
-                        </ul>
-                        <!-- End Messages Dropdown Items -->
-                    </li>
-                    <!-- End Messages Nav -->
                 </ul>
             </nav>
             <!-- End Icons Navigation -->
@@ -246,7 +104,7 @@
         <!-- End Header -->
 
         <!-- ======= Sidebar ======= -->
-        <aside id="sidebar" class="sidebar">
+        <aside id="sidebar" class="sidebar" :key="componentKey">
             <div class="logo-img"><img src="../../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
@@ -273,7 +131,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('createBuyerPriceInquiry | editBuyerPriceInquiry')">
                     <router-link class="nav-link" :to="{ name: 'buyer_price_inquiry' }"
                         :class="{ active: this.$route.name === 'buyer_price_inquiry_entry' || this.$route.name === 'buyer_price_inquiry_edit' }"
                         active-class="active">
@@ -282,7 +140,7 @@
                 </li>
                 <!-- End Tables Nav -->
 
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('editBuyerOrder | createNewBuyerOrder')">
                     <router-link class="nav-link" :to="{ name: 'buyer_order_list' }"
                         :class="{ active: this.$route.name === 'buyer_order_create' || this.$route.name === 'buyer_order_entry' }"
                         active-class="active">
@@ -290,7 +148,7 @@
                     </router-link>
                 </li>
                 <!-- Shipment -->
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('buyerShipmentOverview')">
                     <router-link class="nav-link" :to="{ name: 'buyer_shipment_overview' }"
                         :class="{ active: this.$route.name === 'buyer_shipment_overview' || this.$route.name === 'buyer_information' || this.$route.name === 'buyer_cibd' || this.$route.name === 'buyer_ci' }"
                         active-class="active">
@@ -299,10 +157,9 @@
                 </li>
 
                 <!-- End Icons Nav -->
-                <li class="nav-item">
+                <li class="nav-item" v-if="can('buyerAccountPayable')">
                     <router-link class="nav-link" :to="{ name: 'buyer_payable' }"
-                        :class="{ active: this.$route.name === 'buyer_payable' }"
-                        active-class="active">
+                        :class="{ active: this.$route.name === 'buyer_payable' }" active-class="active">
                         <i class="bi bi-cash-coin"></i><span>Finance</span>
                     </router-link>
                 </li>
@@ -344,7 +201,34 @@
 <script>
 import './../admin/index';
 export default {
+    data() {
+        return {
+            componentKey: 0
+        }
+    },
+    mounted() {
+        this.remountComponent();
+
+    },
     methods: {
+        remountComponent() {
+            axios.get('/api/get-permissions', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                window.Laravel.jsPermissions = response.data;
+                console.log(response.data);
+            }).catch(error => {
+                console.error('Error fetching permissions:', error);
+            });
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    // console.log('load');
+                    this.componentKey++;
+                });
+            }, 2000);
+        },
         isAnyChildRouteActive() {
             const activeRoutes = [
                 '/buyer/product',

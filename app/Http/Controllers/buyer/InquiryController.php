@@ -15,8 +15,8 @@ class InquiryController extends Controller
      */
     public function index()
     {
-        // $userid = auth()->user()->id;
-        $userid = 2;
+        $userid = auth()->user()->id;
+        // $userid = 2;
         $prod = PriceInquiry::where('buyer', $userid)->orderby('created_at', 'desc')->get();
 
         return response()->json($prod, 200);
@@ -55,8 +55,8 @@ class InquiryController extends Controller
             'capacity' => 'required|array',
         ]);
 
-        $userid = 2;
-        // $userid = Auth::id();
+        // $userid = 2;
+        $userid = Auth::id();
         // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
         $validatedData['buyer'] = $userid;
 
@@ -93,8 +93,8 @@ class InquiryController extends Controller
      */
     public function show($id)
     {
-        // $userid = auth()->user()->id;
-        $userid = 2;
+        $userid = auth()->user()->id;
+        // $userid = 2;
         $prod = PriceInquiry::where('buyer', $userid)->where('id', $id)->first();
 
         return response()->json($prod, 200);

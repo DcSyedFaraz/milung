@@ -41,53 +41,59 @@ class ProductController extends Controller
             'capacity' => 'required|array',
         ]);
 
-        $priceInquiry = PriceInquiry::create($validatedData);
+        try {
+            $priceInquiry = PriceInquiry::create($validatedData);
 
-        foreach ($request->supplier_ids as $index => $supplier_id) {
-            foreach ($request->pcs as $pcsIndex => $pcsValue) {
-                foreach ($request->capacity as $capacityIndex => $capacityValue) {
+            if ($request->supplier_ids) {
+                foreach ($request->supplier_ids as $index => $supplier_id) {
+                    foreach ($request->pcs as $pcsIndex => $pcsValue) {
+                        foreach ($request->capacity as $capacityIndex => $capacityValue) {
 
-                    $priceInquiry->inquirysuppliers()->create([
-                        'user_id' => $supplier_id,
-                        'quantity' => $pcsValue,
-                        'capacity' => $capacityValue,
-                    ]);
+                            $priceInquiry->inquirysuppliers()->create([
+                                'user_id' => $supplier_id,
+                                'quantity' => $pcsValue,
+                                'capacity' => $capacityValue,
+                            ]);
+                        }
+
+                    }
                 }
-
             }
+
+            // Handle file uploads
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('public/files', $fileName);
+                $priceInquiry->file = $fileName;
+            }
+            if ($request->hasFile('file1')) {
+                $file1 = $request->file('file1');
+                $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                $file1->storeAs('public/files', $fileName1);
+                $priceInquiry->file1 = $fileName1;
+            }
+
+            // Save materials data
+            $pcs = $request->input('pcs');
+            $priceInquiry->pcs = array_filter($pcs, function ($value) {
+                return $value !== null;
+            });
+
+            // Save capacity data
+            $capacity = $request->input('capacity');
+            $priceInquiry->capacity = array_filter($capacity, function ($value) {
+                return $value !== null && $value !== 'undefined';
+            });
+
+            Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+
+            $priceInquiry->save();
+
+            return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        // Handle file uploads
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/files', $fileName);
-            $priceInquiry->file = $fileName;
-        }
-        if ($request->hasFile('file1')) {
-            $file1 = $request->file('file1');
-            $fileName1 = time() . '_' . $file1->getClientOriginalName();
-            $file1->storeAs('public/files', $fileName1);
-            $priceInquiry->file1 = $fileName1;
-        }
-
-        // Save materials data
-        $pcs = $request->input('pcs');
-        $priceInquiry->pcs = array_filter($pcs, function ($value) {
-            return $value !== null;
-        });
-
-        // Save capacity data
-        $capacity = $request->input('capacity');
-        $priceInquiry->capacity = array_filter($capacity, function ($value) {
-            return $value !== null && $value !== 'undefined';
-        });
-
-        Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
-
-        $priceInquiry->save();
-
-        return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
     }
     public function update_price_inquiry(Request $request, $id)
     {
@@ -369,7 +375,9 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $prod = PriceInquiry::findOrFail($id);
+
+        return response()->json($prod, 200);
     }
 
     /**

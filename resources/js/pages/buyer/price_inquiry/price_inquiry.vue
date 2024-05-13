@@ -25,7 +25,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4 mx-2">
-                                        <router-link :to="{ name: 'buyer_price_inquiry_entry' }"
+                                        <router-link :to="{ name: 'buyer_price_inquiry_entry' }" v-if="can('createBuyerPriceInquiry')"
                                             class="btn btn-warning fw-bold text-dark">Add New
                                         </router-link>
                                     </div>
@@ -79,7 +79,7 @@
                                             :class="{ 'rotate-icon': accordionOpen[inquiry.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'buyer_price_inquiry_edit', params: { id: inquiry.id}  }" class="text-success fw-bold btn mx-2">
+                                        <router-link v-if="can('editBuyerPriceInquiry')" :to="{ name: 'buyer_price_inquiry_edit', params: { id: inquiry.id}  }" class="text-success fw-bold btn mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 

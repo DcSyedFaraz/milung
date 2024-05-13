@@ -76,7 +76,7 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }">
+                                        <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }" v-if="can('inputPackingList')">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
                                     </td>
@@ -126,7 +126,7 @@
                             </ul>
                         </nav>
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-warning me-2 fw-bold" @click="createReceiptNote">
+                            <button class="btn btn-warning me-2 fw-bold" @click="createReceiptNote" v-if="can('createReceiptNote')">
                                 Create Receipt Note
                             </button>
                         </div>

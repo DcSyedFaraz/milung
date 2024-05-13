@@ -21,6 +21,7 @@ const store = new Vuex.Store({
             state.userRole = role;
         },
         clearAuth(state) {
+            localStorage.removeItem('authToken');
             state.authToken = null;
             state.userRole = null;
         },
