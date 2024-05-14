@@ -40,7 +40,9 @@
                                         </form>
                                         <hr />
                                         <div class="text-left">
-                                            <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                            <button type="button" class="small btn text-primary"
+                                                @click="forgotPass">Forgot Password?</button>
+                                            <!-- <a class="small" href="forgot-password.html"> Forgot Password?</a> -->
                                         </div>
                                     </div>
                                 </div>
@@ -72,13 +74,17 @@
 </template>
 
 <script>
-
+import Swal from 'sweetalert2';
+import ProgressModal from "./admin/progress/ProgressModal.vue";
 // import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js';
 export default {
-
+    components: {
+        ProgressModal,
+    },
 
     data() {
         return {
+            showProgress: false,
             email: "",
             password: "",
             loading: false,
@@ -105,22 +111,20 @@ export default {
                 // localStorage.setItem('authToken', token);
 
                 console.log("Login successful:", response.data);
-                toastr.success('Login successful', role);
                 this.email = "";
                 this.password = "";
 
-                // axios.get('/api/get-permissions', {
-                //     headers: {
-                //         Authorization: `Bearer ${localStorage.getItem('token')}`
-                //     }
-                // }).then(response => {
-                //     window.Laravel.jsPermissions = response.data;
-                //     console.log(response.data);
-                // }).catch(error => {
-                //     console.error('Error fetching permissions:', error);
-                // });
 
-                this.redirectBasedOnRole(role);
+                if (response.data.otp_login == true) {
+
+                    toastr.success(response.data.message);
+                    this.$router.push({ name: 'passChange' });
+
+                } else {
+
+                    toastr.success('Login successful', role);
+                    this.redirectBasedOnRole(role);
+                }
 
             } catch (error) {
 
@@ -132,9 +136,62 @@ export default {
                 this.loading = false;
             }
         },
+        async forgotPass() {
+
+            // Display SweetAlert prompt for email
+            const { value: email } = await Swal.fire({
+                title: 'Trouble Logging In?',
+                text: 'Oops! Forgot Your Password?',
+                icon: 'warning',
+                input: 'email',
+                inputPlaceholder: 'Enter your email address',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Submit'
+            });
+
+            if (email) { // Proceed only if email is provided
+                try {
+                    Swal.fire({
+                        title: 'Loading...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    // Make sure email is not empty
+                    if (!email.trim()) {
+                        throw new Error('Email is required');
+                    }
+
+                    // Make API call to trigger password reset
+                    await axios.post(`/api/forgotPass`, { email });
+
+                    // If successful, notify the user and admin
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Password Reset Requested',
+                        text: 'Your request has been submitted. Admin will contact you shortly.'
+                    });
+                } catch (error) {
+                    console.error('Error requesting password reset:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'Something went wrong.'
+                    });
+                }
+            }
+        }
+        ,
         redirectBasedOnRole(role) {
             // Redirect based on the user's role using Vue Router
             if (role === 'Admin') {
+                this.$router.push({ name: 'admin' });
+            }
+            else if (role === 'Internal') {
                 this.$router.push({ name: 'admin' });
             }
             else if (role === 'Supplier') {

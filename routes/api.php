@@ -29,7 +29,9 @@ use Spatie\Permission\Models\Permission;
 */
 
 // Auth
-Route::post('login', [UserController::class, 'login']);
+Route::post('login', [UserController::class, 'login'])->middleware('api');
+Route::post('passChange', [UserController::class, 'passChange'])->middleware('api');
+Route::post('forgotPass', [UserController::class, 'forgotPass']);
 Route::post('register', [UserController::class, 'register']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {

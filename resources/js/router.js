@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import login from "./pages/login.vue";
+import passChange from "./pages/passChange.vue";
+
 import Dashbboard from "./pages/dashboard.vue";
 import supplier from "./pages/supplier/dashboard.vue";
 import buyer from "./pages/buyer/dashboard.vue";
@@ -19,6 +22,11 @@ const routes = [
         path: "/",
         name: "login",
         component: login,
+    },
+    {
+        path: "/change-password",
+        name: "passChange",
+        component: passChange,
     },
     {
         path: "/allnotifications",

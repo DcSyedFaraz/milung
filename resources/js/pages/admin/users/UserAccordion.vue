@@ -32,7 +32,7 @@
                             <div class="row">
                                 <div class="mb-3 col-5">
                                     <label for="oneTimePassword" class="form-label">One Time Password:</label>
-                                    <input type="text" class="form-control" v-model="user.password">
+                                    <input type="text" class="form-control" v-model="user.otp">
                                 </div>
                                 <div class="mb-3 col-5">
                                     <label for="oneTimePassword" class="form-label">User ID Contact Person:</label>
@@ -176,6 +176,9 @@
             </td>
         </tr>
     </transition>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -190,6 +193,7 @@ export default {
     },
     data() {
         return {
+            loader: false,
             updateuser: {
                 id: null,
                 name: '',
@@ -307,6 +311,8 @@ export default {
         },
 
         updateUser(id, user) {
+            this.loader = true;
+
             const formData = {
                 staticsitems: this.staticsitems,
                 adminitems: this.adminitems,
@@ -320,6 +326,8 @@ export default {
                 formData: allItems,
             })
                 .then(response => {
+                    this.loader = false;
+
                     if (response.status === 200) {
                         toastr.success('User updated successfully');
 
@@ -327,6 +335,8 @@ export default {
                     }
                 })
                 .catch(error => {
+                    this.loader = false;
+
                     if (error.response.status === 422) {
                         const errors = error.response.data.errors;
 
@@ -351,5 +361,42 @@ export default {
 </script>
 
 <style scoped>
-/* Add styles for the accordion component */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
 </style>

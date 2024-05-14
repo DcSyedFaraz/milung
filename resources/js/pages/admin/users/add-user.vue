@@ -24,13 +24,15 @@
 
                                             <div class="row">
                                                 <div class="form-check col-3">
-                                                    <input class="form-check-input" type="radio" v-model="user.roles" value="Admin">
+                                                    <input class="form-check-input" type="radio" v-model="user.roles"
+                                                        value="Admin">
                                                     <label class="form-check-label" for="flexRadioDefault1">
                                                         Admin
                                                     </label>
                                                 </div>
                                                 <div class="form-check col-3">
-                                                    <input class="form-check-input" type="radio" v-model="user.roles" value="Internal">
+                                                    <input class="form-check-input" type="radio" v-model="user.roles"
+                                                        value="Internal">
                                                     <label class="form-check-label" for="flexRadioDefault1">
                                                         Internal
                                                     </label>
@@ -77,7 +79,7 @@
                                         </div>
                                         <div class="mb-3 col-3">
                                             <label for="oneTimePassword" class="form-label">One Time Password:</label>
-                                            <input type="text" v-model="user.password" required class="form-control">
+                                            <input type="text" v-model="user.otp" required class="form-control">
                                         </div>
                                         <div class="mb-3 col-3">
                                             <label for="oneTimePassword" class="form-label">User Contact
@@ -238,6 +240,9 @@
             </div>
         </div>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -245,6 +250,7 @@ export default {
 
     data() {
         return {
+            loader: false,
             user: {
                 roles: '',
                 permissions: [],
@@ -255,12 +261,8 @@ export default {
                     { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
                     { id: 'editSupplierEntry', label: 'Edit Supplier Entry' },
                     { id: 'setEditSupplierIDCode', label: 'Set/Edit Supplier ID Code' },
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
-                    { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
-                    { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
-                    { id: 'uploadPrintview', label: 'Upload Printview' },
-                    { id: 'cargoReadyConfirmation', label: 'Cargo Ready Confirmation' },
+                    { id: 'addNewBuyerEntry', label: 'Add New Buyer Entry' },
+                    { id: 'editBuyerEntry', label: 'Edit Buyer Entry' },
                     { id: 'addProductEntry', label: 'Add Product Entry' },
                     { id: 'editProductEntry', label: 'Edit Product Entry' },
                     { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
@@ -271,8 +273,8 @@ export default {
                     { id: 'createNewOrder', label: 'Create New Order' },
                     { id: 'editOrderDetails', label: 'Edit Order Details' },
                     { id: 'voidOrder', label: 'Void Order' },
-                    { id: 'milungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
-                    { id: 'confirmRejectPrintview', label: 'Printview Confirm/Reject Button' },
+                    { id: 'miLungOrderPriceEnquiry', label: 'MiLung Order Price Enquiry' },
+                    { id: 'printviewConfirmRejectButton', label: 'Printview Confirm or Reject Button' },
                     { id: 'massCargoPhotoApproval', label: 'Mass Cargo Photo Approval' },
                     { id: 'createSONumber', label: 'Create SO Number' },
                     { id: 'shipmentOverview', label: 'Shipment Overview' },
@@ -299,10 +301,10 @@ export default {
             buyer: {
                 selectAll: false,
                 checkboxes: [
-                    { id: 'transactionOverview', label: 'Transaction Overview' },
+                    { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
                     { id: 'createBuyerPriceInquiry', label: 'Create Buyer Price Inquiry' },
                     { id: 'editBuyerPriceInquiry', label: 'Edit Buyer Price Inquiry' },
-                    { id: 'createBuyerOrder', label: 'Create New Buyer Order' },
+                    { id: 'createNewBuyerOrder', label: 'Create New Buyer Order' },
                     { id: 'editBuyerOrder', label: 'Edit Buyer Order' },
                     { id: 'confirmRejectPrintview', label: 'Confirm/Reject Printview' },
                     { id: 'buyerShipmentOverview', label: 'Buyer Shipment Overview' },
@@ -357,24 +359,36 @@ export default {
         isPermissionChecked(value, checkboxModel) {
             return checkboxModel.includes(value);
         },
-
+        handleValidationErrors(validationErrors) {
+            console.log(validationErrors);
+            for (const key in validationErrors) {
+                if (Object.hasOwnProperty.call(validationErrors, key)) {
+                    const messages = validationErrors[key];
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
+        },
         updateUser(user) {
+            this.loader = true;
 
             console.log(user);
             axios.post('/api/addusers', user)
                 .then(response => {
+                    this.loader = false;
+
                     if (response.status === 200) {
                         toastr.success('User updated successfully');
-
+                        this.$router.push({ name: 'user' });
                     }
                 })
                 .catch(error => {
-                    if (error.response.status === 422) {
-                        const errors = error.response.data.errors;
+                    this.loader = false;
 
-                        errors.forEach(errorMessage => {
-                            toastr.error(errorMessage);
-                        });
+                    if (error.response.status === 422) {
+                        const validationErrors = error.response.data.errors;
+                        this.handleValidationErrors(validationErrors);
                     } else {
                         toastr.error('An error occurred while updating the user');
                     }
@@ -408,5 +422,44 @@ export default {
 .mx-new {
     margin-right: 1.23rem !important;
     margin-left: 1.23rem !important;
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

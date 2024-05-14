@@ -547,9 +547,7 @@ export default {
         },
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
-            if (this.accordionOpen[user.id]) {
-                this.populateUpdateUser(user);
-            }
+
         },
         changePage(page) {
             this.currentPage = page
