@@ -78,10 +78,10 @@ export default {
     mounted() {
 
         this.fetchNotifications();
-        this.interval.value = setInterval(() => {
-            console.log('notification fetched.');
-            this.fetchNotifications();
-        }, 15000);
+        // this.interval.value = setInterval(() => {
+        //     console.log('notification fetched.');
+        //     this.fetchNotifications();
+        // }, 15000);
 
 
     },

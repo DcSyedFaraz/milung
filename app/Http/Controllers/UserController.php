@@ -35,6 +35,36 @@ class UserController extends Controller
 
         return response()->json($notifications);
     }
+    public function userDetails()
+    {
+        $user = auth()->user();
+
+        return response()->json($user);
+    }
+    public function profile(Request $request)
+    {
+        $id = Auth::id();
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|same:confirmPassword',
+        ];
+
+        // Validate incoming request data
+        $validatedData = $request->validate($rules);
+
+        // Update the user data
+        $user = User::findOrFail($id);
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+
+        if ($validatedData['password']) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+        $user->save();
+
+        return response()->json(['message' => 'User updated successfully'], 200);
+    }
     public function all_notifications()
     {
         // $admin = User::role(['Admin', 'Internal'])->get();

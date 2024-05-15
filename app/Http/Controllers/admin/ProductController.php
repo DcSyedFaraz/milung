@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ProductNotification;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -266,10 +269,14 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function updprod(Request $request)
+    {
+        dd($request->all());
+
+    }
     public function addprod(Request $request)
     {
         // dd(auth()->user()->id);
-        // dd($request->all());
         // In your controller's validation method
         try {
             $validatedData = $request->validate([
@@ -318,7 +325,7 @@ class ProductController extends Controller
                 'product_label' => 'nullable|file',
                 'packaging_label' => 'nullable|file',
             ]);
-
+            \DB::beginTransaction();
             $product = Products::create($validatedData);
 
             // Save images
@@ -362,9 +369,25 @@ class ProductController extends Controller
             // Save the product
             $product->save();
 
+            // Notification
+            $admins = User::role(['Admin', 'Internal', 'Buyer'])->get();
+            $productName = e($validatedData['name']);
+            $message = "Good News! A new product with the name '$productName' has been added.";
+
+            \Notification::send($admins, new UserNotification($message, 'New Product'));
+
+            $buyers = User::role('Buyer')->pluck('email');
+            // dd($buyers);
+            foreach ($buyers as $Buyer) {
+                \Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
+            }
+
+            \DB::commit();
 
             return response()->json(['message' => 'Product saved successfully'], 201);
         } catch (\Exception $e) {
+
+            \DB::rollBack();
             throw $e;
         }
 

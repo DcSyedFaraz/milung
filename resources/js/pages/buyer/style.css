@@ -16,6 +16,19 @@
     color: #14245c;
 }
 
+.bg-milung {
+    background-color: #14245c !important;
+    border-color: #14245c !important;
+    color: white;
+}
+.bg-blue {
+    background-color: #009de1 !important;
+    border-color: #009de1 !important;
+    color: white;
+}
+
+
+
 .page-item.active .page-link,
 .btn-milung {
     background-color: #14245c !important;

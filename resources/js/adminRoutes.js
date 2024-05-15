@@ -7,8 +7,9 @@ import Datasupplier from "./pages/admin/supplier.vue";
 import Databuyer from "./pages/admin/buyer.vue";
 import buyerEntry from "./pages/admin/buyer-entry.vue";
 import supplerEntry from "./pages/admin/supplier-entry.vue";
-import product from "./pages/admin/product.vue";
-import productEntry from "./pages/admin/product-entry.vue";
+import product from "./pages/admin/product/product.vue";
+import productEntry from "./pages/admin/product/product-entry.vue";
+import productEdit from "./pages/admin/product/product-edit.vue";
 
 import Transaction from "./pages/admin/transaction/transaction.vue";
 
@@ -38,11 +39,19 @@ import statistics from "./pages/admin/statistics/statistics.vue";
 // Notifications
 import allnotifications from "./pages/notifications/allnotifications.vue";
 
+// Profile
+import profile from "./pages/profile.vue";
+
 const adminRoutes = [
     {
         path: "dashboard",
         name: "admins",
         component: DefaultAdmin,
+    },
+    {
+        path: "profile",
+        name: "adminprofile",
+        component: profile,
     },
     {
         path: "allnotifications",
@@ -93,6 +102,11 @@ const adminRoutes = [
         path: "productEntry",
         name: "productEntry",
         component: productEntry,
+    },
+    {
+        path: "productEdit/:id",
+        name: "adminproductEdit",
+        component: productEdit,
     },
     {
         path: "Transaction",

@@ -25,11 +25,19 @@ import payable from "./pages/buyer/account/payable.vue";
 // Notifications
 import allnotifications from "./pages/notifications/allnotifications.vue";
 
+// Profile
+import profile from "./pages/profile.vue";
+
 const buyerRoutes = [
     {
         path: "dashboard",
         name: "buyer",
         component: DefaultAdmin,
+    },
+    {
+        path: "profile",
+        name: "buyerprofile",
+        component: profile,
     },
     {
         path: "allnotifications",

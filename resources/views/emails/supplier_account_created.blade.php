@@ -56,6 +56,7 @@
         <ul>
             <li><strong>Email:</strong> {{ $user->email }}</li>
             <li><strong>One-Time Password (OTP):</strong> {{ $otp }}</li>
+            <li><strong>OrderFlow Link:</strong> <a href="http://ordersystem.creatricx.com/">Click here</a></li>
         </ul>
 
         <p>Please use the provided credentials to log in to your account. If you have any questions or need further

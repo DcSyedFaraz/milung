@@ -34,63 +34,23 @@
                     </li>
                     <!-- End Search Icon-->
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
-                            data-bs-toggle="dropdown">
+                    <li class="nav-item  ">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
                             <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
-                            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-                        </a><!-- End Profile Iamge Icon -->
+                            <span class="d-none d-md-block  ps-2"><span class="fs-8" style="font-size: 10px;">User
+                                    ID: {{ userDetails.userid }}</span> <br> {{ userDetails.name }}</span>
+                        </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                            <li class="dropdown-header">
-                                <h6>Kevin Anderson</h6>
-                                <span>Web Designer</span>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-person"></i>
-                                    <span>My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-gear"></i>
-                                    <span>Account Settings</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                    <i class="bi bi-question-circle"></i>
-                                    <span>Need Help?</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" >
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    <span>Sign Out</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- End Profile Dropdown Items -->
                     </li>
                     <!-- End Profile Nav -->
                     <notifications />
+
+                    <li class="nav-item">
+                        <router-link class="nav-link nav-icon" :to="{ name: 'buyerprofile' }">
+                            <i class="bi bi-gear"></i>
+                            <!-- <i class="bi bi-door-open text-warning"></i> -->
+                        </router-link>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link nav-icon" href="#"  @click="logout">
@@ -180,7 +140,7 @@
         <main id="main" class="main">
             <!-- End Page Title -->
 
-            <router-view></router-view>
+            <router-view @profile-updated="userDetail"></router-view>
         </main>
         <!-- End #main -->
 
@@ -203,14 +163,29 @@ import './../admin/index';
 export default {
     data() {
         return {
-            componentKey: 0
+            componentKey: 0,
+            userDetails: {},
         }
     },
     mounted() {
         this.remountComponent();
-
+        this.userDetail();
     },
     methods: {
+        userDetail() {
+            axios.get('/api/userDetails').then(response => {
+                this.userDetails = response.data;
+                console.log('det ', this.userDetails);
+            }).catch(error => {
+                console.error('Error fetching permissions:', error);
+            });
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    // console.log('load');
+                    this.componentKey++;
+                });
+            }, 2000);
+        },
         remountComponent() {
             axios.get('/api/get-permissions', {
                 headers: {

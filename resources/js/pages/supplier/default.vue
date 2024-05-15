@@ -5,10 +5,10 @@
             <div class="col-lg-8">
                 <div class="row">
                     <!-- Sales Card -->
-                    <div class="col-xxl-3 col-md-6 ">
+                    <div class="col-xxl-4 col-md-6 ">
                         <div class="card info-card sales-card">
                             <div class="card-body rounded bg-milung">
-                                <h5 class="card-title text-white text-white">Buyers
+                                <h5 class="card-title text-white text-white">Inquiry
                                     <!-- <span>| Today</span> -->
                                 </h5>
 
@@ -18,7 +18,7 @@
                                         <i class="bi bi-person"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Buyers }}</p>
+                                        <!-- <p class="text-white fw-bold">{{ data.Inquiry }}</p> -->
                                         <!-- <span class="text-success small pt-1 fw-bold">12%</span>
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
                                     </div>
@@ -29,11 +29,11 @@
                     <!-- End Sales Card -->
 
                     <!-- Revenue Card -->
-                    <div class="col-xxl-3 col-md-6">
+                    <div class="col-xxl-4 col-md-6">
                         <div class="card info-card revenue-card">
                             <div class="card-body rounded bg-blue">
                                 <h5 class="card-title text-white">
-                                    Products
+                                    Quotation
                                 </h5>
 
                                 <div class="d-flex align-items-center">
@@ -42,7 +42,7 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Product }}</p>
+                                        <!-- <p class="text-white fw-bold">{{ data.Products }}</p> -->
                                         <!-- <span class="text-success small pt-1 fw-bold">8%</span>
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
                                     </div>
@@ -50,11 +50,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xxl-3 col-md-6">
+                    <div class="col-xxl-4 col-md-6">
                         <div class="card info-card revenue-card">
                             <div class="card-body rounded bg-warning">
                                 <h5 class="card-title text-white">
-                                    Supplier
+                                    PrintView
                                 </h5>
 
                                 <div class="d-flex align-items-center">
@@ -63,27 +63,7 @@
                                         <i class="bi bi-cart"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Supplier }}</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-md-6">
-                        <div class="card info-card revenue-card">
-                            <div class="card-body rounded bg-primary">
-                                <h5 class="card-title text-white">
-                                    Admin
-                                </h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-gear"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <!-- <p class="text-white fw-bold" >$3,264</p> -->
+                                        <!-- <p class="text-white fw-bold">{{ data.Orders }}</p> -->
 
                                     </div>
                                 </div>
@@ -141,7 +121,7 @@
                 <!-- Summary -->
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-white">Summary</h5>
+                        <h5 class="card-title">Summary</h5>
                         <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
 
                         <div class="Summary activity">
@@ -149,7 +129,7 @@
 
                         </div>
                         <div>
-                            <h5 class="card-title text-white">
+                            <h5 class="card-title">
                                 Budget Report <span><a href="#">See All</a></span>
                             </h5>
                             <div class="news">
@@ -182,7 +162,7 @@
                         </div>
                         <!-- Summay Ends -->
                         <div>
-                            <h5 class="card-title text-white">Top Categories</h5>
+                            <h5 class="card-title">Top Categories</h5>
                             <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                             <div class="icon-card">
@@ -209,6 +189,10 @@
 
 <script>
 import './index';
+
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
 export default {
     data() {
 
@@ -217,22 +201,24 @@ export default {
             data: {},
         }
     },
-    mounted() {
+    created() {
         this.fetchdata();
 
     },
     methods: {
-        async fetchdata() {
-            try {
+        // async fetchdata() {
+        //     NProgress.start();
+        //     try {
 
-                const response = await axios.get('/api/dashboard');
-                this.data = response.data;
-                console.log(this.data);
-
-            } catch (error) {
-                console.error(error);
-            }
-        },
+        //         const response = await axios.get('/api/buyer/dashboard');
+        //         this.data = response.data;
+        //         console.log(this.data);
+        //         NProgress.done();
+        //     } catch (error) {
+        //         NProgress.done();
+        //         console.error(error);
+        //     }
+        // },
     },
 }
 </script>

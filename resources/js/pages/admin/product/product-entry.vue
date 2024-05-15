@@ -453,14 +453,16 @@
             </div>
         </form>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
-import ImageSelector from './product/imageselector.vue';
-import fileinput from './product/file-input.vue';
+import ImageSelector from './imageselector.vue';
+import fileinput from './file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import './index';
 
 
 
@@ -473,6 +475,7 @@ export default {
     },
     data() {
         return {
+            loader: false,
             productOptions: [],
             quoteExpiredDate: '',
             Dates: '',
@@ -552,6 +555,7 @@ export default {
             this.selectedImages = images;
         },
         sendDateOnly() {
+
             // Extract date part from quoteExpiredDate
             const selectedDate = new Date(this.Dates);
             const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
@@ -560,6 +564,8 @@ export default {
             console.log('Selected Date:', this.quoteExpiredDate);
         },
         async submitForm() {
+            this.loader = true;
+
             console.log("Form submitted with images:", this.quoteExpiredDate);
 
             // Create a new FormData object
@@ -597,7 +603,7 @@ export default {
                 console.log(this.group.id);
                 // Send the form data to the API endpoint
                 const addProduct = await axios.post('/api/addprod', formData);
-
+                this.loader = false;
                 if (addProduct.status === 201) {
                     toastr.success(addProduct.data.message);
                     this.$router.push({ name: 'product' });
@@ -606,18 +612,32 @@ export default {
                     toastr.error('Unexpected response from the server');
                 }
             } catch (error) {
-                console.error('Error submitting form:', error);
-                toastr.error('An error occurred while submitting the form');
+                this.loader = false;
+                if (error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    toastr.error('An error occurred while updating the user');
+                }
             }
         },
 
-
+        handleValidationErrors(validationErrors) {
+            console.log(validationErrors);
+            for (const key in validationErrors) {
+                if (Object.hasOwnProperty.call(validationErrors, key)) {
+                    const messages = validationErrors[key];
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
+        },
     },
 };
 </script>
 
 <style scoped>
-@import url('./style.css');
 
 .dp-custom-cell {
     border-radius: 50%;
@@ -629,5 +649,44 @@ export default {
 
 .rotate-icon {
     transform: rotate(180deg);
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

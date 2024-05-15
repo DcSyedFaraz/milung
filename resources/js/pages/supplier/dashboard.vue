@@ -34,66 +34,26 @@
                     </li>
                     <!-- End Search Icon-->
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
-                            data-bs-toggle="dropdown">
-                            <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
-                            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-                        </a><!-- End Profile Iamge Icon -->
+                    <li class="nav-item  ">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+                            <img src="./../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
+                            <span class="d-none d-md-block  ps-2"><span class="fs-8" style="font-size: 10px;">User
+                                    ID: {{ userDetails.userid }}</span> <br> {{ userDetails.name }}</span>
+                        </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
-                           >
-                            <li class="dropdown-header">
-                                <h6>Kevin Anderson</h6>
-                                <span>Web Designer</span>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-person"></i>
-                                    <span>My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-gear"></i>
-                                    <span>Account Settings</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                    <i class="bi bi-question-circle"></i>
-                                    <span>Need Help?</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" >
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    <span>Sign Out</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- End Profile Dropdown Items -->
                     </li>
                     <notifications />
+
+                    <li class="nav-item">
+                        <router-link class="nav-link nav-icon" :to="{ name: 'supplierprofile' }">
+                            <i class="bi bi-gear"></i>
+                            <!-- <i class="bi bi-door-open text-warning"></i> -->
+                        </router-link>
+                    </li>
+
                     <!-- End Profile Nav -->
                     <li class="nav-item">
-                        <a class="nav-link nav-icon" href="#"  @click="logout">
+                        <a class="nav-link nav-icon" href="#" @click="logout">
                             <i class="bi bi-door-open text-warning"></i>
                         </a>
                     </li>
@@ -146,7 +106,7 @@
                     </ul>
                 </li> -->
                 <!-- End Forms Nav -->
-                <li class="nav-item" v-if="can('priceInquiry')" >
+                <li class="nav-item" v-if="can('priceInquiry')">
                     <router-link class="nav-link" :to="{ name: 'supplier_price_inquiry' }"
                         :class="{ active: this.$route.name === 'supplier_price_inquiry_entry' }" active-class="active">
                         <i class="bi bi-currency-exchange"></i><span>Price Inquiry</span>
@@ -154,7 +114,7 @@
                 </li>
                 <!-- End Tables Nav -->
 
-                <li class="nav-item" v-if="can('supplierOrderPriceQuote | supplierOrderConfirmationNotification')" >
+                <li class="nav-item" v-if="can('supplierOrderPriceQuote | supplierOrderConfirmationNotification')">
 
                     <a class="nav-link collapsed" :class="{ 'active': isAnyOrderRouteActive() }"
                         data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -163,12 +123,14 @@
                     <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyOrderRouteActive() }">
                         <li>
-                            <router-link class="nav-link" :to="{ name: 'supplier_order_list' }" v-if="can('supplierOrderConfirmationNotification | uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')"
+                            <router-link class="nav-link" :to="{ name: 'supplier_order_list' }"
+                                v-if="can('supplierOrderConfirmationNotification | uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')"
                                 :class="{ active: $route.name === 'order_entry' || $route.name === 'supplier_order_edit' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order</span>
                             </router-link>
-                            <router-link class="nav-link" :to="{ name: 'supplier_order_price_inquiry' }" v-if="can('supplierOrderPriceQuote')"
+                            <router-link class="nav-link" :to="{ name: 'supplier_order_price_inquiry' }"
+                                v-if="can('supplierOrderPriceQuote')"
                                 :class="{ active: $route.name === 'supplier_order_price_inquiry' }"
                                 active-class="active">
                                 <i class="bi bi-bag"></i><span>Order Price Inquiry</span>
@@ -179,7 +141,7 @@
                 </li>
                 <!-- Shipment -->
 
-                <li class="nav-item" v-if="can('shipmentOverview')" >
+                <li class="nav-item" v-if="can('shipmentOverview')">
                     <a class="nav-link collapsed" :class="{ 'active': isAnyShipmentRouteActive() }"
                         data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-box2"></i><span>Shipment</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -188,7 +150,8 @@
                         :class="{ 'show': isAnyShipmentRouteActive() }">
                         <li>
                             <router-link class="nav-link" :to="{ name: 'supplier_shipment_overview' }"
-                                :class="{ active: $route.name === 'packinglist' || $route.name === 'supplier_receiptnote' }" active-class="active">
+                                :class="{ active: $route.name === 'packinglist' || $route.name === 'supplier_receiptnote' }"
+                                active-class="active">
                                 <i class="bi bi-bag"></i><span>Shipment Overview</span>
                             </router-link>
                         </li>
@@ -196,7 +159,7 @@
                     </ul>
                 </li>
                 <!-- End Icons Nav -->
-                <li class="nav-item" v-if="can('supplierAccountsReceivable')" >
+                <li class="nav-item" v-if="can('supplierAccountsReceivable')">
 
                     <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" active-class="active">
                         <i class="bi bi-cash-coin"></i><span>Finance</span>
@@ -211,7 +174,7 @@
         <main id="main" class="main">
             <!-- End Page Title -->
 
-            <router-view></router-view>
+            <router-view @profile-updated="userDetail"></router-view>
         </main>
         <!-- End #main -->
 
@@ -234,14 +197,29 @@ import './../admin/index';
 export default {
     data() {
         return {
-            componentKey: 0
+            componentKey: 0,
+            userDetails: {},
         }
     },
     mounted() {
         this.remountComponent();
-
+        this.userDetail();
     },
     methods: {
+        userDetail() {
+            axios.get('/api/userDetails').then(response => {
+                this.userDetails = response.data;
+                console.log('det ', this.userDetails);
+            }).catch(error => {
+                console.error('Error fetching permissions:', error);
+            });
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    // console.log('load');
+                    this.componentKey++;
+                });
+            }, 2000);
+        },
         remountComponent() {
             axios.get('/api/get-permissions', {
                 headers: {

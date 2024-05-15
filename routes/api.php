@@ -43,6 +43,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('notifications', [UserController::class, 'index']);
     Route::get('all-notifications', [UserController::class, 'all_notifications']);
     Route::post('notifications/{id}', [UserController::class, 'markAsRead']);
+
+    // profile
+    Route::get('userDetails', [UserController::class, 'userDetails']);
+    Route::post('profile', [UserController::class, 'profile']);
 });
 
 
@@ -50,6 +54,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 // <-- Buyer Routes -->
 Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer']], function () {
+
+
+    Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
 
     // Product
     Route::get('products', [UserController::class, 'products']);
@@ -119,6 +126,7 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
 Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
 
+    Route::get('dashboard', [BuyerController::class, 'dashboard']);
 
     // Fetching Users
     Route::get('users', [UserController::class, 'users'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
@@ -137,6 +145,13 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::put('updateusers/{id}', [UserController::class, 'update'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
     Route::post('addusers', [UserController::class, 'addUser'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
     Route::delete('userDelete/{id}', [UserController::class, 'delUser'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
+
+    // Adding Products
+    Route::get('products', [UserController::class, 'products'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
+    Route::get('product/{id}', [BuyerController::class, 'product'])->middleware('can:addProductEntry,editProductEntry');
+    Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
+    Route::post('addprod', [ProductController::class, 'addprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
+    Route::post('updprod', [ProductController::class, 'updprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
 
     //Product-group
     Route::post('product_group', [ProductController::class, 'product_group'])->middleware('can:createProductGroup');
@@ -189,11 +204,6 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
 
     Route::post('statement', [ProductController::class, 'statement']);
-
-    // Adding Products
-    Route::get('products', [UserController::class, 'products'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
-    Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
-    Route::post('addprod', [ProductController::class, 'addprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
 
 });
 

@@ -1,4 +1,4 @@
-import DefaultAdmin from "./pages/admin/default.vue";
+import DefaultAdmin from "./pages/supplier/default.vue";
 
 // Order
 import order_list from "./pages/supplier/order/order_list.vue";
@@ -20,12 +20,20 @@ import recievables from "./pages/supplier/finance/recievables.vue";
 // Notifications
 import allnotifications from "./pages/notifications/allnotifications.vue";
 
+// Profile
+import profile from "./pages/profile.vue";
+
 
 const supplierRoutes = [
     {
         path: "dashboard",
         name: "supplierdash",
         component: DefaultAdmin,
+    },
+    {
+        path: "profile",
+        name: "supplierprofile",
+        component: profile,
     },
     {
         path: "allnotifications",

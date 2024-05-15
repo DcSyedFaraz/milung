@@ -50,29 +50,29 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr v-for="user in dataToDisplay" :key="user.id">
-                                    <td>{{ user.article }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.description }}</td>
-                                    <td>{{ user.product_group?.group_name }}</td>
+                                <tr v-for="product in dataToDisplay" :key="product.id">
+                                    <td>{{ product.article }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.description }}</td>
+                                    <td>{{ product.product_group?.group_name }}</td>
 
                                     <td>
                                         <span
-                                            :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
-                                            {{ user.status === 'active' ? 'Active' : 'InActive' }}
+                                            :class="{ 'badge': true, 'bg-success-new': product.status === 'active', 'bg-danger': product.status !== 'active' }">
+                                            {{ product.status === 'active' ? 'Active' : 'InActive' }}
                                         </span>
                                     </td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
+                                        <!-- <button @click="toggleAccordion(product)" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[product.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link :to="{ name: 'adminproductEdit', params: { id: product.id } }" class="btn btn-light text-dark">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
+                                        <a href="#" @click="deleteUser(product.id)" class="text-dark"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -105,7 +105,6 @@
 </template>
 
 <script>
-import './index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -135,8 +134,8 @@ export default {
     },
     computed: {
         filteredUsers() {
-            return this.users.filter(user => {
-                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.article.toLowerCase().includes(this.searchQuery.toLowerCase());
+            return this.users.filter(product => {
+                return product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || product.article.toLowerCase().includes(this.searchQuery.toLowerCase());
             });
         },
         totalPages() {
@@ -176,8 +175,8 @@ export default {
                 title: message
             });
         },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+        toggleAccordion(product) {
+            this.accordionOpen[product.id] = !this.accordionOpen[product.id];
         },
         changePage(page) {
             this.currentPage = page
@@ -194,13 +193,13 @@ export default {
 
                 if (response.status === 200) {
                     toastr.success('User updated successfully');
-                    this.$router.push({ name: 'user' });
+                    this.$router.push({ name: 'product' });
                 }
             } catch (error) {
                 if (error.response.status === 422) {
                     toastr.error('Please fix the validation errors and try again');
                 } else {
-                    toastr.error('An error occurred while updating the user');
+                    toastr.error('An error occurred while updating the product');
                 }
             }
         },
@@ -233,15 +232,15 @@ export default {
                 try {
                     await axios.delete(`/api/prodDelete/${userId}`);
 
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
+                    // If successful, remove the product from the local data
+                    this.users = this.users.filter(product => product.id !== userId);
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Product deleted successfully',
                     });
                 } catch (error) {
-                    console.error('Error deleting user:', error);
+                    console.error('Error deleting product:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error deleting product',
@@ -255,7 +254,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('./style.css');
 
 .rotate-icon {
     transform: rotate(180deg);

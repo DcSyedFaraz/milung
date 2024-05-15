@@ -579,17 +579,7 @@ export default {
     margin-right: 11rem !important;
     margin-left: 11rem !important;
 }
-.bg-blue {
-    background-color: #009de1 !important;
-    border-color: #009de1 !important;
-    color: white;
-}
 
-.bg-milung {
-    background-color: #14245c !important;
-    border-color: #14245c !important;
-    color: white;
-}
 
 .bg-orange {
     background-color: #f67b00 !important;
