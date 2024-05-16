@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\buyer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PriceInquiryNotification;
 use App\Models\PriceInquiry;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Auth;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -54,38 +58,52 @@ class InquiryController extends Controller
             'pcs' => 'required|array',
             'capacity' => 'required|array',
         ]);
+        try {
+            \DB::beginTransaction();
+            $userid = Auth::id();
+            // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
+            $validatedData['buyer'] = $userid;
 
-        // $userid = 2;
-        $userid = Auth::id();
-        // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
-        $validatedData['buyer'] = $userid;
+            $priceInquiry = PriceInquiry::create($validatedData);
 
-        $priceInquiry = PriceInquiry::create($validatedData);
+            if ($request->hasFile('file1')) {
+                $file1 = $request->file('file1');
+                $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                $file1->storeAs('public/files', $fileName1);
+                $priceInquiry->file1 = $fileName1;
+            }
 
-        if ($request->hasFile('file1')) {
-            $file1 = $request->file('file1');
-            $fileName1 = time() . '_' . $file1->getClientOriginalName();
-            $file1->storeAs('public/files', $fileName1);
-            $priceInquiry->file1 = $fileName1;
+            // Save materials data
+            $pcs = $request->input('pcs');
+            $priceInquiry->pcs = array_filter($pcs, function ($value) {
+                return $value !== null;
+            });
+
+            // Save capacity data
+            $capacity = $request->input('capacity');
+            $priceInquiry->capacity = array_filter($capacity, function ($value) {
+                return $value !== null && $value !== 'undefined';
+            });
+
+            Auth::check() ? $priceInquiry->buyer = Auth::id() : 2;
+
+            $priceInquiry->save();
+
+            // Notification
+            $admins = User::role(['Admin', 'Internal'])->get();
+            $inquiry_number = $validatedData['inquiry_number'];
+            $messages = "A price inquiry with the number '$inquiry_number' has been added.";
+
+            \Notification::send($admins, new UserNotification($messages, 'New Price Inquiry'));
+
+            \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+
+            DB::commit();
+            return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
         }
-
-        // Save materials data
-        $pcs = $request->input('pcs');
-        $priceInquiry->pcs = array_filter($pcs, function ($value) {
-            return $value !== null;
-        });
-
-        // Save capacity data
-        $capacity = $request->input('capacity');
-        $priceInquiry->capacity = array_filter($capacity, function ($value) {
-            return $value !== null && $value !== 'undefined';
-        });
-
-        Auth::check() ? $priceInquiry->buyer = Auth::id() : 2;
-
-        $priceInquiry->save();
-
-        return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
     }
 
     /**
@@ -103,9 +121,24 @@ class InquiryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function inquiry_followup($id)
     {
-        //
+        $user = Auth::user();
+        // dd($id);
+        $admins = User::role(['Admin', 'Internal'])->get();
+        $inquiry_number = PriceInquiry::where('id', $id)->where('buyer', $user->id)->value('inquiry_number');
+        // dd($InquirySupplier);
+        if ($inquiry_number) {
+
+            $messages = "Buyer with User ID:'$user->userid' wanted to follow up on the recent addition of a price inquiry with the number '$inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
+            \Notification::send($admins, new UserNotification($messages, 'Price Inquiry Follow Up'));
+
+            foreach ($admins as $admin) {
+
+                \Mail::to($admin->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+            }
+        }
+        return response()->json(['message' => 'Follow up sent successfully']);
     }
 
     /**
@@ -167,7 +200,7 @@ class InquiryController extends Controller
      */
     public function destroy($id)
     {
-         try {
+        try {
             $user = PriceInquiry::findOrFail($id);
             $user->delete();
 

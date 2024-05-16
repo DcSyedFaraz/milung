@@ -3,15 +3,6 @@
         <section class="section min-vh-100">
             <form @submit.prevent="submitForm" enctype="multipart/form-data">
                 <div class="container">
-                    <!-- <div class="row">
-                        <div class="col-6"></div>
-                        <div class="col-md-6 gap-2">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-milung mx-2 px-4" type="submit">Save</button>
-                                <button class="btn btn-warning px-4" type="reset">Clear</button>
-                            </div>
-                        </div>
-                    </div> -->
 
                     <div class="row my-5">
                         <div class="col-md-6">
@@ -35,15 +26,15 @@
                                 </div>
                                 <div class="col-7">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="profitRadio" value="profit" @change="handleOptionChange"
-                                            v-model="selectedOption">
+                                        <input class="form-check-input" type="radio" id="profitRadio" value="profit"
+                                            @change="handleOptionChange" v-model="selectedOption">
                                         <label class="form-check-label" for="profitRadio">
                                             Profit (%)
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="amountRadio" checked value="amount" @change="handleOptionChange"
-                                            v-model="selectedOption">
+                                        <input class="form-check-input" type="radio" id="amountRadio" checked
+                                            value="amount" @change="handleOptionChange" v-model="selectedOption">
                                         <label class="form-check-label" for="amountRadio">
                                             Amount
                                         </label>
@@ -99,6 +90,7 @@
 export default {
     data() {
         return {
+            id: '',
             group_name: '',
             selectedOption: '',
             description: '',
@@ -109,7 +101,29 @@ export default {
             submitting: false
         }
     },
+    mounted() {
+        // Fetch product group data when editing
+        if (this.$route.params.id) {
+            this.id = this.$route.params.id;
+            this.fetchProductGroupData();
+        }
+    },
     methods: {
+        fetchProductGroupData() {
+            axios.get(`/api/product_group/${this.id}`)
+                .then(response => {
+                    const productGroup = response.data;
+                    this.group_name = productGroup.group_name;
+                    this.description = productGroup.description;
+                    this.profit = productGroup.profit;
+                    this.amount = productGroup.amount;
+                    this.hs_de = productGroup.hs_de;
+                    this.hs_cn = productGroup.hs_cn;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         handleOptionChange() {
             if (this.selectedOption === 'profit') {
                 this.amount = 0; // Set amount to null if profit is selected
@@ -129,42 +143,64 @@ export default {
                 }
             }
         },
-        submitForm() {
-            // Disable submit button to prevent multiple submissions
-            this.submitting = true;
-
+        prepareFormData() {
             const formData = new FormData();
             formData.append('group_name', this.group_name);
             formData.append('description', this.description);
-            formData.append('profit', this.profit);
-            formData.append('amount', this.amount);
+            formData.append('profit', this.profit ?? 0);
+            formData.append('amount', this.amount ?? 0);
             formData.append('hs_de', this.hs_de);
             formData.append('hs_cn', this.hs_cn);
+            return formData;
+        },
+        submitFormData(formData) {
+            if (this.id) {
+                // Update product group
+                axios.post(`/api/product_group/${this.id}`, formData)
+                    .then(response => {
+                        console.log(response);
+                        toastr.success(response.data.message);
+                        this.$router.push({ name: 'product_group' });
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.status === 422) {
+                            const validationErrors = error.response.data.errors;
+                            this.handleValidationErrors(validationErrors);
+                        } else {
+                            // Non-validation error, log the error
+                            console.error(error);
 
-            axios.post('/api/product_group', formData)
-                .then(response => {
-                    // Handle successful user creation
-                    console.log(response);
+                            // Show a toastr error notification
+                            toastr.error('An error occurred while adding the user');
+                        }
+                    });
+            } else {
+                // Create new product group
+                axios.post('/api/product_group', formData)
+                    .then(response => {
+                        console.log(response);
+                        toastr.success(response.data.message);
+                        this.$router.push({ name: 'product_group' });
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.status === 422) {
+                            const validationErrors = error.response.data.errors;
+                            this.handleValidationErrors(validationErrors);
+                        } else {
+                            // Non-validation error, log the error
+                            console.error(error);
 
-                    // Assuming you want to show a success toastr notification
-                    toastr.success(response.data.message);
-                    this.$router.push({ name: 'product_group' });
-                })
-                .catch(error => {
-                    // Handle errors
-                    if (error.response && error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        this.handleValidationErrors(validationErrors);
-                    } else {
-                        // Non-validation error, log the error
-                        console.error(error);
-
-                        // Show a toastr error notification
-                        toastr.error('An error occurred while adding the user');
-                    }
-                })
+                            // Show a toastr error notification
+                            toastr.error('An error occurred while adding the user');
+                        }
+                    });
+            }
+        },
+        submitForm() {
+            this.submitting = true;
+            const formData = this.prepareFormData();
+            this.submitFormData(formData)
                 .finally(() => {
-                    // Re-enable submit button after form submission is complete
                     this.submitting = false;
                 });
         },

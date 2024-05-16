@@ -66,9 +66,10 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
 
     // Price Inquiry
     Route::resource('price_inquiry', InquiryController::class)->except([
-        'update'
+        'update','edit'
     ])->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
     Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update')->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
+    Route::get('inquiry_followup/{id}', [InquiryController::class, 'inquiry_followup'])->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
 
     //Orders
     Route::resource('order', BuyerOrderController::class)->except(['update', 'create'])->middleware('can:createNewBuyerOrder');
@@ -92,6 +93,7 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
 // <-- Supplier Routes -->
 Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Supplier']], function () {
 
+    Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
     // Shipment
     Route::get('shipments', [SupplierShipmentController::class, 'shipments'])->middleware('can:shipmentOverview');
     Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment'])->middleware('can:shipmentOverview');
@@ -155,11 +157,14 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     //Product-group
     Route::post('product_group', [ProductController::class, 'product_group'])->middleware('can:createProductGroup');
+    Route::post('product_group/{id}', [ProductController::class, 'product_group_update'])->middleware('can:createProductGroup');
+    Route::get('product_group/{id}', [ProductController::class, 'product_group_id'])->middleware('can:createProductGroup');
     Route::get('product_group_get', [ProductController::class, 'product_group_get'])->middleware('can:createProductGroup');
     Route::get('product_group_get_all', [ProductController::class, 'product_group_get_all'])->middleware('can:createProductGroup');
 
     //price_inquiry
     Route::post('price_inquiry', [ProductController::class, 'price_inquiry'])->middleware('can:createPriceInquiry');
+    Route::get('inquiry_followup/{id}', [ProductController::class, 'inquiry_followup'])->middleware('can:createPriceInquiry');
     Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
     Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
     Route::get('price_inquiry_get/{id}', [ProductController::class, 'show']);

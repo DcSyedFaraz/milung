@@ -319,21 +319,21 @@ export default {
         };
     },
     methods: {
-        fetchSupplierProfiles(groupId) {
-            NProgress.start();
-            console.log(groupId);
-            axios
-                .get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
-                .then((response) => {
-                    this.supplier_profiles = response.data;
-                    console.log(response);
-                    NProgress.done();
-                })
-                .catch((error) => {
-                    console.error(error);
-                    NProgress.done();
-                });
-        },
+        // fetchSupplierProfiles(groupId) {
+        //     NProgress.start();
+        //     console.log(groupId);
+        //     axios
+        //         .get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
+        //         .then((response) => {
+        //             this.supplier_profiles = response.data;
+        //             console.log(response);
+        //             NProgress.done();
+        //         })
+        //         .catch((error) => {
+        //             console.error(error);
+        //             NProgress.done();
+        //         });
+        // },
         fetchInquiry() {
             NProgress.start();
             const inquiryid = this.$route.params.id;

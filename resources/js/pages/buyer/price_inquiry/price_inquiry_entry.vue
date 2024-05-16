@@ -228,7 +228,7 @@
                                 <button type="button" style="background-color: #41b400 !important;"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3" @click="onSubmit">Send ML</button>
 
-                                <button type="button"
+                                <button type="button" v-show="follow_up" @click="followup"
                                     class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
                                     Up</button>
 
@@ -262,12 +262,28 @@ export default {
             materials: [{ quantity: '' }], // Initialize with default values
             capacity: [{ quantity: '', unit: '' }],
             buyers: [],
-
+            follow_up: false,
             groups: [],
             imageLoaded: false,
         };
     },
     methods: {
+        followup() {
+            NProgress.start();
+            const inquiryid = this.$route.params.id;
+            console.log(inquiryid);
+            axios.get(`/api/buyer/inquiry_followup/${inquiryid}`) // Replace '/api/supplier_profiles/' with your API endpoint
+                .then(response => {
+
+                    console.log(response);
+                    toastr.success(response.data.message)
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
+        },
         updateInquiryMaterials() {
             this.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
         },
@@ -282,7 +298,9 @@ export default {
                     this.inquiry = response.data;
                     console.log(this.inquiry);
 
-
+                    if(inquiryid){
+                        this.follow_up = true;
+                    }
 
                     if (this.inquiry != null) {
                         this.cargo_place = this.inquiry.cargo_place || [];

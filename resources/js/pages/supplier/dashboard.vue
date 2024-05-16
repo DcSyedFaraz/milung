@@ -36,7 +36,7 @@
 
                     <li class="nav-item  ">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                            <img src="./../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
+                            <img src="./../../../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
                             <span class="d-none d-md-block  ps-2"><span class="fs-8" style="font-size: 10px;">User
                                     ID: {{ userDetails.userid }}</span> <br> {{ userDetails.name }}</span>
                         </a>

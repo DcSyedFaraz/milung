@@ -206,19 +206,19 @@ export default {
 
     },
     methods: {
-        // async fetchdata() {
-        //     NProgress.start();
-        //     try {
+        async fetchdata() {
+            NProgress.start();
+            try {
 
-        //         const response = await axios.get('/api/buyer/dashboard');
-        //         this.data = response.data;
-        //         console.log(this.data);
-        //         NProgress.done();
-        //     } catch (error) {
-        //         NProgress.done();
-        //         console.error(error);
-        //     }
-        // },
+                const response = await axios.get('/api/supplier/dashboard');
+                this.data = response.data;
+                console.log(this.data);
+                NProgress.done();
+            } catch (error) {
+                NProgress.done();
+                console.error(error);
+            }
+        },
     },
 }
 </script>

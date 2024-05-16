@@ -247,7 +247,7 @@
                                 <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3"
                                     data-bs-toggle="modal" data-bs-target="#supplierModal">Send To Supplier</button>
 
-                                <button type="button"
+                                <button type="button" v-show="follow_up" @click="followup"
                                     class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
                                     Up</button>
 
@@ -307,28 +307,6 @@ export default {
     },
     data() {
         return {
-            // materials: this.mode === 'create' ? [{ quantity: '' }] : this.user && this.user.pcs ? this.user.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }],
-            // capacity: this.mode === 'create' ? [{ quantity: '', unit: '' }] : this.user && this.user.capacity ? this.user.capacity.map(capacity => {
-            //     const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
-            //     return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
-            // }) : [{ quantity: '' }],
-            // buyer: this.mode === 'create' ? '' : this.user ? this.user.buyer : '',
-            // inquiry_number: this.mode === 'create' ? '' : this.user ? this.user.inquiry_number : '',
-            // article: this.mode === 'create' ? '' : this.user ? this.user.article : '',
-            // group: this.mode === 'create' ? null : this.user ? this.user.group : null,
-            // name: this.mode === 'create' ? '' : this.user ? this.user.name : '',
-            // description: this.mode === 'create' ? '' : this.user ? this.user.description : '',
-            // cargo: this.mode === 'create' ? '' : this.user ? this.user.cargo : '',
-            // cargo_place: this.mode === 'create' ? [] : this.user ? this.user.cargo_place : [],
-            // incoterm: this.mode === 'create' ? '' : this.user ? this.user.incoterm : '',
-            // urgent: this.mode === 'create' ? false : this.user ? this.user.urgent : false,
-            // method: this.mode === 'create' ? '' : this.user ? this.user.method : '',
-            // color: this.mode === 'create' ? '' : this.user ? this.user.color : '',
-            // packaging: this.mode === 'create' ? '' : this.user ? this.user.packaging : '',
-            // requirements: this.mode === 'create' ? '' : this.user ? this.user.requirements : '',
-            // status: this.mode === 'create' ? '' : this.user ? this.user.status : '',
-            // file: this.mode === 'create' ? '' : this.user ? this.user.file : '',
-            // file1: this.mode === 'create' ? '' : this.user ? this.user.file1 : '',
             inquiry: {
                 materials: [{ quantity: '' }], // Initialize with default values
                 capacity: [{ quantity: '', unit: '' }],
@@ -341,6 +319,7 @@ export default {
             imageLoaded: false,
             groups: [],
             supplier_profiles: [],
+            follow_up: false,
         };
     },
     methods: {
@@ -373,6 +352,22 @@ export default {
                 .then(response => {
                     this.supplier_profiles = response.data;
                     console.log(response);
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
+        },
+        followup() {
+            NProgress.start();
+            const inquiryid = this.$route.params.id;
+            console.log(inquiryid);
+            axios.get(`/api/inquiry_followup/${inquiryid}`) // Replace '/api/supplier_profiles/' with your API endpoint
+                .then(response => {
+
+                    console.log(response);
+                    toastr.success(response.data.message)
                     NProgress.done();
                 })
                 .catch(error => {
@@ -650,6 +645,7 @@ export default {
         // Trigger loadImage method if in edit mode and there's an existing image
         if (this.mode === 'edit') {
             this.fetchInquiry();
+            this.follow_up = true;
         }
         if (this.mode === 'edit' && this.file) {
             this.loadImageFromPath(this.file, this.$refs.canvas);

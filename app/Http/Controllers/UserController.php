@@ -58,7 +58,7 @@ class UserController extends Controller
         $user->name = $validatedData['name'];
         $user->email = $validatedData['email'];
 
-        if ($validatedData['password']) {
+        if (isset($validatedData['password'])) {
             $user->password = Hash::make($validatedData['password']);
         }
         $user->save();
@@ -125,6 +125,7 @@ class UserController extends Controller
 
             $user = User::where('email', $request->session()->get('otp_login_email'))->first();
             $user->password = Hash::make($request->password);
+            $user->otp = null;
             $user->save();
             return response()->json(['message' => 'Password reset successfully!'], 200);
         } else {

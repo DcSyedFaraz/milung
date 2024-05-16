@@ -787,6 +787,10 @@ export default {
                     console.log('files ', this.orders[0].files[0]['filepath']);
                     this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
                     NProgress.done();
+
+                    setTimeout(() => {
+                        this.showPrintView = true;
+                    }, 1000);
                 })
                 .catch(error => {
                     console.error(error);
@@ -799,9 +803,7 @@ export default {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);
 
-            setTimeout(() => {
-                this.showPrintView = true;
-            }, 1000);
+
 
         }
         NProgress.configure({ showSpinner: false });

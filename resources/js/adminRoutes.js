@@ -124,6 +124,11 @@ const adminRoutes = [
         component: product_group_entry,
     },
     {
+        path: "product-group-edit/:id",
+        name: "product_group_update",
+        component: product_group_entry,
+    },
+    {
         path: "price_inquiry",
         name: "price_inquiry",
         component: price_inquiry,

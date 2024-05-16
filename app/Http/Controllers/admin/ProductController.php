@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PriceInquiryNotification;
 use App\Mail\ProductNotification;
+use App\Models\InquirySupplier;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
@@ -19,6 +21,55 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function product_group_id($id)
+    {
+        $prod = ProductGroup::findOrFail($id);
+        return response()->json($prod, 200);
+    }
+    public function product_group_update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'group_name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'profit' => 'nullable',
+            'amount' => 'nullable',
+            'hs_de' => 'required|integer',
+            'hs_cn' => 'required|integer',
+        ]);
+
+        $product = ProductGroup::findOrFail($id);
+        $product->update($validatedData);
+
+        // Notification
+        $admins = User::role(['Admin', 'Internal'])->get();
+        $productName = e($validatedData['group_name']);
+        $message = "A product group with the name '$productName' has been updated.";
+
+        \Notification::send($admins, new UserNotification($message, 'Product Group Updated'));
+
+        return response()->json(['message' => 'Product created successfully']);
+    }
+    public function inquiry_followup($id)
+    {
+        $InquirySupplier = InquirySupplier::where('price_inquiry_id', $id)->pluck('user_id');
+        $inquiry_number = PriceInquiry::where('id', $id)->value('inquiry_number');
+        // dd($InquirySupplier);
+        if ($InquirySupplier) {
+
+            $messages = "Admin wanted to follow up on the recent addition of a price inquiry with the number '$inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
+            foreach ($InquirySupplier as $supplierId) {
+                // Get the supplier
+                $supplier = User::where('id', $supplierId)->first();
+                // dd($supplier->email);
+                // Send the notification to the supplier
+                \Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up'));
+
+                // Send the email to the supplier
+                \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+            }
+        }
+        return response()->json(['message' => 'Follow up sent successfully']);
+    }
     public function price_inquiry(Request $request)
     {
 
@@ -45,9 +96,25 @@ class ProductController extends Controller
         ]);
 
         try {
+
+
             $priceInquiry = PriceInquiry::create($validatedData);
 
             if ($request->supplier_ids) {
+
+                $inquiry_number = $validatedData['inquiry_number'];
+                $messages = "A price inquiry with the number '$inquiry_number' has been added.";
+                foreach ($request->supplier_ids as $supplierId) {
+                    // Get the supplier
+                    $supplier = User::find($supplierId);
+
+                    // Send the notification to the supplier
+                    \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry'));
+
+                    // Send the email to the supplier
+                    \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                }
+
                 foreach ($request->supplier_ids as $index => $supplier_id) {
                     foreach ($request->pcs as $pcsIndex => $pcsValue) {
                         foreach ($request->capacity as $capacityIndex => $capacityValue) {
@@ -127,6 +194,21 @@ class ProductController extends Controller
         $priceInquiry = PriceInquiry::findOrFail($id);
 
 
+        if ($request->supplier_ids) {
+
+            $inquiry_number = $validatedData['inquiry_number'];
+            $messages = "A price inquiry with the number '$inquiry_number' has been added.";
+            foreach ($request->supplier_ids as $supplierId) {
+                // Get the supplier
+                $supplier = User::find($supplierId);
+
+                // Send the notification to the supplier
+                \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry'));
+
+                // Send the email to the supplier
+                \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+            }
+        }
 
         // Handle file uploads if necessary
         if ($request->hasFile('file')) {
@@ -165,7 +247,15 @@ class ProductController extends Controller
         $hasNewCapacity = !empty(array_diff($filteredCapacity, $originalCapacity));
         // dd($hasNewPcs,$hasNewCapacity);
         // Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
-        if ($hasNewPcs || $hasNewCapacity) {
+        $newSupplierIds = array_unique($request->supplier_ids);
+
+        // Get existing supplier IDs from the database
+        $existingSupplierIds = $priceInquiry->inquirysuppliers()->pluck('user_id')->toArray();
+
+        // Check if there are differences between the two arrays
+        $diff = array_diff($newSupplierIds, $existingSupplierIds);
+
+        if ($hasNewPcs || $hasNewCapacity || !empty($diff)) {
             $priceInquiry->inquirysuppliers()->delete();
 
             foreach ($request->supplier_ids as $index => $supplier_id) {
@@ -262,6 +352,13 @@ class ProductController extends Controller
         $product->hs_de = $validatedData['hs_de'];
         $product->hs_cn = $validatedData['hs_cn'];
         $product->save();
+
+        // Notification
+        $admins = User::role(['Admin', 'Internal'])->get();
+        $productName = e($validatedData['group_name']);
+        $message = "Good News! A new product group with the name '$productName' has been added.";
+
+        \Notification::send($admins, new UserNotification($message, 'New Product Group'));
 
         return response()->json(['message' => 'Product created successfully']);
     }

@@ -240,7 +240,7 @@
                         </li>
                         <li>
                             <router-link :to="{ name: 'product_group' }" v-if="can('createProductGroup')"
-                                :class="{ active: this.$route.name === 'product_group_entry' }" active-class="active">
+                                :class="{ active: this.$route.name === 'product_group_update' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product Group</span>
                             </router-link>
                         </li>
@@ -455,6 +455,7 @@ export default {
                 '/admin/productEntry',
                 '/admin/product_group',
                 '/admin/product_group_entry',
+                '/admin/product-group-edit/:id',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

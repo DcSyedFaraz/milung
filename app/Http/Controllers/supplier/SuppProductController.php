@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\supplier;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PriceInquiryNotification;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
 use App\Models\SupplierRemarks;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -108,6 +110,17 @@ class SuppProductController extends Controller
                 ]);
             }
         }
+        $inquiry_number = $priceInquiry->inquiry_number;
+        $admins = User::role(['Admin', 'Internal'])->get();
+        $userid = auth()->user()->userid;
+
+        $message = "Hi there! We wanted to let you know that one of your suppliers with user ID: $userid has sent a quote for the price inquiry with the number '$inquiry_number'.";
+
+        // Send notification
+        \Notification::send($admins, new UserNotification($message, 'Price Inquiry Quote'));
+
+        // Send email
+        \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($message,'Price Inquiry Quote'));
 
         return response()->json(['message' => 'Quote submitted successfully'], 201);
     }
@@ -124,7 +137,7 @@ class SuppProductController extends Controller
             whereHas('inquirysuppliers', function ($query) use ($id) {
                 $query->where('user_id', $id);
             })
-            ->orderBy('created_at','desc')->get();
+            ->orderBy('created_at', 'desc')->get();
 
 
 
@@ -149,7 +162,7 @@ class SuppProductController extends Controller
             ->where('user_id', $userId)
             ->first();
 
-            $priceInquiry->remarks = $remarks;
+        $priceInquiry->remarks = $remarks;
 
         if (!$priceInquiry) {
             return response()->json(['error' => 'Price inquiry not found or not assigned to the user.'], JsonResponse::HTTP_NOT_FOUND);

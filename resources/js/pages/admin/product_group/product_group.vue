@@ -63,26 +63,26 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
+                            <tbody v-for="prodgroup in dataToDisplay" :key="prodgroup.id">
                                 <tr style="border-bottom-color: snow !important;">
-                                    <td>{{ user.group_name }}</td>
-                                    <td>{{ user.hs_cn }}</td>
-                                    <td>{{ user.hs_de }}</td>
-                                    <td>{{ user.profit }}</td>
-                                    <td>{{ user.amount }}</td>
-                                    <td>{{ formattedDateTime(user) }}</td>
+                                    <td>{{ prodgroup.group_name }}</td>
+                                    <td>{{ prodgroup.hs_cn }}</td>
+                                    <td>{{ prodgroup.hs_de }}</td>
+                                    <td>{{ prodgroup.profit }}</td>
+                                    <td>{{ prodgroup.amount }}</td>
+                                    <td>{{ formattedDateTime(prodgroup) }}</td>
 
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
+                                        <!-- <button @click="toggleAccordion(prodgroup)" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[prodgroup.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link :to="{ name: 'product_group_update', params: { id: prodgroup.id } }" class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
+                                        <a href="#" @click="deleteUser(prodgroup.id)" class="text-danger"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -151,10 +151,10 @@ export default {
     computed: {
 
         filteredUsers() {
-            return this.users.filter(user => {
-                return user.group_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (user.hs_de.toString().includes(this.searchQuery)) ||
-                    (user.hs_cn.toString().includes(this.searchQuery));
+            return this.users.filter(prodgroup => {
+                return prodgroup.group_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (prodgroup.hs_de.toString().includes(this.searchQuery)) ||
+                    (prodgroup.hs_cn.toString().includes(this.searchQuery));
 
             });
         },
@@ -185,18 +185,18 @@ export default {
         });
     },
     methods: {
-        formattedDateTime(user) {
-            if (user.updated_at) {
+        formattedDateTime(prodgroup) {
+            if (prodgroup.updated_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(user.updated_at);
+                const parsedDateTime = parseISO(prodgroup.updated_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
         },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+        toggleAccordion(prodgroup) {
+            this.accordionOpen[prodgroup.id] = !this.accordionOpen[prodgroup.id];
         },
         changePage(page) {
             this.currentPage = page

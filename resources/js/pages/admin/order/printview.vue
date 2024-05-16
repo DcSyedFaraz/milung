@@ -71,26 +71,13 @@
                 </p>
                 <span class="d-flex justify-content-between">
                     <p class="text-milung fw-bold">Product:</p>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        ref="cargo_productInput"
-                        style="display: none"
-                        @change="handleUpload('cargo_product', $event)"
-                    />
-                    <button
-                        class="btn btn-primary btn-sm mb-2"
-                        @click="triggerUpload('cargo_productInput')"
-                    >
+                    <input type="file" accept="image/*" ref="cargo_productInput" style="display: none"
+                        @change="handleUpload('cargo_product', $event)" />
+                    <button class="btn btn-primary btn-sm mb-2" @click="triggerUpload('cargo_productInput')">
                         Upload
                     </button>
                 </span>
-                <canvas
-                    ref="cargo_productCanvas"
-                    width="353"
-                    height="300"
-                    class="border border-2"
-                ></canvas>
+                <canvas ref="cargo_productCanvas" width="353" height="300" class="border border-2"></canvas>
             </div>
 
             <div class="col-4">
@@ -98,78 +85,43 @@
                     <div class="col-12">
                         <span class="d-flex justify-content-between">
                             <p class="text-milung fw-bold">Packaging:</p>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref="cargo_packagingInput"
-                                style="display: none"
+                            <input type="file" accept="image/*" ref="cargo_packagingInput" style="display: none"
                                 @change="
-                                    handleUpload('cargo_packaging', $event)
-                                "
-                            />
-                            <button
-                                class="btn btn-primary btn-sm mb-2"
-                                @click="triggerUpload('cargo_packagingInput')"
-                            >
+                    handleUpload('cargo_packaging', $event)
+                    " />
+                            <button class="btn btn-primary btn-sm mb-2" @click="triggerUpload('cargo_packagingInput')">
                                 Upload
                             </button>
                         </span>
 
-                        <canvas
-                            ref="cargo_packagingCanvas"
-                            width="353"
-                            height="124"
-                            class="border border-2"
-                        ></canvas>
+                        <canvas ref="cargo_packagingCanvas" width="353" height="124" class="border border-2"></canvas>
                     </div>
                     <div class="col-12">
                         <span class="d-flex justify-content-between">
                             <p class="text-milung fw-bold">Accessories:</p>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref="cargo_accessoriesInput"
-                                style="display: none"
+                            <input type="file" accept="image/*" ref="cargo_accessoriesInput" style="display: none"
                                 @change="
-                                    handleUpload('cargo_accessories', $event)
-                                "
-                            />
-                            <button
-                                class="btn btn-primary btn-sm mb-2"
-                                @click="triggerUpload('cargo_accessoriesInput')"
-                            >
+                    handleUpload('cargo_accessories', $event)
+                    " />
+                            <button class="btn btn-primary btn-sm mb-2"
+                                @click="triggerUpload('cargo_accessoriesInput')">
                                 Upload
                             </button>
                         </span>
 
-                        <canvas
-                            ref="cargo_accessoriesCanvas"
-                            width="353"
-                            height="124"
-                            class="border border-2"
-                        ></canvas>
+                        <canvas ref="cargo_accessoriesCanvas" width="353" height="124" class="border border-2"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mt-3 justify-content-between">
             <div class="col-4">
-                <label for="price" class="form-label text-milung fw-bold"
-                    >Reason For Reject:</label
-                ><br />
-                <textarea
-                    v-model="cargo_reason"
-                    cols="30"
-                    rows="6"
-                    class="form-control"
-                ></textarea>
+                <label for="price" class="form-label text-milung fw-bold">Reason For Reject:</label><br />
+                <textarea v-model="cargo_reason" cols="30" rows="6" class="form-control"></textarea>
             </div>
             <div class="col-4 my-auto mx-auto">
                 <div class="">
-                    <button
-                        class="btn btn-success px-5"
-                        @click="CargoApiRequest"
-                    >
+                    <button class="btn btn-success px-5" @click="CargoApiRequest">
                         Send
                     </button>
                 </div>
@@ -425,10 +377,12 @@ export default {
     mounted() {
         this.fetchprintview();
 
-        // console.log('hi', this.image);
-        if (this.image && this.image.length > 0) {
-            this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
-        }
+        setTimeout(() => {
+            // console.log('hi', this.image);
+            if (this.image && this.image.length > 0) {
+                this.loadImageFromPath(this.image[0].filepath, this.$refs.canvas);
+            }
+        }, 1000);
 
     },
 };
