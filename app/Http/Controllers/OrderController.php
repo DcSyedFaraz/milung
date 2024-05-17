@@ -267,7 +267,7 @@ class OrderController extends Controller
         } else {
             $data['linked_order'] = null;
             $order = $existingOrder->update($data);
-           
+
         }
 
 

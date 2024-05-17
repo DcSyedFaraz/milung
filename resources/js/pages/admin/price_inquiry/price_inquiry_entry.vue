@@ -252,7 +252,7 @@
                                     Up</button>
 
                                 <button type="button" style="background-color: aqua !important; "
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Quote Buyer</button>
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3" @click="quote">Quote Buyer</button>
 
                                 <!-- <button style="background-color: #bc7803 !important;"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button> -->
@@ -264,6 +264,61 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="row" v-for="(rows, index) in supplieData" :key="index"
+                    v-if="supplieData && Object.keys(supplieData).length > 0">
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" v-model="supplierInquiry"
+                                :value="rows[0].user_id">
+                            <label class="form-check-label">
+                                {{ index }} Inquiry Quote
+                            </label>
+                        </div>
+                    </h3>
+                    <table class="table table-striped table-hover">
+                        <thead style="color: #009de1" class="text-center">
+                            <tr style="">
+                                <th class="text-nowrap">Product Capacity</th>
+                                <th class="text-nowrap">Quantity</th>
+                                <th class="text-nowrap">Currency</th>
+                                <th class="text-nowrap">EXW Price</th>
+                                <th class="text-nowrap">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr v-for="(row, indexs) in rows" :key="indexs">
+                                <td class="text-nowrap">
+                                    {{ row.capacity }}
+                                </td>
+                                <td class="text-nowrap">
+                                    {{ row.quantity }}
+                                </td>
+                                <td class="text-nowrap">USD</td>
+                                <td class="text-nowrap" style="width: 13% !important">
+
+                                    <span v-if="row.exw">
+                                        {{ row.exw }}
+                                    </span>
+
+                                    <span v-else class="fst-italic text-muted">
+                                        Not Provided
+                                    </span>
+                                </td>
+                                <td v-show="indexs === 0" :rowspan="totalRows">
+
+                                    <span v-if="row.supplierremarks?.remarks">
+                                        {{ row.supplierremarks?.remarks }}
+                                    </span>
+
+                                    <span v-else class="fst-italic text-muted">
+                                        Not Provided
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- Modal -->
@@ -312,17 +367,35 @@ export default {
                 capacity: [{ quantity: '', unit: '' }],
             },
             cargo_place: [],
+            supplieData: {},
             materials: [{ quantity: '' }],
             capacity: [{ quantity: '', unit: '' }],
             selectedBuyerId: [],
             buyers: [],
             imageLoaded: false,
             groups: [],
+            supplierInquiry: '',
             supplier_profiles: [],
             follow_up: false,
         };
     },
     methods: {
+        async quote() {
+            const inquiryid = this.$route.params.id;
+            console.log(this.supplierInquiry);
+            if (inquiryid) {
+                const formData = {
+                    supplierid: this.supplierInquiry
+                };
+                try {
+                    const response = await axios.post('/api/inquiry/quote/' + inquiryid, formData);
+                    console.log(response);
+                    // Handle the response if needed
+                } catch (error) {
+                    // Handle the error if needed
+                }
+            }
+        },
         updateInquiryMaterials() {
             this.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
         },
@@ -558,6 +631,7 @@ export default {
                     NProgress.done();
                     toastr.error('Something is not correct');
                 }
+
             } catch (error) {
                 NProgress.done();
                 if (error.response && error.response.status === 422) {
@@ -573,9 +647,9 @@ export default {
             const inquiryid = this.$route.params.id;
             axios.get('/api/price_inquiry_get/' + inquiryid)
                 .then(response => {
-                    this.inquiry = response.data;
-                    console.log(this.inquiry);
-
+                    this.inquiry = response.data.price;
+                    this.supplieData = response.data.users;
+                    console.log(this.inquiry, this.supplieData);
 
 
                     if (this.inquiry != null) {
@@ -602,8 +676,10 @@ export default {
                         }) : [{ quantity: '', unit: '' }];
                     }
 
-                    if (this.inquiry.remarks != null) {
-                        this.data.remarks = this.inquiry.remarks.remarks
+                    const selectedbuyerIds = Number(this.inquiry.buyer);
+                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    if (selectedbuyer) {
+                        this.selectedBuyerId = selectedbuyer;
                     }
 
                     if (this.inquiry.group) {
@@ -620,6 +696,9 @@ export default {
         },
 
     }, computed: {
+        totalRows() {
+            return this.inquiry.capacity.length * this.inquiry.pcs.length;
+        },
         formattedCapacity() {
             return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);
         },

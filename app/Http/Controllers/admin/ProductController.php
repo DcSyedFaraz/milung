@@ -165,6 +165,10 @@ class ProductController extends Controller
             throw $e;
         }
     }
+    public function quote(Request $request, $id)
+    {
+        dd($request->all(), $id);
+    }
     public function update_price_inquiry(Request $request, $id)
     {
         // dd($request->all(),$id);
@@ -495,8 +499,13 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $prod = PriceInquiry::findOrFail($id);
-
+        $prod['price'] = PriceInquiry::where('id', $id)->with('inquirysuppliers.userid', 'inquirysuppliers.supplierremarks')->first();
+        if ($prod) {
+            // Group inquirysuppliers by user ID
+            $prod['users'] = $prod['price']->inquirysuppliers->groupBy(function ($supplier) {
+                return $supplier->user->userid;
+            });
+        }
         return response()->json($prod, 200);
     }
 

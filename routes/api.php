@@ -166,6 +166,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::post('price_inquiry', [ProductController::class, 'price_inquiry'])->middleware('can:createPriceInquiry');
     Route::get('inquiry_followup/{id}', [ProductController::class, 'inquiry_followup'])->middleware('can:createPriceInquiry');
     Route::post('update_price_inquiry/{id}', [ProductController::class, 'update_price_inquiry']);
+    Route::post('inquiry/quote/{id}', [ProductController::class, 'quote']);
     Route::get('price_inquiry_get', [ProductController::class, 'price_inquiry_get']);
     Route::get('price_inquiry_get/{id}', [ProductController::class, 'show']);
     Route::delete('PriceDelete/{id}', [ProductController::class, 'PriceDelete']);
