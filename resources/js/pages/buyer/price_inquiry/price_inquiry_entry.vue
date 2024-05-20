@@ -239,6 +239,54 @@
                 </div>
             </div>
         </form>
+        <div class="row" v-if="supplierData && Object.keys(supplierData).length > 0">
+            <h3 class="text-milung mb-4 fw-bold text-uppercase">
+
+                MiLung Inquiry Quote
+            </h3>
+            <table class="table table-striped table-hover">
+                <thead style="color: #009de1" class="text-center">
+                    <tr style="">
+                        <th class="text-nowrap">Product Capacity</th>
+                        <th class="text-nowrap">Quantity</th>
+                        <th class="text-nowrap">Currency</th>
+                        <th class="text-nowrap">EXW Price</th>
+                        <th class="text-nowrap">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr v-for="(row, index) in supplierData" :key="index">
+                        <td class="text-nowrap">
+                            {{ row.capacity }}
+                        </td>
+                        <td class="text-nowrap">
+                            {{ row.quantity }}
+                        </td>
+                        <td class="text-nowrap">USD</td>
+                        <td class="text-nowrap" style="width: 13% !important">
+
+                            <span v-if="row.exw">
+                                {{ row.exw }}
+                            </span>
+
+                            <span v-else class="fst-italic text-muted">
+                                Not Provided
+                            </span>
+                        </td>
+                        <td v-show="index === 0" :rowspan="totalRows">
+
+                            <span v-if="row.supplierremarks?.remarks">
+                                {{ row.supplierremarks?.remarks }}
+                            </span>
+
+                            <span v-else class="fst-italic text-muted">
+                                Not Provided
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 </template>
 
@@ -253,6 +301,7 @@ export default {
     },
     data() {
         return {
+            supplierData: {},
             selectedBuyerId: [],
             cargo_place: [],
             inquiry: {
@@ -265,6 +314,7 @@ export default {
             follow_up: false,
             groups: [],
             imageLoaded: false,
+
         };
     },
     methods: {
@@ -295,10 +345,11 @@ export default {
             const inquiryid = this.$route.params.id;
             axios.get('/api/buyer/price_inquiry/' + inquiryid)
                 .then(response => {
-                    this.inquiry = response.data;
-                    console.log(this.inquiry);
+                    this.inquiry = response.data.inquiry;
+                    this.supplierData = response.data.supplierData;
+                    console.log(this.inquiry, this.supplierData);
 
-                    if(inquiryid){
+                    if (inquiryid) {
                         this.follow_up = true;
                     }
 
@@ -518,7 +569,11 @@ export default {
             }
         }
 
-    }, computed: {
+    },
+    computed: {
+        totalRows() {
+            return this.inquiry.capacity.length * this.inquiry.pcs.length;
+        },
         formattedCapacity() {
             return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);
         },

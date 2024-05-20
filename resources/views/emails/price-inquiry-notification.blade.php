@@ -20,6 +20,10 @@
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         h1 {
@@ -41,14 +45,36 @@
             text-align: center;
             margin-top: 30px;
         }
+
+        .content {
+            width: 80%;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>{{ $sub }}</h1>
-        <p>{{ $messages }}</p>
-        <p>Thank you!</p>
+        <div class="content">
+            <h1>{{ $sub }}</h1>
+            <p>{{ $messages }}</p>
+            <p>Thank you!</p>
+        </div>
         <div class="footer">
             &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
         </div>

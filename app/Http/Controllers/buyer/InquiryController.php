@@ -4,6 +4,7 @@ namespace App\Http\Controllers\buyer;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PriceInquiryNotification;
+use App\Models\InquirySupplier;
 use App\Models\PriceInquiry;
 use App\Models\User;
 use App\Notifications\UserNotification;
@@ -113,9 +114,10 @@ class InquiryController extends Controller
     {
         $userid = auth()->user()->id;
         // $userid = 2;
-        $prod = PriceInquiry::where('buyer', $userid)->where('id', $id)->first();
+        $data['inquiry'] = PriceInquiry::where('buyer', $userid)->where('id', $id)->first();
+        $data['supplierData'] = InquirySupplier::where('price_inquiry_id', $id)->where('selected', 1)->with('supplierremarks')->get();
 
-        return response()->json($prod, 200);
+        return response()->json($data, 200);
     }
 
     /**

@@ -133,7 +133,7 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center" v-for="(item, index) in invoice" :key="index"
-                                v-if="invoice">
+                                v-if="invoice.length > 0">
                                 <tr>
                                     <td>
                                         <div class="form-check">
@@ -241,7 +241,7 @@
                             </tbody>
 
                         </table>
-                        <div class="row">
+                        <div class="row"  v-if="invoice.length > 0">
                             <div class="col-12 d-flex justify-content-end">
                                 <button class="btn btn-danger px-5 me-2 fw-bold" @click="reject">
                                     Reject

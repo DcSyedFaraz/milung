@@ -62,18 +62,18 @@
                                         </div>
                                     </td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipment?.ship_date == null, 'fst-italic': ship?.shipment?.ship_date == null }">
-                                        {{ ship?.shipment?.ship_date ?? 'null' }}
+                                        :class="{ 'text-muted': ship?.shipmentsupplier?.ship_date == null, 'fst-italic': ship?.shipmentsupplier?.ship_date == null }">
+                                        {{ ship?.shipmentsupplier?.ship_date ?? 'null' }}
                                     </td>
                                     <td>
                                         <span>{{ ship.method }}</span>
                                     </td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipment?.waybill == null, 'fst-italic': ship?.shipment?.waybill == null }">
-                                        {{ ship?.shipment?.waybill ?? 'null' }}</td>
+                                        :class="{ 'text-muted': ship?.shipmentsupplier?.waybill == null, 'fst-italic': ship?.shipmentsupplier?.waybill == null }">
+                                        {{ ship?.shipmentsupplier?.waybill ?? 'null' }}</td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipment?.delivery == null, 'fst-italic': ship?.shipment?.delivery == null }">
-                                        {{ ship?.shipment?.delivery ?? 'null'
+                                        :class="{ 'text-muted': ship?.shipmentsupplier?.delivery == null, 'fst-italic': ship?.shipmentsupplier?.delivery == null }">
+                                        {{ ship?.shipmentsupplier?.delivery ?? 'null'
                                         }}</td>
                                     <td>
                                         <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }" v-if="can('inputPackingList')">

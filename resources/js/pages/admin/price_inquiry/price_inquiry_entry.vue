@@ -251,13 +251,13 @@
                                     class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
                                     Up</button>
 
-                                <button type="button" style="background-color: aqua !important; "
+                                <button type="button" style="background-color: aqua !important;" v-show="follow_up"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3" @click="quote">Quote Buyer</button>
 
                                 <!-- <button style="background-color: #bc7803 !important;"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button> -->
 
-                                <button type="button" style="background-color: #41b400 !important;"
+                                <button type="button" style="background-color: #41b400 !important;" v-show="follow_up"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
 
                             </div>
@@ -265,13 +265,13 @@
                     </div>
 
                 </div>
-                <div class="row" v-for="(rows, index) in supplieData" :key="index"
-                    v-if="supplieData && Object.keys(supplieData).length > 0">
+                <div class="row" v-for="(rows, index) in supplierData" :key="index"
+                    v-if="supplierData && Object.keys(supplierData).length > 0">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" v-model="supplierInquiry"
-                                :value="rows[0].user_id">
+                                :value="rows[0].user_id" :checked="rows[0].selected === 1">
                             <label class="form-check-label">
                                 {{ index }} Inquiry Quote
                             </label>
@@ -348,6 +348,9 @@
             </div>
         </form>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -362,12 +365,13 @@ export default {
     },
     data() {
         return {
+            loader: false,
             inquiry: {
                 materials: [{ quantity: '' }], // Initialize with default values
                 capacity: [{ quantity: '', unit: '' }],
             },
             cargo_place: [],
-            supplieData: {},
+            supplierData: {},
             materials: [{ quantity: '' }],
             capacity: [{ quantity: '', unit: '' }],
             selectedBuyerId: [],
@@ -388,10 +392,15 @@ export default {
                     supplierid: this.supplierInquiry
                 };
                 try {
+                    this.loader = true;
                     const response = await axios.post('/api/inquiry/quote/' + inquiryid, formData);
                     console.log(response);
+                    this.loader = false;
+                    toastr.success(response.data.message)
                     // Handle the response if needed
                 } catch (error) {
+                    this.loader = false;
+                    console.error(error);
                     // Handle the error if needed
                 }
             }
@@ -434,17 +443,20 @@ export default {
         },
         followup() {
             NProgress.start();
+            this.loader = true;
             const inquiryid = this.$route.params.id;
             console.log(inquiryid);
             axios.get(`/api/inquiry_followup/${inquiryid}`) // Replace '/api/supplier_profiles/' with your API endpoint
                 .then(response => {
 
                     console.log(response);
-                    toastr.success(response.data.message)
+                    this.loader = false;
+                    toastr.success(response.data.message);
                     NProgress.done();
                 })
                 .catch(error => {
                     console.error(error);
+                    this.loader = false;
                     NProgress.done();
                 });
         },
@@ -648,8 +660,8 @@ export default {
             axios.get('/api/price_inquiry_get/' + inquiryid)
                 .then(response => {
                     this.inquiry = response.data.price;
-                    this.supplieData = response.data.users;
-                    console.log(this.inquiry, this.supplieData);
+                    this.supplierData = response.data.users;
+                    console.log(this.inquiry, this.supplierData);
 
 
                     if (this.inquiry != null) {
@@ -739,3 +751,43 @@ export default {
     }
 }
 </script>
+<style scoped>
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>

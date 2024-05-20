@@ -47,23 +47,31 @@ class Order extends Model
     }
     public function buyerid()
     {
-        return $this->belongsTo(User::class,'buyer')->select('id','userid');
+        return $this->belongsTo(User::class, 'buyer')->select('id', 'userid');
     }
     public function supplierid()
     {
-        return $this->belongsTo(User::class,'supplier')->select('id','userid');
+        return $this->belongsTo(User::class, 'supplier')->select('id', 'userid');
+    }
+    public function supplier()
+    {
+        return $this->belongsTo(User::class, 'supplier');
     }
     public function shipmentOrders()
     {
-        return $this->belongsTo(ShipmentOrder::class,'so_number')->select('id','so_number');
+        return $this->belongsTo(ShipmentOrder::class, 'so_number')->select('id', 'so_number');
     }
     public function information()
     {
-        return $this->hasOne(Information::class,'shipment_order_id','so_number')->select('id','invoice','shipment_order_id','created_at');
+        return $this->hasOne(Information::class, 'shipment_order_id', 'so_number')->select('id', 'invoice', 'shipment_order_id', 'created_at');
     }
     public function settleamount()
     {
-        return $this->hasOne(SettleAmount::class,'shipment_order_id','so_number');
+        return $this->hasOne(SettleAmount::class, 'shipment_order_id', 'so_number');
+    }
+    public function shipmentSupplier()
+    {
+        return $this->hasOne(ShipmentSupplier::class, 'user_id', 'supplier');
     }
 
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\buyer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PriceInquiryNotification;
 use App\Models\Order;
 use App\Models\Printview;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Validator;
@@ -133,10 +136,22 @@ class BuyerOrderController extends Controller
 
 
         $data['linked_order'] = null;
-        $data['buyer'] = \Auth::id();
+        $user = \Auth::user();
+        $data['buyer'] = $user->id;
         $order = Order::create($data);
 
+        // Notification
+        $admins = User::role(['Admin', 'Internal'])->get();
 
+        $message = "A new order has been created by $user->name (User ID: {$user->userid}). Order ID: {$order->id}.";
+
+        // Send the notification to the admins
+        \Notification::send($admins, new UserNotification($message, 'New Order'));
+
+        // Send the email to the admins
+        foreach ($admins as $key => $admin) {
+            \Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'New Order'));
+        }
 
         return response()->json($order, 200);
     }
@@ -159,7 +174,7 @@ class BuyerOrderController extends Controller
             return;
         }
 
-        $fileName = Str::random(10) . '.' . $file['file']->getClientOriginalExtension();
+        $fileName = \Str::random(10) . '.' . $file['file']->getClientOriginalExtension();
         $filePath = $file['file']->storeAs('orders/' . $key, $fileName, 'public');
         $data[$key] = ['filename' => $file['fileName'], 'filepath' => $filePath];
     }

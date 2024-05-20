@@ -108,7 +108,7 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     Route::get('printview/{id}', [SupplierOrderController::class, 'printviewget']);
     Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo'])->middleware('can:cargoReadyConfirmation,uploadMassCargoPhoto');
     Route::get('SupplierOrder', [OrderController::class, 'SupplierOrder'])->middleware('can:supplierOrderPriceQuote');
-    Route::post('supplier/placeAll', [OrderController::class, 'supplierPlace'])->middleware('can:supplierOrderPriceQuote');
+    Route::post('placeAll', [OrderController::class, 'supplierPlace'])->middleware('can:supplierOrderPriceQuote');
 
     //price_inquiry
     Route::get('price_inquiry_get', [SuppProductController::class, 'price_inquiry_get'])->middleware('can:priceInquiry');
@@ -122,6 +122,9 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     Route::get('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipment'])->middleware('can:inputPackingList');
     Route::post('suppliershipments/{id}', [SupplierShipmentController::class, 'suppliershipmentUpdate'])->middleware('can:inputPackingList');
 
+    // Finance
+    Route::get('shipment_details/{id}', [SupplierShipmentController::class, 'shipment_details'])->middleware('can:supplierAccountsReceivable');
+    Route::post('upload_reciept_note', [SupplierShipmentController::class, 'upload_reciept_note'])->middleware('can:supplierAccountsReceivable');
 });
 
 // <-- Admin Routes -->
@@ -173,7 +176,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     //Orders
     Route::post('orderentry', [OrderController::class, 'orderentry'])->middleware('can:orderGeneralSinglePage,createNewOrder');
-    Route::post('saveSelectedOrders', [OrderController::class, 'saveSelectedOrders']);
+    Route::post('saveSelectedOrders', [OrderController::class, 'saveSelectedOrders'])->middleware('can:miLungOrderPriceEnquiry');
     Route::get('orderentry', [OrderController::class, 'orderentryget'])->middleware('can:orderGeneralSinglePage,createNewOrder');
     Route::get('orderAll', [OrderController::class, 'orderAll'])->middleware('can:miLungOrderPriceEnquiry');
     Route::get('orderentry/{id}', [OrderController::class, 'orderentrygetID'])->middleware('can:editOrderDetails');

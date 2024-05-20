@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('capacity');
             $table->integer('exw')->nullable();
+            $table->boolean('selected')->nullable();
             $table->timestamps();
         });
     }

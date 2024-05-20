@@ -167,7 +167,42 @@ class ProductController extends Controller
     }
     public function quote(Request $request, $id)
     {
-        dd($request->all(), $id);
+        $request->validate([
+            'supplierid' => 'required|exists:users,id',
+        ]);
+
+        InquirySupplier::where('price_inquiry_id', $id)
+            ->update(['selected' => 0]);
+
+        $inquirySupplier = InquirySupplier::where('price_inquiry_id', $id)
+            ->where('user_id', $request->supplierid)
+            ->update(['selected' => 1]);
+
+        if (!$inquirySupplier) {
+            return response()->json(['error' => 'Failed to update quote'], 422);
+        }
+
+        $inquiry = PriceInquiry::find($id);
+
+        if (!$inquiry) {
+            return response()->json(['error' => 'Price inquiry not found'], 404);
+        }
+
+        $buyer = User::find($inquiry->buyer);
+
+        if (!$buyer) {
+            return response()->json(['error' => 'Buyer not found'], 404);
+        }
+
+        $message = "We have sent the quotation for your price inquiry #{$inquiry->inquiry_number}. Please review it. Contact us if you have any questions.";
+
+        // Send the notification to the buyer
+        \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation'));
+
+        // Send the email to the buyer
+        \Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
+
+        return response()->json(['message' => 'Quote selected successfully'], 201);
     }
     public function update_price_inquiry(Request $request, $id)
     {

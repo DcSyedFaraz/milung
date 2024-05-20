@@ -17,11 +17,9 @@ return new class extends Migration {
             $table->string('accessories')->nullable();
             $table->string('article')->nullable();
             $table->string('atc_number')->nullable();
-            $table->integer('buyer')->nullable();
             $table->string('capacity')->nullable();
             $table->string('buyeremail')->nullable();
             $table->string('buyerorder')->nullable();
-            $table->string('buyingprice')->nullable();
             $table->string('ftyitem')->nullable();
             $table->string('logocolor')->nullable();
             $table->integer('group')->nullable();
@@ -44,13 +42,16 @@ return new class extends Migration {
             $table->json('safetySheetFiles')->nullable();
             $table->json('labelFiles')->nullable();
             $table->json('files')->nullable();
-            $table->string('sellingprice')->nullable();
             $table->date('sendoutdate')->nullable();
             $table->string('ship_doc')->nullable();
             $table->integer('so_number')->nullable();
             $table->string('status')->nullable();
+            $table->integer('buyer')->nullable();
             $table->integer('supplier')->nullable();
+            $table->string('sellingprice')->nullable();
+            $table->string('buyingprice')->nullable();
             $table->string('totalvalue')->nullable();
+            $table->string('assigned_to_supplier_at')->nullable();
             $table->timestamps();
         });
     }

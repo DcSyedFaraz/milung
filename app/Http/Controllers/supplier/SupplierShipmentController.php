@@ -39,10 +39,10 @@ class SupplierShipmentController extends Controller
         $orders = Order::whereIn('so_number', $request->shipIds)
             ->where('supplier', $userId)->with('product_group', 'packinglist')->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')
             ->get();
-            foreach ($orders as $order) {
-                $order->userid = Auth::user()->userid;
-                // $order->userid = 'Supplier01';
-            }
+        foreach ($orders as $order) {
+            $order->userid = Auth::user()->userid;
+            // $order->userid = 'Supplier01';
+        }
         // dd($orders);
         return response()->json($orders, 200);
     }
@@ -62,8 +62,8 @@ class SupplierShipmentController extends Controller
             'vessel' => 'required|string',
             'train' => 'required|string',
             'delivery' => 'required|date',
-            'remarks' => 'required|string',
-            'shipment_order_id' => 'required|integer|exists:shipment_orders,id'
+            // 'remarks' => 'required|string',
+            // 'shipment_order_id' => 'required|integer|exists:shipment_orders,id'
         ]);
 
 
@@ -83,7 +83,7 @@ class SupplierShipmentController extends Controller
                 'vessel' => $supplier['vessel'],
                 'train' => $supplier['train'],
                 'delivery' => $supplier['delivery'],
-                'remarks' => $supplier['remarks'],
+                // 'remarks' => $supplier['remarks'],
             ]
         );
 
@@ -96,6 +96,18 @@ class SupplierShipmentController extends Controller
         // $userid = 3;
         $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')->with('product_group', 'packinglist')->get();
         return response()->json($shipment, 200);
+    }
+    public function shipment_details($id)
+    {
+        // dd($id);
+        $userid = Auth::user()->id;
+        // $userid = 3;
+        $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'buyingprice', 'quantity_unit', 'status')->with('shipmentSupplier', 'shipmentOrders')->get();
+        return response()->json($shipment, 200);
+    }
+    public function upload_reciept_note(Request $request)
+    {
+        dd($request->all());
     }
     public function suppliershipmentUpdate($id, Request $request)
     {

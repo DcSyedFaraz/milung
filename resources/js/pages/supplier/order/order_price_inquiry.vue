@@ -249,7 +249,7 @@ export default {
                     return
                 }
 
-                const response = await axios.post('/api/supplier/supplier/placeAll', data);
+                const response = await axios.post('/api/supplier/placeAll', data);
 
                 // Handle the API response as needed
                 console.log(response.data);

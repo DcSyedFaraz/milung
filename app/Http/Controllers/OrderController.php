@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PriceInquiryNotification;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\OrderSupplier;
 use App\Models\User;
+use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +63,20 @@ class OrderController extends Controller
 
                     $order->sellingprice = $selling;
                     $order->totalvalue = $selling * $quantityValue;
+                    $order->assigned_to_supplier_at = Carbon::now();
                     $order->save();
+
+                    $user = User::find($supplierId);
+                    // Notification
+                    $message = "Dear Supplier, an admin has placed an order with the ID #$orderId. Please review the details at your earliest convenience.";
+
+
+                    // Send the notification to the supplier
+                    \Notification::send($user, new UserNotification($message, 'New Order'));
+
+                    // Send the email to the supplier
+                    \Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order'));
+
                 } else {
                     return response()->json(['message' => 'The supplier has not provided a price quote yet.', 'success' => false], 200);
                 }
@@ -75,18 +91,21 @@ class OrderController extends Controller
     public function supplierPlace(Request $request)
     {
         $data = $request->all();
-        $id = 3;
-        //$id = Auth::User()->id;
+        // $id = 3;
+        $user = Auth::user();
+
         if (empty($data)) {
             return response()->json(['errors' => 'Request Is Empty'], 422);
         }
 
         //    return $data;
+        $admins = User::role(['Admin', 'Internal'])->get();
+
         foreach ($data as $orderData) {
             $orderId = $orderData['orderId'];
 
             $order_place = OrderSupplier::where('order_id', $orderId)
-                ->where('user_id', $id)
+                ->where('user_id', $user->id)
                 ->first();
 
             // Check if $order_place exists
@@ -96,6 +115,17 @@ class OrderController extends Controller
                     $order_place->purchase = $orderData['selling_price'];
                     $order_place->remarks = $orderData['remarks'];
                     $order_place->save();
+
+                    // Notification
+                    $message = "$user->name (User ID: $user->userid) has submitted a price inquiry for order #$orderId.";
+
+                    // Send the notification to the supplier
+                    \Notification::send($admins, new UserNotification($message, 'Order Price Inquiry'));
+
+                    // Send the email to the supplier
+                    foreach ($admins as $key => $admin) {
+                        \Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'Order Price Inquiry'));
+                    }
                 } else {
                     return response()->json(['message' => 'You already provided a price quote.', 'success' => false], 200);
                 }
@@ -139,8 +169,23 @@ class OrderController extends Controller
                 }
             }
 
+            $orderList = implode(', ', $selectedOrderIds);
+
+            $message = "A new price inquiry has been received for the following order(s): $orderList. Please review and provide a quote as soon as possible.";
+
+            foreach ($selectedSupplierIds as $supplierId) {
+                // Get the supplier
+                $supplier = User::find($supplierId);
+
+                // Send the notification to the supplier
+                \Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry'));
+
+                // Send the email to the supplier
+                \Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+            }
+
             // Return success response
-            return response()->json(['message' => 'Data saved successfully'], 200);
+            return response()->json(['message' => 'Inquiry sent successfully'], 200);
         } catch (\Exception $e) {
             // Return error response if an exception occurs
             return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
@@ -171,7 +216,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         // Retrieve order_ids from the orderSuppliers table where the user ID matches the authenticated user's ID
-        $orderIds = OrderSupplier::where('user_id', $user->id)
+        $orderIds = OrderSupplier::where('user_id', $user->id)->whereNull('purchase')
             ->pluck('order_id')
             ->toArray();
 

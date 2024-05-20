@@ -7,29 +7,35 @@
                     <div class="card-header  ">
                         <div class="">
 
+                            <span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Supplier Account
+                                    Recievable:</span>
+                            </span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span>
-                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Price Inquiry General
-                                    List:</span>
-                            </span>
+                            <div class="d-flex col-5">
+                                <div class="col-2 my-auto">
+                                    <p for="v-model" class="my-auto fs-7 fw-bold">
+                                        SO#:</p>
+                                </div>
+                                <div class="col-8">
+                                    <!-- <input type="text" v-model="info.so_no" class="form-control "> -->
+                                    <multiselect v-model="info.so_no" :options="so" field="id" label="so_number"
+                                        track-by="id">
+                                    </multiselect>
+                                </div>
+                            </div>
 
                             <div class="col-4 d-flex">
-                                <div class="col-12 d-flex">
-                                    <div class="col-8">
-                                        <div class="input-group">
-                                            <span class="input-group-text" id="basic-addon1"><i style="color: #41b400;"
-                                                    class="bx bx-filter-alt fw-bold fs-4"></i></span>
-                                            <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                                ref="search" placeholder="Write here to filter..." />
-                                        </div>
-                                    </div>
-                                    <div class="col-4 mx-2">
-                                        <!-- <router-link :to="{ name: 'supplier_price_inquiry_entry' }"
-                                            class="btn btn-warning fw-bold text-dark">Add New
-                                        </router-link> -->
-                                    </div>
-
+                                <div class="col-4 my-auto">
+                                    <p for="v-model" class="my-auto fs-7 fw-bold">
+                                        Reciept Note:</p>
+                                </div>
+                                <div class="col-8">
+                                    <input type="file" ref="note" style="display: none" @change="handleFileUpload" />
+                                    <button class="btn btn-primary btn-sm mb-2" @click="triggerUpload('note')">
+                                        Upload
+                                    </button>
                                 </div>
 
                             </div>
@@ -51,63 +57,192 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
-                            <thead style="color: #009de1; " class="">
+                            <thead style="color: #009de1; " class="text-center">
                                 <tr style="">
-                                    <th>
-                                        POS
-                                    </th>
-                                    <th>Order/Inv #</th>
-                                    <th>Payment Recievables</th>
-                                    <th>Shipping Date</th>
-                                    <th>Shipping Method</th>
-                                    <th>ETA Date</th>
-                                    <th>Payment Settled</th>
-                                    <th>Action</th>
+                                    <th>Order#</th>
+                                    <th> Status</th>
+                                    <th>Supplier SendOut Date</th>
+                                    <th>SO #</th>
+                                    <th>Invoice #</th>
+                                    <th>Order Payable Amount</th>
+                                    <th>Reciept Note</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="recieve in dataToDisplay" :key="recieve.id" v-if="dataToDisplay.length > 0">
-                                <tr style="border-bottom-color: snow !important;">
-                                    <td>{{ recieve.inquiry_number }}</td>
+                            <tbody class="text-center">
+                                <tr v-for="recieve in orders" :key="recieve.id" v-if="orders.length > 0"
+                                    style="border-bottom-color: snow !important;">
+                                    <td>{{ recieve.id }}</td>
                                     <td>
                                         <span>{{ recieve.status }}</span>
                                     </td>
-                                    <td>{{ eta(recieve) }}</td>
-                                    <td>{{ recieve.requirements }}</td>
+                                    <td>{{ recieve.shipment_supplier?.ship_date }}</td>
+                                    <td>{{ recieve.shipment_orders?.so_number }}</td>
+                                    <td>#***</td>
+                                    <td>{{ recieve.buyingprice * recieve.quantity_unit }}</td>
+                                    <td><i class="bi bi-file-earmark-text fw-bold"></i></td>
 
-
-                                    <td>
-                                        <!-- <button @click="toggleAccordion(recieve)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[recieve.id] }">
-                                            <i class="bi bi-pencil"></i>
-                                        </button> -->
-                                        <router-link
-                                            :to="{ name: 'supplier_price_inquiry_entry', params: { id: recieve.id } }"
-                                            class="text-dark btn btn-light">
-                                            <i class="bi bi-pencil"></i>
-                                        </router-link>
-
-                                    </td>
                                 </tr>
 
 
 
-                            </tbody>
-                            <tbody v-else>
-                                <tr>
+                                <tr v-else>
                                     <td colspan="17">
                                         <p class="text-center">No recievables to display.</p>
                                     </td>
                                 </tr>
+
                             </tbody>
                         </table>
-                        <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-warning me-2 fw-bold" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Payment Reminder
-                            </button>
+                        <div class="col-12 row  " v-if="orders.length > 0">
+                            <div class="col-6 d-flex">
+                                <div class="col-2 my-auto">
+                                    <p for="v-model" class="my-auto fs-7 fw-bold">
+                                        Incoterm:</p>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" v-model="Incoterm" class="form-control ">
+
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <div class="col-4 ">
+
+                                    <button class="btn btn-warning me-2 fw-bold ">
+                                        Generate Invoice
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    <div class="row justify-content-around">
+                    <div class="card-body table-responsive" v-show="!isLoading">
+                        <!-- Table with stripped rows -->
+                        <table class="table table-striped table-hover">
+                            <thead style="color: #009de1" class="text-center">
+                                <tr style="">
+                                    <th class="text-nowrap">
+                                        POS
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Invoice#
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Invoice Date
+                                    </th>
+                                    <th class="text-nowrap">Invoice Value</th>
+                                    <th class="text-nowrap">Settle Amount</th>
+                                    <th class="text-nowrap">Settle Date</th>
+                                    <th class="text-nowrap">
+                                        Outstanding Amount
+                                    </th>
+                                    <th class="text-nowrap">Remarks</th>
+                                    <th class="text-nowrap">MiLung Remittance Slip</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center" v-for="(item, index) in orders" :key="index" v-if="orders">
+                                <tr>
+                                    <td>
+                                        {{ index }}
+                                    </td>
+                                    <td>
+                                        {{ item.id }}
+                                    </td>
+                                    <td @click="toggleAccordion(index)"></td>
+
+                                    <td @click="toggleAccordion(index)">USD {{ item.totalpayable }}</td>
+
+                                    <td @click="toggleAccordion(index)"
+                                        :class="{ 'text-muted': item.settleamount?.settle_amount == null, 'fst-italic': item.settleamount?.settle_amount == null }">
+                                        {{ item.settleamount?.settle_amount ?? 'null' }}</td>
+
+                                    <td @click="toggleAccordion(index)"
+                                        :class="{ 'text-muted': item.settleamount?.settle_date == null, 'fst-italic': item.settleamount?.settle_date == null }">
+                                        {{ item.settleamount?.settle_date ?? 'null' }}</td>
+
+                                    <td @click="toggleAccordion(index)"
+                                        :class="{ 'text-muted': item.settleamount?.outstanding_amount == null, 'fst-italic': item.settleamount?.outstanding_amount == null, 'text-danger': item.settleamount?.outstanding_amount > 0 }">
+                                        {{ item.settleamount?.outstanding_amount ?? item.totalvalue }}</td>
+
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <a v-if="item.settleamount?.slip" :href="'/storage/' +
+                                        item.settleamount?.slip" download class="btn px-4 mx-2 btn-outline-primary  ">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
+                                        </a>
+                                        <p v-else class="fst-italic text-muted">
+                                            Not provided
+                                        </p>
+                                    </td>
+
+                                </tr>
+                                <tr v-if="accordionIndex === index">
+                                    <td colspan="8">
+                                        <div class="">
+
+                                            <div class="" v-for="(order, index) in item.orders" :key="index">
+
+                                                <div class="row border">
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Number:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.id }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Quantity:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.quantity_unit }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Unit Price:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.sellingprice }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex col-3 my-4">
+                                                        <div class="col-6 my-auto">
+                                                            <p class="my-auto fs-7 fw-bold">
+                                                                Order Total Value:
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ order.totalvalue }}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <td colspan="17">
+                                    <p class="text-center">
+                                        No data to display.
+                                    </p>
+                                </td>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    <!-- <div class="row justify-content-around">
                         <div class="col-6 border">
                             <h5 class="text-uppercase text-milung fw-bold">
                                 General Outstanding Account Recievable:
@@ -153,7 +288,7 @@
                             </table>
 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
@@ -175,8 +310,13 @@ export default {
 
 
         return {
+            info: {},
+            invoice: {},
+            orders: {},
+            so: [],
             isLoading: true,
-            searchQuery: '',
+            Incoterm: '',
+            accordionIndex: null,
         }
     },
     watch: {
@@ -184,31 +324,65 @@ export default {
             this.inquiry = newVal;
         }
     },
-    computed: {
-
-        filteredrecieve() {
-            return this.inquiry.filter(recieve => {
-                return recieve.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (recieve.requirements.toLowerCase().includes(this.searchQuery));
-
-            });
-        },
-        dataToDisplay() {
-            if (this.searchQuery) {
-                return this.filteredrecieve;
-            } else {
-                return this.fetchrecievables;
+    mounted() {
+        this.fetchSO();
+    },
+    watch: {
+        'info.so_no': function (newVal, oldVal) {
+            if (newVal !== null) {
+                this.fetchrecievables(newVal);
             }
         }
     },
-    created() {
-        this.fetchrecievables().then(() => {
-            setTimeout(() => {
-                this.isLoading = false;
-            }, 1000); // Delay of 1 second
-        });
-    },
     methods: {
+        toggleAccordion(index) {
+            this.accordionIndex = this.accordionIndex === index ? null : index;
+        },
+        async handleFileUpload() {
+            // Confirm the upload
+            const { isConfirmed } = await Swal.fire({
+                title: 'Are you sure you want to upload this file?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, upload it!',
+            });
+
+            if (!isConfirmed) {
+                return;
+            }
+
+            // Get the selected file and the SO number
+            const file = this.$refs.note.files[0];
+            const soNumber = this.info.so_no.id;
+
+            // Send the file and the SO number to the API
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('so_number', soNumber);
+
+            try {
+                const response = await axios.post('/api/supplier/upload_reciept_note', formData);
+
+                // Fetch the updated recievables
+                this.fetchrecievables(this.info.so_no);
+
+                // Show a success message
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'The file has been uploaded successfully.',
+                    icon: 'success',
+                });
+            } catch (error) {
+                // Show an error message
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while uploading the file.',
+                    icon: 'error',
+                });
+            }
+        },
+        triggerUpload(refName) {
+            this.$refs[refName].click();
+        },
         eta(recieve) {
             if (recieve.updated_at) {
                 // Parse the datetime string using date-fns
@@ -219,13 +393,27 @@ export default {
                 return '';
             }
         },
-        async fetchrecievables() {
+
+        fetchSO() {
+            axios.get('/api/supplier/suppliershipments')
+                .then(response => {
+                    this.so = response.data;
+                    console.log(this.so);
+
+                    this.isLoading = false;
+                })
+                .catch(error => {
+                    this.isLoading = false;
+                    console.error(error);
+                });
+        },
+        async fetchrecievables(newVal) {
             NProgress.start();
             try {
-                const response = await axios.get('/api/supplier/price_inquiry_get');
-                this.inquiry = response.data;
+                const response = await axios.get('/api/supplier/shipment_details/' + newVal.id);
+                this.orders = response.data;
                 // this.pagination.totalItems = response.data.total;
-                console.log(response.data);
+                console.log('orders ', this.orders);
 
                 NProgress.done();
             } catch (error) {

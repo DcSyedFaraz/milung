@@ -159,7 +159,7 @@
                     </li> -->
                     <!-- End Messages Nav -->
                     <li class="nav-item">
-                        <router-link class="nav-link nav-icon" :to="{ name: 'adminprofile' }">
+                        <router-link class="nav-link nav-icon me-0 pe-0" :to="{ name: 'adminprofile' }">
                             <i class="bi bi-gear"></i>
                             <!-- <i class="bi bi-door-open text-warning"></i> -->
                         </router-link>

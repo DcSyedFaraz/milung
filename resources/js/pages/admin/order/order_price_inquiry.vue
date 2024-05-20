@@ -80,8 +80,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="dataToDisplay.length > 0" class="text-center" style="border-bottom-color: snow !important;"
-                                    v-for="order in dataToDisplay" :key="order.id">
+                                <tr v-if="dataToDisplay.length > 0" class="text-center"
+                                    style="border-bottom-color: snow !important;" v-for="order in dataToDisplay"
+                                    :key="order.id">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" :value="order.id"
@@ -129,18 +130,19 @@
                                     </td>
                                     <td>
                                         +{{ order.product_group.amount === 0 ? order.product_group.profit + '%' :
-                                            order.product_group.amount }}
+                                                order.product_group.amount }}
                                     </td>
 
                                     <td>
                                         <span v-for="(supplier, index) in order.order_suppliers" :key="index">
                                             {{
                                                 supplier.purchase !== null ?
-                                                (order.product_group.amount !== 0 ? (parseFloat(supplier.purchase) +
-                                                    parseFloat(order.product_group.amount)) : (parseFloat(supplier.purchase) +
-                                                        (parseFloat(supplier.purchase) * parseFloat(order.product_group.profit) / 100)))
-                                                :
-                                                'null'
+                                                    (order.product_group.amount !== 0 ? (parseFloat(supplier.purchase) +
+                                                        parseFloat(order.product_group.amount)) : (parseFloat(supplier.purchase) +
+                                                            (parseFloat(supplier.purchase) * parseFloat(order.product_group.profit) /
+                                                                100)))
+                                                    :
+                                                    'null'
                                             }}
                                             <br v-if="index !== order.order_suppliers.length - 1">
                                         </span>
@@ -156,7 +158,9 @@
                                     </td>
                                 </tr>
                                 <tr v-else>
-                                    <td colspan="17"><p class="text-center">No orders to display.</p></td>
+                                    <td colspan="17">
+                                        <p class="text-center">No orders to display.</p>
+                                    </td>
                                 </tr>
 
                             </tbody>
@@ -183,6 +187,9 @@
             </div>
         </div>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -204,6 +211,7 @@ export default {
     data() {
 
         return {
+            loader: false,
             isLoading: true,
             bank_name: '',
             file: null,
@@ -246,6 +254,7 @@ export default {
     },
     methods: {
         async placeAll() {
+            this.loader = true;
             // Get the IDs of selected orders
             const data = [];
 
@@ -265,6 +274,7 @@ export default {
             try {
                 if (Object.keys(data).length === 0) {
                     // The data object is empty
+                    this.loader = false;
                     toastr.error('Data is empty. Please select orders before placing.');
                     return
                 }
@@ -275,6 +285,7 @@ export default {
                 console.log(response.data);
                 // Show a success message
                 if (response.data.success == true) {
+                    this.loader = false;
                     Swal.fire({
                         icon: 'success',
                         title: response.data.message,
@@ -285,6 +296,7 @@ export default {
                         }, 1000); // Delay of 1 second
                     });
                 } else {
+                    this.loader = false;
 
                     Swal.fire({
                         icon: 'error',
@@ -292,6 +304,7 @@ export default {
                     });
                 }
             } catch (error) {
+                this.loader = false;
                 console.error('Error placing orders:', error);
                 // Show an error message
                 if (error.response && error.response.status === 422) {
@@ -361,5 +374,44 @@ export default {
 .w-milung {
     width: 100px !important;
     border-radius: 6px;
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
