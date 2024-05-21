@@ -71,13 +71,29 @@
                             <tbody class="text-center">
                                 <tr v-for="recieve in orders" :key="recieve.id" v-if="orders.length > 0"
                                     style="border-bottom-color: snow !important;">
-                                    <td>{{ recieve.id }}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" :value="recieve.id"
+                                                v-model="selectedOrderIds"
+                                                :disabled="recieve.invoice_number.length > 0">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                {{ recieve.id }}
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td>
                                         <span>{{ recieve.status }}</span>
                                     </td>
                                     <td>{{ recieve.shipment_supplier?.ship_date }}</td>
                                     <td>{{ recieve.shipment_orders?.so_number }}</td>
-                                    <td>#***</td>
+                                    <td>
+                                        <span v-if="recieve.invoice_number.length > 0"
+                                            v-for="(item, index) in recieve.invoice_number" :key="index">{{
+                                        item.invoice_number }}</span>
+                                        <span v-else class="text-muted fst-italic">
+                                            No invoices found
+                                        </span>
+                                    </td>
                                     <td>{{ recieve.buyingprice * recieve.quantity_unit }}</td>
                                     <td><i class="bi bi-file-earmark-text fw-bold"></i></td>
 
@@ -100,14 +116,13 @@
                                         Incoterm:</p>
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" v-model="Incoterm" class="form-control ">
-
+                                    <input type="text" v-model="incoterm" class="form-control ">
                                 </div>
                             </div>
                             <div class="col-6 d-flex justify-content-end">
                                 <div class="col-4 ">
 
-                                    <button class="btn btn-warning me-2 fw-bold ">
+                                    <button class="btn btn-warning me-2 fw-bold " @click="generate_invoice">
                                         Generate Invoice
                                     </button>
                                 </div>
@@ -139,36 +154,39 @@
                                     <th class="text-nowrap">MiLung Remittance Slip</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-center" v-for="(item, index) in orders" :key="index" v-if="orders">
+                            <tbody class="text-center" v-for="(item, index) in invoice" :key="index" v-if="invoice">
                                 <tr>
                                     <td>
-                                        {{ index }}
+                                        {{ index + 1 }}
                                     </td>
                                     <td>
-                                        {{ item.id }}
+                                        <router-link :to="{ name: 'supplier_invoice', params: { id: item.id } }"> {{
+                                        item.invoice_number }}</router-link>
+
                                     </td>
-                                    <td @click="toggleAccordion(index)"></td>
+                                    <td @click="toggleAccordion(index)" class="text-nowrap">{{ date(item) }}</td>
 
-                                    <td @click="toggleAccordion(index)">USD {{ item.totalpayable }}</td>
-
-                                    <td @click="toggleAccordion(index)"
-                                        :class="{ 'text-muted': item.settleamount?.settle_amount == null, 'fst-italic': item.settleamount?.settle_amount == null }">
-                                        {{ item.settleamount?.settle_amount ?? 'null' }}</td>
+                                    <td @click="toggleAccordion(index)" class="text-nowrap">USD {{ item.total_value }}
+                                    </td>
 
                                     <td @click="toggleAccordion(index)"
-                                        :class="{ 'text-muted': item.settleamount?.settle_date == null, 'fst-italic': item.settleamount?.settle_date == null }">
-                                        {{ item.settleamount?.settle_date ?? 'null' }}</td>
+                                        :class="{ 'text-muted': item.settle_amount == null, 'fst-italic': item.settle_amount == null }">
+                                        {{ item.settle_amount ?? 'null' }}</td>
 
                                     <td @click="toggleAccordion(index)"
-                                        :class="{ 'text-muted': item.settleamount?.outstanding_amount == null, 'fst-italic': item.settleamount?.outstanding_amount == null, 'text-danger': item.settleamount?.outstanding_amount > 0 }">
-                                        {{ item.settleamount?.outstanding_amount ?? item.totalvalue }}</td>
+                                        :class="{ 'text-muted': item.settle_date == null, 'fst-italic': item.settle_date == null }">
+                                        {{ item.settle_date ?? 'null' }}</td>
+
+                                    <td @click="toggleAccordion(index)"
+                                        :class="{ 'text-muted': item.outstanding_amount == null, 'fst-italic': item.outstanding_amount == null, 'text-danger': item.outstanding_amount > 0 }">
+                                        {{ item.outstanding_amount ?? item.totalvalue }}</td>
 
                                     <td>
                                         <input type="text" class="form-control">
                                     </td>
                                     <td>
-                                        <a v-if="item.settleamount?.slip" :href="'/storage/' +
-                                        item.settleamount?.slip" download class="btn px-4 mx-2 btn-outline-primary  ">
+                                        <a v-if="item.slip" :href="'/storage/' +
+                                        item.slip" download class="btn px-4 mx-2 btn-outline-primary  ">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </a>
                                         <p v-else class="fst-italic text-muted">
@@ -178,7 +196,7 @@
 
                                 </tr>
                                 <tr v-if="accordionIndex === index">
-                                    <td colspan="8">
+                                    <td colspan="9">
                                         <div class="">
 
                                             <div class="" v-for="(order, index) in item.orders" :key="index">
@@ -211,7 +229,7 @@
                                                             </p>
                                                         </div>
                                                         <div class="col-3">
-                                                            {{ order.sellingprice }}
+                                                            {{ order.buyingprice }}
                                                         </div>
                                                     </div>
                                                     <div class="d-flex col-3 my-4">
@@ -232,11 +250,14 @@
                                 </tr>
                             </tbody>
                             <tbody v-else>
-                                <td colspan="17">
-                                    <p class="text-center">
-                                        No data to display.
-                                    </p>
-                                </td>
+                                <tr>
+
+                                    <td colspan="17">
+                                        <p class="text-center">
+                                            No data to display.
+                                        </p>
+                                    </td>
+                                </tr>
                             </tbody>
 
                         </table>
@@ -310,12 +331,13 @@ export default {
 
 
         return {
+            selectedOrderIds: [],
             info: {},
             invoice: {},
             orders: {},
             so: [],
             isLoading: true,
-            Incoterm: '',
+            incoterm: '',
             accordionIndex: null,
         }
     },
@@ -335,6 +357,89 @@ export default {
         }
     },
     methods: {
+        async generate_invoice() {
+
+            // Check if any selected order is already invoiced
+            for (let orderId of this.selectedOrderIds) {
+                const order = this.orders.find(order => order.id === orderId);
+                if (order.invoice_number.length > 0) {
+                    this.error = 'One or more selected orders are already invoiced.';
+                    return;
+                }
+            }
+
+            if (this.selectedOrderIds.length === 0 || this.incoterm == "") {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select at least one order and write incoterm to generate an invoice.',
+                    icon: 'error',
+                });
+                return;
+            }
+
+            // Confirm the upload
+            const { isConfirmed } = await Swal.fire({
+                title: 'Are you sure you want to create invoice?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+            });
+
+            if (!isConfirmed) {
+                return;
+            }
+
+            const formData = {
+                order_ids: this.selectedOrderIds,
+                incoterm: this.incoterm,
+
+            };
+
+            Swal.fire({
+                title: 'Please wait...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const response = await axios.post('/api/supplier/invoice', formData);
+
+                this.selectedOrderIds = [];
+                this.intoterm = '';
+
+                Swal.hideLoading();
+                // Show a success message
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Invoice created successfully.',
+                    icon: 'success',
+                });
+
+                this.fetchSO();
+            } catch (error) {
+                Swal.hideLoading();
+                // Show an error message
+                if (error.response && error.response.status === 422) {
+
+                    const validationErrors = error.response.data.errors;
+                    console.log('error', error);
+                    this.handleValidationErrors(validationErrors);
+
+                } else if (error.response && error.response.status === 400) {
+
+                    toastr.error(error.response.data.error);
+
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while creating the invoice.',
+                        icon: 'error',
+                    });
+                }
+            }
+        },
         toggleAccordion(index) {
             this.accordionIndex = this.accordionIndex === index ? null : index;
         },
@@ -373,20 +478,26 @@ export default {
                 });
             } catch (error) {
                 // Show an error message
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred while uploading the file.',
-                    icon: 'error',
-                });
+                console.log('error', error);
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while uploading the file.',
+                        icon: 'error',
+                    });
+                }
             }
         },
         triggerUpload(refName) {
             this.$refs[refName].click();
         },
-        eta(recieve) {
-            if (recieve.updated_at) {
+        date(recieve) {
+            if (recieve.created_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(recieve.updated_at);
+                const parsedDateTime = parseISO(recieve.created_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
@@ -397,15 +508,25 @@ export default {
         fetchSO() {
             axios.get('/api/supplier/suppliershipments')
                 .then(response => {
-                    this.so = response.data;
-                    console.log(this.so);
-
+                    this.so = response.data.ship;
+                    this.invoice = response.data.invoice;
+                    console.log(this.so, this.invoice);
                     this.isLoading = false;
                 })
                 .catch(error => {
                     this.isLoading = false;
                     console.error(error);
                 });
+        },
+        handleValidationErrors(validationErrors) {
+            for (const key in validationErrors) {
+                if (Object.hasOwnProperty.call(validationErrors, key)) {
+                    const messages = validationErrors[key];
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
         async fetchrecievables(newVal) {
             NProgress.start();

@@ -73,5 +73,13 @@ class Order extends Model
     {
         return $this->hasOne(ShipmentSupplier::class, 'user_id', 'supplier');
     }
-
+    public function invoice_number()
+    {
+        return $this->belongsToMany(SupplierInvoice::class)
+            ->select('supplier_invoices.invoice_number');
+    }
+    public function invoices()
+    {
+        return $this->belongsToMany(SupplierInvoice::class);
+    }
 }

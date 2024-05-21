@@ -125,6 +125,8 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     // Finance
     Route::get('shipment_details/{id}', [SupplierShipmentController::class, 'shipment_details'])->middleware('can:supplierAccountsReceivable');
     Route::post('upload_reciept_note', [SupplierShipmentController::class, 'upload_reciept_note'])->middleware('can:supplierAccountsReceivable');
+    Route::post('invoice', [SupplierShipmentController::class, 'invoice'])->middleware('can:supplierAccountsReceivable');
+    Route::get('invoice/{id}', [SupplierShipmentController::class, 'invoiceShow'])->middleware('can:supplierAccountsReceivable');
 });
 
 // <-- Admin Routes -->

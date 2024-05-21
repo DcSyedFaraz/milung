@@ -161,7 +161,7 @@
                 <!-- End Icons Nav -->
                 <li class="nav-item" v-if="can('supplierAccountsReceivable')">
 
-                    <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" active-class="active">
+                    <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" :class="{active: $route.name === 'supplier_invoice'}" active-class="active">
                         <i class="bi bi-cash-coin"></i><span>Finance</span>
                     </router-link>
                 </li>

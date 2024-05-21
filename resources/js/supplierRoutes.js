@@ -16,6 +16,7 @@ import receiptnote from "./pages/supplier/shipment/receipt-note.vue";
 
 // Finance
 import recievables from "./pages/supplier/finance/recievables.vue";
+import invoice from "./pages/supplier/finance/invoice.vue";
 
 // Notifications
 import allnotifications from "./pages/notifications/allnotifications.vue";
@@ -88,6 +89,11 @@ const supplierRoutes = [
         path: "recievables",
         name: "supplier_recievables",
         component: recievables,
+    },
+    {
+        path: "recievables/invoice/:id",
+        name: "supplier_invoice",
+        component: invoice,
     },
 ];
 
