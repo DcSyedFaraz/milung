@@ -17,6 +17,7 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Notification;
 
 class SupplierShipmentController extends Controller
 {
@@ -121,8 +122,32 @@ class SupplierShipmentController extends Controller
     }
     public function invoiceShow($id)
     {
-        $invoice = SupplierInvoice::where('id', $id)->with('orders', 'orders.product_group','user')->first();
+        $invoice = SupplierInvoice::where('id', $id)->with('orders', 'orders.product_group', 'user', 'orders.shipmentOrders')->first();
         return response()->json($invoice, 200);
+    }
+    public function invoicereminder(Request $request)
+    {
+        $user = Auth::user();
+
+        $invoiceIds = $request->input('invoice_ids');
+
+        // Retrieve the invoice numbers from the database
+        $invoices = SupplierInvoice::whereIn('id', $invoiceIds)->get(['invoice_number']);
+
+        $invoiceNumbers = $invoices->pluck('invoice_number')->toArray();
+
+        $invoiceNumbersList = implode(', ', $invoiceNumbers);
+        $message = "Just a quick note to let you know that user '{$user->userid}' named '{$user->name}' has sent payment reminders for the following invoices: {$invoiceNumbersList}.";
+
+        $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
+
+        // Notification::send($admins, new UserNotification($message, 'Account Payable-Payment Reminder'));
+
+        foreach ($admins as $admin) {
+            \Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
+        }
+
+        return response()->json(['status' => 'success'], 200);
     }
     public function invoice(Request $request)
     {

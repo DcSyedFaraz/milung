@@ -218,9 +218,13 @@ class UserController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function buyersUpdate(Request $request)
+    {
+        dd($request->all());
+    }
     public function buyers(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
 
 
         $validator = Validator::make($request->all(), [
@@ -388,6 +392,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
+    public function buyersShow($id)
+    {
+    }
     public function usersEdit($id)
     {
         $user = User::find($id);

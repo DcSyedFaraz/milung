@@ -126,6 +126,7 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     Route::get('shipment_details/{id}', [SupplierShipmentController::class, 'shipment_details'])->middleware('can:supplierAccountsReceivable');
     Route::post('upload_reciept_note', [SupplierShipmentController::class, 'upload_reciept_note'])->middleware('can:supplierAccountsReceivable');
     Route::post('invoice', [SupplierShipmentController::class, 'invoice'])->middleware('can:supplierAccountsReceivable');
+    Route::post('invoice/reminder', [SupplierShipmentController::class, 'invoicereminder'])->middleware('can:supplierAccountsReceivable');
     Route::get('invoice/{id}', [SupplierShipmentController::class, 'invoiceShow'])->middleware('can:supplierAccountsReceivable');
 });
 
@@ -145,6 +146,8 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     // Adding Users
     Route::post('addbuyers', [UserController::class, 'buyers'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
+    Route::post('buyers/{id}', [UserController::class, 'buyersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
+    Route::get('buyers/{id}', [UserController::class, 'buyersShow'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::post('addsupliers', [UserController::class, 'suppliers'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
 
     // Updating Users

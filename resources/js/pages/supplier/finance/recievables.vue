@@ -154,10 +154,18 @@
                                     <th class="text-nowrap">MiLung Remittance Slip</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-center" v-for="(item, index) in invoice" :key="index" v-if="invoice">
+                            <tbody class="text-center" v-for="(item, index) in invoice" :key="index"
+                                v-if="invoice.length > 0">
                                 <tr>
                                     <td>
-                                        {{ index + 1 }}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" :value="item.id"
+                                                v-model="selectedInvoiceIds">
+                                            <label class="form-check-label">
+
+                                                {{ index + 1 }}
+                                            </label>
+                                        </div>
                                     </td>
                                     <td>
                                         <router-link :to="{ name: 'supplier_invoice', params: { id: item.id } }"> {{
@@ -199,7 +207,7 @@
                                     <td colspan="9">
                                         <div class="">
 
-                                            <div class="" v-for="(order, index) in item.orders" :key="index">
+                                            <div class="" v-for="(order, index) in item.orders_invoice" :key="index">
 
                                                 <div class="row border">
                                                     <div class="d-flex col-3 my-4">
@@ -254,13 +262,21 @@
 
                                     <td colspan="17">
                                         <p class="text-center">
-                                            No data to display.
+                                            No invoice to display.
                                         </p>
                                     </td>
                                 </tr>
                             </tbody>
 
                         </table>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end" v-if="invoice.length > 0">
+                        <div class="col-2">
+
+                            <button class="btn btn-warning mt-2 fw-bold " @click="payment">
+                                Payment Reminder
+                            </button>
+                        </div>
 
                     </div>
                     <!-- <div class="row justify-content-around">
@@ -332,6 +348,7 @@ export default {
 
         return {
             selectedOrderIds: [],
+            selectedInvoiceIds: [],
             info: {},
             invoice: {},
             orders: {},
@@ -357,13 +374,74 @@ export default {
         }
     },
     methods: {
+        async payment() {
+
+            if (this.selectedInvoiceIds.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select at least one invoice to send reminder.',
+                    icon: 'error',
+                });
+                return;
+            }
+            // Confirm the upload
+            const { isConfirmed } = await Swal.fire({
+                title: 'Are you sure you want to send payment reminder?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+            });
+
+            if (!isConfirmed) {
+                return;
+            }
+
+            const formData = {
+                invoice_ids: this.selectedInvoiceIds,
+
+            };
+
+            Swal.fire({
+                title: 'Please wait...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+            });
+            Swal.showLoading();
+
+            try {
+                const response = await axios.post('/api/supplier/invoice/reminder', formData);
+
+                Swal.hideLoading();
+                // Show a success message
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Reminder sent successfully.',
+                    icon: 'success',
+                });
+
+                this.selectedInvoiceIds = [];
+
+            } catch (error) {
+                Swal.hideLoading();
+                // Show an error message
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while sending reminder.',
+                    icon: 'error',
+                });
+            }
+
+        },
         async generate_invoice() {
 
             // Check if any selected order is already invoiced
             for (let orderId of this.selectedOrderIds) {
                 const order = this.orders.find(order => order.id === orderId);
                 if (order.invoice_number.length > 0) {
-                    this.error = 'One or more selected orders are already invoiced.';
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'One or more selected orders are already invoiced.',
+                        icon: 'error',
+                    });
                     return;
                 }
             }

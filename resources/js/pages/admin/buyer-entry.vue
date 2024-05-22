@@ -4,7 +4,7 @@
             <div class=" justify-content-start">
                 <div class="col-md-12">
                     <h3 class="fw-bold mb-4" style="color: #14245c;">Buyer Entry</h3>
-                    <form  @submit.prevent="submitForm">
+                    <form @submit.prevent="submitForm">
                         <div class=" ">
 
                             <div class="row">
@@ -12,7 +12,8 @@
                                     <div class="col-6">
                                         <p for="name">User ID:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="userid" class="form-control"></div>
+                                    <div class="col-6"><input type="text" v-model="buyer.userid" class="form-control">
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -20,13 +21,15 @@
                                     <div class="col-6">
                                         <p for="name">Buyer Name:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="name" class="form-control"></div>
+                                    <div class="col-6"><input type="text" v-model="buyer.name" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
                                         <p for="name">Contact person:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="contact" class="form-control"></div>
+                                    <div class="col-6"><input type="text" v-model="buyer.contact" class="form-control">
+                                    </div>
                                 </div>
                             </div>
                             <div class="row my-3">
@@ -35,13 +38,16 @@
                                     <div class="col-6">
                                         <p for="name">Office Phone/Mobile:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="officePhone" class="form-control"></div>
+                                    <div class="col-6"><input type="text" v-model="buyer.officePhone"
+                                            class="form-control">
+                                    </div>
                                 </div>
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
                                         <p for="name">Email:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="email" class="form-control" id="email">
+                                    <div class="col-6"><input type="text" v-model="buyer.email" class="form-control"
+                                            id="email">
                                     </div>
                                 </div>
                             </div>
@@ -51,13 +57,15 @@
                                     <div class="col-6">
                                         <p for="name">Address:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="address" class="form-control"></div>
+                                    <div class="col-6"><input type="text" v-model="buyer.address" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
                                         <p for="name">Website:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="website" class="form-control" id="email">
+                                    <div class="col-6"><input type="text" v-model="buyer.website" class="form-control"
+                                            id="email">
                                     </div>
                                 </div>
                             </div>
@@ -66,32 +74,17 @@
                         </div>
                         <div class="form-group ">
                             <label for="buyerDescription" class="form-label">Buyer Description</label>
-                            <textarea class="form-control" id="buyerDescription" v-model="buyerDescription" rows="3"
-                                style="height: 120px; "></textarea>
+                            <textarea class="form-control" id="buyerDescription" v-model="buyer.buyerDescription"
+                                rows="3" style="height: 120px; "></textarea>
                         </div>
                         <div class="form-group col-6 my-2">
                             <label class="form-label">Product Group</label>
-                            <!-- <div class="form-group">
-                                <label>Multiple (.select2-purple)</label>
-                                <div class="select2-purple">
-                                    <select class="select2" multiple="multiple" id="multiple"
-                                        data-placeholder="Select a State" data-dropdown-css-class="select2-purple"
-                                        style="width: 100%;">
-                                        <option>Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
-                                    </select>
-                                </div>
-                            </div> -->
+
                             <div class="form-group">
-                                <multiselect v-model="group" :options="productOptions" :multiple="true" label="group_name" track-by="id">
+                                <multiselect v-model="buyer.group" :options="productOptions" :multiple="true"
+                                    label="group_name" track-by="id">
                                 </multiselect>
                             </div>
-                            <!-- <Select2 v-model="myValue" :options="myOptions" :multiple="true"/> -->
 
                         </div>
                         <div class="d-flex gap-2 my-2">
@@ -185,29 +178,25 @@
 <script>
 import './index';
 
-// import 'select2'; // Import the Select2 library
-// import 'select2/dist/css/select2.min.css';
-import $ from 'jquery';
-window.jQuery = window.$ = $;
-
-
 export default {
-    // components: { Select2 },
     data() {
         return {
-            // myValue: [],
             productOptions: [],
-            name: '',
-            userid: '',
-            email: '',
-            address: '',
-            website: '',
-            contact: '',
-            officePhone: '',
-            buyerDescription: '',
-            group: [],
-            errors: []
-        }
+            buyer: {
+                name: '',
+                userid: '',
+                email: '',
+                address: '',
+                website: '',
+                contact: '',
+                officePhone: '',
+                buyerDescription: '',
+                group: []
+            },
+            errors: [],
+            isEditMode: false,
+            buyerId: null,
+        };
     },
     methods: {
         async fetchProductOptions() {
@@ -218,68 +207,62 @@ export default {
                 console.error(error);
             }
         },
+        async fetchBuyerDetails(buyerId) {
+            try {
+                const response = await axios.get(`/api/buyers/${buyerId}`);
+                const buyer = response.data;
+                this.buyer = {
+                    name: buyer.name,
+                    userid: buyer.userid,
+                    email: buyer.email,
+                    address: buyer.address,
+                    website: buyer.website,
+                    contact: buyer.contact,
+                    officePhone: buyer.officePhone,
+                    buyerDescription: buyer.buyerDescription,
+                    group: buyer.group.map(groupItem => {
+                        return this.productOptions.find(option => option.id === groupItem.id);
+                    })
+                };
+            } catch (error) {
+                console.error(error);
+            }
+        },
         async submitForm() {
             this.errors = [];
-            if (!this.name) {
-                this.errors.push('Buyer name is required.');
-            }
-            if (!this.userid) {
-                this.errors.push('UserID is required.');
-            }
-            if (!this.email) {
-                this.errors.push('Email is required.');
-            }
-            if (!this.address) {
-                this.errors.push('Address is required.');
-            }
-            if (!this.website) {
-                this.errors.push('Website is required.');
-            }
-            if (!this.buyerDescription) {
-                this.errors.push('Buyer description is required.');
-            }
-            if (!this.group.length) {
-                this.errors.push('Product group is required.');
-            }
-            if (!this.errors.length) {
-                const formData = {
-                    name: this.name,
-                    email: this.email,
-                    userid: this.userid,
-                    address: this.address,
-                    website: this.website,
-                    officePhone: this.officePhone,
-                    contact: this.contact,
-                    buyerDescription: this.buyerDescription,
-                    group: this.group
-                };
-                try {
-                    console.log(formData);
-                    const addbuyer = await axios.post('/api/addbuyers', formData);
-                    console.log(addbuyer.data);
-                    // alert('Supplier added successfully');
-                    this.resetForm();
+            const requiredFields = ['name', 'userid', 'email', 'address', 'website', 'buyerDescription', 'group'];
+            requiredFields.forEach(field => {
+                if (!this.buyer[field] || (Array.isArray(this.buyer[field]) && !this.buyer[field].length)) {
+                    this.errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required.`);
+                }
+            });
 
-                    if (addbuyer.status === 201) {
-                        toastr.success(addbuyer.data.message);
-                        this.$router.push({ name: 'Databuyer' });
+            if (!this.errors.length) {
+                try {
+                    let response;
+                    if (this.isEditMode) {
+                        response = await axios.post(`/api/buyers/${this.buyerId}`, this.buyer);
                     } else {
-                        // Handle other status codes or unexpected responses
-                        toastr.error('Unexpected response from the server');
+                        response = await axios.post('/api/addbuyers', this.buyer);
                     }
 
+                    this.resetForm();
+
+                    if (response.status === 201 || response.status === 200) {
+                        toastr.success(response.data.message);
+                        this.$router.push({ name: 'Databuyer' });
+                    } else {
+                        toastr.error('Unexpected response from the server');
+                    }
                 } catch (error) {
                     console.error(error);
                     if (error.response && error.response.status === 422) {
-                        // Validation error, display Toastr messages
                         const validationErrors = error.response.data.errors;
-
                         Object.values(validationErrors).forEach(errorMessage => {
                             toastr.error(errorMessage[0]);
                         });
                     } else {
-                        // Handle other types of errors
-                        toastr.error('An error occurred while adding the supplier');
+                        toastr.error('An error occurred while saving the buyer');
                     }
                 }
             } else {
@@ -293,25 +276,32 @@ export default {
             }
         },
         resetForm() {
-            this.name = '';
-            this.email = '';
-            this.address = '';
-            this.website = '';
-            this.buyerDescription = '';
-            this.group = [];
+            this.buyer = {
+                name: '',
+                userid: '',
+                email: '',
+                address: '',
+                website: '',
+                contact: '',
+                officePhone: '',
+                buyerDescription: '',
+                group: []
+            };
+            this.errors = [];
         }
     },
+    async mounted() {
+        await this.fetchProductOptions();
 
-    mounted() {
-        this.fetchProductOptions();
-    },
-    beforeDestroy() {
-        // Destroy Select2 instance when the component is destroyed to prevent memory leaks
-        // $(this.$refs.select).select2('destroy');
-    },
-
-}
+        if (this.$route.params.buyerId) {
+            this.isEditMode = true;
+            this.buyerId = this.$route.params.buyerId;
+            await this.fetchBuyerDetails(this.buyerId);
+        }
+    }
+};
 </script>
+
 
 <style>
 @import url('./style.css');
