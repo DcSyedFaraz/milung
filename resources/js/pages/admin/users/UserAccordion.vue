@@ -45,7 +45,8 @@
                         </div>
                         <div class="col-12 ">
                             <div class="row py-5">
-                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                <div class="col-3"
+                                    v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                     <div class="col-12 d-flex justify-content-between mb-3">
                                         <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                             Admin</div>
@@ -66,7 +67,8 @@
 
 
                                 </div>
-                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                <div class="col-3"
+                                    v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                     <div class="col-12 d-flex justify-content-between mb-3">
                                         <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                             Operations </div>
@@ -86,7 +88,8 @@
                                     </div>
 
                                 </div>
-                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                <div class="col-3"
+                                    v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                     <div class="col-12 d-flex justify-content-between mb-3">
                                         <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                             Finance</div>
@@ -107,7 +110,8 @@
 
 
                                 </div>
-                                <div class="col-3" v-if="user.roles[0] == 'Admin'">
+                                <div class="col-3"
+                                    v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                     <div class="col-12 d-flex justify-content-between mb-3">
                                         <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                             Statics</div>

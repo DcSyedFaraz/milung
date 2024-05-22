@@ -58,13 +58,13 @@
                                     </td>
 
                                     <td>
-                                        <button v-if="can('editSupplierEntry')" @click="toggleAccordion(user)" class="btn btn-light"
+                                        <!-- <button v-if="can('editSupplierEntry')" @click="toggleAccordion(user)" class="btn btn-light"
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link v-if="can('editSupplierEntry')" :to="{ name: 'editsupplier', params: { id: user.id } }" class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
                                         <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
                                                 class="bi bi-trash"></i>

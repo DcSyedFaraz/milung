@@ -75,7 +75,11 @@
                                         </div>
                                         <div class="mb-3 col-2">
                                             <label for="userIdContactPerson" class="form-label">UserID:</label>
-                                            <input type="text" class="form-control" v-model="user.userid">
+                                            <input type="text" class="form-control" v-model="user.userid"
+                                                :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
+                                            <div v-if="!userIdPatternValid" class="invalid-feedback">
+                                                User ID must be alphanumeric and between 1 and 10 characters long.
+                                            </div>
                                         </div>
                                         <div class="mb-3 col-3">
                                             <label for="oneTimePassword" class="form-label">One Time Password:</label>
@@ -402,6 +406,12 @@ export default {
             }
         },
         //...
+    },
+    computed: {
+        userIdPatternValid() {
+            const pattern = /^[a-zA-Z0-9]{1,10}$/;
+            return pattern.test(this.user.userid);
+        }
     }
 }
 </script>

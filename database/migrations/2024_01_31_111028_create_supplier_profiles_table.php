@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('address');
             $table->string('website');
             $table->string('office_phone');
-            $table->string('contact');
             $table->string('buyer_description');
             $table->json('group');
             $table->json('sec_group');

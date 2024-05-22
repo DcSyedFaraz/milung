@@ -218,10 +218,46 @@ class UserController extends Controller
         return response()->json($responseData, 200);
     }
 
-    public function buyersUpdate(Request $request)
+    public function buyersUpdate(Request $request, $id)
     {
-        dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'userid' => 'required||regex:/^[^\s]+$/|unique:users,userid,' . $id,
+            'group' => 'array',
+            'group.*' => 'integer',
+            'status' => 'required|string|in:active,inactive',
+            'contact_person' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'userid' => $request->userid,
+            'name' => $request->name,
+            'email' => $request->email,
+            'status' => $request->status,
+            'contact_person' => $request->contact_person,
+            // Add any other user-related fields
+        ]);
+
+        $user->buyerProfile()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'address' => $request->address,
+                'website' => $request->website,
+                'office_phone' => $request->officePhone,
+                'buyer_description' => $request->buyerDescription,
+                'group' => $request->group,
+            ]
+        );
+
+        return response()->json(['message' => 'Successfully updated user!'], 200);
     }
+
     public function buyers(Request $request)
     {
         // dd($request->all());
@@ -229,8 +265,11 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'userid' => 'required|unique:users,userid',
+            'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
+            'email' => 'required|string|email|max:255|unique:users',
+            'status' => 'required|string|in:active,inactive',
+            'otp' => 'required|string|min:8|regex:/^[^\s]+$/',
+            'contact_person' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -242,8 +281,10 @@ class UserController extends Controller
             'userid' => $request->userid,
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('12345678'),
-            // Add any other user-related fields
+            'status' => $request->status,
+            'password' => Hash::make($request->otp),
+            'otp' => $request->otp,
+            'contact_person' => $request->contact_person,
         ]);
 
         // Store buyer profile data
@@ -251,14 +292,17 @@ class UserController extends Controller
             'address' => $request->address,
             'website' => $request->website,
             'office_phone' => $request->officePhone,
-            'contact' => $request->contact,
             'buyer_description' => $request->buyerDescription,
             'group' => $request->group,
             // 'sec_group' => $request->Secgroup,
         ]);
-
-        // Assign the 'supplier' role (or any other role) using Spatie permissions
         $user->assignRole('Buyer');
+
+        $admin = User::role(['Admin', 'Internal'])->get();
+        Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+        $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
+
+        Notification::send($admin, new UserNotification($message, 'New Buyer'));
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
     public function suppliers(Request $request)
@@ -289,7 +333,6 @@ class UserController extends Controller
             'address' => $request->address,
             'website' => $request->website,
             'office_phone' => $request->officePhone,
-            'contact' => $request->contact,
             'buyer_description' => $request->buyerDescription,
             'group' => $request->group,
             'sec_group' => $request->Secgroup,
@@ -352,6 +395,7 @@ class UserController extends Controller
 
         // dd($request->all());
         try {
+
             $user = new User($validatedData);
             $user->password = Hash::make($validatedData['otp']);
             $user->save();
@@ -394,6 +438,15 @@ class UserController extends Controller
      */
     public function buyersShow($id)
     {
+        $buyer = User::with('buyerProfile')->findOrFail($id);
+
+        return response()->json($buyer);
+    }
+    public function suppliersShow($id)
+    {
+        $buyer = User::with('supplierProfile')->findOrFail($id);
+
+        return response()->json($buyer);
     }
     public function usersEdit($id)
     {
@@ -450,8 +503,8 @@ class UserController extends Controller
         $validator = Validator::make($data, [
             'status' => 'required',
             'name' => 'required',
-            'email' => 'required|email',
-            'otp' => 'nullable|string|min:8',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'otp' => 'nullable|string|min:8|regex:/^[^\s]+$/',
             'permissions' => 'nullable|array',
             'contact_person' => 'nullable|string',
         ]);

@@ -10,7 +10,8 @@
                                     class="">Overview on all Buyers</span></span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                            <router-link :to="{ name: 'buyerEntry' }" v-if="can('addNewBuyerEntry')" class="btn btn-warning fw-bold text-dark">Add New
+                            <router-link :to="{ name: 'buyerEntry' }" v-if="can('addNewBuyerEntry')"
+                                class="btn btn-warning fw-bold text-dark">Add New
                                 Buyer</router-link>
                         </div>
                     </div>
@@ -55,184 +56,21 @@
                                     </td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light" v-if="can('editBuyerEntry')"
+                                        <!-- <button @click="toggleAccordion(user)" class="btn btn-light" v-if="can('editBuyerEntry')"
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
+                                        </button> -->
+                                        <router-link v-if="can('editBuyerEntry')" :to="{ name: 'editbuyer', params: { id: user.id } }"
+                                            class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        </router-link>
 
                                         <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
-                                <transition name="fade" v-if="can('editBuyerEntry')">
-                                    <tr v-show="accordionOpen[user.id]">
-                                        <td :colspan="7">
-                                            <div>
-                                                <!-- <p>Additional information about user {{ user.name }}</p> -->
-                                                <div class="">
-                                                    <form @submit.prevent="updateUser(user.id)">
-                                                        <div class="col-12 px-3" style="background-color: #e2f2f9;">
-                                                            <div class="row">
-                                                                <div class="mb-3 col-4">
-                                                                    <label for="registerEmail"
-                                                                        class="form-label">Name</label>
-                                                                    <input type="text" class="form-control"
-                                                                        v-model="updateuser.name">
-                                                                </div>
-                                                                <div class="mb-3 col-4">
-                                                                    <label for="registerEmail" class="form-label">Register
-                                                                        Email</label>
-                                                                    <input type="email" class="form-control"
-                                                                        v-model="updateuser.email">
-                                                                </div>
 
-                                                                <div class="mb-3 col-2">
-                                                                    <label for="status" class="form-label">Status</label>
-                                                                    <select class="form-select" v-model="updateuser.status"
-                                                                        required>
-                                                                        <option value="active">Active</option>
-                                                                        <option value="inactive">Inactive</option>
-                                                                    </select>
-
-                                                                </div>
-                                                                <div class="mb-3 col-2">
-                                                                    <label for="userIdContactPerson"
-                                                                        class="form-label">ID:</label>
-                                                                    <input type="text" disabled class="form-control"
-                                                                        :value="user.id">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">One Time
-                                                                        Use
-                                                                        Password:</label>
-                                                                    <input type="text" class="form-control">
-                                                                </div>
-                                                                <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">User ID
-                                                                        Contact Person:</label>
-                                                                    <input type="tel" class="form-control">
-                                                                </div>
-                                                                <div class="mb-3 col-1" style="display: flex !important;">
-                                                                    <button type="submit"
-                                                                        class="btn btn-milung  align-self-end">Save</button>
-                                                                </div>
-                                                                <!-- <div class="mb-3 col-1">
-                                                                <button type="button" class="btn btn-primary">Submit</button>
-                                                            </div> -->
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 ">
-                                                            <div class="row py-5">
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
-                                                                        <div class="fs-5 fw-bold col-6"
-                                                                            style="color: #14245c;">
-                                                                            Admin</div>
-                                                                        <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="adminSelectAll"
-                                                                                @change="adminSelectAllChanged">
-                                                                            <label class="form-check-label  "
-                                                                                for="productEntry">Select All</label>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div v-for="(item, index) in adminCheckboxes"
-                                                                        :key="index" class="form-check">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            v-model="adminitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
-                                                                        }}</label>
-                                                                    </div>
-
-
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
-                                                                        <div class="fs-5 fw-bold col-6"
-                                                                            style="color: #14245c;">
-                                                                            Operations </div>
-                                                                        <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="operationsSelectAll"
-                                                                                @change="operationselect">
-                                                                            <label class="form-check-label fs-6 "
-                                                                                for="productEntry">Select All</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div v-for="(item, index) in operationsCheckboxes"
-                                                                        :key="index" class="form-check">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            v-model="operationitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
-                                                                        }}</label>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
-                                                                        <div class="fs-5 fw-bold col-6"
-                                                                            style="color: #14245c;">
-                                                                            Finance</div>
-                                                                        <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="financeSelectAll"
-                                                                                @change="financeselect">
-                                                                            <label class="form-check-label  "
-                                                                                for="productEntry">Select All</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div v-for="(item, index) in financeCheckboxes"
-                                                                        :key="index" class="form-check">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            v-model="financeitems" :value="item.value">
-                                                                        <label class="form-check-label">{{ item.label
-                                                                        }}</label>
-                                                                    </div>
-
-
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
-                                                                        <div class="fs-5 fw-bold col-6"
-                                                                            style="color: #14245c;">
-                                                                            Statics</div>
-                                                                        <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="selectAll" @change="selectAllItems"
-                                                                                value="true">
-                                                                            <label class="form-check-label  "
-                                                                                for="productEntry">Select All</label>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div v-for="(item, index) in items" :key="index"
-                                                                        class="form-check">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            :value="item.value" v-model="staticsitems">
-                                                                        <label class="form-check-label" :for="item.id">{{
-                                                                            item.label }}</label>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-
-                                                    </form>
-                                                </div>
-                                                <!-- Add more content here -->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </transition>
 
                             </tbody>
                         </table>

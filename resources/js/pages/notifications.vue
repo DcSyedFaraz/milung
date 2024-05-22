@@ -81,7 +81,7 @@ export default {
         this.interval.value = setInterval(() => {
             // console.log('notification fetched.');
             this.fetchNotifications();
-        }, 15000);
+        }, 30000);
 
 
     },
@@ -115,7 +115,7 @@ export default {
             axios.get('/api/notifications').then((response) => {
                 this.notifications = response.data.msg;
                 this.count = response.data.count;
-                console.log(this.notifications, this.count);
+                // console.log(this.notifications, this.count);
             });
         },
         markAsRead(notification) {

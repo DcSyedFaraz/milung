@@ -221,13 +221,13 @@
                         <li>
                             <router-link :to="{ name: 'Datasupplier' }"
                                 v-if="can('addNewSupplierEntry | editSupplierEntry | setEditSupplierIDCode')"
-                                :class="{ active: this.$route.name === 'supplerEntry' }" active-class="active">
+                                :class="{ active: this.$route.name === 'supplerEntry' || this.$route.name === 'editsupplier' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Supplier</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link :to="{ name: 'Databuyer' }" v-if="can('editBuyerEntry | addNewBuyerEntry')"
-                                :class="{ active: this.$route.name === 'buyerEntry' }" active-class="active">
+                                :class="{ active: this.$route.name === 'buyerEntry' || this.$route.name === 'editbuyer' }" active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
@@ -456,6 +456,8 @@ export default {
                 '/admin/product_group',
                 '/admin/product_group_entry',
                 '/admin/product-group-edit/:id',
+                '/admin/Databuyer/:id',
+                '/admin/Datasupplier/:id',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
@@ -471,6 +473,7 @@ export default {
     },
 };
 </script>
+<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 @import './admin/style.css';

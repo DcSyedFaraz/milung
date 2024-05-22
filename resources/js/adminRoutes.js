@@ -79,9 +79,19 @@ const adminRoutes = [
         component: Datasupplier,
     },
     {
+        path: "Datasupplier/:id",
+        name: "editsupplier",
+        component: supplerEntry,
+    },
+    {
         path: "Databuyer",
         name: "Databuyer",
         component: Databuyer,
+    },
+    {
+        path: "Databuyer/:id",
+        name: "editbuyer",
+        component: buyerEntry,
     },
     {
         path: "buyerEntry",

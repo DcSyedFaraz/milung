@@ -8,11 +8,38 @@
                         <div class=" ">
 
                             <div class="row">
+
+                                <div class="d-flex col-6  my-2" v-if="!isEditMode">
+                                    <div class="col-6">
+                                        <p for="name">OTP:</p>
+                                    </div>
+                                    <div class="col-6"><input type="text" v-model="buyer.otp" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="d-flex col-6  my-2">
                                     <div class="col-6">
                                         <p for="name">User ID:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="buyer.userid" class="form-control">
+                                    <div class="col-6">
+                                        <input type="text" v-model="buyer.userid" required pattern="[a-zA-Z0-9]{1,10}"
+                                            class="form-control"
+                                            :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
+                                        <div v-if="!userIdPatternValid" class="invalid-feedback">
+                                            User ID must be alphanumeric and between 1 and 10 characters long.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6  ">
+                                    <div class="col-6">
+                                        <p for="name">Status:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select" v-model="buyer.status" required>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -28,7 +55,8 @@
                                     <div class="col-6">
                                         <p for="name">Contact person:</p>
                                     </div>
-                                    <div class="col-6"><input type="text" v-model="buyer.contact" class="form-control">
+                                    <div class="col-6"><input type="text" v-model="buyer.contact_person"
+                                            class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +216,7 @@ export default {
                 email: '',
                 address: '',
                 website: '',
-                contact: '',
+                contact_person: '',
                 officePhone: '',
                 buyerDescription: '',
                 group: []
@@ -203,6 +231,7 @@ export default {
             try {
                 const response = await axios.get('/api/product_group_get');
                 this.productOptions = response.data;
+                console.log(this.productOptions);
             } catch (error) {
                 console.error(error);
             }
@@ -211,17 +240,26 @@ export default {
             try {
                 const response = await axios.get(`/api/buyers/${buyerId}`);
                 const buyer = response.data;
+                console.log(buyer);
+
                 this.buyer = {
                     name: buyer.name,
                     userid: buyer.userid,
                     email: buyer.email,
-                    address: buyer.address,
-                    website: buyer.website,
-                    contact: buyer.contact,
-                    officePhone: buyer.officePhone,
-                    buyerDescription: buyer.buyerDescription,
-                    group: buyer.group.map(groupItem => {
-                        return this.productOptions.find(option => option.id === groupItem.id);
+                    status: buyer.status,
+                    address: buyer.buyer_profile?.address,
+                    website: buyer.buyer_profile?.website,
+                    contact_person: buyer.contact_person,
+                    officePhone: buyer.buyer_profile?.office_phone,
+                    buyerDescription: buyer.buyer_profile?.buyer_description,
+                    group: buyer.buyer_profile?.group.map(groupItem => {
+                        // Find the option with the same id as groupItem.id
+                        const option = this.productOptions.find(option => option.id === groupItem);
+                        // console.log(option, this.productOptions, groupItem);
+                        return {
+                            id: option.id,
+                            group_name: option.group_name
+                        };
                     })
                 };
             } catch (error) {
@@ -238,12 +276,17 @@ export default {
             });
 
             if (!this.errors.length) {
+                const formData = {
+                    ...this.buyer,
+                    group: this.buyer.group.map(groupItem => groupItem.id) // Send only IDs
+                };
+
                 try {
                     let response;
                     if (this.isEditMode) {
-                        response = await axios.post(`/api/buyers/${this.buyerId}`, this.buyer);
+                        response = await axios.post(`/api/buyers/${this.buyerId}`, formData);
                     } else {
-                        response = await axios.post('/api/addbuyers', this.buyer);
+                        response = await axios.post('/api/addbuyers', formData);
                     }
 
                     this.resetForm();
@@ -282,7 +325,7 @@ export default {
                 email: '',
                 address: '',
                 website: '',
-                contact: '',
+                contact_person: '',
                 officePhone: '',
                 buyerDescription: '',
                 group: []
@@ -293,14 +336,21 @@ export default {
     async mounted() {
         await this.fetchProductOptions();
 
-        if (this.$route.params.buyerId) {
+        if (this.$route.params.id) {
             this.isEditMode = true;
-            this.buyerId = this.$route.params.buyerId;
+            this.buyerId = this.$route.params.id;
             await this.fetchBuyerDetails(this.buyerId);
+        }
+    },
+    computed: {
+        userIdPatternValid() {
+            const pattern = /^[a-zA-Z0-9]{1,10}$/;
+            return pattern.test(this.buyer.userid);
         }
     }
 };
 </script>
+
 
 
 <style>
