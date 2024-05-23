@@ -121,82 +121,49 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-lg-12 ">
-
-                    <div class="card  ">
-                        <div class="card-header pt-3  ">
-                            <div class="d-flex justify-content-between align-items-center ">
+                <div class="col-lg-12" v-if="isEditMode">
+                    <div class="card">
+                        <div class="card-header pt-3">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="col-6">
-                                    <span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Order History:</span>
+                                    <span class="mt-2 fw-bold fs-4" style="color: #14245c;">Order History:</span>
                                 </div>
                                 <div class="col-4">
-
-                                    <input type="text" class="form-control" placeholder="Search Products..." />
+                                    <!-- <input type="text" class="form-control" placeholder="Search Products..." /> -->
                                 </div>
                             </div>
                         </div>
-
                         <div class="card-body rounded-top">
-
-
                             <!-- Table with stripped rows -->
-                            <table class="table table-striped  display " id="">
-                                <thead style="color: #009de1; " class="">
-                                    <tr class="rounded-top-new" style="">
-                                        <th>
-                                            Order Number
-                                        </th>
+                            <table class="table table-striped display text-center">
+                                <thead style="color: #009de1;">
+                                    <tr class="rounded-top-new">
+                                        <th>Order Number</th>
                                         <th>Order Date</th>
-                                        <th>Buyer Name</th>
+                                        <th>Supplier Name</th>
                                         <th>Quantity</th>
                                         <th>Amount</th>
                                         <th>Article Number</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>
-                                            1500
-                                        </td>
-                                        <td>
-                                            ArticleNo1
+                                    <tr v-for="(order, index) in orders" :key="index" v-if="orders.length > 0">
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.orderdate }}</td>
+                                        <td>{{ buyer.name }}</td>
+                                        <td>{{ order.quantity_unit }}</td>
+                                        <td>{{ order.buyingprice }}</td>
+                                        <td>{{ order.article }}</td>
+                                    </tr>
+                                    <tr v-else>
+                                        <td colspan="8" class="text-center">
+                                            No orders available
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>
-                                            1500
-                                        </td>
-                                        <td>
-                                            ArticleNo1
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>
-                                            1500
-                                        </td>
-                                        <td>
-                                            ArticleNo1
-                                        </td>
-                                    </tr>
-
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -224,6 +191,7 @@ export default {
             errors: [],
             isEditMode: false,
             buyerId: null,
+            orders: {},
         };
     },
     methods: {
@@ -239,7 +207,8 @@ export default {
         async fetchBuyerDetails(buyerId) {
             try {
                 const response = await axios.get(`/api/buyers/${buyerId}`);
-                const buyer = response.data;
+                const buyer = response.data.user;
+                this.orders = response.data.orders;
                 console.log(buyer);
 
                 this.buyer = {

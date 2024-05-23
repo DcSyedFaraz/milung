@@ -17,9 +17,16 @@ return new class extends Migration
             $table->string('address');
             $table->string('website');
             $table->string('office_phone');
-            $table->string('buyer_description');
+            $table->string('supplier_description');
             $table->json('group');
             $table->json('sec_group');
+            $table->string('company_header')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('bank_address')->nullable();
+            $table->string('swift_code')->nullable();
+            $table->string('chips_no')->nullable();
+            $table->string('beneficiary_name')->nullable();
+            $table->string('account_no')->nullable();
             $table->timestamps();
         });
     }

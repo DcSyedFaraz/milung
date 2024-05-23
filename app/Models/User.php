@@ -60,11 +60,11 @@ class User extends Authenticatable
 
     public function supplierProfile()
     {
-        return $this->hasOne(SupplierProfile::class);
+        return $this->hasOne(SupplierProfile::class, 'user_id', 'id');
     }
     public function buyerProfile()
     {
-        return $this->hasOne(BuyerProfile::class);
+        return $this->hasOne(BuyerProfile::class, 'user_id', 'id');
     }
     public function inquirySupplier()
     {

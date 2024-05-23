@@ -7,6 +7,33 @@
                     <form @submit.prevent="submitForm">
                         <div>
                             <div class="row">
+
+                                <div class="d-flex col-6  my-2" v-if="!isEditMode">
+                                    <div class="col-6">
+                                        <p for="name">OTP:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.otp" class="form-control" minlength="8"
+                                            maxlength="10"
+                                            :class="{ 'is-invalid': !OTPPatternValid, 'is-valid': OTPPatternValid }">
+                                        <div v-if="!OTPPatternValid" class="invalid-feedback">
+                                            OTP must be alphanumeric and between 8 and 10 characters long.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6  my-auto">
+                                    <div class="col-6">
+                                        <p for="name">Status:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select" v-model="supplier.status" required>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row my-3">
                                 <div class="d-flex col-6 my-2">
                                     <div class="col-6">
                                         <p for="userid">User ID:</p>
@@ -18,9 +45,18 @@
                                             User ID must be alphanumeric and between 1 and 10 characters long.
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="d-flex col-6 my-auto">
+                                    <div class="col-6">
+                                        <p for="name">Supplier Company Header:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.company_header" class="form-control">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row my-3">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="name">Supplier Name:</p>
@@ -44,7 +80,7 @@
                                         <p for="officePhone">Office Phone/Mobile:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.officePhone" class="form-control">
+                                        <input type="tel" v-model="supplier.officePhone" class="form-control">
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -56,7 +92,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row my-3">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="address">Address:</p>
@@ -70,17 +106,73 @@
                                         <p for="website">Website:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.website" class="form-control" id="website">
+                                        <input type="text" v-model="supplier.website" class="form-control">
                                     </div>
                                 </div>
                             </div>
+                            <div class="row my-3">
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="address">Beneficiary Bank:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.bank" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="website">Beneficiary Bank Address:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.bank_address" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="address">SWIFT Code:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.swift_code" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="website">CHIPS No:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.chips_no" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="address">Beneficiary Name:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.beneficiary_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="website">Beneficiary Account Number:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="supplier.account_no" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
                         <div class="form-group">
-                            <label for="buyerDescription" class="form-label">Supplier Description</label>
-                            <textarea class="form-control" id="buyerDescription" v-model="supplier.buyerDescription"
-                                rows="3" style="height: 120px;"></textarea>
+                            <label for="supplierDescription" class="form-label">Supplier Description</label>
+                            <textarea class="form-control" id="supplierDescription"
+                                v-model="supplier.supplierDescription" rows="3" style="height: 120px;"></textarea>
                         </div>
-                        <div class="row">
+                        <div class="row my-3">
                             <div class="form-group col-6 my-2">
                                 <label class="form-label">Primary Product Group</label>
                                 <div class="form-group">
@@ -103,7 +195,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-12" v-if="isEditMode">
                     <div class="card">
                         <div class="card-header pt-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -111,13 +203,13 @@
                                     <span class="mt-2 fw-bold fs-4" style="color: #14245c;">Order History:</span>
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" class="form-control" placeholder="Search Products..." />
+                                    <!-- <input type="text" class="form-control" placeholder="Search Products..." /> -->
                                 </div>
                             </div>
                         </div>
                         <div class="card-body rounded-top">
                             <!-- Table with stripped rows -->
-                            <table class="table table-striped display">
+                            <table class="table table-striped display text-center">
                                 <thead style="color: #009de1;">
                                     <tr class="rounded-top-new">
                                         <th>Order Number</th>
@@ -129,29 +221,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>1500</td>
-                                        <td>ArticleNo1</td>
+                                    <tr v-for="(order, index) in orders" :key="index" v-if="orders.length > 0">
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.orderdate }}</td>
+                                        <td>{{ supplier.name }}</td>
+                                        <td>{{ order.quantity_unit }}</td>
+                                        <td>{{ order.buyingprice }}</td>
+                                        <td>{{ order.article }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>1500</td>
-                                        <td>ArticleNo1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>OrderN01</td>
-                                        <td>22-07-23 21</td>
-                                        <td>John Smith</td>
-                                        <td>2500</td>
-                                        <td>1500</td>
-                                        <td>ArticleNo1</td>
+                                    <tr v-else>
+                                        <td colspan="8" class="text-center">
+                                            No orders available
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -179,11 +260,12 @@ export default {
                 website: '',
                 contact: '',
                 officePhone: '',
-                buyerDescription: '',
+                supplierDescription: '',
                 group: [],
                 Secgroup: []
             },
             errors: [],
+            orders: {},
             isEditMode: false
         }
     },
@@ -212,7 +294,7 @@ export default {
             if (!this.supplier.email) this.errors.push('Email is required.');
             if (!this.supplier.address) this.errors.push('Address is required.');
             if (!this.supplier.website) this.errors.push('Website is required.');
-            if (!this.supplier.buyerDescription) this.errors.push('Supplier description is required.');
+            if (!this.supplier.supplierDescription) this.errors.push('Supplier description is required.');
             if (!this.supplier.userid) this.errors.push('User ID is required.');
             if (!this.supplier.group.length) this.errors.push('Product group is required.');
 
@@ -226,7 +308,7 @@ export default {
                 try {
                     let response;
                     if (this.isEditMode) {
-                        response = await axios.put(`/api/suppliers/${this.supplier.userid}`, formData);
+                        response = await axios.put(`/api/suppliers/${this.supplier.id}`, formData);
                     } else {
                         response = await axios.post('/api/addsuppliers', formData);
                     }
@@ -267,7 +349,7 @@ export default {
                 website: '',
                 contact: '',
                 officePhone: '',
-                buyerDescription: '',
+                supplierDescription: '',
                 group: [],
                 Secgroup: []
             };
@@ -277,27 +359,43 @@ export default {
             try {
                 const response = await axios.get(`/api/suppliers/${userid}`);
                 console.log(response.data);
+                this.orders = response.data.orders;
+                const supplierData = response.data.user;
+
                 this.supplier = {
-                    ...response.data,
-                    group: response.data.supplier_profile?.group.map(groupItem => {
-                        // Find the option with the same id as groupItem.id
+                    name: supplierData.name,
+                    userid: supplierData.userid,
+                    email: supplierData.email,
+                    address: supplierData.supplier_profile.address,
+                    website: supplierData.supplier_profile.website,
+                    officePhone: supplierData.supplier_profile.office_phone,
+                    supplierDescription: supplierData.supplier_profile.supplier_description,
+                    group: supplierData.supplier_profile.group.map(groupItem => {
                         const option = this.productOptions.find(option => option.id === groupItem);
-                        // console.log(option, this.productOptions, groupItem);
                         return {
                             id: option.id,
                             group_name: option.group_name
                         };
                     }),
-                    Secgroup: response.data.supplier_profile?.sec_group.map(groupItem => {
-                        // Find the option with the same id as groupItem.id
+                    Secgroup: supplierData.supplier_profile.sec_group.map(groupItem => {
                         const option = this.productOptions.find(option => option.id === groupItem);
-                        // console.log(option, this.productOptions, groupItem);
                         return {
                             id: option.id,
                             group_name: option.group_name
                         };
-                    })
+                    }),
+                    account_no: supplierData.supplier_profile.account_no,
+                    bank: supplierData.supplier_profile.bank,
+                    bank_address: supplierData.supplier_profile.bank_address,
+                    beneficiary_name: supplierData.supplier_profile.beneficiary_name,
+                    status: supplierData.status,
+                    chips_no: supplierData.supplier_profile.chips_no,
+                    swift_code: supplierData.supplier_profile.swift_code,
+                    contact_person: supplierData.contact_person,
+                    company_header: supplierData.supplier_profile.company_header,
+                    contact: supplierData.supplier_profile.contact,
                 };
+
                 this.isEditMode = true;
             } catch (error) {
                 console.error(error);
@@ -315,7 +413,11 @@ export default {
         userIdPatternValid() {
             const pattern = /^[a-zA-Z0-9]{1,10}$/;
             return pattern.test(this.supplier.userid);
-        }
+        },
+        OTPPatternValid() {
+            const pattern = /^[a-zA-Z0-9]{8,10}$/;
+            return pattern.test(this.supplier.otp);
+        },
     }
 }
 </script>

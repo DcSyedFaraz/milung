@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\supplier;
 
 use App\Http\Controllers\Controller;
-use App\Mail\PriceInquiryNotification;
+use AppMail\PriceInquiryNotification;
 use App\Models\Order;
 use App\Models\PackingList;
 use App\Models\ShipmentOrder;
 use App\Models\ShipmentSupplier;
 use App\Models\SupplierInvoice;
+use App\Models\SupplierProfile;
+use App\Models\SupplierReceipt;
 use App\Models\User;
-use App\Notifications\UserNotification;
+use AppNotifications\UserNotification;
 use Auth;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Mail;
 use Notification;
 
 class SupplierShipmentController extends Controller
@@ -113,16 +116,58 @@ class SupplierShipmentController extends Controller
         // dd($id);
         $userid = Auth::user()->id;
         // $userid = 3;
-        $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'buyingprice', 'quantity_unit', 'status')->with('shipmentSupplier', 'shipmentOrders', 'invoice_number')->get();
+        $shipment['orders'] = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'buyingprice', 'quantity_unit', 'status')->with('shipmentSupplier', 'shipmentOrders', 'invoice_number')->get();
+        $shipment['note'] = SupplierReceipt::where('shipment_order_id', $id)->where('user_id', $userid)->first();
         return response()->json($shipment, 200);
     }
     public function upload_reciept_note(Request $request)
     {
-        dd($request->all());
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'so_number' => 'required|integer|exists:shipment_orders,id',
+            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // Adjust file types and size as needed
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Get the validated data
+        $soNumber = $request->input('so_number');
+        $file = $request->file('file');
+
+        // Store the file
+        if ($request->hasFile('file')) {
+            $slipFile = $request->file('file');
+            $fileName = time() . $slipFile->getClientOriginalName();
+            $filePath = $slipFile->storeAs('orders/receipt_notes', $fileName, 'public');
+        }
+
+        // Save the data to the database
+        $receipt = SupplierReceipt::create([
+            'shipment_order_id' => $soNumber,
+            'user_id' => Auth::id(),
+            'receipt_note' => $filePath,
+        ]);
+
+        $user = Auth::user();
+        $messages = "A supplier ID:$user->userid has uploaded a new receipt note for SO#$soNumber. Please check the details in the system.";
+
+        $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
+
+        Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable'));
+
+        foreach ($admins as $admin) {
+            //Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
+        }
+
+        return response()->json(['message' => 'The file has been uploaded successfully.'], 201);
     }
+
     public function invoiceShow($id)
     {
-        $invoice = SupplierInvoice::where('id', $id)->with('orders', 'orders.product_group', 'user', 'orders.shipmentOrders')->first();
+        $invoice['inv'] = SupplierInvoice::where('id', $id)->with('orders', 'orders.product_group', 'user', 'orders.shipmentOrders')->first();
+        $invoice['user'] = SupplierProfile::where('user_id', auth()->user()->id)->first();
         return response()->json($invoice, 200);
     }
     public function invoicereminder(Request $request)
@@ -144,7 +189,7 @@ class SupplierShipmentController extends Controller
         // Notification::send($admins, new UserNotification($message, 'Account Payable-Payment Reminder'));
 
         foreach ($admins as $admin) {
-            \Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
+            //Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
         }
 
         return response()->json(['status' => 'success'], 200);
@@ -202,10 +247,10 @@ class SupplierShipmentController extends Controller
 
             $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
 
-            \Notification::send($admins, new UserNotification($messages, 'Account Payable'));
+            Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable'));
 
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new PriceInquiryNotification($messages, 'Account Payable'));
+                //Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
             }
 
             DB::commit();

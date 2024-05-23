@@ -31,11 +31,17 @@
                                     <p for="v-model" class="my-auto fs-7 fw-bold">
                                         Reciept Note:</p>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-8" v-if="note == null">
                                     <input type="file" ref="note" style="display: none" @change="handleFileUpload" />
                                     <button class="btn btn-primary btn-sm mb-2" @click="triggerUpload('note')">
                                         Upload
                                     </button>
+                                </div>
+                                <div class="col-8" v-else>
+                                    <a v-if="note.receipt_note" :href="'/storage/' +
+                                        note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
+                                        <i class="bi bi-file-earmark-text fw-bold"></i>
+                                    </a>
                                 </div>
 
                             </div>
@@ -95,7 +101,15 @@
                                         </span>
                                     </td>
                                     <td>{{ recieve.buyingprice * recieve.quantity_unit }}</td>
-                                    <td><i class="bi bi-file-earmark-text fw-bold"></i></td>
+                                    <td>
+                                        <a v-if="note != null" :href="'/storage/' +
+                                        note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
+                                        </a>
+                                        <p v-else class="fst-italic text-muted">
+                                            Not provided
+                                        </p>
+                                    </td>
 
                                 </tr>
 
@@ -353,6 +367,7 @@ export default {
             invoice: {},
             orders: {},
             so: [],
+            note: [],
             isLoading: true,
             incoterm: '',
             accordionIndex: null,
@@ -522,6 +537,17 @@ export default {
             this.accordionIndex = this.accordionIndex === index ? null : index;
         },
         async handleFileUpload() {
+            if (!this.info.so_no || this.info.so_no.id === undefined) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select shipment order number to upload receipt note.',
+                    icon: 'error',
+                });
+                return;
+            }
+
+            console.log(this.info.so_no, ' hi');
+
             // Confirm the upload
             const { isConfirmed } = await Swal.fire({
                 title: 'Are you sure you want to upload this file?',
@@ -530,6 +556,16 @@ export default {
             });
 
             if (!isConfirmed) {
+                return;
+            }
+
+            // Ensure file input exists and file is selected
+            if (!this.$refs.note || !this.$refs.note.files[0]) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select a file to upload.',
+                    icon: 'error',
+                });
                 return;
             }
 
@@ -545,7 +581,7 @@ export default {
             try {
                 const response = await axios.post('/api/supplier/upload_reciept_note', formData);
 
-                // Fetch the updated recievables
+                // Fetch the updated receivables
                 this.fetchrecievables(this.info.so_no);
 
                 // Show a success message
@@ -610,9 +646,10 @@ export default {
             NProgress.start();
             try {
                 const response = await axios.get('/api/supplier/shipment_details/' + newVal.id);
-                this.orders = response.data;
+                this.orders = response.data.orders;
+                this.note = response.data.note;
                 // this.pagination.totalItems = response.data.total;
-                console.log('orders ', this.orders);
+                console.log('orders ', response.data);
 
                 NProgress.done();
             } catch (error) {

@@ -473,7 +473,6 @@ export default {
     },
 };
 </script>
-<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 @import './admin/style.css';

@@ -3,7 +3,7 @@
         <!-- Header -->
         <div class="row my-4">
             <div class="col text-center">
-                <h1>Supplier Company Header</h1>
+                <h1 class="text-capitalize">{{ user.company_header ?? 'not provided' }}</h1>
             </div>
         </div>
 
@@ -85,27 +85,27 @@
                     <tbody>
                         <tr>
                             <td>Beneficiary Bank</td>
-                            <td></td>
+                            <td> {{ user.bank ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Bank Address</td>
-                            <td></td>
+                            <td> {{ user.bank_address ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>SWIFT Code</td>
-                            <td></td>
+                            <td> {{ user.swift_code ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>CHIPS No</td>
-                            <td></td>
+                            <td> {{ user.chips_no ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Name</td>
-                            <td></td>
+                            <td> {{ user.beneficiary_name ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Account Number</td>
-                            <td></td>
+                            <td> {{ user.account_no ?? 'not provided'}} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -126,6 +126,7 @@ export default {
     data() {
         return {
             invoices: {},
+            user: {},
             orders: [
                 // Example data, replace with your actual data
                 { soNumber: "SO123", orderNumber: "OrderNumber1", description: "Paper Box", quantity: 250, unitPrice: 1.5, totalAmount: 375 },
@@ -227,8 +228,9 @@ export default {
             await axios.get('/api/supplier/invoice/' + invoiceID)
                 .then(response => {
 
-                    this.invoices = response.data;
-                    console.log(this.invoices);
+                    this.invoices = response.data.inv;
+                    this.user = response.data.user;
+                    console.log(response.data);
 
                     NProgress.done();
                 })

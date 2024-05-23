@@ -9,6 +9,7 @@ use App\Models\SettleAmount;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
 use App\Models\ShipmentSupplier;
+use App\Models\SupplierReceipt;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -28,25 +29,52 @@ class ShipmentController extends Controller
         $data = ShipmentOrder::where('buyerid', $id)->with('settleamount', 'information', 'shipment')->whereHas('information')->get();
         return response()->json($data, 200);
     }
+    public function orders($supplierId, $soId)
+    {
+        // dd($supplierId, $soId);
+        $data['orders'] = Order::where('supplier', $supplierId)->where('so_number', $soId)
+            ->with([
+                'shipmentOrders',
+                'information'
+            ])
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')
+            ->get();
+        $data['note'] = SupplierReceipt::where('user_id', $supplierId)->where('shipment_order_id', $soId)->first();
+        return response()->json($data, 200);
+    }
     public function SupplierSo($id)
     {
-        $data = Order::where('supplier', $id)->with('shipmentOrders', 'information')->whereNotNull('so_number')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
-        // $distinctSoNumbers = collect(); // Initialize an empty collection
+        $data['order'] = Order::where('supplier', $id)
+            ->with([
+                'shipmentOrders' => function ($query) {
+                    $query->select('id', 'so_number');
+                },
+                'information'
+            ])
+            ->whereNotNull('so_number')
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')
+            ->get();
 
-        // $data['order']->each(function ($order) use ($distinctSoNumbers) {
-        //     $order->shipmentOrders->each(function ($shipmentOrder) use ($order, $distinctSoNumbers) {
-        //         // Check if the so_number already exists in the collection
-        //         if (!$distinctSoNumbers->contains('so_number', $shipmentOrder->so_number)) {
-        //             // If not, add it to the collection
-        //             $distinctSoNumbers->push([
-        //                 'id' => $shipmentOrder->id,
-        //                 'so_number' => $shipmentOrder->so_number,
-        //             ]);
-        //         }
-        //     });
-        // });
-        // $data['so'] = $distinctSoNumbers->toArray();
+        $distinctSoNumbers = $data['order']->pluck('shipmentOrders')
+            ->flatten()
+            ->unique('so_number')
+            ->values()
+            ->filter(function ($shipmentOrder) {
+                return $shipmentOrder !== null;
+            })
+            ->map(function ($shipmentOrder) {
+                return [
+                    'id' => $shipmentOrder->id,
+                    'so_number' => $shipmentOrder->so_number,
+                ];
+            })
+            ->filter() // this will remove any null values from the collection
+            ->values();
+
+        $data['so'] = $distinctSoNumbers->toArray();
+
         return response()->json($data, 200);
+
     }
     public function rcvablesave(Request $request, $id)
     {

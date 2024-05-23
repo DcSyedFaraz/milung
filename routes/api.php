@@ -66,7 +66,8 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
 
     // Price Inquiry
     Route::resource('price_inquiry', InquiryController::class)->except([
-        'update','edit'
+        'update',
+        'edit'
     ])->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
     Route::post('price_inquiry/{price_inquiry}', [InquiryController::class, 'update'])->name('price_inquiry.update')->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
     Route::get('inquiry_followup/{id}', [InquiryController::class, 'inquiry_followup'])->middleware('can:createBuyerPriceInquiry,editBuyerPriceInquiry');
@@ -149,7 +150,8 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::post('buyers/{id}', [UserController::class, 'buyersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::get('buyers/{id}', [UserController::class, 'buyersShow'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::get('suppliers/{id}', [UserController::class, 'suppliersShow'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
-    Route::post('addsupliers', [UserController::class, 'suppliers'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
+    Route::put('suppliers/{id}', [UserController::class, 'suppliersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
+    Route::post('addsuppliers', [UserController::class, 'suppliers'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
 
     // Updating Users
     Route::get('editusers/{id}', [UserController::class, 'usersEdit'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
@@ -206,6 +208,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     // Finance
     Route::get('so/{id}', [ShipmentController::class, 'SupplierSo']);
+    Route::get('orders/{supplierId}/{soId}', [ShipmentController::class, 'orders']);
     Route::get('invoice/{id}', [ShipmentController::class, 'invoice'])->middleware('can:accountReceivable');
     Route::get('buyerFinance', [UserController::class, 'buyerFinance'])->middleware('can:accountReceivable');
     Route::post('rcvablesave/{id}', [ShipmentController::class, 'rcvablesave'])->middleware('can:accountReceivable');

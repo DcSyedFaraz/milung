@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\OTPMail;
 use App\Mail\PasswordResetRequested;
 use App\Mail\AccountCreated;
+use App\Models\Order;
 use App\Models\ProductGroup;
 use App\Models\Products;
 use App\Models\ShipmentOrder;
@@ -307,41 +308,75 @@ class UserController extends Controller
     }
     public function suppliers(Request $request)
     {
-        // dd($request);
-        // return response()->json(['message' => 'Successfully created user!'], 201);
+        // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'userid' => 'required|unique:users,userid',
+            'status' => 'required|string|in:active,inactive',
+            'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
+            'address' => 'required|string|max:255',
+            'website' => 'required',
+            'contact' => 'required|string|max:255',
+            'officePhone' => 'required|string|max:255',
+            'supplierDescription' => 'required|string|max:255',
+            'group' => 'required|array',
+            'group.*' => 'integer',
+            'Secgroup' => 'required|array',
+            'Secgroup.*' => 'integer',
+            'otp' => 'required|string|min:8|regex:/^[^\s]+$/',
+            'company_header' => 'required|string|max:255',
+            'bank' => 'required|string|max:255',
+            'bank_address' => 'required',
+            'swift_code' => 'required|string|max:255',
+            'chips_no' => 'required',
+            'beneficiary_name' => 'required|string|max:255',
+            'account_no' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-
+        // Create a new user
         $user = User::create([
             'userid' => $request->userid,
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('12345678'),
-            // Add any other user-related fields
+            'password' => Hash::make($request->otp),
+            'otp' => $request->otp,
+            'status' => $request->status,
         ]);
 
         // Store buyer profile data
         $user->supplierProfile()->create([
             'address' => $request->address,
             'website' => $request->website,
+            'contact' => $request->contact,
             'office_phone' => $request->officePhone,
-            'buyer_description' => $request->buyerDescription,
+            'supplier_description' => $request->supplierDescription,
             'group' => $request->group,
             'sec_group' => $request->Secgroup,
+            'company_header' => $request->company_header,
+            'bank' => $request->bank,
+            'bank_address' => $request->bank_address,
+            'swift_code' => $request->swift_code,
+            'chips_no' => $request->chips_no,
+            'beneficiary_name' => $request->beneficiary_name,
+            'account_no' => $request->account_no,
         ]);
 
-        // Assign the 'supplier' role (or any other role) using Spatie permissions
+        // Assign the 'Supplier' role using Spatie permissions
         $user->assignRole('Supplier');
+
+        $admin = User::role(['Admin', 'Internal'])->get();
+        //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+        $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->userid}\n\nThank you!";
+
+        Notification::send($admin, new UserNotification($message, 'New Supplier'));
+
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
+
     public function buyer()
     {
         $users = User::withRole('Buyer')->with('buyerProfile')->get();
@@ -438,15 +473,82 @@ class UserController extends Controller
      */
     public function buyersShow($id)
     {
-        $buyer = User::with('buyerProfile')->findOrFail($id);
+        // $buyer = User::with('buyerProfile')->findOrFail($id);
+        $buyer['user'] = User::where('id', $id)->select('id', 'name', 'userid', 'email', 'status')->with('buyerProfile')->first();
+        $buyer['orders'] = Order::where('buyer', $id)->select('id', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
 
         return response()->json($buyer);
     }
     public function suppliersShow($id)
     {
-        $buyer = User::with('supplierProfile')->findOrFail($id);
+        $supplier['user'] = User::where('id', $id)->select('id', 'name', 'userid', 'email', 'status')->with('supplierProfile')->first();
+        $supplier['orders'] = Order::where('supplier', $id)->select('id', 'buyingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
+        return response()->json($supplier);
+    }
+    public function suppliersUpdate(Request $request, $userid)
+    {
+        // dd($request->all());
+        // Fetch the existing user
+        $user = User::where('id', $userid)->firstOrFail();
 
-        return response()->json($buyer);
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'userid' => 'required|unique:users,userid,' . $user->id,
+            'address' => 'required|string|max:255',
+            'website' => 'required',
+            'status' => 'required|string|in:active,inactive',
+            'contact' => 'required|string|max:255',
+            'officePhone' => 'required|string|max:255',
+            'supplierDescription' => 'required|string|max:255',
+            'group' => 'required|array',
+            'group.*' => 'integer',
+            'Secgroup' => 'required|array',
+            'Secgroup.*' => 'integer',
+            'company_header' => 'required|string|max:255',
+            'bank' => 'required|string|max:255',
+            'bank_address' => 'required',
+            'swift_code' => 'required|string|max:255',
+            'chips_no' => 'required',
+            'beneficiary_name' => 'required|string|max:255',
+            'account_no' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Update user information
+        $user->update([
+            'userid' => $request->userid,
+            'name' => $request->name,
+            'email' => $request->email,
+            'status' => $request->status,
+        ]);
+
+        // Update buyer profile data
+        $user->supplierProfile()->update([
+            'address' => $request->address,
+            'website' => $request->website,
+            'contact' => $request->contact,
+            'office_phone' => $request->officePhone,
+            'supplier_description' => $request->supplierDescription,
+            'group' => $request->group,
+            'sec_group' => $request->Secgroup,
+            'company_header' => $request->company_header,
+            'bank' => $request->bank,
+            'bank_address' => $request->bank_address,
+            'swift_code' => $request->swift_code,
+            'chips_no' => $request->chips_no,
+            'beneficiary_name' => $request->beneficiary_name,
+            'account_no' => $request->account_no,
+        ]);
+
+        // Optionally, update roles using Spatie permissions
+        // $user->syncRoles(['Supplier']);
+
+        return response()->json(['message' => 'Successfully updated user!'], 200);
     }
     public function usersEdit($id)
     {

@@ -7,7 +7,8 @@ import store from './store';
 import VueGoodTablePlugin from 'vue-good-table';
 import VueApexCharts from "vue3-apexcharts";
 import Multiselect from 'vue-multiselect';
-// import 'vue-multiselect/dist/vue-multiselect.min.css';
+import 'vue-multiselect/dist/vue-multiselect.css';
+
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 // PrimeVue

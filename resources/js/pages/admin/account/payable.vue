@@ -27,7 +27,8 @@
                                     </div>
                                     <div class="col-7">
                                         <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                        <multiselect v-model="selectedsoId" :options="so">
+                                        <multiselect label="so_number" track-by="id" v-model="selectedsoId"
+                                            :options="so">
                                         </multiselect>
                                     </div>
                                 </div>
@@ -40,7 +41,13 @@
                                         </p>
                                     </div>
                                     <div class="col-5">
-                                        <input type="text" v-model="so.buyerid" class="form-control" />
+                                        <a v-if="note != null" :href="'/storage/' +
+                                            note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
+                                        </a>
+                                        <p v-else class="fst-italic text-muted">
+                                            Not provided
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="d-flex col-11 my-2 justify-content-end">
@@ -112,17 +119,13 @@
                                     <td>{{ item.information?.invoice }}</td>
                                     <td>{{ item.totalvalue }}</td>
                                     <td>
-                                        <router-link class="fw-bold" style="color: #009de1 !important" :to="{
-                                            name: 'information',
-                                            params: {
-                                                id: item.so_number,
-                                                so_number:
-                                                    item.shipment_orders
-                                                        ?.so_number,
-                                            },
-                                        }">
+                                        <a v-if="note != null" :href="'/storage/' +
+                                            note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
-                                        </router-link>
+                                        </a>
+                                        <p v-else class="fst-italic text-muted">
+                                            Not provided
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr v-else>
@@ -294,6 +297,7 @@ export default {
             selectedsupplierId: "",
             so: [],
             orders: [],
+            note: [],
             invoice: [],
             selectedsoId: "",
             selectedOrderIds: [],
@@ -314,6 +318,12 @@ export default {
                 this.so = [];
             }
         },
+        selectedsoId(newVal) {
+            if (newVal) {
+                this.fetchOrders(this.selectedsupplierId, newVal);
+            }
+        }
+        ,
     },
     computed: {
         totalvalue() {
@@ -325,19 +335,31 @@ export default {
         },
     },
     methods: {
+        async fetchOrders(supplierId, soId) {
+            NProgress.start();
+            try {
+                console.log(supplierId.id, soId.id);
+                const response = await axios.get(`/api/orders/${supplierId.id}/${soId.id}`);
+                console.log(response.data);
+                this.orders = response.data.orders;
+                this.note = response.data.note;
+                NProgress.done();
+            } catch (error) {
+                NProgress.done();
+                console.error("Error fetching orders:", error);
+                toastr.error("Error fetching data");
+            }
+        },
         async fetchSOs(supplierId) {
             NProgress.start();
 
             try {
                 const response = await axios.get(`/api/so/${supplierId}`);
-                this.orders = response.data;
+                this.orders = response.data.order;
+                this.so = response.data.so;
 
-                this.so = response.data.map(
-                    (order) => order.shipment_orders.so_number
-                );
-
-                this.so = this.so.flat();
-                console.log(this.orders, this.so);
+                // this.so = this.so.flat();
+                console.log(this.orders, this.so, response.data);
 
                 NProgress.done();
             } catch (error) {
