@@ -14,7 +14,7 @@
                                     List:</span>
                             </span>
 
-                            <div class="col-4 d-flex">
+                            <div class="col-5 d-flex">
                                 <div class="col-12 d-flex">
                                     <div class="col-8">
                                         <div class="input-group">

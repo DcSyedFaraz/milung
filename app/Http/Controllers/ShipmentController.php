@@ -9,6 +9,8 @@ use App\Models\SettleAmount;
 use App\Models\Shipment;
 use App\Models\ShipmentOrder;
 use App\Models\ShipmentSupplier;
+use App\Models\SupplierInvoice;
+use App\Models\SupplierProfile;
 use App\Models\SupplierReceipt;
 use Auth;
 use Carbon\Carbon;
@@ -18,10 +20,138 @@ use Illuminate\Validation\Rule;
 
 class ShipmentController extends Controller
 {
+    public function payment(Request $request)
+    {
+        // dd($request->all());
+        $rules = [
+            'invIds' => 'required',
+            'amount' => 'required|numeric',
+            'paymentType' => 'required',
+            'file' => 'required|file',
+        ];
+
+        // Custom validation callback for validating the amount based on payment type
+        $validator = \Validator::make($request->all(), $rules, [
+            'amount' => 'Amount validation failed.',
+        ])->after(function ($validator) use ($request) {
+            $paymentType = $request->input('paymentType');
+            $amount = $request->input('amount');
+            $invIds = explode(',', $request->input('invIds'));
+
+            foreach ($invIds as $invoiceId) {
+                if (!SupplierInvoice::where('id', $invoiceId)->exists()) {
+                    $validator->errors()->add('invIds', 'One or more invoice IDs are invalid.');
+                    break;
+                }
+            }
+
+            if ($paymentType === 'Full Payment') {
+                // If Full Payment, validate amount against the sum of totalvalue
+                $totalValueSum = SupplierInvoice::whereIn('id', $invIds)->sum('outstanding_amount');
+                // dd($totalValueSum);
+                if ($amount != $totalValueSum) {
+                    $validator->errors()->add('amount', 'Amount should be equal to the sum of outstanding amount of selected invoice/s for Full Payment.');
+                }
+            } elseif ($paymentType === 'Partial Payment') {
+                $totalValueSum = SupplierInvoice::whereIn('id', $invIds)->sum('outstanding_amount');
+                if ($amount > $totalValueSum) {
+                    $validator->errors()->add('amount', 'Amount for Partial Payment should be less than or equal to the sum of outstanding amount of selected invoice/s.');
+                }
+            }
+
+
+        });
+        // Check if validation fails
+        if ($validator->fails()) {
+            // If fails, return back with errors
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->all();
+            $invIds = explode(',', $data['invIds']);
+            $amount = $data['amount'];
+
+            $remarks = json_decode($data['remarks'], true);
+
+            $slipFile = null;
+            if ($request->hasFile('file')) {
+                $slipFile = $request->file('file');
+                $fileName = time() . $slipFile->getClientOriginalName();
+                $slipPath = $slipFile->storeAs('orders/remittance', $fileName, 'public');
+            }
+
+            $remainingAmounts = [];
+            foreach ($invIds as $infoId) {
+                $outstanding_amount = SupplierInvoice::find($infoId)->outstanding_amount;
+                $remainingAmount = max(0, $outstanding_amount - $amount);
+                $remainingAmounts[$infoId] = $remainingAmount;
+                $amount = max(0, $amount - ($outstanding_amount - $remainingAmount));
+
+
+                // dd($remainingAmount);
+            }
+            // dd($remainingAmounts);
+
+            // Loop through each combination of order and shipment IDs
+            foreach ($remainingAmounts as $infoId => $shipId) {
+                // dd($infoId, $shipId);
+                $remark = $remarks[$infoId] ?? null;
+                $status = ($remainingAmounts[$infoId] == 0) ? 'Full Payment' : 'Partial Payment';
+                $SupplierInvoice = SupplierInvoice::find($infoId);
+
+                $SupplierInvoice->update([
+                    'settle_amount' => $SupplierInvoice->total_value - $remainingAmounts[$infoId],
+                    'outstanding_amount' => $remainingAmounts[$infoId],
+                    'settle_date' => Carbon::now(),
+                    'status' => $status,
+                    'remarks' => $remark,
+                ]);
+
+                if ($slipFile) {
+                    $SupplierInvoice->slip = $slipPath;
+                    $SupplierInvoice->save();
+                }
+
+            }
+            \DB::commit();
+            return response()->json($SupplierInvoice, 200);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            // throw $e;
+            // Return error response if an exception occurs
+            return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
+        }
+    }
     public function information($id)
     {
         $data = Information::where('shipment_order_id', $id)->with('user')->first();
         return response()->json($data, 200);
+    }
+    public function supplier_invoice($id)
+    {
+        $query = SupplierInvoice::query()
+            ->where('id', $id)
+            ->with([
+                'orders' => function ($query) {
+                    $query->with(['product_group', 'shipmentOrders']);
+                },
+                'user'
+            ]);
+
+        $invoice = $query->first();
+
+        if (!$invoice) {
+            abort(404, 'Supplier invoice not found.');
+        }
+
+        $user = SupplierProfile::where('user_id', $invoice->user_id)->first();
+
+        return response()->json([
+            'inv' => $invoice,
+            'user' => $user
+        ], 200);
     }
     public function invoice($id)
     {
@@ -35,11 +165,12 @@ class ShipmentController extends Controller
         $data['orders'] = Order::where('supplier', $supplierId)->where('so_number', $soId)
             ->with([
                 'shipmentOrders',
-                'information'
+                'invoice_number'
             ])
-            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue','buyingprice','quantity_unit')
             ->get();
         $data['note'] = SupplierReceipt::where('user_id', $supplierId)->where('shipment_order_id', $soId)->first();
+        $data['invoice'] = SupplierInvoice::where('user_id', $supplierId)->where('shipment_order_id', $soId)->with('ordersInvoice')->get();
         return response()->json($data, 200);
     }
     public function SupplierSo($id)
@@ -49,10 +180,10 @@ class ShipmentController extends Controller
                 'shipmentOrders' => function ($query) {
                     $query->select('id', 'so_number');
                 },
-                'information'
+                'invoice_number'
             ])
-            ->whereNotNull('so_number')
-            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')
+            ->whereHas('shipmentOrders')
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue','buyingprice','quantity_unit')
             ->get();
 
         $distinctSoNumbers = $data['order']->pluck('shipmentOrders')

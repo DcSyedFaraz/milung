@@ -76,7 +76,7 @@ class Order extends Model
     public function invoice_number()
     {
         return $this->belongsToMany(SupplierInvoice::class)
-            ->select('supplier_invoices.invoice_number');
+            ->select('supplier_invoices.invoice_number','supplier_invoices.outstanding_amount');
     }
     public function invoices()
     {

@@ -32,6 +32,7 @@ import ci from "./pages/admin/shipment/documents/ci.vue";
 // Accounts
 import payable from "./pages/admin/account/payable.vue";
 import receivable from "./pages/admin/account/receivable.vue";
+import invoice from "./pages/admin/account/invoice.vue";
 
 // Statistics
 import statistics from "./pages/admin/statistics/statistics.vue";
@@ -208,6 +209,11 @@ const adminRoutes = [
         path: "accounts/payable",
         name: "payable",
         component: payable,
+    },
+    {
+        path: "accounts/payable/invoice/:id",
+        name: "invoice_admin",
+        component: invoice,
     },
     {
         path: "accounts/receivable",

@@ -210,8 +210,10 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::get('so/{id}', [ShipmentController::class, 'SupplierSo']);
     Route::get('orders/{supplierId}/{soId}', [ShipmentController::class, 'orders']);
     Route::get('invoice/{id}', [ShipmentController::class, 'invoice'])->middleware('can:accountReceivable');
+    Route::get('supplier_invoice/{id}', [ShipmentController::class, 'supplier_invoice'])->middleware('can:accountReceivable');
     Route::get('buyerFinance', [UserController::class, 'buyerFinance'])->middleware('can:accountReceivable');
     Route::post('rcvablesave/{id}', [ShipmentController::class, 'rcvablesave'])->middleware('can:accountReceivable');
+    Route::post('payment', [ShipmentController::class, 'payment']);
 
     // Statistics
     Route::get('statfilter', [StatController::class, 'statfilter']);
