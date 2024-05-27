@@ -8,32 +8,37 @@
                         <div class="mb-5">
                             <div class="row d-flex">
                                 <div class="col-2">
-                                    <div class="text-uppercase fw-bold fs-4 " style="color: #14245c;">date:</div>
-                                    <div class="text-uppercase fw-bold fs-4 mt-2" style="color: #14245c;">bank:</div>
+                                    <div class="text-uppercase fw-bold fs-4 mt-2" style="color: #14245c;">date:</div>
+                                    <div class="text-uppercase fw-bold fs-4 mt-4" style="color: #14245c;">bank:</div>
                                 </div>
                                 <div class="col-10">
                                     <div class="row">
                                         <div class="row  ">
                                             <div class="col-3">
-                                                <input type="date" name="start_date" class="form-control ">
+                                                <input type="date" v-model="startDate" class="form-control">
                                             </div>
                                             <div class="col-3">
-                                                <input type="date" name="end_date" class="form-control ">
+                                                <input type="date" v-model="endDate" class="form-control">
+                                            </div>
+                                            <div class="col-3 my-auto">
+                                                <button class="btn btn-milung"
+                                                    @click="filterTransactions">Submit</button>
                                             </div>
                                         </div>
                                         <form @submit.prevent="submitForm" enctype="multipart/form-data">
                                             <div class="row mt-2 ">
 
-                                                <div class="col-3">
+                                                <!-- <div class="col-3 my-auto">
                                                     <input type="text" placeholder="Bnak Name USD" v-model="bank_name"
                                                         class="form-control ">
-                                                </div>
+                                                </div> -->
                                                 <div class="col-3">
                                                     <button class="btn btn-light text-white fw-bold"
                                                         style="background-color: #009de1; border-color: #009de1;"
                                                         type="button" @click="uploadFile">UPLOAD</button>
-                                                    <button class="btn btn-milung text-white mx-2 fw-bold">Submit</button>
-                                                    <input ref="fileInput" type="file" name="statement" class="d-none "
+                                                    <button
+                                                        class="btn btn-milung text-white mx-2 fw-bold">Submit</button>
+                                                    <input ref="fileInput" accept=".xlsx , .csv" type="file" name="statement" class="d-none "
                                                         @change="handleFileUpload">
                                                 </div>
                                             </div>
@@ -74,9 +79,8 @@
                     <!-- // Loader -->
                     <div class="card-body rounded-top" v-else>
 
-
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped  display ">
+                        <table class="table table-striped text-center display ">
                             <thead style="color: white; background-color: #14245c" class="">
                                 <tr class="rounded-top-new" style="">
                                     <th>
@@ -90,36 +94,45 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id">
-                                <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.email }}</td>
-
+                            <tbody >
+                                <tr v-for="transaction in dataToDisplay" :key="transaction.id" v-if="dataToDisplay.length > 0">
+                                    <td>{{ transaction.date }}</td>
+                                    <td>{{ transaction.transaction_details }}</td>
                                     <td>
-                                        <span
-                                            :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
-                                            {{ user.status === 'active' ? 'Active' : 'InActive' }}
-                                        </span>
+                                        <span v-if="!transaction.deposit" class="text-muted fst-italic">N/A</span>
+                                        <span v-else class="fw-bold">{{ transaction.deposit }}</span>
                                     </td>
+                                    <td>
+                                        <span v-if="!transaction.withdrawal" class="text-muted fst-italic">N/A</span>
+                                        <span v-else class="fw-bold">{{ transaction.withdrawal }}</span>
+                                    </td>
+                                    <td class="fw-bold">{{ transaction.balance }}</td>
+                                    <td>{{ transaction.notice }}</td>
 
                                     <td>
-                                        <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <!-- <router-link :to="'/edit-user/' + user.id" class="text-dark">
-                                            <i class="bi bi-pencil"></i>
-                                        </router-link> -->
+                                        <input type="file" :ref="setFileInputRef(transaction.id)"
+                                            @change="onFileChange($event, transaction.id)" style="display: none;" />
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-dark"><i
-                                                class="bi bi-trash"></i>
+                                        <button v-if="!transaction.remittance_slip" class="btn btn-info btn-sm mx-2"
+                                            @click="triggerFileInput(transaction.id)">
+                                            Upload
+                                        </button>
+                                        <a v-else :href="'/storage/' + transaction.remittance_slip" download
+                                            class="btn px-4 mx-2 btn-outline-primary">
+                                            <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </a>
+                                        <button @click.prevent="deleteUser(transaction.id)"
+                                            class="btn btn-danger btn-sm mx-2"><i class="bi bi-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
-
+                                <tr v-else>
+                                    <td colspan="17">
+                                        <p class="text-center">
+                                            No statement to display.
+                                        </p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -151,9 +164,6 @@ import './../index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-
-
-
 export default {
     name: "Transaction",
     props: {
@@ -167,31 +177,44 @@ export default {
         return {
             isLoading: true,
             bank_name: '',
+            startDate: '',
+            endDate: '',
             file: null,
-            users: [],
+            transactions: [],
             accordionOpen: {},
             currentPage: 1,
-            searchQuery: ''
+            searchQuery: '',
+            selectedFiles: {},
+            userIdForUpload: null,
+            fileInputs: {},
+
         };
     },
     watch: {
         data(newVal) {
-            this.users = newVal;
+            this.transactions = newVal;
         }
     },
     computed: {
         filteredUsers() {
-            return this.users.filter(user => {
-                return user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || user.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+            return this.transactions.filter(transaction => {
+                return (
+                    transaction.date.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    transaction.transaction_details.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (transaction.deposit && transaction.deposit.toString().includes(this.searchQuery)) ||
+                    (transaction.withdrawal && transaction.withdrawal.toString().includes(this.searchQuery)) ||
+                    transaction.balance.toString().includes(this.searchQuery) ||
+                    transaction.notice.toLowerCase().includes(this.searchQuery)
+                );
             });
         },
         totalPages() {
-            return Math.ceil(this.users.length / this.perPage)
+            return Math.ceil(this.transactions.length / this.perPage)
         },
         paginatedData() {
             const start = (this.currentPage - 1) * this.perPage
             const end = start + this.perPage
-            return this.users.slice(start, end)
+            return this.transactions.slice(start, end)
         },
         dataToDisplay() {
             if (this.searchQuery) {
@@ -205,13 +228,136 @@ export default {
 
     },
     created() {
-        this.fetchUsers().then(() => {
+        this.fetchTransactions().then(() => {
             setTimeout(() => {
                 this.isLoading = false;
             }, 1000); // Delay of 1 second
         });
     },
     methods: {
+        async filterTransactions() {
+            if (!this.startDate || !this.endDate) {
+                Swal.fire(
+                    'Validation Error',
+                    'Please select both start and end dates.',
+                    'warning'
+                );
+                return;
+            }
+
+            if (new Date(this.startDate) > new Date(this.endDate)) {
+                Swal.fire(
+                    'Validation Error',
+                    'Start date cannot be later than end date.',
+                    'warning'
+                );
+                return;
+            }
+
+            try {
+                const response = await axios.get('/api/transactions', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate
+                    }
+                });
+                this.transactions = response.data;
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+                Swal.fire(
+                    'Error',
+                    'There was an error fetching the transactions.',
+                    'error'
+                );
+            }
+        },
+        async deleteUser(userId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await axios.delete(`/api/transactions/${userId}`);
+                        this.fetchTransactions();
+                        Swal.fire(
+                            'Deleted!',
+                            'The transaction has been deleted.',
+                            'success'
+                        );
+                    } catch (error) {
+                        console.error('There was an error deleting the transaction:', error);
+                        Swal.fire(
+                            'Error!',
+                            'There was an error deleting the transaction.',
+                            'error'
+                        );
+                    }
+                }
+            });
+        },
+        setFileInputRef(userId) {
+            return (el) => {
+                if (el) {
+                    this.fileInputs[userId] = el;
+                }
+            };
+        },
+        triggerFileInput(userId) {
+            this.fileInputs[userId].click();
+        },
+        onFileChange(event, userId) {
+            this.selectedFiles[userId] = event.target.files[0];
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to upload this file?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, upload it!',
+                cancelButtonText: 'No, cancel!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.uploadFiles(userId);
+                }
+            });
+        },
+        async uploadFiles(userId) {
+            if (this.selectedFiles[userId]) {
+                let formData = new FormData();
+                formData.append('file', this.selectedFiles[userId]);
+
+                try {
+                    const response = await axios.post(`/api/transactions/${userId}/upload`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    this.fetchTransactions();
+                    Swal.fire(
+                        'Uploaded!',
+                        'Your file has been uploaded.',
+                        'success'
+                    );
+                } catch (error) {
+                    console.error('There was an error uploading the file:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error uploading the file.',
+                        'error'
+                    );
+                }
+            } else {
+                Swal.fire(
+                    'No file selected!',
+                    'Please select a file to upload.',
+                    'warning'
+                );
+            }
+        },
         uploadFile() {
             this.$refs.fileInput.click();
         },
@@ -236,21 +382,18 @@ export default {
             }
         },
 
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
-        },
         changePage(page) {
             this.currentPage = page
         },
-        async fetchUsers() {
+        async fetchTransactions() {
             try {
-                const response = await axios.get('/api/users');
-                this.users = response.data;
+                const response = await axios.get('/api/statementget');
+                this.transactions = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching transactions:', error);
                 toastr.error('Error fetching data');
             }
         },
@@ -295,8 +438,6 @@ export default {
     background-color: #14245c !important;
     color: white;
 }
-
-
 
 .rounded-top-new {
     border-top-left-radius: 2.25rem !important;

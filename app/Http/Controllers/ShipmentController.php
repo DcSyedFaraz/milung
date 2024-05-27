@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PriceInquiryNotification;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\PackingList;
@@ -12,6 +13,8 @@ use App\Models\ShipmentSupplier;
 use App\Models\SupplierInvoice;
 use App\Models\SupplierProfile;
 use App\Models\SupplierReceipt;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -83,12 +86,21 @@ class ShipmentController extends Controller
             }
 
             $remainingAmounts = [];
+            $supplierId = null;
+            $invoiceNumbers = [];
+
             foreach ($invIds as $infoId) {
-                $outstanding_amount = SupplierInvoice::find($infoId)->outstanding_amount;
+
+                $invoice = SupplierInvoice::find($infoId);
+                if (!$supplierId) {
+                    $supplierId = $invoice->user_id;
+                }
+
+                $outstanding_amount = $invoice->outstanding_amount;
                 $remainingAmount = max(0, $outstanding_amount - $amount);
                 $remainingAmounts[$infoId] = $remainingAmount;
                 $amount = max(0, $amount - ($outstanding_amount - $remainingAmount));
-
+                $invoiceNumbers[] = $invoice->invoice_number;
 
                 // dd($remainingAmount);
             }
@@ -110,11 +122,19 @@ class ShipmentController extends Controller
                 ]);
 
                 if ($slipFile) {
-                    $SupplierInvoice->slip = $slipPath;
-                    $SupplierInvoice->save();
+                    $invoice->update(['slip' => $slipPath]);
                 }
-
             }
+
+            $invoiceList = implode(', ', $invoiceNumbers);
+            $message = "Payment has been received for the following invoice(s): $invoiceList. Please review and confirm the receipt.";
+            $supplier = User::find($supplierId);
+
+            // Send the notification to the supplier
+            \Notification::send($supplier, new UserNotification($message, 'Account Receivable - Payment Received'));
+
+            // Send the email to the supplier
+            //\Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));
             \DB::commit();
             return response()->json($SupplierInvoice, 200);
         } catch (\Exception $e) {
@@ -167,7 +187,7 @@ class ShipmentController extends Controller
                 'shipmentOrders',
                 'invoice_number'
             ])
-            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue','buyingprice','quantity_unit')
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue', 'buyingprice', 'quantity_unit')
             ->get();
         $data['note'] = SupplierReceipt::where('user_id', $supplierId)->where('shipment_order_id', $soId)->first();
         $data['invoice'] = SupplierInvoice::where('user_id', $supplierId)->where('shipment_order_id', $soId)->with('ordersInvoice')->get();
@@ -183,7 +203,7 @@ class ShipmentController extends Controller
                 'invoice_number'
             ])
             ->whereHas('shipmentOrders')
-            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue','buyingprice','quantity_unit')
+            ->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue', 'buyingprice', 'quantity_unit')
             ->get();
 
         $distinctSoNumbers = $data['order']->pluck('shipmentOrders')
@@ -238,7 +258,6 @@ class ShipmentController extends Controller
         // Calculate outstanding amount
         $outstandingAmount = $totalPayable - $amount;
 
-        // Handle file upload
         $slipPath = null;
         if ($request->hasFile('image')) {
             $slipFile = $request->file('image');

@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                <div class="d-flex col-11 my-2">
+                                <div class="d-flex col-11 ">
                                     <div class="col-3 my-auto">
                                         <p class="fw-bold text-milung text-uppercase my-auto">
                                             Supplier ID:
@@ -19,7 +19,7 @@
                                         </multiselect>
                                     </div>
                                 </div>
-                                <div class="d-flex col-11 my-2">
+                                <div class="d-flex col-11 ">
                                     <div class="col-3 my-auto">
                                         <p class="fw-bold text-milung text-uppercase my-auto">
                                             so#:
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="d-flex col-11 my-2 justify-content-end">
+                                <div class="d-flex col-11  justify-content-end">
                                     <div class="col-4 my-auto">
                                         <p class="text-milung my-auto">
                                             Reciept/Delivery Note:
@@ -50,7 +50,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="d-flex col-11 my-2 justify-content-end">
+                                <div class="d-flex col-11 justify-content-end">
                                     <div class="col-4 my-auto">
                                         <!-- <p class="fw-bold my-auto">
                                             ML User Only:
@@ -144,8 +144,9 @@
                             </Column>
                             <Column field="totalvalue" header="Order Value" style="min-width: 10rem">
                                 <template #body="{ data }">
-                                    {{ data.invoice_number[0]?.outstanding_amount ?? data.quantity_unit *
-                                            data.buyingprice }}
+                                    <span :class="{ 'text-danger': calculatedValue(data) > 0 }">
+                                        {{ calculatedValue(data) }}
+                                    </span>
                                 </template>
                             </Column>
                             <Column field="note.receipt_note" header="Receipt Note" style="min-width: 10rem">
@@ -258,10 +259,10 @@
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" :value="item.id"
-                                                v-model="selectedInvoiceIds">
+                                                v-model="selectedInvoiceIds" :disabled="item.outstanding_amount == 0">
                                             <label class="form-check-label">
 
-                                                <router-link class="text-milung text-decoration-underline"
+                                                <router-link class=""
                                                     :to="{ name: 'invoice_admin', params: { id: item.id } }"> {{
                                             item.invoice_number }}</router-link>
                                             </label>
@@ -368,6 +369,9 @@
                     </div>
                     <div class="row" v-if="invoice.length > 0">
                         <div class="col-12 d-flex justify-content-end">
+                            <button class="btn btn-danger px-5 me-2 fw-bold">
+                                Reject
+                            </button>
                             <button class="btn btn-warning px-5 me-2 fw-bold" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
                                 Payment
@@ -551,6 +555,9 @@ export default {
         },
     },
     methods: {
+        calculatedValue(recieve) {
+            return recieve.invoice_number[0]?.outstanding_amount ?? (recieve.quantity_unit * recieve.buyingprice);
+        },
         async sendPaymentData() {
             try {
                 console.log(this.selectedInvoiceIds);
@@ -641,6 +648,13 @@ export default {
                 this.orders = response.data.orders;
                 this.note = response.data.note;
                 this.invoice = response.data.invoice;
+
+                this.invoice.forEach((item) => {
+                    if (item.remarks) {
+                        this.remarks[item.id] = item.remarks;
+                    }
+                });
+
                 NProgress.done();
             } catch (error) {
                 NProgress.done();

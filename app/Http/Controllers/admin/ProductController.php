@@ -367,10 +367,7 @@ class ProductController extends Controller
             throw $e;
         }
     }
-    public function statement(Request $request)
-    {
-        dd($request->all());
-    }
+   
     public function product_group(Request $request)
     {
         // dd($request->all());

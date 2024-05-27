@@ -100,7 +100,9 @@
                                             No invoices found
                                         </span>
                                     </td>
-                                    <td>{{ recieve.buyingprice * recieve.quantity_unit }}</td>
+                                    <td :class="{ 'text-danger': calculatedValue(recieve) > 0 }">
+                                        {{ calculatedValue(recieve) }}
+                                    </td>
                                     <td>
                                         <a v-if="note != null" :href="'/storage/' +
                                         note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
@@ -204,7 +206,8 @@
                                         {{ item.outstanding_amount ?? item.totalvalue }}</td>
 
                                     <td>
-                                        <input type="text" class="form-control">
+                                        <p v-if="item.remarks">{{ item.remarks }}</p>
+                                        <p v-else class="text-muted fst-italic"> No remarks</p>
                                     </td>
                                     <td>
                                         <a v-if="item.slip" :href="'/storage/' +
@@ -389,6 +392,9 @@ export default {
         }
     },
     methods: {
+        calculatedValue(recieve) {
+            return recieve.invoice_number[0]?.outstanding_amount ?? (recieve.quantity_unit * recieve.buyingprice);
+        },
         async payment() {
 
             if (this.selectedInvoiceIds.length === 0) {

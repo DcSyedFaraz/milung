@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
+use App\Http\Controllers\admin\TransactionController;
 use App\Http\Controllers\buyer\BuyerController;
 use App\Http\Controllers\buyer\BuyerOrderController;
 use App\Http\Controllers\buyer\BuyerShipmentController;
@@ -214,6 +215,12 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::get('buyerFinance', [UserController::class, 'buyerFinance'])->middleware('can:accountReceivable');
     Route::post('rcvablesave/{id}', [ShipmentController::class, 'rcvablesave'])->middleware('can:accountReceivable');
     Route::post('payment', [ShipmentController::class, 'payment']);
+    // Statement
+    Route::get('statementget', [TransactionController::class, 'index']);
+    Route::post('statement', [TransactionController::class, 'statement']);
+    Route::post('transactions/{id}/upload', [TransactionController::class, 'transactions']);
+    Route::get('/transactions', [TransactionController::class, 'getTransactions']);
+    Route::delete('transactions/{id}', [TransactionController::class, 'destroy']);
 
     // Statistics
     Route::get('statfilter', [StatController::class, 'statfilter']);
@@ -223,7 +230,6 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     // Doc Routes
     Route::post('infosave/{id}', [SupplierShipmentController::class, 'infosave']);
 
-    Route::post('statement', [ProductController::class, 'statement']);
 
 });
 
