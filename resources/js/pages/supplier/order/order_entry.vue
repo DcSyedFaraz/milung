@@ -498,9 +498,9 @@
                                 {{ orders[0].incoterm }}
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-4 bg-danger">
+                        <!-- <div class="d-flex col-12 my-4 bg-danger">
                             <p>XD Page not cleared</p>
-                        </div>
+                        </div> -->
                         <div class="d-flex col-12 my-4 d-flex justify-content-end">
                             <button class="btn btn-warning mx-2" name="action" value="create">
                                 Cargo Ready

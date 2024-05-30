@@ -123,8 +123,7 @@
                                     <td>
                                         <textarea name="remarks" cols="30" rows="4" class="form-control"
                                             style="width: 230px !important; " v-model="order.remarks"
-                                            :disabled="order.order_suppliers_only?.purchase > 0"
-                                            ></textarea>
+                                            :disabled="order.order_suppliers_only?.purchase > 0"></textarea>
                                     </td>
 
                                 </tr>
@@ -158,6 +157,9 @@
             </div>
         </div>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -179,6 +181,7 @@ export default {
     data() {
 
         return {
+            loader: false,
             isLoading: true,
             bank_name: '',
             file: null,
@@ -217,14 +220,15 @@ export default {
             setTimeout(() => {
                 this.isLoading = false;
                 this.orders.forEach(order => {
-                order.selling_price = order.order_suppliers_only?.purchase || 0;
-                order.remarks = order.order_suppliers_only?.remarks || null;
-            });
+                    order.selling_price = order.order_suppliers_only?.purchase || 0;
+                    order.remarks = order.order_suppliers_only?.remarks || null;
+                });
             }, 1000); // Delay of 1 second
         });
     },
     methods: {
         async placeAll() {
+            this.loader = true;
             // Get the IDs of selected orders
             const data = [];
 
@@ -253,6 +257,7 @@ export default {
 
                 // Handle the API response as needed
                 console.log(response.data);
+                this.loader = false;
                 // Show a success message
                 if (response.data.success == true) {
                     Swal.fire({
@@ -272,6 +277,7 @@ export default {
                     });
                 }
             } catch (error) {
+                this.loader = false;
                 console.error('Error placing orders:', error);
                 // Show an error message
                 if (error.response && error.response.status === 422) {
@@ -342,5 +348,44 @@ export default {
 .w-milung {
     width: 100px !important;
     border-radius: 6px;
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

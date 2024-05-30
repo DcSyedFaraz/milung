@@ -682,7 +682,7 @@ export default {
         },
 
         onSubmit() {
-            // this.showProgress = true;
+            this.showProgress = true;
             NProgress.start();
             console.log(this.orders);
             if (this.isEditing) {

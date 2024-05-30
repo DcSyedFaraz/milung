@@ -25,7 +25,8 @@
                                         </div>
                                     </div>
                                     <div class="col-4 mx-2">
-                                        <router-link :to="{ name: 'order_entry' }" v-if="can('orderGeneralSinglePage | createNewOrder')"
+                                        <router-link :to="{ name: 'order_entry' }"
+                                            v-if="can('orderGeneralSinglePage | createNewOrder')"
                                             class="btn btn-warning fw-bold text-dark">Create New
                                         </router-link>
                                     </div>
@@ -91,8 +92,8 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }" v-if="can('editOrderDetails | voidOrder')"
-                                            class="text-success mx-2">
+                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }"
+                                            v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -150,7 +151,8 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
+                                        <div class="form-check" v-for="(supplier, index) in supplier_profiles"
+                                            :key="index">
                                             <input class="form-check-input" type="checkbox" :value="supplier.id"
                                                 v-model="supplier.checked">
                                             <label class="form-check-label" for="flexCheckDefault">
@@ -173,6 +175,9 @@
             </div>
         </div>
     </section>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -197,6 +202,7 @@ export default {
     },
     data() {
         return {
+            loader: false,
             selectedUserIds: [],
             groupId: null,
             supplier_profiles: [],
@@ -251,6 +257,7 @@ export default {
     },
     methods: {
         async saveChanges() {
+            this.loader = true;
             NProgress.start();
             try {
                 const selectedSupplierIds = this.supplier_profiles
@@ -265,6 +272,7 @@ export default {
                 const response = await axios.post('/api/saveSelectedOrders', data);
                 console.log(response);
                 this.selectedUserIds = [];
+                this.loader = false;
                 if (response.status == 200) {
                     NProgress.done();
                     toastr.success(response.data.message);
@@ -272,6 +280,7 @@ export default {
                     NProgress.done();
                 }
             } catch (error) {
+                this.loader = false;
                 NProgress.done();
                 toastr.error('Please Select Valid Supplier.');
                 // Handle error if needed
@@ -463,5 +472,44 @@ td {
 .rounded-bottom-new {
     border-bottom-left-radius: 2.25rem !important;
     border-bottom-right-radius: 2.25rem !important;
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    /* Add blur effect */
+    z-index: 9999;
+    /* Ensure it's above other elements */
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light gray border */
+    border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    /* Spin animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
