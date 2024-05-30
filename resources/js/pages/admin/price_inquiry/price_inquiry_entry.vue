@@ -591,9 +591,10 @@ export default {
         },
         async onSubmit() {
             NProgress.start();
+            this.loader = true;
             try {
                 const formData = new FormData();
-                formData.append('buyer', this.inquiry.buyer);
+                formData.append('buyer', this.buyer);
                 formData.append('inquiry_number', this.inquiry.inquiry_number);
                 formData.append('article', this.inquiry.article);
                 formData.append('group', this.inquiry.group);
@@ -632,6 +633,7 @@ export default {
                 const method = 'post';
                 const response = await axios[method](url, formData);
 
+                this.loader = false;
                 if (response.status === 201 || response.status === 200) {
                     NProgress.done();
                     toastr.success(response.data.message);
@@ -645,6 +647,7 @@ export default {
                 }
 
             } catch (error) {
+                this.loader = false;
                 NProgress.done();
                 if (error.response && error.response.status === 422) {
                     const validationErrors = error.response.data.errors;

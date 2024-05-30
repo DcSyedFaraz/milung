@@ -351,7 +351,6 @@ class UserController extends Controller
         $user->supplierProfile()->create([
             'address' => $request->address,
             'website' => $request->website,
-            'contact' => $request->contact,
             'office_phone' => $request->officePhone,
             'supplier_description' => $request->supplierDescription,
             'group' => $request->group,

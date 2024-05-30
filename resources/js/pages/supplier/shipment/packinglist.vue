@@ -88,7 +88,7 @@
                         }} </td>
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'hcm')">{{
                             item.packinglist?.hcm
-                                        }} </td>
+                        }} </td>
                                     <td>{{ calculateVolume(item) }}</td>
 
                                     <td> <template v-if="!item.editable">
@@ -212,7 +212,7 @@ export default {
         fetchSO() {
             axios.get('/api/supplier/suppliershipments')
                 .then(response => {
-                    this.so = response.data;
+                    this.so = response.data.ship;
                     console.log(this.so);
 
                 })

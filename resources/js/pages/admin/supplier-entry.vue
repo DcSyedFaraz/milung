@@ -411,7 +411,7 @@ export default {
     },
     computed: {
         userIdPatternValid() {
-            const pattern = /^[a-zA-Z0-9]{1,10}$/;
+            const pattern = /^[a-zA-Z0-9]{1,20}$/;
             return pattern.test(this.supplier.userid);
         },
         OTPPatternValid() {
