@@ -33,8 +33,14 @@ const store = new Vuex.Store({
         },
         logout({ commit }) {
             commit('clearAuth');
+
+             // Clear axios default headers
+             delete axios.defaults.headers.common['Authorization'];
         },
     },
+    getters: {
+        isAuthenticated: state => !!state.authToken,
+    }
 });
 
 // Add a request interceptor

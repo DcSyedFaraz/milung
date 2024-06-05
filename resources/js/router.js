@@ -37,6 +37,7 @@ const routes = [
         path: "/admin",
         name: "admin",
         component: Dashbboard,
+        meta: { requiresAuth: true, requiresAdmin: true },
         // meta: { requiresAdmin: true },
         children: adminRoutes,
         redirect: "admin/dashboard",
@@ -45,6 +46,7 @@ const routes = [
         path: "/buyer",
         name: "buyer",
         component: buyer,
+        meta: { requiresAuth: true, requiresBuyer: true },
         // meta: { requiresBuyer: true },
         children: buyerRoutes,
         redirect: "/buyer/dashboard",
@@ -53,6 +55,7 @@ const routes = [
         path: "/supplier",
         name: "supplier",
         component: supplier,
+        meta: { requiresAuth: true, requiresSupplier: true },
         // meta: { requiresSupplier: true },
         children: supplierRoutes,
         redirect: "/supplier/dashboard",
@@ -64,6 +67,19 @@ const router = createRouter({
     routes,
 });
 
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!store.getters.isAuthenticated) {
+            next({ name: 'login' });
+        } else {
+            toastr.error("Unauthorized access to Supplier route");
+            next();
+        }
+    } else {
+        next();
+    }
+});
 // Import the Toastr library
 
 router.beforeEach((to, from, next) => {
