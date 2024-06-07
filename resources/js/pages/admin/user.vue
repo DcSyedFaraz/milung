@@ -29,16 +29,30 @@
                         <table class="table table-striped mt-5 display" id="">
                             <thead style="color: #14245c;">
                                 <tr>
-                                    <th>
+                                    <th @click="sortTable('roles')">
                                         User Type
+                                        <i :class="getSortIcon('roles')" class="ms-1"></i>
                                     </th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>User ID</th>
-                                    <th>Status</th>
+                                    <th @click="sortTable('name')">
+                                        Full Name
+                                        <i :class="getSortIcon('name')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('email')">
+                                        Email
+                                        <i :class="getSortIcon('email')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('userid')">
+                                        User ID
+                                        <i :class="getSortIcon('userid')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('status')">
+                                        Status
+                                        <i :class="getSortIcon('status')" class="ms-1"></i>
+                                    </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
+
                             <tbody v-for="user in paginatedData" :key="user.id">
                                 <tr>
                                     <td class="fw-bold">{{ user.roles[0] }}</td>
@@ -352,6 +366,8 @@ export default {
     },
     data() {
         return {
+            sortKey: '',
+            sortAsc: true,
             permissions: [],
             isLoading: true,
             updateuser: {
@@ -489,6 +505,29 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         // handleCheckboxChange(user, value) {
         //     const index = user.permissions.indexOf(value);
         //     if (index === -1) {

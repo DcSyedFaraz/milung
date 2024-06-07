@@ -15,7 +15,7 @@
             <!-- End Logo -->
             <div class="heading-name">
                 <h2>Milung User Dashboard</h2>
-                <p>Welcome Back, Lets get back to Win</p>
+                <!-- <p>Welcome Back, Lets get back to Win</p> -->
                 <!-- <button type="button" @click="remountComponent">click</button> -->
             </div>
 
@@ -350,7 +350,7 @@
         <!-- ======= Footer ======= -->
         <footer id="footer" class="footer">
             <div class="copyright">
-                &copy; Copyright <strong><span>OderFlow</span></strong>. All Rights Reserved
+                &copy; Copyright <strong><span>OrderFlow</span></strong>. All Rights Reserved
             </div>
         </footer>
         <!-- End Footer -->

@@ -12,6 +12,7 @@ use App\Models\ShipmentOrder;
 use App\Models\SupplierProfile;
 use App\Models\User;
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,20 +48,24 @@ class UserController extends Controller
         $id = Auth::id();
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            // 'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|same:confirmPassword',
         ];
 
-        // Validate incoming request data
         $validatedData = $request->validate($rules);
 
-        // Update the user data
         $user = User::findOrFail($id);
         $user->name = $validatedData['name'];
-        $user->email = $validatedData['email'];
+        // $user->email = $validatedData['email'];
 
         if (isset($validatedData['password'])) {
+
+            if (Hash::check($validatedData['password'], $user->password)) {
+                return response()->json(['message' => 'The new password cannot be the same as the current password.'], 400);
+            }
+
             $user->password = Hash::make($validatedData['password']);
+            $user->password_updated_at = now();
         }
         $user->save();
 
@@ -93,14 +98,26 @@ class UserController extends Controller
         $password = $request->input('password');
 
         // Check if the provided password matches the OTP column value for the user
-        $user = User::where('email', $email)
-            ->where('otp', $password)
-            ->first();
+        $user = User::where('email', $email)->first();
 
         if ($user) {
-            // OTP login successful, set flag and save email in session
-            $request->session()->put('otp_login_email', $email);
-            return response()->json(['otp_login' => true, 'message' => 'OTP login successful'], 200);
+            $oneMonthAgo = Carbon::now()->subMonth();
+            $otpLoginSuccess = false;
+            $message = '';
+
+            if ($user->otp === $password) {
+                $otpLoginSuccess = true;
+                $message = 'OTP login successful';
+            } elseif (Carbon::parse($user->password_updated_at)->lessThanOrEqualTo($oneMonthAgo)) {
+                $otpLoginSuccess = true;
+                $message = 'Password not changed in the last month. Please update your password.';
+            }
+
+            if ($otpLoginSuccess) {
+                // OTP login successful, set flag and save email in session
+                $request->session()->put('otp_login_email', $email);
+                return response()->json(['otp_login' => true, 'message' => $message], 200);
+            }
         }
 
         // If OTP login failed, attempt regular password authentication
@@ -125,8 +142,13 @@ class UserController extends Controller
         if ($request->session()->get('otp_login_email')) {
 
             $user = User::where('email', $request->session()->get('otp_login_email'))->first();
+
+            if (Hash::check($request->password, $user->password)) {
+                return response()->json(['message' => 'The new password cannot be the same as the current password.'], 400);
+            }
             $user->password = Hash::make($request->password);
             $user->otp = null;
+            $user->password_updated_at = now();
             $user->save();
             return response()->json(['message' => 'Password reset successfully!'], 200);
         } else {

@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('printview:cron')->everyMinute();
-
+        // $schedule->command('printview:cron')->everyMinute();
+        $schedule->command('check:passwordchange')->everyMinute();
     }
 
     /**

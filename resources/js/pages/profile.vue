@@ -6,7 +6,8 @@
                 <div class="form-group col-md-6"> <label for="name" class="form-label">Name</label> <input type="text"
                         class="form-control" id="name" v-model="user.name" placeholder="Name" required> </div>
                 <div class="form-group col-md-6"> <label for="email" class="form-label">Email</label> <input
-                        type="email" class="form-control" id="email" v-model="user.email" placeholder="Email" required>
+                        type="email" class="form-control" id="email" disabled :value="user.email" placeholder="Email"
+                        required>
                 </div>
 
             </div>
@@ -76,7 +77,14 @@ export default {
                     if (error.response && error.response.status === 422) {
                         const validationErrors = error.response.data.errors;
                         this.handleValidationErrors(validationErrors);
-                    } else {
+                    } else if (error.response && error.response.status === 400) {
+                        // Non-validation error, log the error
+                        console.error(error);
+
+                        // Show a toastr error notification
+                        toastr.error(error.response.data.message);
+                    }
+                    else {
                         // Non-validation error, log the error
                         console.error(error);
 

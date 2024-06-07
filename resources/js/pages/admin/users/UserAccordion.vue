@@ -8,7 +8,7 @@
                         <div class="col-12 px-3" style="background-color: #e2f2f9;">
                             <div class="row">
                                 <div class="mb-3 col-4">
-                                    <label for="registerEmail" class="form-label">Name</label>
+                                    <label for="registerEmail" class="form-label">Company Name</label>
                                     <input type="text" class="form-control" v-model="user.name">
                                 </div>
                                 <div class="mb-3 col-4">

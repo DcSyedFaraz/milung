@@ -142,7 +142,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title text-white">Summary</h5>
-                        <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
+                        <p><i class="bi bi-clock-fill"></i> 12:24 Today, May 19</p>
 
                         <div class="Summary activity">
                             <p>Pending Tasks or Schedule Board</p>

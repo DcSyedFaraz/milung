@@ -55,7 +55,7 @@
 
                                         </div>
                                         <div class="mb-3 col-4">
-                                            <label for="registerEmail" class="form-label">Name</label>
+                                            <label for="registerEmail" class="form-label">Company Name</label>
                                             <input type="text" required class="form-control" v-model="user.name">
                                         </div>
                                         <div class="mb-3 col-4">
@@ -78,7 +78,8 @@
                                             <input type="text" class="form-control" v-model="user.userid"
                                                 :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
                                             <div v-if="!userIdPatternValid" class="invalid-feedback">
-                                                User ID must be alphanumeric and between 1 and 10 characters long.
+                                                User ID must be alphanumeric, between 1 and 20 characters long, and can
+                                                include hyphens.
                                             </div>
                                         </div>
                                         <div class="mb-3 col-3">
@@ -409,8 +410,17 @@ export default {
     },
     computed: {
         userIdPatternValid() {
-            const pattern = /^[a-zA-Z0-9]{1,10}$/;
+            const pattern = /^[a-zA-Z0-9-]{1,20}$/;
             return pattern.test(this.user.userid);
+        }
+    },
+    watch: {
+        'user.roles': function (newValue) {
+            if (newValue === 'Admin' || newValue === 'Internal') {
+                this.user.name = 'MiLung Trade Limited';
+            } else {
+                this.user.name = ''; // reset company name if not Admin or Internal
+            }
         }
     }
 }
