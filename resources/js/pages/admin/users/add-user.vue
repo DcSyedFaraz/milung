@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-12 ">
                                     <div class="row py-5">
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Internal'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Admin</div>
@@ -121,7 +121,7 @@
 
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Internal'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Operations </div>
@@ -143,7 +143,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Internal'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Finance</div>
@@ -166,7 +166,7 @@
 
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Internal'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Statics</div>
@@ -187,7 +187,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Buyer'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Buyer</div>
@@ -210,7 +210,7 @@
 
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" v-if="user.roles == 'Supplier'">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Supplier</div>
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                 </div>
-
+                <EventLogTable />
             </div>
         </div>
     </section>
@@ -347,6 +347,10 @@ export default {
                 { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
             ],
         };
+    },
+    mounted() {
+        this.user.roles = 'Admin'; // set the initial role to Admin
+        this.user.name = 'MiLung Trade Limited';
     },
     methods: {
         handleCheckboxChange(user, value) {

@@ -120,7 +120,12 @@ export default {
                     toastr.success(response.data.message);
                     this.$router.push({ name: 'passChange' });
 
-                } else {
+                } else if (response.data.inactive == true) {
+                    toastr.error(response.data.message);
+                    this.email = "";
+                    this.password = "";
+                }
+                else {
 
                     toastr.success('Login successful', role);
                     this.redirectBasedOnRole(role);

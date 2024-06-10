@@ -137,6 +137,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
 
     Route::get('dashboard', [BuyerController::class, 'dashboard']);
+    Route::get('events', [UserController::class, 'events']);
 
     // Fetching Users
     Route::get('users', [UserController::class, 'users'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');

@@ -341,7 +341,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" />
             </div>
         </div>
     </section>
@@ -366,6 +366,7 @@ export default {
     },
     data() {
         return {
+            componentKey: 0,
             sortKey: '',
             sortAsc: true,
             permissions: [],
@@ -629,6 +630,7 @@ export default {
         handleUpdateSuccess() {
             // Close the accordion
             this.accordionOpen = {};
+            this.componentKey += 1;
             // Refresh the records
             this.fetchUsers();
         },
@@ -663,7 +665,7 @@ export default {
 
                     // If successful, remove the user from the local data
                     this.users = this.users.filter(user => user.id !== userId);
-
+                    this.componentKey += 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'User deleted successfully',

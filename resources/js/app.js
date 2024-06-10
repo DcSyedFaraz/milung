@@ -127,6 +127,7 @@ import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 import Notifications from './pages/notifications.vue';
+import EventLogTable from './pages/admin/logEvent.vue';
 
 
 
@@ -142,6 +143,7 @@ app.use(store)
 app.component('VueDatePicker', VueDatePicker)
 app.use(VueGoodTablePlugin)
 app.use(LaravelPermissionToVueJS)
+app.component('EventLogTable', EventLogTable);
 app.component('notifications', Notifications);
 
 app.use(PrimeVue, { ripple: true });

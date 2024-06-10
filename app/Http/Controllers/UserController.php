@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\OTPMail;
 use App\Mail\PasswordResetRequested;
 use App\Mail\AccountCreated;
+use App\Mail\PriceInquiryNotification;
+use App\Models\EventLog;
 use App\Models\Order;
 use App\Models\ProductGroup;
 use App\Models\Products;
@@ -26,6 +28,20 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    protected function logEvent($event, $description)
+    {
+        EventLog::create([
+            'event' => $event,
+            'description' => $description,
+            'user_id' => auth()->id()
+        ]);
+    }
+
+    public function events()
+    {
+        $event = EventLog::orderBy('created_at', 'desc')->with('user')->get();
+        return response()->json($event);
+    }
     public function index()
     {
         // $admin = User::role(['Admin', 'Internal'])->get();
@@ -101,6 +117,14 @@ class UserController extends Controller
         $user = User::where('email', $email)->first();
 
         if ($user) {
+
+            if ($user->status == 'inactive') {
+                return response()->json([
+                    'inactive' => true,
+                    'message' => 'The user is inactive. Please contact support for further assistance.'
+                ], 200);
+            }
+
             $oneMonthAgo = Carbon::now()->subMonth();
             $otpLoginSuccess = false;
             $message = '';
@@ -126,6 +150,28 @@ class UserController extends Controller
             $roles = $user->getRoleNames()->toArray();
             $token = $user->createToken('authToken', [$roles[0]])->plainTextToken;
             return response()->json(['token' => $token, 'success' => true, 'role' => $user->getRoleNames()->first()], 200);
+        }
+
+        // Authentication failed
+        if ($user) {
+            $user->increment('login_attempts');
+
+            if ($user->login_attempts >= 5) {
+                $user->status = 'inactive';
+                $user->login_attempts = 0;
+                $user->save();
+
+                $message = "User with ID {$user->userid} has been set to inactive due to multiple failed login attempts.";
+                $admins = User::role('Admin')->pluck('email');
+                foreach ($admins as $admin) {
+                    \Mail::to($admin)->send(new PriceInquiryNotification($message, 'User Inactive Notification'));
+                }
+
+                return response()->json([
+                    'inactive' => true,
+                    'message' => 'The user is now inactive due to multiple failed login attempts. Please contact admin.'
+                ], 200);
+            }
         }
 
         // Authentication failed
@@ -258,6 +304,10 @@ class UserController extends Controller
         }
 
         $user = User::findOrFail($id);
+
+        if ($request->status != $user->status) {
+            $this->logEvent('Buyer Status Change', 'Buyer ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+        }
         $user->update([
             'userid' => $request->userid,
             'name' => $request->name,
@@ -326,6 +376,9 @@ class UserController extends Controller
         $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Buyer'));
+
+        $this->logEvent("New Buyer Created", "User ID '$user->userid' has been created.");
+
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
     public function suppliers(Request $request)
@@ -394,6 +447,8 @@ class UserController extends Controller
         $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->userid}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Supplier'));
+
+        $this->logEvent("New Supplier Created", "User ID '$user->userid' has been created.");
 
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
@@ -481,6 +536,9 @@ class UserController extends Controller
                 Notification::send($admin, new UserNotification($message, 'New Buyer'));
 
             }
+            $role = $validatedData['roles'];
+
+            $this->logEvent("New $role Created", "User ID '$user->userid' has been created.");
 
             return response()->json(['message' => 'Successfully created user!', 'data' => $permissions], 200);
         } catch (\Exception $e) {
@@ -540,6 +598,9 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        if ($request->status != $user->status) {
+            $this->logEvent('Supplier Status Change', 'Supplier ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+        }
         // Update user information
         $user->update([
             'userid' => $request->userid,
@@ -650,6 +711,11 @@ class UserController extends Controller
                 ], 404);
             }
 
+
+            if ($request->status != $user->status) {
+                $this->logEvent('User Status Change', 'User ID ' . $user->userid . ' status has been changed to ' . $data['status'] . '.');
+            }
+
             $user->update($data);
 
             if ($request->otp) {
@@ -686,6 +752,8 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
+
+            $this->logEvent('User Deleted', 'User ID ' . $user->userid . ' has been deleted.');
 
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Exception $e) {

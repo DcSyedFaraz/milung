@@ -92,7 +92,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" />
             </div>
         </div>
     </section>
@@ -116,6 +116,7 @@ export default {
     },
     data() {
         return {
+            componentKey: 0,
             isLoading: true,
             updateuser: {
                 // id: this.$route.params.id,
@@ -279,7 +280,7 @@ export default {
 
                     // If successful, remove the user from the local data
                     this.users = this.users.filter(user => user.id !== userId);
-
+                    this.componentKey += 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'User deleted successfully',

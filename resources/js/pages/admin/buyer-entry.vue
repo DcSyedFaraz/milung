@@ -167,6 +167,7 @@
                 </div>
             </div>
         </div>
+        <EventLogTable />
     </div>
 </template>
 

@@ -37,7 +37,7 @@ const routes = [
         path: "/admin",
         name: "admin",
         component: Dashbboard,
-        meta: { requiresAuth: true, requiresAdmin: true },
+        meta: { requiresAuth: false, requiresAdmin: false },
         // meta: { requiresAdmin: true },
         children: adminRoutes,
         redirect: "admin/dashboard",
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
         if (!store.getters.isAuthenticated) {
             next({ name: 'login' });
         } else {
-            toastr.error("Unauthorized access to Supplier route");
+            toastr.error("Unauthorized access to route");
             next();
         }
     } else {

@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('password_updated_at')->nullable();
-            $table->integer('login_attempts');
+        Schema::create('event_logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('event');
+            $table->text('description');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('password_updated_at');
-            $table->dropColumn('login_attempts');
-        });
+        Schema::dropIfExists('event_logs');
     }
 };
