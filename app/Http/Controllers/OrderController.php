@@ -70,9 +70,10 @@ class OrderController extends Controller
                     // Notification
                     $message = "Dear Supplier, an admin has placed an order with the ID #$orderId. Please review the details at your earliest convenience.";
 
-
+                    $route = 'supplier_order_edit';
+                    $routeParams = ['id' => $orderId];
                     // Send the notification to the supplier
-                    \Notification::send($user, new UserNotification($message, 'New Order'));
+                    \Notification::send($user, new UserNotification($message, 'New Order', $route, $routeParams));
 
                     // Send the email to the supplier
                     \Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order'));
@@ -119,8 +120,9 @@ class OrderController extends Controller
                     // Notification
                     $message = "$user->name (User ID: $user->userid) has submitted a price inquiry for order #$orderId.";
 
+                    $route = 'order_price_inquiry';
                     // Send the notification to the supplier
-                    \Notification::send($admins, new UserNotification($message, 'Order Price Inquiry'));
+                    \Notification::send($admins, new UserNotification($message, 'Order Price Inquiry', $route));
 
                     // Send the email to the supplier
                     foreach ($admins as $key => $admin) {
@@ -152,6 +154,10 @@ class OrderController extends Controller
         $selectedOrderIds = $validatedData['selectedOrderIds'];
         $selectedSupplierIds = $validatedData['selectedSupplierIds'];
 
+        $orderList = implode(', ', $selectedOrderIds);
+        $message = "A new price inquiry has been received for the following order(s): $orderList. Please review and provide a quote as soon as possible.";
+        $route = 'supplier_order_price_inquiry';
+
         try {
             foreach ($selectedOrderIds as $orderId) {
                 foreach ($selectedSupplierIds as $supplierId) {
@@ -165,24 +171,17 @@ class OrderController extends Controller
                             'order_id' => $orderId,
                             'user_id' => $supplierId,
                         ]);
+
+                        $supplier = User::find($supplierId);
+
+                        \Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry', $route));
+
+                        \Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+
                     }
                 }
             }
 
-            $orderList = implode(', ', $selectedOrderIds);
-
-            $message = "A new price inquiry has been received for the following order(s): $orderList. Please review and provide a quote as soon as possible.";
-
-            foreach ($selectedSupplierIds as $supplierId) {
-                // Get the supplier
-                $supplier = User::find($supplierId);
-
-                // Send the notification to the supplier
-                \Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry'));
-
-                // Send the email to the supplier
-                \Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
-            }
 
             // Return success response
             return response()->json(['message' => 'Inquiry sent successfully'], 200);

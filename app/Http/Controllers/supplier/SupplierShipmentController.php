@@ -155,7 +155,7 @@ class SupplierShipmentController extends Controller
 
         $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
 
-        Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable'));
+        Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable', 'payable'));
 
         foreach ($admins as $admin) {
             //Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
@@ -186,10 +186,10 @@ class SupplierShipmentController extends Controller
 
         $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
 
-        // Notification::send($admins, new UserNotification($message, 'Account Payable-Payment Reminder'));
+        Notification::send($admins, new \App\Notifications\UserNotification($message, 'Account Payable-Payment Reminder', null));
 
         foreach ($admins as $admin) {
-            //Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
+            Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
         }
 
         return response()->json(['status' => 'success'], 200);
@@ -247,10 +247,10 @@ class SupplierShipmentController extends Controller
 
             $admins = User::permission('accountPayable')->role(['Admin', 'Internal'])->get();
 
-            Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable'));
+            Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable', 'payable'));
 
             foreach ($admins as $admin) {
-                //Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
+                Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
             }
 
             DB::commit();

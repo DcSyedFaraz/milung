@@ -130,8 +130,9 @@ class ShipmentController extends Controller
             $message = "Payment has been received for the following invoice(s): $invoiceList. Please review and confirm the receipt.";
             $supplier = User::find($supplierId);
 
+            $route = 'supplier_recievables';
             // Send the notification to the supplier
-            \Notification::send($supplier, new UserNotification($message, 'Account Receivable - Payment Received'));
+            \Notification::send($supplier, new UserNotification($message, 'Account Receivable - Payment Received', $route));
 
             // Send the email to the supplier
             //\Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));

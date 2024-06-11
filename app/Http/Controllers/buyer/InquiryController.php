@@ -95,7 +95,7 @@ class InquiryController extends Controller
             $inquiry_number = $validatedData['inquiry_number'];
             $messages = "A price inquiry with the number '$inquiry_number' has been added.";
 
-            \Notification::send($admins, new UserNotification($messages, 'New Price Inquiry'));
+            \Notification::send($admins, new UserNotification($messages, 'New Price Inquiry', 'price_inquiry_edit', ['id' => $priceInquiry->id]));
 
             \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
 
@@ -133,7 +133,7 @@ class InquiryController extends Controller
         if ($inquiry_number) {
 
             $messages = "Buyer with User ID:'$user->userid' wanted to follow up on the recent addition of a price inquiry with the number '$inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
-            \Notification::send($admins, new UserNotification($messages, 'Price Inquiry Follow Up'));
+            \Notification::send($admins, new UserNotification($messages, 'Price Inquiry Follow Up', 'price_inquiry_edit', ['id' => $id]));
 
             foreach ($admins as $admin) {
 

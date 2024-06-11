@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
         if (!store.getters.isAuthenticated) {
             next({ name: 'login' });
         } else {
-            toastr.error("Unauthorized access to route");
+            // toastr.error("Unauthorized access to route");
             next();
         }
     } else {

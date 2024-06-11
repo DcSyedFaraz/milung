@@ -45,7 +45,7 @@ class ProductController extends Controller
         $productName = e($validatedData['group_name']);
         $message = "A product group with the name '$productName' has been updated.";
 
-        \Notification::send($admins, new UserNotification($message, 'Product Group Updated'));
+        \Notification::send($admins, new UserNotification($message, 'Product Group Updated', 'product'));
 
         return response()->json(['message' => 'Product created successfully']);
     }
@@ -62,7 +62,7 @@ class ProductController extends Controller
                 $supplier = User::where('id', $supplierId)->first();
                 // dd($supplier->email);
                 // Send the notification to the supplier
-                \Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up'));
+                \Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
                 \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
@@ -109,7 +109,7 @@ class ProductController extends Controller
                     $supplier = User::find($supplierId);
 
                     // Send the notification to the supplier
-                    \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry'));
+                    \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $priceInquiry->id]));
 
                     // Send the email to the supplier
                     \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
@@ -197,7 +197,7 @@ class ProductController extends Controller
         $message = "We have sent the quotation for your price inquiry #{$inquiry->inquiry_number}. Please review it. Contact us if you have any questions.";
 
         // Send the notification to the buyer
-        \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation'));
+        \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation', 'buyer_price_inquiry_edit', ['id' => $inquiry->id]));
 
         // Send the email to the buyer
         \Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
@@ -242,7 +242,7 @@ class ProductController extends Controller
                 $supplier = User::find($supplierId);
 
                 // Send the notification to the supplier
-                \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry'));
+                \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
                 \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
@@ -367,7 +367,7 @@ class ProductController extends Controller
             throw $e;
         }
     }
-   
+
     public function product_group(Request $request)
     {
         // dd($request->all());
@@ -394,7 +394,7 @@ class ProductController extends Controller
         $productName = e($validatedData['group_name']);
         $message = "Good News! A new product group with the name '$productName' has been added.";
 
-        \Notification::send($admins, new UserNotification($message, 'New Product Group'));
+        \Notification::send($admins, new UserNotification($message, 'New Product Group', 'product_group_update', ['id' => $product->id]));
 
         return response()->json(['message' => 'Product created successfully']);
     }
@@ -507,7 +507,7 @@ class ProductController extends Controller
             $productName = e($validatedData['name']);
             $message = "Good News! A new product with the name '$productName' has been added.";
 
-            \Notification::send($admins, new UserNotification($message, 'New Product'));
+            \Notification::send($admins, new UserNotification($message, 'New Product', null));
 
             $buyers = User::role('Buyer')->pluck('email');
             // dd($buyers);

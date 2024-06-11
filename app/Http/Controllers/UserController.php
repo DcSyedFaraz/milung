@@ -220,10 +220,11 @@ class UserController extends Controller
             }
 
             $message = "Hello! User with the ID: {$user->userid} has requested a password reset.";
+            $route = 'user';
 
-            Notification::send($admins, new UserNotification($message, 'Forgot Password'));
+            Notification::send($admins, new UserNotification($message, 'Forgot Password', $route));
 
-            Notification::send($user, new UserNotification('Password Reset Requested!', 'Forgot Password'));
+            Notification::send($user, new UserNotification('Password Reset Requested!', 'Forgot Password', null));
 
             return response()->json(['message' => 'Password reset request sent successfully'], 200);
         }
@@ -375,7 +376,8 @@ class UserController extends Controller
         Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
         $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
 
-        Notification::send($admin, new UserNotification($message, 'New Buyer'));
+
+        Notification::send($admin, new UserNotification($message, 'New Buyer', 'editbuyer', ['id' => $user->id]));
 
         $this->logEvent("New Buyer Created", "User ID '$user->userid' has been created.");
 
@@ -446,7 +448,7 @@ class UserController extends Controller
         //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
         $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->userid}\n\nThank you!";
 
-        Notification::send($admin, new UserNotification($message, 'New Supplier'));
+        Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
 
         $this->logEvent("New Supplier Created", "User ID '$user->userid' has been created.");
 
@@ -527,13 +529,13 @@ class UserController extends Controller
                 Mail::to($user->email)->send(new AccountCreated($user, $validatedData['otp']));
                 $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->userid}\n\nThank you!";
 
-                Notification::send($admin, new UserNotification($message, 'New Supplier'));
+                Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
             } elseif ($validatedData['roles'] == 'Buyer') {
 
                 Mail::to($user->email)->send(new AccountCreated($user, $validatedData['otp']));
                 $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
 
-                Notification::send($admin, new UserNotification($message, 'New Buyer'));
+                Notification::send($admin, new UserNotification($message, 'New Buyer', 'editbuyer', ['id' => $user->id]));
 
             }
             $role = $validatedData['roles'];

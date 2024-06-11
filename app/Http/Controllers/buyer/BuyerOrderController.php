@@ -146,7 +146,7 @@ class BuyerOrderController extends Controller
         $message = "A new order has been created by $user->name (User ID: {$user->userid}). Order ID: {$order->id}.";
 
         // Send the notification to the admins
-        \Notification::send($admins, new UserNotification($message, 'New Order'));
+        \Notification::send($admins, new UserNotification($message, 'New Order', 'order_edit', ['id' => $$order->id]));
 
         // Send the email to the admins
         foreach ($admins as $key => $admin) {

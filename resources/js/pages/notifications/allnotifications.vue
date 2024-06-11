@@ -6,18 +6,19 @@
                 <span class="badge bg-primary rounded-pill">{{ unreadNotificationsCount }}</span>
             </div>
             <div class="notifications-list">
-                <div class="card shadow-sm" v-for="notification in notifications" :key="notification.id">
-                    <div class="card-body">
-                        <div class="notification-item">
-                            <i class="fs-8 bi bi-exclamation-circle text-warning" v-if="!notification.read_at"></i>
+                <div class="card shadow-sm" v-for="notification in notifications" :key="notification.id" >
+                    <div class="card-body" >
+                        <div class="notification-item p-4" :class="notificationItemClass(notification)">
+                            <i class="fs-8 bi bi-exclamation-circle" :class="iconClass(notification)" v-if="!notification.read_at"></i>
                             <i class="fs-8 bi bi-check-circle text-success" v-else></i>
-                            <div>
+                            <div @click="handleNotificationClick(notification)" style="cursor: pointer;">
                                 <strong class="text-black">{{ notification.type }}</strong>
-                                <p class="text-black">{{ notification.data.message }}</p>
-                                <p class="text-muted fst-italic">{{ formatCreatedAt(notification.created_at) }}</p>
+                                <p :class="messageClass(notification)">{{ notification.data.message }}</p>
+                                <p class="fst-italic" :class="buttonClass(notification)">{{ formatCreatedAt(notification.created_at) }}</p>
                             </div>
-                            <button class="btn btn-link text-secondary" v-if="!notification.read_at"
-                                @click="markAsRead(notification.id)" title="Mark as read"> <i class="bi bi-check-circle"></i> Mark as read</button>
+                            <button class="btn btn-link " :class="buttonClass(notification)" v-if="!notification.read_at"
+                                @click="markAsRead(notification.id)" title="Mark as read"> <i
+                                    class="bi bi-check-circle"></i> Mark as read</button>
                         </div>
                     </div>
                 </div>
@@ -58,6 +59,40 @@ export default {
         //     });
     },
     methods: {
+        notificationItemClass(notification) {
+            return {
+                'bg-danger text-white': this.isCriticalNotification(notification.type)
+            };
+        },
+        iconClass(notification) {
+            return {
+                'text-white': this.isCriticalNotification(notification.type),
+                'text-warning': !this.isCriticalNotification(notification.type)
+            };
+        },
+        messageClass(notification) {
+            return {
+                'text-white': this.isCriticalNotification(notification.type)
+            };
+        },
+        buttonClass(notification) {
+            return {
+                'text-white': this.isCriticalNotification(notification.type),
+                'text-secondary': !this.isCriticalNotification(notification.type)
+            };
+        },
+        isCriticalNotification(type) {
+            return ['Price Inquiry Follow Up', 'Account Payable-Payment Reminder', 'Forgot Password', 'New Order', 'New Order Price Inquiry', 'New Price Inquiry'].includes(type);
+        },
+        handleNotificationClick(notification) {
+            const route = notification.data.route;
+            const params = notification.data.routeParams || {};
+            if (route) {
+                this.$router.push({ name: route, params: params });
+            } else {
+                toastrs.error('No route information found for this notification.');
+            }
+        },
         fetchNotifications() {
             axios.get('/api/all-notifications').then((response) => {
                 this.notifications = response.data.msg;
@@ -108,7 +143,7 @@ export default {
 .notifications-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+
 }
 
 .notification-item {

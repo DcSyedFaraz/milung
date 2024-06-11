@@ -117,10 +117,10 @@ class SuppProductController extends Controller
         $message = "Hi there! We wanted to let you know that one of your suppliers with user ID: $userid has sent a quote for the price inquiry with the number '$inquiry_number'.";
 
         // Send notification
-        \Notification::send($admins, new UserNotification($message, 'Price Inquiry Quote'));
+        \Notification::send($admins, new UserNotification($message, 'Price Inquiry Quote', 'price_inquiry_edit', ['id' => $priceInquiry->id]));
 
         // Send email
-        \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($message,'Price Inquiry Quote'));
+        \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($message, 'Price Inquiry Quote'));
 
         return response()->json(['message' => 'Quote submitted successfully'], 201);
     }

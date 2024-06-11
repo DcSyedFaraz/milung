@@ -15,11 +15,15 @@ class UserNotification extends Notification
      * Create a new notification instance.
      */
     public $message;
-   public $type;
-    public function __construct($message,$type)
+    public $type;
+    protected $route;
+    protected $routeParams;
+    public function __construct($message, $type, $route, $routeParams = [])
     {
         $this->message = $message;
         $this->type = $type;
+        $this->route = $route;
+        $this->routeParams = $routeParams;
     }
 
     public function databaseType(object $notifiable): string
@@ -57,6 +61,8 @@ class UserNotification extends Notification
     {
         return [
             'message' => $this->message,
-         ];
+            'route' => $this->route,
+            'routeParams' => $this->routeParams,
+        ];
     }
 }
