@@ -18,7 +18,7 @@
                         <div>
                             <form @submit.prevent="updateUser(user)">
                                 <div class="col-12 px-3 pt-3" style="background-color: #e2f2f9;">
-                                    <div class="row px-2">
+                                    <div class="ms-2 row px-2">
                                         <div class="mb-3 col-4">
                                             <label for="registerEmail" class="form-label">Type of ID:</label>
 
@@ -351,6 +351,7 @@ export default {
     mounted() {
         this.user.roles = 'Admin'; // set the initial role to Admin
         this.user.name = 'MiLung Trade Limited';
+        this.user.status = 'active';
     },
     methods: {
         handleCheckboxChange(user, value) {

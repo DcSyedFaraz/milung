@@ -137,7 +137,7 @@
         </aside>
         <!-- End Sidebar-->
 
-        <main id="main" class="main">
+        <main id="main" class="main" style="min-height: 100vh">
             <!-- End Page Title -->
 
             <router-view @profile-updated="userDetail"></router-view>

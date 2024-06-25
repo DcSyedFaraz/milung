@@ -167,12 +167,11 @@
                 </div>
             </div>
         </div>
-        <EventLogTable />
+        <EventLogTable  :filterValue="'Buyer'"/>
     </div>
 </template>
 
 <script>
-import './index';
 
 export default {
     data() {
@@ -324,7 +323,6 @@ export default {
 
 
 <style>
-@import url('./style.css');
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #14245c !important;

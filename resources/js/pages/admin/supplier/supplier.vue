@@ -6,11 +6,13 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Supplier List</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Supplier List</span>
+                                <!-- <br> <span class="">Overview on all Suppliers</span> -->
+                            </span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
-                            <router-link v-if="can('editSupplierEntry | setEditSupplierIDCode')" :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
+                            <router-link v-if="can('editSupplierEntry | setEditSupplierIDCode')"
+                                :to="{ name: 'supplerEntry' }" class="btn btn-warning fw-bold text-dark">Add New
                                 Supplier</router-link>
                         </div>
                     </div>
@@ -31,19 +33,30 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped  display " id="">
                             <thead style="color: white; background-color: #14245c" class="">
-                                <tr class="rounded-top-new" style="">
-                                    <th>
+                                <tr class="rounded-top-new cursor-pointer" style="">
+                                    <th @click="sortTable('userid')">
                                         Supplier ID
+                                        <i :class="getSortIcon('userid')" class="ms-1"></i>
                                     </th>
-                                    <th>Supplier Name</th>
-                                    <th>Location</th>
-                                    <th>Product Group</th>
-                                    <th>Status</th>
+                                    <th @click="sortTable('name')">Comapny Name
+                                        <i :class="getSortIcon('name')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('supplier_profile.address')">
+                                        Location
+                                        <i :class="getSortIcon('supplier_profile.address')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('supplier_profile.group_names')">
+                                        Product Group
+                                        <i :class="getSortIcon('supplier_profile.group_names')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('status')">Status
+                                        <i :class="getSortIcon('status')" class="ms-1"></i>
+                                    </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in paginatedData" :key="user.id">
-                                <tr>
+                            <tbody>
+                                <tr v-for="user in paginatedData" :key="user.id" v-if="paginatedData.length > 0">
                                     <td>{{ user.userid }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.supplier_profile?.address }}</td>
@@ -62,7 +75,9 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link v-if="can('editSupplierEntry')" :to="{ name: 'editsupplier', params: { id: user.id } }" class="text-dark btn btn-light">
+                                        <router-link v-if="can('editSupplierEntry')"
+                                            :to="{ name: 'editsupplier', params: { id: user.id } }"
+                                            class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -71,11 +86,10 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <transition v-if="can('editSupplierEntry | setEditSupplierIDCode')" name="fade">
+                                <!-- <transition v-if="can('editSupplierEntry | setEditSupplierIDCode')" name="fade">
                                     <tr v-show="accordionOpen[user.id]">
                                         <td :colspan="7">
                                             <div>
-                                                <!-- <p>Additional information about user {{ user.name }}</p> -->
                                                 <div class="">
                                                     <form @submit.prevent="updateUser(user.id)">
                                                         <div class="col-12 px-3" style="background-color: #e2f2f9;">
@@ -87,16 +101,18 @@
                                                                         v-model="updateuser.name">
                                                                 </div>
                                                                 <div class="mb-3 col-4">
-                                                                    <label for="registerEmail" class="form-label">Register
+                                                                    <label for="registerEmail"
+                                                                        class="form-label">Register
                                                                         Email</label>
                                                                     <input type="email" class="form-control"
                                                                         v-model="updateuser.email">
                                                                 </div>
 
                                                                 <div class="mb-3 col-2">
-                                                                    <label for="status" class="form-label">Status</label>
-                                                                    <select class="form-select" v-model="updateuser.status"
-                                                                        required>
+                                                                    <label for="status"
+                                                                        class="form-label">Status</label>
+                                                                    <select class="form-select"
+                                                                        v-model="updateuser.status" required>
                                                                         <option value="active">Active</option>
                                                                         <option value="inactive">Inactive</option>
                                                                     </select>
@@ -111,35 +127,37 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">One Time
+                                                                    <label for="oneTimePassword" class="form-label">One
+                                                                        Time
                                                                         Use
                                                                         Password:</label>
                                                                     <input type="text" class="form-control">
                                                                 </div>
                                                                 <div class="mb-3 col-5">
-                                                                    <label for="oneTimePassword" class="form-label">User ID
+                                                                    <label for="oneTimePassword" class="form-label">User
+                                                                        ID
                                                                         Contact Person:</label>
                                                                     <input type="tel" class="form-control">
                                                                 </div>
-                                                                <div class="mb-3 col-1" style="display: flex !important;">
+                                                                <div class="mb-3 col-1"
+                                                                    style="display: flex !important;">
                                                                     <button type="submit"
                                                                         class="btn btn-milung  align-self-end">Save</button>
                                                                 </div>
-                                                                <!-- <div class="mb-3 col-1">
-                                                                <button type="button" class="btn btn-primary">Submit</button>
-                                                            </div> -->
+
                                                             </div>
                                                         </div>
                                                         <div class="col-12 ">
                                                             <div class="row py-5">
                                                                 <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Admin</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="adminSelectAll"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox" v-model="adminSelectAll"
                                                                                 @change="adminSelectAllChanged">
                                                                             <label class="form-check-label  "
                                                                                 for="productEntry">Select All</label>
@@ -151,18 +169,20 @@
                                                                         <input class="form-check-input" type="checkbox"
                                                                             v-model="adminitems" :value="item.value">
                                                                         <label class="form-check-label">{{ item.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
 
                                                                 </div>
                                                                 <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Operations </div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
                                                                                 v-model="operationsSelectAll"
                                                                                 @change="operationselect">
                                                                             <label class="form-check-label fs-6 "
@@ -172,19 +192,22 @@
                                                                     <div v-for="(item, index) in operationsCheckboxes"
                                                                         :key="index" class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            v-model="operationitems" :value="item.value">
+                                                                            v-model="operationitems"
+                                                                            :value="item.value">
                                                                         <label class="form-check-label">{{ item.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
                                                                 </div>
                                                                 <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Finance</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
                                                                                 v-model="financeSelectAll"
                                                                                 @change="financeselect">
                                                                             <label class="form-check-label  "
@@ -196,20 +219,21 @@
                                                                         <input class="form-check-input" type="checkbox"
                                                                             v-model="financeitems" :value="item.value">
                                                                         <label class="form-check-label">{{ item.label
-                                                                        }}</label>
+                                                                            }}</label>
                                                                     </div>
 
 
                                                                 </div>
                                                                 <div class="col-3">
-                                                                    <div class="col-12 d-flex justify-content-between mb-3">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
                                                                             Statics</div>
                                                                         <div class="form-check my-auto col-6">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                v-model="selectAll" @change="selectAllItems"
-                                                                                value="true">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox" v-model="selectAll"
+                                                                                @change="selectAllItems" value="true">
                                                                             <label class="form-check-label  "
                                                                                 for="productEntry">Select All</label>
                                                                         </div>
@@ -219,8 +243,9 @@
                                                                         class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
                                                                             :value="item.value" v-model="staticsitems">
-                                                                        <label class="form-check-label" :for="item.id">{{
-                                                                            item.label }}</label>
+                                                                        <label class="form-check-label"
+                                                                            :for="item.id">{{
+                                item.label }}</label>
                                                                     </div>
 
                                                                 </div>
@@ -231,12 +256,15 @@
 
                                                     </form>
                                                 </div>
-                                                <!-- Add more content here -->
                                             </div>
                                         </td>
                                     </tr>
-                                </transition>
-
+                                </transition> -->
+                                <tr v-else>
+                                    <td colspan="17">
+                                        <p class="text-center">No user to display.</p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -257,14 +285,13 @@
                         </nav>
                     </div>
                 </div>
-                <EventLogTable :key="componentKey" />
+                <EventLogTable :key="componentKey" :filterValue="'Supplier'" />
             </div>
         </div>
     </section>
 </template>
 
 <script>
-import './index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -282,6 +309,8 @@ export default {
     data() {
         return {
             componentKey: 0,
+            sortKey: '',
+            sortAsc: true,
             isLoading: true,
             updateuser: {
                 // id: this.$route.params.id,
@@ -355,6 +384,33 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+                const aValue = getValue(a, key);
+                const bValue = getValue(b, key);
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         adminSelectAllChanged() {
             if (this.adminSelectAll) {
                 this.adminitems = this.adminCheckboxes.map(item => item.value);
@@ -465,8 +521,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('./style.css');
-
 .rotate-icon {
     transform: rotate(180deg);
 }

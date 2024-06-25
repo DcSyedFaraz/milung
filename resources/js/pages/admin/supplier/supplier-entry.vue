@@ -35,10 +35,10 @@
                             </div>
                             <div class="row my-3">
                                 <div class="d-flex col-6 my-2">
-                                    <div class="col-6">
-                                        <p for="userid">User ID:</p>
+                                    <div class="col-6 my-auto">
+                                        <p for="userid">Supplier ID:</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 my-auto">
                                         <input type="text" v-model="supplier.userid" class="form-control"
                                             :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
                                         <div v-if="!userIdPatternValid" class="invalid-feedback">
@@ -59,7 +59,7 @@
                             <div class="row my-3">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
-                                        <p for="name">Supplier Name:</p>
+                                        <p for="name">Company Name:</p>
                                     </div>
                                     <div class="col-6">
                                         <input type="text" v-model="supplier.name" class="form-control">
@@ -110,7 +110,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row my-3">
+                            <h3 class="fw-bold" style="color: #14245c;">Bank Details</h3>
+                            <div class="row my-1">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="address">Beneficiary Bank:</p>
@@ -128,7 +129,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row my-3">
+                            <div class="row my-1">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="address">SWIFT Code:</p>
@@ -146,7 +147,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row my-3">
+                            <div class="row my-1">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="address">Beneficiary Name:</p>
@@ -214,19 +215,20 @@
                                     <tr class="rounded-top-new">
                                         <th>Order Number</th>
                                         <th>Order Date</th>
-                                        <th>Supplier Name</th>
                                         <th>Quantity</th>
-                                        <th>Amount</th>
                                         <th>Article Number</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(order, index) in orders" :key="index" v-if="orders.length > 0">
-                                        <td>{{ order.id }}</td>
+                                        <td>
+                                            <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
+                                                class="text- underline">
+                                                {{ order.id }}
+                                            </router-link>
+                                        </td>
                                         <td>{{ order.orderdate }}</td>
-                                        <td>{{ supplier.name }}</td>
                                         <td>{{ order.quantity_unit }}</td>
-                                        <td>{{ order.buyingprice }}</td>
                                         <td>{{ order.article }}</td>
                                     </tr>
                                     <tr v-else>
@@ -241,7 +243,7 @@
                 </div>
             </div>
         </div>
-        <EventLogTable />
+        <EventLogTable :filterValue="'Supplier'" />
     </div>
 </template>
 
@@ -275,6 +277,10 @@ export default {
             try {
                 const response = await axios.get('/api/product_group_get');
                 this.productOptions = response.data;
+                console.log(this.productOptions);
+                if (this.$route.params.id) {
+                    this.loadSupplier(this.$route.params.id);
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -309,7 +315,8 @@ export default {
                 try {
                     let response;
                     if (this.isEditMode) {
-                        response = await axios.put(`/api/suppliers/${this.supplier.id}`, formData);
+                        const id = this.$route.params.id;
+                        response = await axios.put(`/api/suppliers/${id}`, formData);
                     } else {
                         response = await axios.post('/api/addsuppliers', formData);
                     }
@@ -405,10 +412,8 @@ export default {
     },
     mounted() {
         this.fetchProductOptions();
+        this.supplier.status = 'active';
 
-        if (this.$route.params.id) {
-            this.loadSupplier(this.$route.params.id);
-        }
     },
     computed: {
         userIdPatternValid() {
@@ -423,15 +428,13 @@ export default {
 }
 </script>
 <style>
-@import url('./style.css');
-
 .multiselect__tag {
     background-color: #14245c !important;
     color: white;
 }
 
 .multiselect__tag-icon::after {
-    color: white;
+    color: white !important;
 
 }
 

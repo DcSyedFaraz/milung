@@ -48,7 +48,7 @@
                                         Article#
                                     </th>
                                     <th>Product Name</th>
-                                    <th>Discription</th>
+                                    <th>Description</th>
                                     <th>Product Group</th>
                                     <th>Status</th>
                                     <th>Action</th>

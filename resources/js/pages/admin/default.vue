@@ -6,7 +6,7 @@
                 <div class="row">
                     <!-- Sales Card -->
                     <div class="col-xxl-3 col-md-6 ">
-                        <div class="card info-card sales-card">
+                        <div class="card info-card sales-card cursor-pointer" @click="goToBuyersPage">
                             <div class="card-body rounded bg-milung">
                                 <h5 class="card-title text-white text-white">Buyers
                                     <!-- <span>| Today</span> -->
@@ -30,7 +30,7 @@
 
                     <!-- Revenue Card -->
                     <div class="col-xxl-3 col-md-6">
-                        <div class="card info-card revenue-card">
+                        <div class="card info-card revenue-card cursor-pointer" @click="goToProductsPage">
                             <div class="card-body rounded bg-blue">
                                 <h5 class="card-title text-white">
                                     Products
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="col-xxl-3 col-md-6">
-                        <div class="card info-card revenue-card">
+                        <div class="card info-card revenue-card cursor-pointer" @click="goToSuppliersPage">
                             <div class="card-body rounded bg-warning">
                                 <h5 class="card-title text-white">
                                     Supplier
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="col-xxl-3 col-md-6">
-                        <div class="card info-card revenue-card">
+                        <div class="card info-card revenue-card cursor-pointer" @click="goToAdminPage">
                             <div class="card-body rounded bg-primary">
                                 <h5 class="card-title text-white">
                                     Admin
@@ -222,6 +222,18 @@ export default {
 
     },
     methods: {
+        goToBuyersPage() {
+            this.$router.push({ name: 'Databuyer' });
+        },
+        goToProductsPage() {
+            this.$router.push({ name: 'product' });
+        },
+        goToSuppliersPage() {
+            this.$router.push({ name: 'Datasupplier' });
+        },
+        goToAdminPage() {
+            this.$router.push({ name: 'user' });
+        },
         async fetchdata() {
             try {
 

@@ -24,18 +24,18 @@
                 <table class="table table-striped display">
                     <thead style="color: #009de1;">
                         <tr>
-                            <th>Event</th>
-                            <th>Description</th>
                             <th>User ID</th>
-                            <th>Created At</th>
+                            <th>Description</th>
+                            <th>HKT</th>
+                            <th>DE</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(entry, index) in displayedEntries" :key="index" v-if="displayedEntries.length > 0">
-                            <td>{{ entry.event }}</td>
-                            <td>{{ entry.description }}</td>
                             <td>{{ entry.user?.userid }}</td>
+                            <td>{{ entry.description }}</td>
                             <td class="fst-italic text-muted">{{ formatDate(entry.created_at) }}</td>
+                            <td class="fst-italic text-muted">{{ formatDate(entry.updated_at) }}</td>
                         </tr>
                         <tr v-else>
                             <td colspan="17">
@@ -56,6 +56,12 @@ import moment from 'moment';
 
 export default {
     name: 'EventLogTable',
+    props: {
+        filterValue: { // define a prop to receive the value from the parent component
+            type: String,
+            default: null
+        }
+    },
     data() {
         return {
             isLoading: true,
@@ -74,13 +80,18 @@ export default {
             this.showAll = true;
         },
         formatDate(date) {
-            return moment(date).fromNow();
+            return moment(date, 'YYYY-MM-DD HH:mm:ss').format('MMMM Do YYYY, h:mm:ss a');
         }
+
     },
     async mounted() {
         try {
-
-            const response = await axios.get('/api/events');
+            let params = {}; // create an object to hold the API request parameters
+            if (this.filterValue) { // if the filterValue prop is present
+                params.filter = this.filterValue; // add it to the params object
+            }
+            // console.log(params,'ss');
+            const response = await axios.get('/api/events', { params });
             this.entries = response.data;
             console.log(this.entries);
             this.isLoading = false;

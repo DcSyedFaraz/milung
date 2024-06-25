@@ -114,7 +114,7 @@
                                     v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                     <div class="col-12 d-flex justify-content-between mb-3">
                                         <div class="fs-5 fw-bold col-6" style="color: #14245c;">
-                                            Statics</div>
+                                            Statistics</div>
                                         <div class="form-check my-auto col-6">
                                             <input class="form-check-input" type="checkbox" v-model="selectAll"
                                                 @change="selectAllItems" value="true">

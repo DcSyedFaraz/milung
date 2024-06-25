@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessUserNotifications;
 use App\Mail\OTPMail;
 use App\Mail\PasswordResetRequested;
 use App\Mail\AccountCreated;
@@ -15,6 +16,7 @@ use App\Models\SupplierProfile;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,13 +35,20 @@ class UserController extends Controller
         EventLog::create([
             'event' => $event,
             'description' => $description,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
+            'created_at' => Carbon::now('Asia/Hong_Kong'),
+            'updated_at' => Carbon::now('Europe/Berlin')
         ]);
     }
 
-    public function events()
+    public function events(Request $request)
     {
-        $event = EventLog::orderBy('created_at', 'desc')->with('user')->get();
+        $filterValue = $request->input('filter');
+        // dd($filterValue);
+        $event = EventLog::when($filterValue, function ($query) use ($filterValue) {
+            $query->where('event', $filterValue);
+        })->orderBy('created_at', 'desc')->with('user')->get();
+
         return response()->json($event);
     }
     public function index()
@@ -307,7 +316,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         if ($request->status != $user->status) {
-            $this->logEvent('Buyer Status Change', 'Buyer ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+            $this->logEvent('Buyer', 'Buyer ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
         }
         $user->update([
             'userid' => $request->userid,
@@ -349,39 +358,46 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+        try {
+            DB::beginTransaction();
+            $user = User::create([
+                'userid' => $request->userid,
+                'name' => $request->name,
+                'email' => $request->email,
+                'status' => $request->status,
+                'password' => Hash::make($request->otp),
+                'otp' => $request->otp,
+                'contact_person' => $request->contact_person,
+            ]);
+
+            // Store buyer profile data
+            $user->buyerProfile()->create([
+                'address' => $request->address,
+                'website' => $request->website,
+                'office_phone' => $request->officePhone,
+                'buyer_description' => $request->buyerDescription,
+                'group' => $request->group,
+                // 'sec_group' => $request->Secgroup,
+            ]);
+            $user->assignRole('Buyer');
+
+            // ProcessUserNotifications::dispatch($user, $request->otp);
+            $admin = User::role(['Admin', 'Internal'])->get();
+            Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+            $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
 
 
-        $user = User::create([
-            'userid' => $request->userid,
-            'name' => $request->name,
-            'email' => $request->email,
-            'status' => $request->status,
-            'password' => Hash::make($request->otp),
-            'otp' => $request->otp,
-            'contact_person' => $request->contact_person,
-        ]);
+            Notification::send($admin, new UserNotification($message, 'New Buyer', 'editbuyer', ['id' => $user->id]));
 
-        // Store buyer profile data
-        $user->buyerProfile()->create([
-            'address' => $request->address,
-            'website' => $request->website,
-            'office_phone' => $request->officePhone,
-            'buyer_description' => $request->buyerDescription,
-            'group' => $request->group,
-            // 'sec_group' => $request->Secgroup,
-        ]);
-        $user->assignRole('Buyer');
-
-        $admin = User::role(['Admin', 'Internal'])->get();
-        Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
-        $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
-
-
-        Notification::send($admin, new UserNotification($message, 'New Buyer', 'editbuyer', ['id' => $user->id]));
-
-        $this->logEvent("New Buyer Created", "User ID '$user->userid' has been created.");
-
-        return response()->json(['message' => 'Successfully created user!'], 201);
+            $this->logEvent("Buyer", "User ID '$user->userid' has been created.");
+            DB::commit();
+            return response()->json(['message' => 'Successfully created user!'], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // throw $e;
+            // Return error response if an exception occurs
+            return response()->json(['message' => 'Failed to save data', 'error' => $e->getMessage()], 500);
+        }
     }
     public function suppliers(Request $request)
     {
@@ -450,7 +466,7 @@ class UserController extends Controller
 
         Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
 
-        $this->logEvent("New Supplier Created", "User ID '$user->userid' has been created.");
+        $this->logEvent("Supplier", "User ID '$user->userid' has been created.");
 
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
@@ -540,7 +556,7 @@ class UserController extends Controller
             }
             $role = $validatedData['roles'];
 
-            $this->logEvent("New $role Created", "User ID '$user->userid' has been created.");
+            $this->logEvent("$role", "User ID '$user->userid' has been created.");
 
             return response()->json(['message' => 'Successfully created user!', 'data' => $permissions], 200);
         } catch (\Exception $e) {
@@ -601,7 +617,7 @@ class UserController extends Controller
         }
 
         if ($request->status != $user->status) {
-            $this->logEvent('Supplier Status Change', 'Supplier ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+            $this->logEvent('Supplier', 'Supplier ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
         }
         // Update user information
         $user->update([
@@ -715,7 +731,9 @@ class UserController extends Controller
 
 
             if ($request->status != $user->status) {
-                $this->logEvent('User Status Change', 'User ID ' . $user->userid . ' status has been changed to ' . $data['status'] . '.');
+                $roles = $user->getRoleNames()->toArray();
+                $role = $roles[0];
+                $this->logEvent("$role", 'User ID ' . $user->userid . ' status has been changed to ' . $data['status'] . '.');
             }
 
             $user->update($data);
@@ -752,14 +770,20 @@ class UserController extends Controller
     {
         // dd($id);
         try {
+            DB::beginTransaction();
             $user = User::findOrFail($id);
+
+            $roles = $user->getRoleNames()->toArray();
+            $role = $roles[0];
+            $this->logEvent("$role", "User ID '$user->userid' has been deleted.");
             $user->delete();
 
-            $this->logEvent('User Deleted', 'User ID ' . $user->userid . ' has been deleted.');
-
+            DB::commit();
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Exception $e) {
-            throw $e;
+            DB::rollback();
+            // throw $e;
+            return response()->json(['message' => 'Failed to delete data', 'error' => $e->getMessage()], 500);
         }
     }
 

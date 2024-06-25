@@ -13,4 +13,5 @@ class EventLog extends Model
     {
         return $this->belongsTo(User::class)->select('id', 'userid');
     }
+    
 }

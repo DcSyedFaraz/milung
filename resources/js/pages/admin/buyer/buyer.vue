@@ -6,8 +6,9 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Buyer List</span> <br> <span
-                                    class="">Overview on all Buyers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Buyer List</span>
+                                <!-- <br> <span class="">Overview on all Buyers</span> -->
+                            </span>
                             <!-- <span class="fw-bold "><router-link :to="{ name: 'add-user' }" class="text-white">Add
                                     new</router-link></span> -->
                             <router-link :to="{ name: 'buyerEntry' }" v-if="can('addNewBuyerEntry')"
@@ -32,18 +33,26 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped  display " id="">
                             <thead style="color: white; background-color: #14245c" class="">
-                                <tr class="rounded-top-new" style="">
-                                    <th>
+                                <tr class="rounded-top-new cursor-pointer" style="">
+                                    <th @click="sortTable('userid')">
                                         Buyer ID
+                                        <i :class="getSortIcon('userid')" class="ms-1"></i>
                                     </th>
-                                    <th>Buyer Name</th>
-                                    <th>Location</th>
-                                    <th>Status</th>
+                                    <th @click="sortTable('name')">Comapny Name
+                                        <i :class="getSortIcon('name')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('buyer_profile.address')">
+                                        Location
+                                        <i :class="getSortIcon('buyer_profile.address')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('status')">Status
+                                        <i :class="getSortIcon('status')" class="ms-1"></i>
+                                    </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in paginatedData" :key="user.id">
-                                <tr>
+                            <tbody>
+                                <tr v-for="user in paginatedData" :key="user.id">
                                     <td>{{ user.userid }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.buyer_profile?.address }}</td>
@@ -60,7 +69,8 @@
                                             :class="{ 'rotate-icon': accordionOpen[user.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link v-if="can('editBuyerEntry')" :to="{ name: 'editbuyer', params: { id: user.id } }"
+                                        <router-link v-if="can('editBuyerEntry')"
+                                            :to="{ name: 'editbuyer', params: { id: user.id } }"
                                             class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
@@ -92,14 +102,13 @@
                         </nav>
                     </div>
                 </div>
-                <EventLogTable :key="componentKey" />
+                <EventLogTable :key="componentKey" :filterValue="'Buyer'" />
             </div>
         </div>
     </section>
 </template>
 
 <script>
-import './index';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -117,6 +126,8 @@ export default {
     data() {
         return {
             componentKey: 0,
+            sortKey: '',
+            sortAsc: true,
             isLoading: true,
             updateuser: {
                 // id: this.$route.params.id,
@@ -190,6 +201,29 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         adminSelectAllChanged() {
             if (this.adminSelectAll) {
                 this.adminitems = this.adminCheckboxes.map(item => item.value);
@@ -300,8 +334,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('./style.css');
-
 .rotate-icon {
     transform: rotate(180deg);
 }
