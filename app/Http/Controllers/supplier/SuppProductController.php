@@ -22,9 +22,9 @@ class SuppProductController extends Controller
      */
     public function price_inquiry(Request $request)
     {
-        // $id = Auth::id();
-        $id = 3;
-        dd($request->all(), $request->price);
+        $id = Auth::id();
+        // $id = 3;
+        // dd($request->all(), $request->price);
 
         $validatedData = $request->validate([
             'remarks' => 'nullable',
@@ -131,8 +131,8 @@ class SuppProductController extends Controller
 
     public function price_inquiry_get()
     {
-        // $id = Auth::id();
-        $id = 3;
+        $id = Auth::id();
+        // $id = 3;
         $priceInquiries = PriceInquiry::
             whereHas('inquirysuppliers', function ($query) use ($id) {
                 $query->where('user_id', $id);

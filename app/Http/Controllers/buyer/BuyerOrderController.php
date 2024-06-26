@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Printview;
 use App\Models\User;
 use App\Notifications\UserNotification;
+use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Validator;
@@ -19,8 +20,8 @@ class BuyerOrderController extends Controller
      */
     public function index()
     {
-        // $id = Auth::id();
-        $id = 2;
+        $id = Auth::id();
+        // $id = 2;
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'status', 'group')->where('buyer', $id)->orderby('created_at', 'desc')->get();
         return response()->json($order, 200);
     }

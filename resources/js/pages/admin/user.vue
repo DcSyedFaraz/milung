@@ -28,7 +28,7 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped mt-5 display" id="">
                             <thead style="color: #14245c;">
-                                <tr>
+                                <tr class="cursor-pointer">
                                     <th @click="sortTable('roles')">
                                         User Type
                                         <i :class="getSortIcon('roles')" class="ms-1"></i>

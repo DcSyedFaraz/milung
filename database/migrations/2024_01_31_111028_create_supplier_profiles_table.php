@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('supplier_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('supplier_id');
+            $table->string('status')->default('active');
+            $table->string('name');
             $table->string('address');
             $table->string('website');
             $table->string('office_phone');
@@ -28,6 +31,7 @@ return new class extends Migration
             $table->string('beneficiary_name')->nullable();
             $table->string('account_no')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

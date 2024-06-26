@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('buyer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('buyer_id');
+            $table->string('name');
             $table->string('address');
             $table->string('website');
             $table->string('office_phone');
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->json('group');
             // $table->json('sec_group');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

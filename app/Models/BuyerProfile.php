@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BuyerProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $guarded = [];
 
     protected $casts = [
@@ -18,5 +19,9 @@ class BuyerProfile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function person()
+    {
+        return $this->hasMany(User::class,'parent_id')->select('parent_id','userid','email','name','status');
     }
 }

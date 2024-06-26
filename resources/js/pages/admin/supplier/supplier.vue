@@ -34,9 +34,9 @@
                         <table class="table table-striped  display " id="">
                             <thead style="color: white; background-color: #14245c" class="">
                                 <tr class="rounded-top-new cursor-pointer" style="">
-                                    <th @click="sortTable('userid')">
+                                    <th @click="sortTable('supplier_id')">
                                         Supplier ID
-                                        <i :class="getSortIcon('userid')" class="ms-1"></i>
+                                        <i :class="getSortIcon('supplier_id')" class="ms-1"></i>
                                     </th>
                                     <th @click="sortTable('name')">Comapny Name
                                         <i :class="getSortIcon('name')" class="ms-1"></i>
@@ -57,10 +57,10 @@
                             </thead>
                             <tbody>
                                 <tr v-for="user in paginatedData" :key="user.id" v-if="paginatedData.length > 0">
-                                    <td>{{ user.userid }}</td>
+                                    <td>{{ user.supplier_id }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.supplier_profile?.address }}</td>
-                                    <td>{{ user.supplier_profile?.group_names.join(', ') }}</td>
+                                    <td>{{ user?.address }}</td>
+                                    <td>{{ user?.group_names.join(', ') }}</td>
 
 
                                     <td>
@@ -320,39 +320,8 @@ export default {
                 buyer_id: '',
                 roles: '',
             },
-            adminSelectAll: false,
-            adminCheckboxes: [
-                { id: 'idPassword', label: 'Issue New Login ID & Password to Vim Internal Staff', value: 'idPassword' },
-                { id: 'Authority', label: 'Right to set Access Authority', value: 'Authority' },
-            ],
-            selectAll: false,
-            items: [
-                { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
-                { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty', value: 'bestPurchase' },
-                { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'salesRevenue' },
-                { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
-            ],
-            staticsitems: [],
-            adminitems: [],
-            operationitems: [],
-            financeitems: [],
-            operationsSelectAll: false,
-            operationsCheckboxes: [
-                { id: 'productEntry', label: 'Product Entry', value: 'productEntry', checked: false },
-                { id: 'createNewAN', label: 'Create New AN', value: 'createNewAN', checked: false },
-                { id: 'createNewOrder', label: 'Create New Order', value: 'createNewOrder', checked: false },
-                { id: 'productGroup', label: 'Product Group', value: 'productGroup', checked: false },
-                { id: 'confirmOrRejectPrintview', label: 'Confirm or Reject Printview', value: 'confirmOrRejectPrintview', checked: false },
-                { id: 'orderGeneralSinglePage', label: 'Order General & Single Page', value: 'orderGeneralSinglePage', checked: false },
-                { id: 'atcNumberInput', label: 'ATC Number Input', value: 'atcNumberInput', checked: false },
-                { id: 'exportShippingDocuments', label: 'Export Shipping Documents', value: 'exportShippingDocuments', checked: false },
-                { id: 'voidOrder', label: 'Void Order', value: 'voidOrder', checked: false },
-            ],
-            financeSelectAll: false,
-            financeCheckboxes: [
-                { id: 'accountPayable', label: 'Account Payable', value: 'accountPayable', checked: false },
-                { id: 'accountReceivable', label: 'Account Receivable', value: 'accountReceivable', checked: false },
-            ],
+
+
             users: [],
             accordionOpen: {},
             currentPage: 1
@@ -411,34 +380,7 @@ export default {
             }
             return 'fas fa-sort';
         },
-        adminSelectAllChanged() {
-            if (this.adminSelectAll) {
-                this.adminitems = this.adminCheckboxes.map(item => item.value);
-            } else {
-                this.adminitems = [];
-            }
-        },
-        financeselect() {
-            if (this.financeSelectAll) {
-                this.financeitems = this.financeCheckboxes.map(item => item.value);
-            } else {
-                this.financeitems = [];
-            }
-        },
-        operationselect() {
-            if (this.operationsSelectAll) {
-                this.operationitems = this.operationsCheckboxes.map(item => item.value);
-            } else {
-                this.operationitems = [];
-            }
-        },
-        selectAllItems() {
-            if (this.selectAll) {
-                this.staticsitems = this.items.map(item => item.value);
-            } else {
-                this.staticsitems = [];
-            }
-        },
+       
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
         },

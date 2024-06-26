@@ -8,7 +8,7 @@
                         <div>
                             <div class="row">
 
-                                <div class="d-flex col-6  my-2" v-if="!isEditMode">
+                                <!-- <div class="d-flex col-6  my-2" v-if="!isEditMode">
                                     <div class="col-6">
                                         <p for="name">OTP:</p>
                                     </div>
@@ -20,7 +20,7 @@
                                             OTP must be alphanumeric and between 8 and 10 characters long.
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="d-flex col-6  my-auto">
                                     <div class="col-6">
                                         <p for="name">Status:</p>
@@ -39,7 +39,7 @@
                                         <p for="userid">Supplier ID:</p>
                                     </div>
                                     <div class="col-6 my-auto">
-                                        <input type="text" v-model="supplier.userid" class="form-control"
+                                        <input type="text" v-model="supplier.supplier_id" class="form-control"
                                             :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
                                         <div v-if="!userIdPatternValid" class="invalid-feedback">
                                             User ID must be alphanumeric and between 1 and 10 characters long.
@@ -65,16 +65,24 @@
                                         <input type="text" v-model="supplier.name" class="form-control">
                                     </div>
                                 </div>
-                                <div class="d-flex col-6">
+                                <!-- <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="contact">Contact person:</p>
                                     </div>
                                     <div class="col-6">
                                         <input type="text" v-model="supplier.contact" class="form-control">
                                     </div>
+                                </div> -->
+                                <div class="d-flex col-6">
+                                    <div class="col-6">
+                                        <p for="officePhone">Office Phone/Mobile:</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="tel" v-model="supplier.officePhone" class="form-control">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row my-3">
+                            <!-- <div class="row my-3">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="officePhone">Office Phone/Mobile:</p>
@@ -91,14 +99,16 @@
                                         <input type="text" v-model="supplier.email" class="form-control" id="email">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row my-3">
                                 <div class="d-flex col-6">
                                     <div class="col-6">
                                         <p for="address">Address:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.address" class="form-control">
+                                        <textarea v-model="supplier.address" class="form-control" cols="30"
+                                            rows="1"></textarea>
+                                        <!-- <input type="text" v-model="supplier.address" class="form-control"> -->
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -109,6 +119,52 @@
                                         <input type="text" v-model="supplier.website" class="form-control">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row my-3" v-if="isEditMode">
+                                <h3 class="fw-bold" style="color: #14245c;">Contact Person</h3>
+                                <table class="table table-striped mt-5 display" id="">
+                                    <thead style="color: #14245c;">
+                                        <tr class="cursor-pointer">
+                                            <th @click="sortTable('name')">
+                                                Full Name
+                                                <i :class="getSortIcon('name')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('email')">
+                                                Email
+                                                <i :class="getSortIcon('email')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('userid')">
+                                                User ID
+                                                <i :class="getSortIcon('userid')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('status')">
+                                                Status
+                                                <i :class="getSortIcon('status')" class="ms-1"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr v-for="user in supplier.person" :key="user.id"
+                                            v-if="supplier.person.length > 0">
+                                            <td>{{ user.name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.userid }}</td>
+
+                                            <td>
+                                                <span
+                                                    :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
+                                                    {{ user.status === 'active' ? 'Active' : 'InActive' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td class="text-center" colspan="4">
+                                                No user available
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <h3 class="fw-bold" style="color: #14245c;">Bank Details</h3>
                             <div class="row my-1">
@@ -255,6 +311,8 @@ export default {
     data() {
         return {
             productOptions: [],
+            sortKey: '',
+            sortAsc: true,
             supplier: {
                 name: '',
                 userid: '',
@@ -273,6 +331,30 @@ export default {
         }
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.supplier.person.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
+
         async fetchProductOptions() {
             try {
                 const response = await axios.get('/api/product_group_get');
@@ -302,7 +384,7 @@ export default {
             if (!this.supplier.address) this.errors.push('Address is required.');
             if (!this.supplier.website) this.errors.push('Website is required.');
             if (!this.supplier.supplierDescription) this.errors.push('Supplier description is required.');
-            if (!this.supplier.userid) this.errors.push('User ID is required.');
+            if (!this.supplier.supplier_id) this.errors.push('Supplier ID is required.');
             if (!this.supplier.group.length) this.errors.push('Product group is required.');
 
             if (!this.errors.length) {
@@ -372,36 +454,37 @@ export default {
 
                 this.supplier = {
                     name: supplierData.name,
-                    userid: supplierData.userid,
-                    email: supplierData.email,
-                    address: supplierData.supplier_profile.address,
-                    website: supplierData.supplier_profile.website,
-                    officePhone: supplierData.supplier_profile.office_phone,
-                    supplierDescription: supplierData.supplier_profile.supplier_description,
-                    group: supplierData.supplier_profile.group.map(groupItem => {
+                    supplier_id: supplierData.supplier_id,
+                    // email: supplierData.email,
+                    address: supplierData.address,
+                    website: supplierData.website,
+                    officePhone: supplierData.office_phone,
+                    supplierDescription: supplierData.supplier_description,
+                    group: supplierData.group.map(groupItem => {
                         const option = this.productOptions.find(option => option.id === groupItem);
                         return {
                             id: option.id,
                             group_name: option.group_name
                         };
                     }),
-                    Secgroup: supplierData.supplier_profile.sec_group.map(groupItem => {
+                    Secgroup: supplierData.sec_group.map(groupItem => {
                         const option = this.productOptions.find(option => option.id === groupItem);
                         return {
                             id: option.id,
                             group_name: option.group_name
                         };
                     }),
-                    account_no: supplierData.supplier_profile.account_no,
-                    bank: supplierData.supplier_profile.bank,
-                    bank_address: supplierData.supplier_profile.bank_address,
-                    beneficiary_name: supplierData.supplier_profile.beneficiary_name,
+                    account_no: supplierData.account_no,
+                    bank: supplierData.bank,
+                    bank_address: supplierData.bank_address,
+                    beneficiary_name: supplierData.beneficiary_name,
                     status: supplierData.status,
-                    chips_no: supplierData.supplier_profile.chips_no,
-                    swift_code: supplierData.supplier_profile.swift_code,
+                    chips_no: supplierData.chips_no,
+                    swift_code: supplierData.swift_code,
                     contact_person: supplierData.contact_person,
-                    company_header: supplierData.supplier_profile.company_header,
-                    contact: supplierData.supplier_profile.contact,
+                    company_header: supplierData.company_header,
+                    contact: supplierData.contact,
+                    person: supplierData.person,
                 };
 
                 this.isEditMode = true;
@@ -418,7 +501,7 @@ export default {
     computed: {
         userIdPatternValid() {
             const pattern = /^[a-zA-Z0-9]{1,20}$/;
-            return pattern.test(this.supplier.userid);
+            return pattern.test(this.supplier.supplier_id);
         },
         OTPPatternValid() {
             const pattern = /^[a-zA-Z0-9]{8,10}$/;

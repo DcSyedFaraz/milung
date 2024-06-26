@@ -281,16 +281,14 @@ class UserController extends Controller
     }
     public function supplier()
     {
-        $users = User::withRole('Supplier')->with('supplierProfile')->get();
+        $users = SupplierProfile::with('person')->get();
 
         $responseData = [];
         foreach ($users as $user) {
-            $supplierProfile = $user->supplierProfile;
-            if ($supplierProfile) {
-                $group = $supplierProfile->group;
-                $groupNames = ProductGroup::whereIn('id', $group)->pluck('group_name')->toArray();
-                $user->supplierProfile->group_names = $groupNames;
-            }
+            $group = $user->group;
+            $groupNames = ProductGroup::whereIn('id', $group)->pluck('group_name')->toArray();
+            $user->group_names = $groupNames;
+
             $responseData[] = $user;
         }
 
@@ -578,7 +576,7 @@ class UserController extends Controller
     }
     public function suppliersShow($id)
     {
-        $supplier['user'] = User::where('id', $id)->select('id', 'name', 'userid', 'email', 'status')->with('supplierProfile')->first();
+        $supplier['user'] = SupplierProfile::where('id', $id)->with('person')->first();
         $supplier['orders'] = Order::where('supplier', $id)->select('id', 'buyingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
         return response()->json($supplier);
     }
