@@ -1,77 +1,36 @@
+<!-- UserAccordion.vue -->
 <template>
-    <section class="section">
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+    <section class="section" v-else>
         <div class="row">
             <div class="col-lg-12 ">
 
-                <div class="card  ">
+                <div class="card  mx-2">
                     <div class="card-header pt-3 pb-5 text-white rounded-top-new mx-new"
                         style="background-color: #14245c">
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span class=" mt-2 fw-bold fs-4">USERS LIST</span>
-                            <span class="fw-bold ">Add
-                                New</span>
+                            <span class="fw-bold ">Edit User</span>
                         </div>
                     </div>
 
 
-                    <div class="card-body ">
+                    <div class="card-body px-0">
                         <div>
-                            <form @submit.prevent="updateUser(user)">
-                                <div class="col-12 px-3 pt-3" style="background-color: #e2f2f9;">
-                                    <div class="ms-2 row px-2">
-                                        <div class="mb-3 col-4">
-                                            <label for="registerEmail" class="form-label">Type of ID:</label>
-
-                                            <div class="row">
-                                                <div class="form-check col-3">
-                                                    <input class="form-check-input" type="radio" v-model="user.roles"
-                                                        value="Admin">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Admin
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-3">
-                                                    <input class="form-check-input" type="radio" v-model="user.roles"
-                                                        value="Internal">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Internal
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-3">
-                                                    <input class="form-check-input" type="radio" v-model="user.roles"
-                                                        value="Supplier">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Supplier
-                                                    </label>
-                                                </div>
-                                                <div class="form-check col-3">
-                                                    <input class="form-check-input" value="Buyer" type="radio"
-                                                        v-model="user.roles">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Buyer
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="mb-3 col-3">
-                                            <label for="registerEmail" class="form-label">Company Name</label>
-                                            <input type="text" required class="form-control" v-model="user.name">
-                                        </div>
-                                        <div class="mb-3 col-2">
-                                            <label for="registerEmail" class="form-label">Supplier/Buyer ID</label>
-                                            <multiselect v-model="selectedOption" :options="parent_id"
-                                                @change="updateParentIdAndName" label="userid"
-                                                v-if="parent_id && parent_id.length > 0" track-by="id"></multiselect>
-                                            <small v-else class=""> Selected role in not Supplier/Buyer</small>
-                                        </div>
-                                        <div class="mb-3 col-3">
-                                            <label for="registerEmail" class="form-label">Register Email</label>
-                                            <input type="email" required class="form-control" v-model="user.email">
-                                        </div>
-
-                                    </div>
+                            <form @submit.prevent="updateUser(user.id, user)">
+                                <div class="col-12 px-3" style="background-color: #e2f2f9;">
                                     <div class="row">
+                                        <div class="mb-3 col-4">
+                                            <label for="registerEmail" class="form-label">Company Name</label>
+                                            <input type="text" class="form-control" v-model="user.name">
+                                        </div>
+                                        <div class="mb-3 col-4">
+                                            <label for="registerEmail" class="form-label">Register Email</label>
+                                            <input type="email" class="form-control" v-model="user.email">
+                                        </div>
+
                                         <div class="mb-3 col-2">
                                             <label for="status" class="form-label">Status</label>
                                             <select class="form-select" v-model="user.status" required>
@@ -81,24 +40,21 @@
 
                                         </div>
                                         <div class="mb-3 col-2">
-                                            <label for="userIdContactPerson" class="form-label">UserID:</label>
-                                            <input type="text" class="form-control" v-model="user.userid"
-                                                :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
-                                            <div v-if="!userIdPatternValid" class="invalid-feedback">
-                                                User ID must be alphanumeric, between 1 and 20 characters long, and can
-                                                include hyphens.
-                                            </div>
+                                            <label for="userIdContactPerson" class="form-label">ID:</label>
+                                            <input type="text" disabled class="form-control" :value="user.userid">
                                         </div>
-                                        <div class="mb-3 col-2">
+                                    </div>
+                                    <div class="row">
+                                        <div class="mb-3 col-3">
                                             <label for="oneTimePassword" class="form-label">One Time Password:</label>
-                                            <input type="text" v-model="user.otp" required class="form-control">
+                                            <input type="text" class="form-control" v-model="user.otp">
                                         </div>
-                                        <div class="mb-3 col-2">
-                                            <label for="oneTimePassword" class="form-label">User Contact
+                                        <div class="mb-3 col-3">
+                                            <label for="oneTimePassword" class="form-label">User ID Contact
                                                 Person:</label>
                                             <input type="text" class="form-control" v-model="user.contact_person">
                                         </div>
-                                        <div class="mb-3 col-2">
+                                        <div class="mb-3 col-3">
                                             <label for="oneTimePassword" class="form-label">User Contact
                                                 Number:</label>
                                             <input type="text" class="form-control" v-model="user.contact_number">
@@ -110,7 +66,8 @@
                                 </div>
                                 <div class="col-12 ">
                                     <div class="row py-5">
-                                        <div class="col-3" v-if="user.roles == 'Internal'">
+                                        <div class="col-3"
+                                            v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Admin</div>
@@ -133,7 +90,8 @@
 
 
                                         </div>
-                                        <div class="col-3" v-if="user.roles == 'Internal'">
+                                        <div class="col-3"
+                                            v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Operations </div>
@@ -155,13 +113,14 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-3" v-if="user.roles == 'Internal'">
+                                        <div class="col-3"
+                                            v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Finance</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
-                                                        v-model="finance.selectAll">
+                                                        v-model="finance.selectAll" @change="financeselect">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
                                                 </div>
@@ -178,10 +137,11 @@
 
 
                                         </div>
-                                        <div class="col-3" v-if="user.roles == 'Internal'">
+                                        <div class="col-3"
+                                            v-if="user.roles.includes('Admin') || user.roles.includes('Internal')">
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
-                                                    Statics</div>
+                                                    Statistics</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox" v-model="selectAll"
                                                         @change="selectAllItems" value="true">
@@ -199,32 +159,31 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-3" v-if="user.roles == 'Buyer'">
-                                            <div class="col-12 d-flex justify-content-between mb-3">
-                                                <div class="fs-5 fw-bold col-6" style="color: #14245c;">
+                                        <div class="col-12" v-if="user.roles[0] == 'Buyer'">
+                                            <div class="col-12 d-flex  mb-3">
+                                                <div class="fs-5 fw-bold col-1" style="color: #14245c;">
                                                     Buyer</div>
-                                                <div class="form-check my-auto col-6">
+                                                <div class="form-check my-auto col-1">
                                                     <input class="form-check-input" type="checkbox"
                                                         v-model="buyer.selectAll">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
                                                 </div>
                                             </div>
-                                            <div v-for="(fin, index) in buyer.checkboxes" :key="index"
-                                                class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    :checked="user.permissions.includes(fin.id)"
-                                                    @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
-
-                                                <label class="form-check-label">{{ fin.label
-                                                    }}</label>
+                                            <div class="row px-2">
+                                                <div v-for="(fin, index) in buyer.checkboxes" :key="index"
+                                                    class="form-check col-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        :checked="user.permissions.includes(fin.id)"
+                                                        @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
+                                                    <label class="form-check-label">{{ fin.label
+                                                        }}</label>
+                                                </div>
                                             </div>
-
-
                                         </div>
-                                        <div class="col-3" v-if="user.roles == 'Supplier'">
-                                            <div class="col-12 d-flex justify-content-between mb-3">
-                                                <div class="fs-5 fw-bold col-6" style="color: #14245c;">
+                                        <div class="col-12" v-if="user.roles[0] == 'Supplier'">
+                                            <div class="col-12 d-flex  mb-3">
+                                                <div class="fs-5 fw-bold col-2" style="color: #14245c;">
                                                     Supplier</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
@@ -233,19 +192,17 @@
                                                         All</label>
                                                 </div>
                                             </div>
-                                            <div v-for="(fin, index) in supplier.checkboxes" :key="index"
-                                                class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    :checked="user.permissions.includes(fin.id)"
-                                                    @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
-
-                                                <label class="form-check-label">{{ fin.label
-                                                    }}</label>
+                                            <div class="row px-2">
+                                                <div v-for="(fin, index) in supplier.checkboxes" :key="index"
+                                                    class="form-check col-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        :checked="user.permissions.includes(fin.id)"
+                                                        @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
+                                                    <label class="form-check-label">{{ fin.label
+                                                        }}</label>
+                                                </div>
                                             </div>
-
-
                                         </div>
-
 
                                     </div>
                                 </div>
@@ -253,24 +210,25 @@
                         </div>
                     </div>
                 </div>
-                <EventLogTable />
             </div>
         </div>
     </section>
-    <div v-if="loader" class="loader-overlay">
-        <div class="loader"></div>
-    </div>
+
 </template>
 
 <script>
 export default {
-    emits: ['profileUpdated'],
+
     data() {
         return {
-            parent_id: {},
-            selectedOption: '',
+            user: {},
             loader: false,
-            user: {
+            updateuser: {
+                id: null,
+                name: '',
+                email: '',
+                status: '',
+                userid: '',
                 roles: '',
                 permissions: [],
             },
@@ -335,7 +293,7 @@ export default {
                     { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
                     { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
                     { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
-                ],
+                ]
             },
             finance: {
                 selectAll: false,
@@ -362,74 +320,59 @@ export default {
             ],
         };
     },
-    mounted() {
-        this.user.roles = 'Admin';
-        this.user.name = 'MiLung Trade Limited';
-        this.user.status = 'active';
+    created() {
+        this.loader = true;
+        axios.get(`/api/users/${this.$route.params.id}`)
+            .then(response => {
+                this.user = response.data;
+                console.log(this.user);
+                this.loader = false;
+            })
+            .catch(error => {
+                this.loader = false;
+                console.error(error);
+            });
     },
     methods: {
-        updateParentIdAndName(selectedOption) {
-            console.log(selectedOption);
-            if (selectedOption) {
-                this.user.parent_id = selectedOption.id;
-                this.user.name = selectedOption.userid;
-            } else {
-                this.user.parent_id = null;
-                this.user.name = '';
-            }
-        },
-        parentid(role) {
-            const params = { role: role };
-            console.log(params);
-            this.loader = true;
-            axios.get('/api/parentid', { params })
-                .then(response => {
-                    this.loader = false;
-                    this.parent_id = response.data
-                    console.log(this.parent_id);
-                })
-                .catch(error => {
-                    this.loader = false;
-                    console.log('catch error:', error);
-                    toastr.error('An error occurred while updating the user');
-                });
-        },
         handleCheckboxChange(user, value) {
             const index = user.permissions.indexOf(value);
             if (index === -1) {
                 // If not found, add to permissions
                 user.permissions.push(value);
+                this.updateuser.permissions = user.permissions;
             } else {
                 // If found, remove from permissions
                 user.permissions.splice(index, 1);
+                this.updateuser.permissions = user.permissions;
             }
             // You can also console.log the updated permissions here to verify the changes
-            console.log('Updated Permissions:', this.user.permissions);
+            console.log('Updated Permissions:', this.updateuser.permissions);
         },
         isPermissionChecked(value, checkboxModel) {
             return checkboxModel.includes(value);
         },
-        handleValidationErrors(validationErrors) {
-            console.log(validationErrors);
-            for (const key in validationErrors) {
-                if (Object.hasOwnProperty.call(validationErrors, key)) {
-                    const messages = validationErrors[key];
-                    messages.forEach(message => {
-                        toastr.error(message);
-                    });
-                }
-            }
-        },
-        updateUser(user) {
+
+        updateUser(id, user) {
             this.loader = true;
 
-            console.log(user);
-            axios.post('/api/addusers', user)
+            const formData = {
+                staticsitems: this.staticsitems,
+                adminitems: this.adminitems,
+                operationitems: this.operationitems,
+                financeitems: this.financeitems,
+            };
+            const allItems = Object.values(formData).flat();
+
+            axios.put(`/api/updateusers/${id}`, {
+                updateuser: user,
+                formData: allItems,
+            })
                 .then(response => {
                     this.loader = false;
 
                     if (response.status === 200) {
                         toastr.success('User updated successfully');
+
                         this.$router.push({ name: 'user' });
                     }
                 })
@@ -437,8 +380,11 @@ export default {
                     this.loader = false;
 
                     if (error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        this.handleValidationErrors(validationErrors);
+                        const errors = error.response.data.errors;
+
+                        errors.forEach(errorMessage => {
+                            toastr.error(errorMessage);
+                        });
                     } else {
                         toastr.error('An error occurred while updating the user');
                     }
@@ -452,61 +398,11 @@ export default {
             }
         },
         //...
-    },
-    computed: {
-        userIdPatternValid() {
-            const pattern = /^[a-zA-Z0-9-]{1,20}$/;
-            return pattern.test(this.user.userid);
-        }
-    },
-    watch: {
-        selectedOption(newValue) {
-            console.log(newValue);
-            if (newValue) {
-                this.user.parent_id = newValue.id;
-                this.user.parent_userid = newValue.userid;
-                this.user.name = newValue.name;
-            } else {
-                this.user.parent_id = null;
-                this.user.parent_userid = null;
-                this.user.name = '';
-            }
-        },
-        'user.roles': function (newValue) {
-            if (newValue === 'Admin' || newValue === 'Internal') {
-                this.user.name = 'MiLung Trade Limited';
-                this.user.parent_userid = null;
-                this.parent_id = {};
-            } else if (newValue === 'Supplier') {
-                this.parentid('Supplier');
-                this.user.name = '';
-            } else if (newValue === 'Buyer') {
-                this.parentid('Buyer');
-                this.user.name = '';
-            }
-        }
     }
 }
 </script>
 
 <style scoped>
-@import url('../style.css');
-
-.rounded-top-new {
-    border-top-left-radius: 2.25rem !important;
-    border-top-right-radius: 2.25rem !important;
-}
-
-.rounded-bottom-new {
-    border-bottom-left-radius: 2.25rem !important;
-    border-bottom-right-radius: 2.25rem !important;
-}
-
-.mx-new {
-    margin-right: 1.23rem !important;
-    margin-left: 1.23rem !important;
-}
-
 .loader-overlay {
     position: fixed;
     top: 0;
@@ -544,5 +440,15 @@ export default {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.rounded-top-new {
+    border-top-left-radius: 2.25rem !important;
+    border-top-right-radius: 2.25rem !important;
+}
+
+.rounded-bottom-new {
+    border-bottom-left-radius: 2.25rem !important;
+    border-bottom-right-radius: 2.25rem !important;
 }
 </style>

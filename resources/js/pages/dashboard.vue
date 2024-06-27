@@ -457,6 +457,7 @@ export default {
                 '/admin/product-group-edit/:id',
                 '/admin/Databuyer/:id',
                 '/admin/Datasupplier/:id',
+                '/edit-user/:id',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

@@ -141,11 +141,13 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     // Fetching Users
     Route::get('users', [UserController::class, 'users'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
+    Route::get('users/{id}', [UserController::class, 'userGet'])->middleware('can:issueNewLoginIdPassword,setAccessAuthority,userManagement');
     Route::get('supplier', [UserController::class, 'supplier'])->middleware('can:addNewSupplierEntry,setEditSupplierIDCode');
     Route::get('buyer', [UserController::class, 'buyer'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::get('supplierOrder', [UserController::class, 'supplierOrder']);
     Route::get('buyerOrder', [UserController::class, 'buyerOrder']);
     Route::get('supplier_profiles/{id}', [UserController::class, 'supplier_profiles']);
+    Route::get('parentid', [UserController::class, 'parentid']);
 
     // Adding Users
     Route::post('addbuyers', [UserController::class, 'buyers'])->middleware('can:addNewBuyerEntry,editBuyerEntry');

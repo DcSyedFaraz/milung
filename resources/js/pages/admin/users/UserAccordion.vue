@@ -30,13 +30,17 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 col-5">
+                                <div class="mb-3 col-3">
                                     <label for="oneTimePassword" class="form-label">One Time Password:</label>
                                     <input type="text" class="form-control" v-model="user.otp">
                                 </div>
-                                <div class="mb-3 col-5">
+                                <div class="mb-3 col-3">
                                     <label for="oneTimePassword" class="form-label">User ID Contact Person:</label>
                                     <input type="text" class="form-control" v-model="user.contact_person">
+                                </div>
+                                <div class="mb-3 col-3">
+                                    <label for="oneTimePassword" class="form-label">User Contact Number:</label>
+                                    <input type="text" class="form-control" v-model="user.contact_number">
                                 </div>
                                 <div class="mb-3 col-1" style="display: flex !important;">
                                     <button type="submit" class="btn btn-milung  align-self-end">Save</button>
@@ -135,7 +139,7 @@
                                     <div class="col-12 d-flex  mb-3">
                                         <div class="fs-5 fw-bold col-1" style="color: #14245c;">
                                             Buyer</div>
-                                        <div class="form-check my-auto col-1">
+                                        <div class="form-check my-auto col-2">
                                             <input class="form-check-input" type="checkbox" v-model="buyer.selectAll">
                                             <label class="form-check-label  " for="productEntry">Select All</label>
                                         </div>
@@ -153,9 +157,9 @@
                                 </div>
                                 <div class="col-12" v-if="user.roles[0] == 'Supplier'">
                                     <div class="col-12 d-flex  mb-3">
-                                        <div class="fs-5 fw-bold col-1" style="color: #14245c;">
+                                        <div class="fs-5 fw-bold col-2" style="color: #14245c;">
                                             Supplier</div>
-                                        <div class="form-check my-auto col-6">
+                                        <div class="form-check my-auto col-2">
                                             <input class="form-check-input" type="checkbox"
                                                 v-model="supplier.selectAll">
                                             <label class="form-check-label  " for="productEntry">Select All</label>

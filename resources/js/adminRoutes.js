@@ -1,7 +1,7 @@
 import DefaultAdmin from "./pages/admin/default.vue";
 
 import User from "./pages/admin/user.vue";
-import EditUser from "./pages/admin/user-edit.vue";
+import EditUser from "./pages/admin/users/user-edit.vue";
 import AddUser from "./pages/admin/users/add-user.vue";
 import Datasupplier from "./pages/admin/supplier/supplier.vue";
 import Databuyer from "./pages/admin/buyer/buyer.vue";
@@ -66,7 +66,7 @@ const adminRoutes = [
     },
     {
         path: "/edit-user/:id",
-        name: "edit-user",
+        name: "edituser",
         component: EditUser,
     },
     {

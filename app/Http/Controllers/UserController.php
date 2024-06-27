@@ -7,6 +7,7 @@ use App\Mail\OTPMail;
 use App\Mail\PasswordResetRequested;
 use App\Mail\AccountCreated;
 use App\Mail\PriceInquiryNotification;
+use App\Models\BuyerProfile;
 use App\Models\EventLog;
 use App\Models\Order;
 use App\Models\ProductGroup;
@@ -41,6 +42,18 @@ class UserController extends Controller
         ]);
     }
 
+    public function parentid(Request $request)
+    {
+        // dd($request->all());
+        $role = $request->input('role');
+        if ($role == 'Supplier') {
+            $data = SupplierProfile::select('id', 'supplier_id as userid', 'name')->get();
+        } else {
+            $data = BuyerProfile::select('id', 'buyer_id as userid', 'name')->get();
+        }
+
+        return response()->json($data);
+    }
     public function events(Request $request)
     {
         $filterValue = $request->input('filter');
@@ -257,6 +270,8 @@ class UserController extends Controller
                 'buyer_id' => $user->buyer_id,
                 'email' => $user->email,
                 'status' => $user->status,
+                'contact_number' => $user->contact_number,
+                'contact_person' => $user->contact_person,
                 'roles' => $user->getRoleNames()->toArray(),
                 'permissions' => $user->getPermissionNames()->toArray(),
             ];
@@ -269,6 +284,30 @@ class UserController extends Controller
         // $admin->givePermissionTo($permission);
         // dd($responseData);
         return response()->json($responseData, 200);
+    }
+    public function userGet($id)
+    {
+        $user = User::where('id', $id)->first();
+        $responseData = [];
+
+        $userData = [
+            'id' => $user->id,
+            'userid' => $user->userid,
+            'name' => $user->name,
+            'contact_number' => $user->contact_number,
+            'contact_person' => $user->contact_person,
+            'email' => $user->email,
+            'status' => $user->status,
+            'roles' => $user->getRoleNames()->toArray(),
+            'permissions' => $user->getPermissionNames()->toArray(),
+        ];
+
+        // $admin = auth()->user();
+        // $permission = Permission::create(['name' => 'edit articles', 'guard_name' => 'web']);
+
+        // $admin->givePermissionTo($permission);
+        // dd($responseData);
+        return response()->json($userData, 200);
     }
     public function products()
     {
@@ -402,19 +441,16 @@ class UserController extends Controller
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
             'status' => 'required|string|in:active,inactive',
-            'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
+            'supplier_id' => 'required|unique:supplier_profiles,supplier_id|regex:/^[^\s]+$/',
             'address' => 'required|string|max:255',
             'website' => 'required',
-            'contact' => 'required|string|max:255',
             'officePhone' => 'required|string|max:255',
             'supplierDescription' => 'required|string|max:255',
             'group' => 'required|array',
             'group.*' => 'integer',
             'Secgroup' => 'required|array',
             'Secgroup.*' => 'integer',
-            'otp' => 'required|string|min:8|regex:/^[^\s]+$/',
             'company_header' => 'required|string|max:255',
             'bank' => 'required|string|max:255',
             'bank_address' => 'required',
@@ -428,18 +464,13 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Create a new user
-        $user = User::create([
-            'userid' => $request->userid,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->otp),
-            'otp' => $request->otp,
-            'status' => $request->status,
-        ]);
+
 
         // Store buyer profile data
-        $user->supplierProfile()->create([
+        $user = SupplierProfile::create([
+            'name' => $request->name,
+            'supplier_id' => $request->supplier_id,
+            'status' => $request->status,
             'address' => $request->address,
             'website' => $request->website,
             'office_phone' => $request->officePhone,
@@ -456,17 +487,17 @@ class UserController extends Controller
         ]);
 
         // Assign the 'Supplier' role using Spatie permissions
-        $user->assignRole('Supplier');
+        // $user->assignRole('Supplier');
 
         $admin = User::role(['Admin', 'Internal'])->get();
         //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
-        $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->userid}\n\nThank you!";
+        $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->supplier_id}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
 
-        $this->logEvent("Supplier", "User ID '$user->userid' has been created.");
+        $this->logEvent("Supplier", "Supplier ID '$user->supplier_id' has been created.");
 
-        return response()->json(['message' => 'Successfully created user!'], 201);
+        return response()->json(['message' => 'Successfully created supplier!'], 201);
     }
 
     public function buyer()
@@ -509,6 +540,12 @@ class UserController extends Controller
     }
     public function addUser(Request $request)
     {
+        if ($request->parent_userid) {
+            $newuserid = $request->parent_userid . '-' . $request->userid;
+            $request->merge(['userid' => $newuserid]);
+        }
+        // dd($request->all());
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
@@ -518,9 +555,11 @@ class UserController extends Controller
             'otp' => 'required|string|min:8|regex:/^[^\s]+$/',
             'permissions' => 'nullable|array',
             'contact_person' => 'nullable|string',
+            'parent_id' => 'nullable|integer',
+            'contact_number' => 'nullable|integer',
         ]);
 
-        // dd($request->all());
+        // dd($validatedData['userid']);
         try {
 
             $user = new User($validatedData);
@@ -584,13 +623,13 @@ class UserController extends Controller
     {
         // dd($request->all());
         // Fetch the existing user
-        $user = User::where('id', $userid)->firstOrFail();
+        $user = SupplierProfile::where('id', $userid)->firstOrFail();
 
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'userid' => 'required|unique:users,userid,' . $user->id,
+            // 'email' => 'required|email|unique:users,email,' . $user->id,
+            // 'userid' => 'required|unique:users,userid,' . $user->id,
             'address' => 'required|string|max:255',
             'website' => 'required',
             'status' => 'required|string|in:active,inactive',
@@ -618,16 +657,14 @@ class UserController extends Controller
             $this->logEvent('Supplier', 'Supplier ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
         }
         // Update user information
-        $user->update([
-            'userid' => $request->userid,
-            'name' => $request->name,
-            'email' => $request->email,
-            'status' => $request->status,
-        ]);
+
 
         // Update buyer profile data
-        $user->supplierProfile()->update([
+        $user->update([
+            'name' => $request->name,
             'address' => $request->address,
+            // 'supplier_id' => $request->supplier_id,
+            'status' => $request->status,
             'website' => $request->website,
             'contact' => $request->contact,
             'office_phone' => $request->officePhone,
@@ -707,6 +744,7 @@ class UserController extends Controller
             'otp' => 'nullable|string|min:8|regex:/^[^\s]+$/',
             'permissions' => 'nullable|array',
             'contact_person' => 'nullable|string',
+            'contact_number' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {

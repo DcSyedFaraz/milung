@@ -22,6 +22,6 @@ class BuyerProfile extends Model
     }
     public function person()
     {
-        return $this->hasMany(User::class,'parent_id')->select('parent_id','userid','email','name','status');
+        return $this->hasMany(User::class,'parent_id')->select('id','parent_id','userid','email','name','status');
     }
 }

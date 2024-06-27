@@ -40,6 +40,7 @@
                                     </div>
                                     <div class="col-6 my-auto">
                                         <input type="text" v-model="supplier.supplier_id" class="form-control"
+                                            :disabled="isEditMode"
                                             :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
                                         <div v-if="!userIdPatternValid" class="invalid-feedback">
                                             User ID must be alphanumeric and between 1 and 10 characters long.
@@ -125,6 +126,10 @@
                                 <table class="table table-striped mt-5 display" id="">
                                     <thead style="color: #14245c;">
                                         <tr class="cursor-pointer">
+                                            <th @click="sortTable('userid')">
+                                                User ID
+                                                <i :class="getSortIcon('userid')" class="ms-1"></i>
+                                            </th>
                                             <th @click="sortTable('name')">
                                                 Full Name
                                                 <i :class="getSortIcon('name')" class="ms-1"></i>
@@ -132,10 +137,6 @@
                                             <th @click="sortTable('email')">
                                                 Email
                                                 <i :class="getSortIcon('email')" class="ms-1"></i>
-                                            </th>
-                                            <th @click="sortTable('userid')">
-                                                User ID
-                                                <i :class="getSortIcon('userid')" class="ms-1"></i>
                                             </th>
                                             <th @click="sortTable('status')">
                                                 Status
@@ -147,9 +148,16 @@
                                     <tbody>
                                         <tr v-for="user in supplier.person" :key="user.id"
                                             v-if="supplier.person.length > 0">
+                                            <td>
+                                                <router-link :to="{
+                        name: 'edituser',
+                        params: { id: user.id },
+                    }">
+                                                    {{ user.userid }}
+                                                </router-link>
+                                            </td>
                                             <td>{{ user.name }}</td>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.userid }}</td>
 
                                             <td>
                                                 <span
@@ -301,6 +309,9 @@
         </div>
         <EventLogTable :filterValue="'Supplier'" />
     </div>
+    <div v-if="loader" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 </template>
 
 <script>
@@ -308,8 +319,10 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
+    emits: ['profileUpdated'],
     data() {
         return {
+            loader: false,
             productOptions: [],
             sortKey: '',
             sortAsc: true,
@@ -356,6 +369,7 @@ export default {
         },
 
         async fetchProductOptions() {
+            this.loader = true;
             try {
                 const response = await axios.get('/api/product_group_get');
                 this.productOptions = response.data;
@@ -363,7 +377,9 @@ export default {
                 if (this.$route.params.id) {
                     this.loadSupplier(this.$route.params.id);
                 }
+                this.loader = false;
             } catch (error) {
+                this.loader = false;
                 console.error(error);
             }
         },
@@ -378,9 +394,9 @@ export default {
             });
         },
         async submitForm() {
+            this.loader = true;
             this.errors = [];
             if (!this.supplier.name) this.errors.push('Supplier name is required.');
-            if (!this.supplier.email) this.errors.push('Email is required.');
             if (!this.supplier.address) this.errors.push('Address is required.');
             if (!this.supplier.website) this.errors.push('Website is required.');
             if (!this.supplier.supplierDescription) this.errors.push('Supplier description is required.');
@@ -405,6 +421,7 @@ export default {
 
                     this.resetForm();
 
+                    this.loader = false;
                     if (response.status === 201 || response.status === 200) {
                         this.showToast('success', response.data.message);
                         this.$router.push({ name: 'Datasupplier' });
@@ -412,6 +429,7 @@ export default {
                         toastr.error('Unexpected response from the server');
                     }
                 } catch (error) {
+                    this.loader = false;
                     console.error(error);
                     if (error.response && error.response.status === 422) {
                         const validationErrors = error.response.data.errors;
@@ -446,8 +464,10 @@ export default {
             this.isEditMode = false;
         },
         async loadSupplier(userid) {
+            this.loader = true;
             try {
                 const response = await axios.get(`/api/suppliers/${userid}`);
+                
                 console.log(response.data);
                 this.orders = response.data.orders;
                 const supplierData = response.data.user;
@@ -488,7 +508,9 @@ export default {
                 };
 
                 this.isEditMode = true;
+                this.loader = false;
             } catch (error) {
+                this.loader = false;
                 console.error(error);
             }
         }
