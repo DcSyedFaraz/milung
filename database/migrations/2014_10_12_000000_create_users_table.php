@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('contact_number')->nullable();
-            $table->string('parent_id')->nullable();
+            $table->integer('supplier_id')->nullable();
+            $table->integer('buyer_id')->nullable();
             $table->string('otp')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

@@ -460,6 +460,7 @@ import 'nprogress/nprogress.css';
 
 
 export default {
+    emits: ['profileUpdated'],
     components: {
         VueDatePicker,
     },

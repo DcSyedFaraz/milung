@@ -53,9 +53,9 @@
                             </thead>
                             <tbody>
                                 <tr v-for="user in paginatedData" :key="user.id">
-                                    <td>{{ user.userid }}</td>
+                                    <td>{{ user.buyer_id }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.buyer_profile?.address }}</td>
+                                    <td>{{ user.address }}</td>
 
                                     <td>
                                         <span
@@ -223,37 +223,6 @@ export default {
                 return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
             }
             return 'fas fa-sort';
-        },
-        adminSelectAllChanged() {
-            if (this.adminSelectAll) {
-                this.adminitems = this.adminCheckboxes.map(item => item.value);
-            } else {
-                this.adminitems = [];
-            }
-        },
-        financeselect() {
-            if (this.financeSelectAll) {
-                this.financeitems = this.financeCheckboxes.map(item => item.value);
-            } else {
-                this.financeitems = [];
-            }
-        },
-        operationselect() {
-            if (this.operationsSelectAll) {
-                this.operationitems = this.operationsCheckboxes.map(item => item.value);
-            } else {
-                this.operationitems = [];
-            }
-        },
-        selectAllItems() {
-            if (this.selectAll) {
-                this.staticsitems = this.items.map(item => item.value);
-            } else {
-                this.staticsitems = [];
-            }
-        },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
         },
         changePage(page) {
             this.currentPage = page

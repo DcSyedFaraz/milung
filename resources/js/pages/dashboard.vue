@@ -234,7 +234,7 @@
                         <li>
                             <router-link :to="{ name: 'product' }"
                                 v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
-                                :class="{ active: this.$route.name === 'productEntry' }" active-class="active">
+                                :class="{ active: this.$route.name === 'productEntry' || this.$route.name === 'adminproductEdit'}" active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
@@ -457,6 +457,7 @@ export default {
                 '/admin/product-group-edit/:id',
                 '/admin/Databuyer/:id',
                 '/admin/Datasupplier/:id',
+                '/admin/productEdit/:id',
                 '/edit-user/:id',
             ];
 

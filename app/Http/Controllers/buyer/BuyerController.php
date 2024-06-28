@@ -14,8 +14,8 @@ class BuyerController extends Controller
 {
     public function product($id)
     {
-        // dd($id);
         $product = Products::where('id', $id)->with('product_group', 'images')->first();
+        // dd($product);
         return response()->json($product, 200);
     }
     public function dashboard()

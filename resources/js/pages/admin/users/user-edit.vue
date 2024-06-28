@@ -163,7 +163,7 @@
                                             <div class="col-12 d-flex  mb-3">
                                                 <div class="fs-5 fw-bold col-1" style="color: #14245c;">
                                                     Buyer</div>
-                                                <div class="form-check my-auto col-1">
+                                                <div class="form-check my-auto col-2">
                                                     <input class="form-check-input" type="checkbox"
                                                         v-model="buyer.selectAll">
                                                     <label class="form-check-label  " for="productEntry">Select

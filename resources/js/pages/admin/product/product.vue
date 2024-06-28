@@ -6,8 +6,9 @@
                 <div class="card  ">
                     <div class="card-header pt-3  ">
                         <div class="d-flex justify-content-between align-items-center mx-3">
-                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span> <br> <span
-                                    class="">Overview on all Suppliers</span></span>
+                            <span><span class=" mt-2 fw-bold fs-4 " style="color: #14245c;">Products</span>
+                                <!-- <br> <span class="">Overview on all Suppliers</span> -->
+                            </span>
                             <div class="col-4 d-flex">
                                 <div class="col-6">
 
@@ -15,7 +16,8 @@
                                         ref="search" placeholder="Write here..." />
                                 </div>
                                 <div class="col-6 mx-2">
-                                    <router-link :to="{ name: 'productEntry' }" v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
+                                    <router-link :to="{ name: 'productEntry' }"
+                                        v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
                                         class="btn btn-warning fw-bold text-dark">Add New
                                         Product</router-link>
                                 </div>
@@ -37,15 +39,18 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  display " id="">
-                            <thead style="color: white; background-color: #14245c" class="text-center">
+                            <thead style="color: white; background-color: #14245c" class="text-center cursor-pointer">
                                 <tr class="rounded-top-new" style="">
-                                    <th>
-                                        Article#
-                                    </th>
-                                    <th>Product Name</th>
-                                    <th>Description</th>
-                                    <th>Product Group</th>
-                                    <th>Status</th>
+                                    <th @click="sortTable('article')">Article Number <i :class="getSortIcon('article')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('name')">Product Name <i :class="getSortIcon('name')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('description')">Description <i
+                                            :class="getSortIcon('description')" class="ms-1"></i></th>
+                                    <th @click="sortTable('product_group.group_name')">Product Group <i
+                                            :class="getSortIcon('product_group.group_name')" class="ms-1"></i></th>
+                                    <th @click="sortTable('status')">Status <i :class="getSortIcon('status')"
+                                            class="ms-1"></i></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -68,7 +73,8 @@
                                             :class="{ 'rotate-icon': accordionOpen[product.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'adminproductEdit', params: { id: product.id } }" class="btn btn-light text-dark">
+                                        <router-link :to="{ name: 'adminproductEdit', params: { id: product.id } }"
+                                            class="btn btn-light text-dark">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -98,7 +104,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" :filterValue="'Product'"/>
             </div>
         </div>
     </section>
@@ -120,6 +126,9 @@ export default {
     },
     data() {
         return {
+            componentKey: 0,
+            sortKey: '',
+            sortAsc: true,
             isLoading: true,
             users: [],
             accordionOpen: {},
@@ -165,6 +174,30 @@ export default {
         });
     },
     methods: {
+        
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         showToast(type, message) {
             Swal.fire({
                 toast: true,
@@ -234,7 +267,7 @@ export default {
 
                     // If successful, remove the product from the local data
                     this.users = this.users.filter(product => product.id !== userId);
-
+                    this.componentKey += 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'Product deleted successfully',
@@ -254,7 +287,6 @@ export default {
 </script>
 
 <style scoped>
-
 .rotate-icon {
     transform: rotate(180deg);
 }

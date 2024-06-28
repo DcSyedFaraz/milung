@@ -55,8 +55,7 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <multiselect v-model="product.group" :options="productOptions" label="group_name"
-                                    track-by="id">
+                                <multiselect v-model="group" :options="productOptions" label="group_name" track-by="id">
                                 </multiselect>
                             </div>
                         </div>
@@ -100,22 +99,22 @@
 
                             </div>
                         </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Product Color:</p>
+                        <div class="d-flex col-11 ">
+                            <div class="col-4 my-auto">
+                                <label for="chips-input">Product Colors:</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.color" class="form-control">
+                                <Chips v-model="product.color" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4 ">
                                 <p for="v-model" class="">Product Material:</p>
                             </div>
-                            <div class="col-5">
+                            <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" v-model="product.material" />
-                                    <span class="input-group-text">mm</span>
+                                    <Chips v-model="product.material" />
+                                    <!-- <span class="input-group-text">mm</span> -->
                                 </div>
                             </div>
                         </div>
@@ -180,7 +179,8 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.accessory" class="form-control">
+                                <Chips v-model="product.accessory" />
+                                <!-- <input type="text" v-model="product.accessory" class="form-control"> -->
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -189,8 +189,8 @@
                                     (Accessories
                                     Only per pc):</p>
                             </div>
-                            <div class="col-4">
-                                <div class="input-group">
+                            <div class="col-6">
+                                <div class="input-group d-flex">
                                     <input type="text" class="form-control" v-model="product.accessory_weight" />
                                     <span class="input-group-text">g</span>
                                 </div>
@@ -198,10 +198,10 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS Code:</p>
+                                <p for="v-model" class=" fs-7">HS-DE Code:</p>
                             </div>
                             <div class="col-8">
-                                <p>{{ product.group?.hs_de }}</p>
+                                <p>{{ group.hs_de }}</p>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -209,10 +209,10 @@
                                 <p for="v-model" class=" fs-7">HS-CN Code:</p>
                             </div>
                             <div class="col-8">
-                                <p>{{ product.group?.hs_cn }}</p>
+                                <p>{{ group.hs_cn }}</p>
                             </div>
                         </div>
-                        <h3 class="text-milung fw-bold text-uppercase">3. Battery Details</h3>
+                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Battey Type:</p>
@@ -338,44 +338,30 @@
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">2. Product Photo</h3>
                         <div class="d-flex col-11 my-2">
-                            <div class="d-flex col-11 my-2">
-                                <div class="col-12">
-                                    <div v-if="product.images !== null && product.images?.length > 0"
-                                        class="carousel-container">
-
-                                        <!-- Bootstrap Carousel -->
-                                        <div id="imageCarousel" class="carousel carousel-dark slide"
-                                            data-bs-ride="carousel">
-                                            <ol class="carousel-indicators">
-                                                <li v-for="(image, index) in product.images" :key="index"
-                                                    :data-bs-target="'#imageCarousel'" :data-bs-slide-to="index"
-                                                    :class="{ 'active': index === 0 }"></li>
-                                            </ol>
-                                            <div class="carousel-inner">
-                                                <div v-for="(image, index) in product.images" :key="index"
-                                                    :class="{ 'carousel-item': true, 'active': index === 0 }">
-                                                    <img :src="'/storage/' + image.path" class="d-block w-100"
-                                                        style="height: 300px; object-fit: cover;" alt="Image">
-                                                </div>
-                                            </div>
-                                            <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#imageCarousel" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button"
-                                                data-bs-target="#imageCarousel" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Next</span>
-                                            </button>
+                            <ImageSelector @imagesSelected="handleImagesSelected" />
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <p>Uploaded Images:</p>
+                            </div>
+                            <div class="col-8">
+                                <div v-if="product.images?.length">
+                                    <div class="image-gallery">
+                                        <div v-for="(image, index) in product.images" :key="index"
+                                            class="uploaded-image">
+                                            <img :src="`/storage/${image.path}`" alt="Product Image"
+                                                class="img-thumbnail" />
+                                            <button @click="removeImage(image)"
+                                                class="btn btn-danger btn-sm">Remove</button>
                                         </div>
                                     </div>
                                 </div>
+                                <div v-else class="no-images">
+                                    <p>No images uploaded.</p>
+                                </div>
                             </div>
-                            <button v-if="product.images !== null && product.images?.length > 0"
-                                @click="downloadAllImages" class="btn btn-primary">Download All Images</button>
-                            <!-- <ImageSelector @imagesSelected="handleImagesSelected" /> -->
                         </div>
+                        <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
@@ -389,7 +375,7 @@
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Standart Printing Method:</p>
+                                <p for="v-model" style="font-size: 0.9rem!important;">Standard Printing Method:</p>
                             </div>
                             <div class="col-8">
                                 <input type="text" v-model="product.printing_method" class="form-control">
@@ -473,13 +459,16 @@
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
 
-                        <fileinput label="Safety Sheet:" inputName="safety_sheet" @file-uploaded="handleFileUploaded">
+                        <fileinput :key="componentKey" label="Safety Sheet:" inputName="safety_sheet"
+                            :initialFile="parseFile(product.safety_sheet)" @file-uploaded="handleFileUploaded">
                         </fileinput>
-                        <fileinput label="Manual:" inputName="manual" @file-uploaded="handleFileUploaded"></fileinput>
-                        <fileinput label="Product Label:" inputName="product_label" @file-uploaded="handleFileUploaded">
+                        <fileinput :key="componentKey" label="Manual:" inputName="manual"
+                            :initialFile="parseFile(product.manual)" @file-uploaded="handleFileUploaded"></fileinput>
+                        <fileinput :key="componentKey" label="Product Label:" inputName="product_label"
+                            :initialFile="parseFile(product.product_label)" @file-uploaded="handleFileUploaded">
                         </fileinput>
-                        <fileinput label="Packaging Label:" inputName="packaging_label"
-                            @file-uploaded="handleFileUploaded">
+                        <fileinput :key="componentKey" label="Packaging Label:" inputName="packaging_label"
+                            :initialFile="parseFile(product.packaging_label)" @file-uploaded="handleFileUploaded">
                         </fileinput>
 
                     </div>
@@ -488,7 +477,7 @@
             <div class="container d-flex p-4" style="background-color: #14245c;">
                 <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
                 <div class="col-6 d-flex">
-                    <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new" v-model="product.Dates"
+                    <VueDatePicker calendar-cell-class-name="dp-custom-cell" class="dp__new" v-model="Dates"
                         mode='single' format="dd-MM-yyyy" @input="sendDateOnly"></VueDatePicker>
                     <button class="btn btn-warning mx-2 fw-bold" type="reset">Reset</button>
                 </div>
@@ -501,18 +490,14 @@
 </template>
 
 <script>
-
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
 import ImageSelector from './imageselector.vue';
 import fileinput from './file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-
-
-
+import axios from 'axios';
 
 export default {
+    emits: ['profileUpdated'],
     components: {
         ImageSelector,
         fileinput,
@@ -521,58 +506,73 @@ export default {
     data() {
         return {
             loader: false,
+            componentKey: 0,
+            group: '',
+            Dates: '',
             productOptions: [],
-            quoteExpiredDate: '',
-            product: {},
             selectedImages: [],
             selectedFiles: [],
             uploadedFiles: {},
+            product: {
+                cargo_place: [],
+                color: [],
+                material: [],
+                accessory: [],
+                safety_sheet: null,
+                manual: null,
+                product_label: null,
+                packaging_label: null,
+            },
         };
     },
-    created() {
-        this.fetchProduct();
-    },
     mounted() {
-        setTimeout(() => {
-            this.fetchProductOptions();
-
-        }, 1000);
+        this.fetchProductOptions();
+        this.fetchProductDetails();
     },
     watch: {
         Dates: function (newDate, oldDate) {
             this.sendDateOnly();
-        }
+        },
     },
     methods: {
-        async fetchProduct() {
-            NProgress.start();
+        parseFile(fileString) {
             try {
-                const productId = this.$route.params.id;
-                const response = await axios.get(`/api/product/${productId}`);
-                this.product = response.data;
-                console.log(this.product);
+                const file = JSON.parse(fileString);
 
-
-
-                // console.log('fd',this.productOptions);
-
-                NProgress.done();
+                return file && file.name ? file : {
+                    path: null,
+                    name: null
+                };
             } catch (error) {
-
-                console.error(error);
-                NProgress.done();
+                return {
+                    path: null,
+                    name: null
+                };
             }
         },
         async fetchProductOptions() {
             try {
                 const response = await axios.get('/api/product_group_get');
                 this.productOptions = response.data;
-                // Pre-select product group
-                const desiredGroup = this.productOptions.find(group => group.id == this.product.group);
-                if (desiredGroup) {
-                    this.product.group = desiredGroup;
-                }
-                // console.log('fe', desiredGroup);
+                console.log(this.productOptions);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async fetchProductDetails() {
+            const productId = this.$route.params.id;
+            try {
+                const response = await axios.get(`/api/product/${productId}`);
+                this.product = response.data;
+                this.group = this.product.group;
+                console.log(response.data);
+                this.product.color = response.data.color.split(',').map(item => item.trim());
+                this.product.material = response.data.material.split(',').map(item => item.trim());
+                this.product.accessory = response.data.accessory.split(',').map(item => item.trim());
+
+                this.Dates = new Date(this.product.quoteExpiredDate);
+                this.componentKey += 1;
+
             } catch (error) {
                 console.error(error);
             }
@@ -587,36 +587,25 @@ export default {
             this.selectedImages = images;
         },
         sendDateOnly() {
-
             // Extract date part from quoteExpiredDate
             const selectedDate = new Date(this.Dates);
             const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
-            this.quoteExpiredDate = formattedDate;
+            this.product.quoteExpiredDate = formattedDate;
             // Now you can send the formattedDate to your backend
-            console.log('Selected Date:', this.quoteExpiredDate);
+            console.log('Selected Date:', this.product.quoteExpiredDate);
         },
         async submitForm() {
             this.loader = true;
 
-            console.log("Form submitted with images:", this.quoteExpiredDate);
+            console.log('Form submitted with images:', this.quoteExpiredDate);
 
             // Create a new FormData object
             const formData = new FormData();
 
-            // Define an array of field names
-            const formFields = [
-                'article', 'status', 'name', 'description', 'cargo', 'cargo_place', 'color',
-                'material', 'size', 'weight', 'specification', 'memory', 'feature', 'accessory',
-                'accessory_weight', 'battery_type', 'rated', 'capacity', 'voltage', 'pcs',
-                'mAh', 'mm', 'gram', 'edition', 'msds_expiry', 'un_expiry', 'air_safety_expiry',
-                'sea_safety_expiry', 'train_safety_expiry', 'certificate', 'printing_method',
-                'unit_packaging_paper', 'unit_packaging_plastic', 'unit_packaging_metal',
-                'unit_packaging_others', 'packaging_material', 'packaging_weight', 'standart_packaging', 'quoteExpiredDate'
-            ];
-            formData.append('group', this.product.group.id);
+            formData.append('group', this.group.id);
             // Append form fields to FormData dynamically
-            formFields.forEach(field => {
-                formData.append(field, this[field]);
+            Object.keys(this.product).forEach((key) => {
+                formData.append(key, this.product[key]);
             });
             for (const image of this.selectedImages) {
                 formData.append('images[]', image);
@@ -626,19 +615,16 @@ export default {
             Object.entries(this.uploadedFiles).forEach(([inputName, fileName]) => {
                 formData.append(inputName, this.uploadedFiles[inputName]);
             });
-            // const token = this.$store.state.authToken;
-            // if (token) {
-            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            // }
 
             try {
-                console.log(this.group.id);
-                // Send the form data to the API endpoint
-                const addProduct = await axios.post('/api/updprod', formData);
+                const productId = this.$route.params.id;
+                const updateProduct = await axios.post(`/api/updprod/${productId}`, formData);
                 this.loader = false;
-                if (addProduct.status === 201) {
-                    toastr.success(addProduct.data.message);
-                    this.$router.push({ name: 'product' });
+                if (updateProduct.status === 200) {
+                    toastr.success(updateProduct.data.message);
+                    this.$router.push({
+                        name: 'product'
+                    });
                 } else {
                     // Handle other status codes or unexpected responses
                     toastr.error('Unexpected response from the server');
@@ -649,27 +635,35 @@ export default {
                     const validationErrors = error.response.data.errors;
                     this.handleValidationErrors(validationErrors);
                 } else {
-                    toastr.error('An error occurred while updating the user');
+                    toastr.error('An error occurred while updating the product');
                 }
             }
         },
-
         handleValidationErrors(validationErrors) {
             console.log(validationErrors);
             for (const key in validationErrors) {
                 if (Object.hasOwnProperty.call(validationErrors, key)) {
                     const messages = validationErrors[key];
-                    messages.forEach(message => {
+                    messages.forEach((message) => {
                         toastr.error(message);
                     });
                 }
             }
         },
+        resetForm() {
+            this.fetchProductDetails();
+        },
+        resetDate() {
+            this.Dates = '';
+        },
+        removeImage(image) {
+            this.product.images = this.product.images.filter(img => img !== image);
+        },
     },
 };
 </script>
 
-<style scoped>
+<style>
 .dp-custom-cell {
     border-radius: 50%;
 }
@@ -680,6 +674,22 @@ export default {
 
 .rotate-icon {
     transform: rotate(180deg);
+}
+
+.p-chips-token {
+    background-color: #009de1 !important;
+    color: white !important;
+}
+
+.p-chips-form {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0 !important;
+}
+
+.p-chips-multiple-container {
+    margin-bottom: 0 !important;
 }
 
 .loader-overlay {
@@ -719,5 +729,22 @@ export default {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.uploaded-image {
+    margin: 10px;
+    display: inline-block;
+}
+
+.no-images {
+    text-align: center;
+    padding: 20px;
+    color: #999;
 }
 </style>

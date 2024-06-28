@@ -7,7 +7,7 @@
                     <form @submit.prevent="submitForm">
                         <div class=" ">
 
-                            <div class="row">
+                            <!-- <div class="row">
 
                                 <div class="d-flex col-6  my-2" v-if="!isEditMode">
                                     <div class="col-6">
@@ -16,15 +16,15 @@
                                     <div class="col-6"><input type="text" v-model="buyer.otp" class="form-control">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="d-flex col-6  my-2">
                                     <div class="col-6">
                                         <p for="name">User ID:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="buyer.userid" required pattern="[a-zA-Z0-9]{1,10}"
-                                            class="form-control"
+                                        <input type="text" v-model="buyer.buyer_id" required pattern="[a-zA-Z0-9]{1,10}"
+                                            class="form-control" :disabled="isEditMode"
                                             :class="{ 'is-invalid': !userIdPatternValid, 'is-valid': userIdPatternValid }">
                                         <div v-if="!userIdPatternValid" class="invalid-feedback">
                                             User ID must be alphanumeric and between 1 and 10 characters long.
@@ -51,16 +51,6 @@
                                     <div class="col-6"><input type="text" v-model="buyer.name" class="form-control">
                                     </div>
                                 </div>
-                                <div class="d-flex col-6  ">
-                                    <div class="col-6">
-                                        <p for="name">Contact person:</p>
-                                    </div>
-                                    <div class="col-6"><input type="text" v-model="buyer.contact_person"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row my-3">
 
                                 <div class="d-flex col-6  ">
                                     <div class="col-6">
@@ -70,15 +60,8 @@
                                             class="form-control">
                                     </div>
                                 </div>
-                                <div class="d-flex col-6  ">
-                                    <div class="col-6">
-                                        <p for="name">Email:</p>
-                                    </div>
-                                    <div class="col-6"><input type="text" v-model="buyer.email" class="form-control"
-                                            id="email">
-                                    </div>
-                                </div>
                             </div>
+
                             <div class="row">
 
                                 <div class="d-flex col-6  ">
@@ -97,7 +80,59 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row my-3" v-if="isEditMode">
+                                <h3 class="fw-bold" style="color: #14245c;">Contact Person</h3>
+                                <table class="table table-striped mt-5 display" id="">
+                                    <thead style="color: #14245c;">
+                                        <tr class="cursor-pointer">
+                                            <th @click="sortTable('userid')">
+                                                User ID
+                                                <i :class="getSortIcon('userid')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('name')">
+                                                Full Name
+                                                <i :class="getSortIcon('name')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('email')">
+                                                Email
+                                                <i :class="getSortIcon('email')" class="ms-1"></i>
+                                            </th>
+                                            <th @click="sortTable('status')">
+                                                Status
+                                                <i :class="getSortIcon('status')" class="ms-1"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
 
+                                    <tbody>
+                                        <tr v-for="user in buyer.person" :key="user.id"
+                                            v-if="buyer.person && buyer.person.length > 0">
+                                            <td>
+                                                <router-link :to="{
+                        name: 'edituser',
+                        params: { id: user.id },
+                    }">
+                                                    {{ user.userid }}
+                                                </router-link>
+                                            </td>
+                                            <td>{{ user.name }}</td>
+                                            <td>{{ user.email }}</td>
+
+                                            <td>
+                                                <span
+                                                    :class="{ 'badge': true, 'bg-success-new': user.status === 'active', 'bg-danger': user.status !== 'active' }">
+                                                    {{ user.status === 'active' ? 'Active' : 'InActive' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td class="text-center" colspan="4">
+                                                No user available
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
 
                         </div>
                         <div class="form-group ">
@@ -167,7 +202,7 @@
                 </div>
             </div>
         </div>
-        <EventLogTable  :filterValue="'Buyer'"/>
+        <EventLogTable :filterValue="'Buyer'" />
     </div>
 </template>
 
@@ -177,9 +212,12 @@ export default {
     data() {
         return {
             productOptions: [],
+            sortKey: '',
+            sortAsc: true,
             buyer: {
                 name: '',
-                userid: '',
+                buyer_id: '',
+                status: '',
                 email: '',
                 address: '',
                 website: '',
@@ -195,6 +233,29 @@ export default {
         };
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.supplier.person.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         async fetchProductOptions() {
             try {
                 const response = await axios.get('/api/product_group_get');
@@ -213,15 +274,16 @@ export default {
 
                 this.buyer = {
                     name: buyer.name,
-                    userid: buyer.userid,
+                    buyer_id: buyer.buyer_id,
                     email: buyer.email,
                     status: buyer.status,
-                    address: buyer.buyer_profile?.address,
-                    website: buyer.buyer_profile?.website,
+                    address: buyer.address,
+                    website: buyer.website,
                     contact_person: buyer.contact_person,
-                    officePhone: buyer.buyer_profile?.office_phone,
-                    buyerDescription: buyer.buyer_profile?.buyer_description,
-                    group: buyer.buyer_profile?.group.map(groupItem => {
+                    officePhone: buyer.office_phone,
+                    buyerDescription: buyer.buyer_description,
+                    person: buyer.person,
+                    group: buyer.group.map(groupItem => {
                         // Find the option with the same id as groupItem.id
                         const option = this.productOptions.find(option => option.id === groupItem);
                         // console.log(option, this.productOptions, groupItem);
@@ -237,7 +299,7 @@ export default {
         },
         async submitForm() {
             this.errors = [];
-            const requiredFields = ['name', 'userid', 'email', 'address', 'website', 'buyerDescription', 'group'];
+            const requiredFields = ['name', 'buyer_id', 'email', 'address', 'website', 'buyerDescription', 'group'];
             requiredFields.forEach(field => {
                 if (!this.buyer[field] || (Array.isArray(this.buyer[field]) && !this.buyer[field].length)) {
                     this.errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required.`);
@@ -290,7 +352,7 @@ export default {
         resetForm() {
             this.buyer = {
                 name: '',
-                userid: '',
+                buyer_id: '',
                 email: '',
                 address: '',
                 website: '',
@@ -314,7 +376,7 @@ export default {
     computed: {
         userIdPatternValid() {
             const pattern = /^[a-zA-Z0-9]{1,10}$/;
-            return pattern.test(this.buyer.userid);
+            return pattern.test(this.buyer.buyer_id);
         }
     }
 };
@@ -323,7 +385,6 @@ export default {
 
 
 <style>
-
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #14245c !important;
     color: white;

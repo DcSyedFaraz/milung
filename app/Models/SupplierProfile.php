@@ -22,6 +22,6 @@ class SupplierProfile extends Model
     }
     public function person()
     {
-        return $this->hasMany(User::class,'parent_id')->select('id','parent_id','userid','email','name','status');
+        return $this->hasMany(User::class,'supplier_id')->select('id','supplier_id','userid','email','name','status');
     }
 }

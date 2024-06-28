@@ -20,14 +20,14 @@
                             <div class="col-4">
                                 <p for="v-model">Article Number:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="article" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="product.article" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Status:</p>
                             </div>
                             <div class="col-8">
-                                <select v-model="status" class="form-select">
+                                <select v-model="product.status" class="form-select">
                                     <option value="active">Active</option>
                                     <option value="inactive">InActive</option>
                                 </select>
@@ -38,7 +38,7 @@
                                 <p for="v-model">Product Name:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="name" class="form-control">
+                                <input type="text" v-model="product.name" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -46,7 +46,8 @@
                                 <p for="v-model">Product Description:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="description" class="form-control" cols="36" rows="10"></textarea>
+                                <textarea v-model="product.description" class="form-control" cols="36"
+                                    rows="10"></textarea>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -65,13 +66,15 @@
                             <div class="col-8">
                                 <div class="d-flex">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" value="general" v-model="cargo">
+                                        <input class="form-check-input" type="radio" value="general"
+                                            v-model="product.cargo">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             General Cargo
                                         </label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" value="danger" v-model="cargo">
+                                        <input class="form-check-input" type="radio" value="danger"
+                                            v-model="product.cargo">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                             Danger Goods
                                         </label>
@@ -79,14 +82,14 @@
                                 </div>
                                 <div class="d-flex my-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
+                                        <input class="form-check-input" type="checkbox" v-model="product.cargo_place"
                                             value="hongkong">
                                         <label class="form-check-label" for="flexCheckDefault1">
                                             Hong Kong
                                         </label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
+                                        <input class="form-check-input" type="checkbox" v-model="product.cargo_place"
                                             value="china">
                                         <label class="form-check-label" for="flexCheckDefault2">
                                             Mainland China
@@ -96,22 +99,22 @@
 
                             </div>
                         </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Product Color:</p>
+                        <div class="d-flex col-11 ">
+                            <div class="col-4 my-auto">
+                                <label for="chips-input">Product Colors:</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="color" class="form-control">
+                                <Chips v-model="product.color" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4 ">
                                 <p for="v-model" class="">Product Material:</p>
                             </div>
-                            <div class="col-5">
+                            <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" v-model="material" />
-                                    <span class="input-group-text">mm</span>
+                                    <Chips v-model="product.material" />
+                                    <!-- <span class="input-group-text">mm</span> -->
                                 </div>
                             </div>
                         </div>
@@ -121,7 +124,7 @@
                             </div>
                             <div class="col-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" v-model="size" />
+                                    <input type="text" class="form-control" v-model="product.size" />
                                     <span class="input-group-text">mm</span>
                                 </div>
                             </div>
@@ -137,7 +140,7 @@
                             </div>
                             <div class="col-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" v-model="weight" />
+                                    <input type="text" class="form-control" v-model="product.weight" />
                                     <span class="input-group-text">g</span>
                                 </div>
                             </div>
@@ -147,7 +150,8 @@
                                 <p for="v-model">Product Specifications:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="specification" class="form-control" cols="36" rows="10"></textarea>
+                                <textarea v-model="product.specification" class="form-control" cols="36"
+                                    rows="10"></textarea>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -157,7 +161,7 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="memory" class="form-control">
+                                <input type="text" v-model="product.memory" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -165,7 +169,7 @@
                                 <p for="v-model">Product Features:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="feature" class="form-control">
+                                <input type="text" v-model="product.feature" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -175,7 +179,8 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="accessory" class="form-control">
+                                <Chips v-model="product.accessory" />
+                                <!-- <input type="text" v-model="product.accessory" class="form-control"> -->
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -184,16 +189,16 @@
                                     (Accessories
                                     Only per pc):</p>
                             </div>
-                            <div class="col-4">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" v-model="accessory_weight" />
+                            <div class="col-6">
+                                <div class="input-group d-flex">
+                                    <input type="text" class="form-control" v-model="product.accessory_weight" />
                                     <span class="input-group-text">g</span>
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS Code:</p>
+                                <p for="v-model" class=" fs-7">HS-DE Code:</p>
                             </div>
                             <div class="col-8">
                                 <p>{{ group.hs_de }}</p>
@@ -207,12 +212,13 @@
                                 <p>{{ group.hs_cn }}</p>
                             </div>
                         </div>
-                        <h3 class="text-milung fw-bold text-uppercase">3. Battery Details</h3>
+                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Battey Type:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="battery_type" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="product.battery_type" class="form-control">
+                            </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
@@ -220,8 +226,8 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" v-model="rated" class="form-control">
-                                    <input type="text" v-model="capacity" class="form-control">
+                                    <input type="text" v-model="product.rated" class="form-control">
+                                    <input type="text" v-model="product.capacity" class="form-control">
                                     <span class="input-group-text px-3"> mAh/Wh </span>
                                 </div>
                             </div>
@@ -230,7 +236,7 @@
                             <div class="col-4">
                                 <p for="v-model">Battey Nominal Voltage:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="voltage" class="form-control"></div>
+                            <div class="col-8"><input type="text" v-model="product.voltage" class="form-control"></div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
@@ -238,7 +244,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="number" v-model="pcs" class="form-control">
+                                    <input type="number" v-model="product.pcs" class="form-control">
                                     <span class="input-group-text px-3"> pcs </span>
                                 </div>
                             </div>
@@ -249,7 +255,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="number" v-model="mAh" class="form-control">
+                                    <input type="number" v-model="product.mAh" class="form-control">
                                     <span class="input-group-text px-3"> mAh </span>
                                 </div>
                             </div>
@@ -260,7 +266,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="number" v-model="mm" class="form-control">
+                                    <input type="number" v-model="product.mm" class="form-control">
                                     <span class="input-group-text px-3"> mm </span>
                                 </div>
                             </div>
@@ -271,7 +277,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="number" v-model="gram" class="form-control">
+                                    <input type="number" v-model="product.gram" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -281,7 +287,7 @@
                                 <p for="v-model">MSDS IATA Edition No.:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="edition" class="form-control">
+                                <input type="text" v-model="product.edition" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -289,7 +295,7 @@
                                 <p for="v-model">MSDS Expiry Date:</p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="msds_expiry" class="form-control">
+                                <input type="date" v-model="product.msds_expiry" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -297,7 +303,7 @@
                                 <p for="v-model">UN38.3 Expiry Date:</p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="un_expiry" class="form-control">
+                                <input type="date" v-model="product.un_expiry" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -306,7 +312,7 @@
                                 </p>
                             </div>
                             <div class="col-8 ">
-                                <input type="date" v-model="air_safety_expiry" class="form-control">
+                                <input type="date" v-model="product.air_safety_expiry" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -315,7 +321,7 @@
                                 </p>
                             </div>
                             <div class="col-8 ">
-                                <input type="date" v-model="sea_safety_expiry" class="form-control">
+                                <input type="date" v-model="product.sea_safety_expiry" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -325,7 +331,7 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="train_safety_expiry" class="form-control">
+                                <input type="date" v-model="product.train_safety_expiry" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -334,6 +340,7 @@
                         <div class="d-flex col-11 my-2">
                             <ImageSelector @imagesSelected="handleImagesSelected" />
                         </div>
+                        <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
@@ -341,16 +348,16 @@
                                     (CE,ROHS,RED,REACH,LFGB,FSC,etc.)</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="certificate" class="form-control">
+                                <input type="text" v-model="product.certificate" class="form-control">
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Standart Printing Method:</p>
+                                <p for="v-model" style="font-size: 0.9rem!important;">Standard Printing Method:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="printing_method" class="form-control">
+                                <input type="text" v-model="product.printing_method" class="form-control">
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>
@@ -361,7 +368,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-                                    <input type="number" v-model="unit_packaging_paper" class="form-control">
+                                    <input type="number" v-model="product.unit_packaging_paper" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -373,7 +380,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-                                    <input type="number" v-model="unit_packaging_plastic" class="form-control">
+                                    <input type="number" v-model="product.unit_packaging_plastic" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -385,7 +392,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-                                    <input type="number" v-model="unit_packaging_metal" class="form-control">
+                                    <input type="number" v-model="product.unit_packaging_metal" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -397,7 +404,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-                                    <input type="number" v-model="unit_packaging_others" class="form-control">
+                                    <input type="number" v-model="product.unit_packaging_others" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -407,7 +414,7 @@
                                 <p for="v-model">Specify Packaging Material:</p>
                             </div>
                             <div class="col-6">
-                                <input type="text" v-model="packaging_material" class="form-control">
+                                <input type="text" v-model="product.packaging_material" class="form-control">
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -416,7 +423,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group">
-                                    <input type="number" v-model="packaging_weight" class="form-control">
+                                    <input type="number" v-model="product.packaging_weight" class="form-control">
                                     <span class="input-group-text px-3"> g </span>
                                 </div>
                             </div>
@@ -426,7 +433,7 @@
                                 <p for="v-model">Standard Packaging:</p>
                             </div>
                             <div class="col-6">
-                                <input type="text" v-model="standart_packaging" class="form-control">
+                                <input type="text" v-model="product.standart_packaging" class="form-control">
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
@@ -468,6 +475,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 
 export default {
+    emits: ['profileUpdated'],
     components: {
         ImageSelector,
         fileinput,
@@ -476,55 +484,22 @@ export default {
     data() {
         return {
             loader: false,
-            productOptions: [],
-            quoteExpiredDate: '',
-            Dates: '',
-            article: '',
-            name: '',
-            description: '',
             group: '',
-            cargo: '',
-            cargo_place: [],
-            color: '',
-            material: '',
-            size: '',
-            weight: '',
-            specification: '',
-            memory: '',
-            feature: '',
-            accessory: '',
-            accessory_weight: '',
-            battery_type: '',
-            rated: '',
-            capacity: '',
-            voltage: '',
-            pcs: 0,
-            mAh: 0,
-            mm: 0,
-            gram: 0,
-            edition: '',
-            status: '',
-            msds_expiry: '',
-            un_expiry: '',
-            air_safety_expiry: '',
-            sea_safety_expiry: '',
-            train_safety_expiry: '',
-            certificate: '',
-            printing_method: '',
-            unit_packaging_paper: 0,
-            unit_packaging_plastic: 0,
-            unit_packaging_metal: 0,
-            unit_packaging_others: 0,
-            packaging_material: '',
-            packaging_weight: 0,
-            standart_packaging: '',
-            safety_sheet: null,
-            manual: null,
-            product_label: null,
-            packaging_label: null,
+            Dates: '',
+            productOptions: [],
             selectedImages: [],
             selectedFiles: [],
             uploadedFiles: {},
+            product: {
+                cargo_place: [],
+                color: [],
+                material: [],
+                accessory: [],
+                safety_sheet: null,
+                manual: null,
+                product_label: null,
+                packaging_label: null,
+            },
         };
     },
     mounted() {
@@ -558,38 +533,31 @@ export default {
 
             // Extract date part from quoteExpiredDate
             const selectedDate = new Date(this.Dates);
-            const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
-            this.quoteExpiredDate = formattedDate;
+            const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+            this.product.quoteExpiredDate = formattedDate;
             // Now you can send the formattedDate to your backend
-            console.log('Selected Date:', this.quoteExpiredDate);
+            console.log('Selected Date:', this.product.quoteExpiredDate);
         },
         async submitForm() {
             this.loader = true;
 
-            console.log("Form submitted with images:", this.quoteExpiredDate);
-
+            this.product.color = Array.isArray(this.product.color) ? this.product.color : [this.product.color];
+            this.product.material = Array.isArray(this.product.material) ? this.product.material : [this.product.material];
+            this.product.accessory = Array.isArray(this.product.accessory) ? this.product.accessory : [this.product.accessory];
             // Create a new FormData object
             const formData = new FormData();
 
-            // Define an array of field names
-            const formFields = [
-                'article', 'status', 'name', 'description', 'cargo', 'cargo_place', 'color',
-                'material', 'size', 'weight', 'specification', 'memory', 'feature', 'accessory',
-                'accessory_weight', 'battery_type', 'rated', 'capacity', 'voltage', 'pcs',
-                'mAh', 'mm', 'gram', 'edition', 'msds_expiry', 'un_expiry', 'air_safety_expiry',
-                'sea_safety_expiry', 'train_safety_expiry', 'certificate', 'printing_method',
-                'unit_packaging_paper', 'unit_packaging_plastic', 'unit_packaging_metal',
-                'unit_packaging_others', 'packaging_material', 'packaging_weight', 'standart_packaging', 'quoteExpiredDate'
-            ];
+
             formData.append('group', this.group.id);
             // Append form fields to FormData dynamically
-            formFields.forEach(field => {
-                formData.append(field, this[field]);
+            Object.keys(this.product).forEach((key) => {
+                formData.append(key, this.product[key]);
             });
             for (const image of this.selectedImages) {
                 formData.append('images[]', image);
             }
 
+            console.log(formData);
             // Append file inputs to the FormData object
             Object.entries(this.uploadedFiles).forEach(([inputName, fileName]) => {
                 formData.append(inputName, this.uploadedFiles[inputName]);
@@ -637,8 +605,7 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style>
 .dp-custom-cell {
     border-radius: 50%;
 }
@@ -649,6 +616,24 @@ export default {
 
 .rotate-icon {
     transform: rotate(180deg);
+}
+
+.p-chips-token {
+    background-color: #009de1 !important;
+    color: white !important;
+
+}
+
+.p-chips-form {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0 !important;
+}
+
+.p-chips-multiple-container {
+    margin-bottom: 0 !important;
+
 }
 
 .loader-overlay {

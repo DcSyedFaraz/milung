@@ -168,7 +168,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::get('product/{id}', [BuyerController::class, 'product'])->middleware('can:addProductEntry,editProductEntry');
     Route::delete('prodDelete/{id}', [ProductController::class, 'prodDelete'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
     Route::post('addprod', [ProductController::class, 'addprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
-    Route::post('updprod', [ProductController::class, 'updprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
+    Route::post('updprod/{id}', [ProductController::class, 'updprod'])->middleware('can:addProductEntry,editProductEntry,accessImportExportCertificateTestingReport');
 
     //Product-group
     Route::post('product_group', [ProductController::class, 'product_group'])->middleware('can:createProductGroup');

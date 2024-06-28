@@ -31,16 +31,7 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    protected function logEvent($event, $description)
-    {
-        EventLog::create([
-            'event' => $event,
-            'description' => $description,
-            'user_id' => auth()->id(),
-            'created_at' => Carbon::now('Asia/Hong_Kong'),
-            'updated_at' => Carbon::now('Europe/Berlin')
-        ]);
-    }
+
 
     public function parentid(Request $request)
     {
@@ -311,11 +302,12 @@ class UserController extends Controller
     }
     public function products()
     {
-        $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with([
+        $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with(['images',
             'product_group' => function ($query) {
                 $query->select('id', 'group_name');
             }
         ])->orderby('created_at', 'desc')->get();
+        // dd($products);
         return response()->json($products, 200);
     }
     public function supplier()
@@ -341,7 +333,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'userid' => 'required||regex:/^[^\s]+$/|unique:users,userid,' . $id,
             'group' => 'array',
-            'group.*' => 'integer',
+            'group.*' => 'integer|exists:product_groups,id',
             'status' => 'required|string|in:active,inactive',
             'contact_person' => 'nullable|string',
         ]);
@@ -385,11 +377,15 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'userid' => 'required|unique:users,userid|regex:/^[^\s]+$/',
-            'email' => 'required|string|email|max:255|unique:users',
+            'buyer_id' => 'required|unique:buyer_profiles,buyer_id|regex:/^[^\s]+$/',
             'status' => 'required|string|in:active,inactive',
-            'otp' => 'required|string|min:8|regex:/^[^\s]+$/',
-            'contact_person' => 'nullable|string',
+            'address' => 'required|string',
+            'website' => 'required|string',
+            'officePhone' => 'required|string',
+            'buyerDescription' => 'required|string',
+            'group' => 'required|array',
+            'group.*' => 'integer|exists:product_groups,id',
+
         ]);
 
         if ($validator->fails()) {
@@ -397,18 +393,12 @@ class UserController extends Controller
         }
         try {
             DB::beginTransaction();
-            $user = User::create([
-                'userid' => $request->userid,
-                'name' => $request->name,
-                'email' => $request->email,
-                'status' => $request->status,
-                'password' => Hash::make($request->otp),
-                'otp' => $request->otp,
-                'contact_person' => $request->contact_person,
-            ]);
+
 
             // Store buyer profile data
-            $user->buyerProfile()->create([
+            $user = BuyerProfile::create([
+                'buyer_id' => $request->buyer_id,
+                'name' => $request->name,
                 'address' => $request->address,
                 'website' => $request->website,
                 'office_phone' => $request->officePhone,
@@ -416,17 +406,16 @@ class UserController extends Controller
                 'group' => $request->group,
                 // 'sec_group' => $request->Secgroup,
             ]);
-            $user->assignRole('Buyer');
 
             // ProcessUserNotifications::dispatch($user, $request->otp);
             $admin = User::role(['Admin', 'Internal'])->get();
-            Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
-            $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->userid}\n\nThank you!";
+            //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+            $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->buyer_id}\n\nThank you!";
 
 
             Notification::send($admin, new UserNotification($message, 'New Buyer', 'editbuyer', ['id' => $user->id]));
 
-            $this->logEvent("Buyer", "User ID '$user->userid' has been created.");
+            $this->logEvent("Buyer", "User ID '$user->buyer_id' has been created.");
             DB::commit();
             return response()->json(['message' => 'Successfully created user!'], 201);
         } catch (\Exception $e) {
@@ -448,7 +437,7 @@ class UserController extends Controller
             'officePhone' => 'required|string|max:255',
             'supplierDescription' => 'required|string|max:255',
             'group' => 'required|array',
-            'group.*' => 'integer',
+            'group.*' => 'integer|exists:product_groups,id',
             'Secgroup' => 'required|array',
             'Secgroup.*' => 'integer',
             'company_header' => 'required|string|max:255',
@@ -502,7 +491,7 @@ class UserController extends Controller
 
     public function buyer()
     {
-        $users = User::withRole('Buyer')->with('buyerProfile')->get();
+        $users = BuyerProfile::with('person')->get();
 
         return response()->json($users, 200);
     }
@@ -556,7 +545,7 @@ class UserController extends Controller
             'permissions' => 'nullable|array',
             'contact_person' => 'nullable|string',
             'parent_id' => 'nullable|integer',
-            'contact_number' => 'nullable|integer',
+            'contact_number' => 'nullable|string',
         ]);
 
         // dd($validatedData['userid']);
@@ -564,7 +553,15 @@ class UserController extends Controller
 
             $user = new User($validatedData);
             $user->password = Hash::make($validatedData['otp']);
+
+            if ($validatedData['roles'] == 'Supplier') {
+                $user->supplier_id = $validatedData['parent_id'];
+            } else if ($validatedData['roles'] == 'Buyer') {
+                $user->buyer_id = $validatedData['parent_id'];
+            }
+
             $user->save();
+
             $user->assignRole($validatedData['roles']);
 
             if ($validatedData['roles'] == 'Admin') {
@@ -608,7 +605,7 @@ class UserController extends Controller
     public function buyersShow($id)
     {
         // $buyer = User::with('buyerProfile')->findOrFail($id);
-        $buyer['user'] = User::where('id', $id)->select('id', 'name', 'userid', 'email', 'status')->with('buyerProfile')->first();
+        $buyer['user'] = BuyerProfile::where('id', $id)->with('person')->first();
         $buyer['orders'] = Order::where('buyer', $id)->select('id', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
 
         return response()->json($buyer);
@@ -637,7 +634,7 @@ class UserController extends Controller
             'officePhone' => 'required|string|max:255',
             'supplierDescription' => 'required|string|max:255',
             'group' => 'required|array',
-            'group.*' => 'integer',
+            'group.*' => 'integer|exists:product_groups,id',
             'Secgroup' => 'required|array',
             'Secgroup.*' => 'integer',
             'company_header' => 'required|string|max:255',

@@ -402,14 +402,14 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function updprod(Request $request)
+    public function updprod(Request $request,$id)
     {
-        dd($request->all());
+        dd($request->all(),$id);
 
     }
     public function addprod(Request $request)
     {
-        // dd(auth()->user()->id);
+        // dd($request->all());
         // In your controller's validation method
         try {
             $validatedData = $request->validate([
@@ -420,14 +420,14 @@ class ProductController extends Controller
                 'group' => 'nullable|integer|max:255',
                 'cargo' => 'nullable|string|max:255',
                 'cargo_place' => 'nullable',
-                'color' => 'nullable|string|max:255',
-                'material' => 'nullable|string|max:255',
+                'color' => 'required',
+                'material' => 'required',
+                'accessory' => 'required',
                 'size' => 'nullable|string|max:255',
                 'weight' => 'nullable|string|max:255',
                 'specification' => 'nullable|string',
                 'memory' => 'nullable|string|max:255',
                 'feature' => 'nullable|string|max:255',
-                'accessory' => 'nullable|string|max:255',
                 'accessory_weight' => 'nullable|string|max:255',
                 'battery_type' => 'nullable|string|max:255',
                 'rated' => 'nullable|string|max:255',
@@ -453,10 +453,10 @@ class ProductController extends Controller
                 'packaging_material' => 'nullable|string|max:255',
                 'packaging_weight' => 'nullable|integer',
                 'standart_packaging' => 'nullable|string|max:255',
-                'safety_sheet' => 'nullable|file',
-                'manual' => 'nullable|file',
-                'product_label' => 'nullable|file',
-                'packaging_label' => 'nullable|file',
+                'safety_sheet' => 'nullable',
+                'manual' => 'nullable',
+                'product_label' => 'nullable',
+                'packaging_label' => 'nullable',
             ]);
             \DB::beginTransaction();
             $product = Products::create($validatedData);
@@ -514,7 +514,7 @@ class ProductController extends Controller
             foreach ($buyers as $Buyer) {
                 \Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
             }
-
+            $this->logEvent('Product', 'Article Number ' . $product->article . ' has been added. ');
             \DB::commit();
 
             return response()->json(['message' => 'Product saved successfully'], 201);
@@ -570,6 +570,7 @@ class ProductController extends Controller
         try {
 
             $user = Products::findOrFail($id);
+            $this->logEvent('Product', 'Article Number ' . $user->article . ' has been deleted. ');
             $user->delete();
             return response()->json(['message' => 'Product deleted successfully'], 200);
         } catch (\Exception $e) {
