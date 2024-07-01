@@ -53,7 +53,6 @@ Schema::create('products', function (Blueprint $table) {
     $table->integer('unit_packaging_others')->nullable();
     $table->string('packaging_material')->nullable();
     $table->integer('packaging_weight')->nullable();
-    $table->string('standart_packaging')->nullable();
     $table->string('safety_sheet')->nullable();
     $table->string('manual')->nullable();
     $table->string('product_label')->nullable();

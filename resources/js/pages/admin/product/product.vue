@@ -43,6 +43,7 @@
                                 <tr class="rounded-top-new" style="">
                                     <th @click="sortTable('article')">Article Number <i :class="getSortIcon('article')"
                                             class="ms-1"></i></th>
+                                    <th>Image</th>
                                     <th @click="sortTable('name')">Product Name <i :class="getSortIcon('name')"
                                             class="ms-1"></i></th>
                                     <th @click="sortTable('description')">Description <i
@@ -57,6 +58,12 @@
                             <tbody class="text-center">
                                 <tr v-for="product in dataToDisplay" :key="product.id">
                                     <td>{{ product.article }}</td>
+                                    <td>
+                                        <span v-if="product && product.images && product.images.length > 0">
+                                            <img class="img-thumbnail" :src="'/storage/' + product.images[0].path" alt="Product Image"
+                                                width="80" >
+                                        </span>
+                                    </td>
                                     <td>{{ product.name }}</td>
                                     <td>{{ product.description }}</td>
                                     <td>{{ product.product_group?.group_name }}</td>
@@ -104,7 +111,7 @@
                         </nav>
                     </div>
                 </div>
-                <EventLogTable :key="componentKey" :filterValue="'Product'"/>
+                <EventLogTable :key="componentKey" :filterValue="'Product'" />
             </div>
         </div>
     </section>
@@ -130,7 +137,9 @@ export default {
             sortKey: '',
             sortAsc: true,
             isLoading: true,
-            users: [],
+            users: {
+                images: []
+             },
             accordionOpen: {},
             currentPage: 1,
             searchQuery: ''
@@ -174,7 +183,7 @@ export default {
         });
     },
     methods: {
-        
+
         sortTable(key) {
             if (this.sortKey === key) {
                 this.sortAsc = !this.sortAsc;
@@ -213,28 +222,6 @@ export default {
         },
         changePage(page) {
             this.currentPage = page
-        },
-        async updateUser(id) {
-            // const formData = {
-
-            // };
-
-            // Send formData to your API
-            // console.log('Form Data:', formData);
-            try {
-                // const response = await axios.put(`/api/updateusers/${id}`, [this.updateuser, formData]);
-
-                if (response.status === 200) {
-                    toastr.success('User updated successfully');
-                    this.$router.push({ name: 'product' });
-                }
-            } catch (error) {
-                if (error.response.status === 422) {
-                    toastr.error('Please fix the validation errors and try again');
-                } else {
-                    toastr.error('An error occurred while updating the product');
-                }
-            }
         },
         async fetchUsers() {
             try {

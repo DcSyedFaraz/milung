@@ -191,7 +191,7 @@
                     </div>
                     <div class="d-flex col-11 my-2">
                         <div class="col-4">
-                            <p for="v-model">No. of Battey Contained:</p>
+                            <p for="v-model">Product Battery Capacity:</p>
                         </div>
                         <div class="col-8">
                             {{ product.mAh }} mAh
@@ -199,7 +199,7 @@
                     </div>
                     <div class="d-flex col-11 my-2">
                         <div class="col-4">
-                            <p for="v-model">No. of Battey Contained:</p>
+                            <p for="v-model">Battery Size (LxWxH):</p>
                         </div>
                         <div class="col-8">
                             {{ product.mm }} mm
@@ -207,7 +207,7 @@
                     </div>
                     <div class="d-flex col-11 my-2">
                         <div class="col-4">
-                            <p for="v-model">No. of Battey Contained:</p>
+                            <p for="v-model">Battery Net Weight (per pc):</p>
                         </div>
                         <div class="col-8">
                             {{ product.gram }} g
@@ -314,12 +314,30 @@
                         </div>
                     </div>
                     <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
-                    <div class="d-flex col-11 my-2">
-                        <div class="col-4">
-                            <p for="v-model" style="font-size: 0.9rem!important;">Standart Printing Method:</p>
-                        </div>
-                        <div class="col-8">
-                            {{ product.printing_method }}
+                    <div class="col-11 my-2">
+                        <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
+                            <div class="col-4">
+                                <label :for="'position-' + index" style="font-size: 0.9rem!important;">Print Area
+                                    Position:</label>
+                            </div>
+                            <div class="col-8">
+                                {{ printArea.position }}
+                            </div>
+                            <div class="col-4">
+                                <label :for="'size-' + index" style="font-size: 0.9rem!important;">Max. Print Area
+                                    Size (mm):</label>
+                            </div>
+                            <div class="col-8">
+                                {{ printArea.size }}
+                            </div>
+                            <div class="col-4">
+                                <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard Printing
+                                    Method:</label>
+                            </div>
+                            <div class="col-8">
+                                {{ printArea.method }}
+                            </div>
+
                         </div>
                     </div>
                     <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>

@@ -251,7 +251,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Product Battery Capacity:</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -262,7 +262,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Battery Size (LxWxH):</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -273,7 +273,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Battery Net Weight (per pc):</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -352,12 +352,41 @@
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Standard Printing Method:</p>
+                        <div class=" col-11 my-2">
+                            <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
+                                <div class="col-4">
+                                    <label :for="'position-' + index" style="font-size: 0.9rem!important;">Print Area
+                                        Position:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.position" :id="'position-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label :for="'size-' + index" style="font-size: 0.9rem!important;">Max. Print Area
+                                        Size (mm):</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.size" :id="'size-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard
+                                        Printing
+                                        Method:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.method" :id="'method-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button @click="removePrintArea(index)"
+                                        class="btn btn-danger btn-sm">Remove</button>
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="text" v-model="product.printing_method" class="form-control">
+                            <div class="text-end">
+                                <button type="button" @click="addPrintArea" class="btn btn-primary">Add Print
+                                    Area</button>
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>
@@ -499,6 +528,9 @@ export default {
                 manual: null,
                 product_label: null,
                 packaging_label: null,
+                print_areas: [
+                    { position: '', size: '', method: '' }
+                ]
             },
         };
     },
@@ -511,6 +543,12 @@ export default {
         }
     },
     methods: {
+        addPrintArea() {
+            this.product.print_areas.push({ position: '', size: '', method: '' });
+        },
+        removePrintArea(index) {
+            this.product.print_areas.splice(index, 1);
+        },
         async fetchProductOptions() {
             try {
                 const response = await axios.get('/api/product_group_get');
@@ -551,7 +589,11 @@ export default {
             formData.append('group', this.group.id);
             // Append form fields to FormData dynamically
             Object.keys(this.product).forEach((key) => {
-                formData.append(key, this.product[key]);
+                if (key === 'print_areas') {
+                    formData.append(key, JSON.stringify(this.product[key]));
+                } else {
+                    formData.append(key, this.product[key]);
+                }
             });
             for (const image of this.selectedImages) {
                 formData.append('images[]', image);

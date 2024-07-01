@@ -251,7 +251,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Product Battery Capacity:</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -262,7 +262,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Battery Size (LxWxH):</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -273,7 +273,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <p for="v-model">Battery Net Weight (per pc):</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -351,7 +351,7 @@
                                             class="uploaded-image">
                                             <img :src="`/storage/${image.path}`" alt="Product Image"
                                                 class="img-thumbnail" />
-                                            <button @click="removeImage(image)"
+                                            <button @click="removeImage(image)" type="button"
                                                 class="btn btn-danger btn-sm">Remove</button>
                                         </div>
                                     </div>
@@ -373,12 +373,40 @@
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Standard Printing Method:</p>
+                        <div class=" col-11 my-2">
+                            <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
+                                <div class="col-4">
+                                    <label :for="'position-' + index" style="font-size: 0.9rem!important;">Print Area
+                                        Position:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.position" :id="'position-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label :for="'size-' + index" style="font-size: 0.9rem!important;">Max. Print Area
+                                        Size (mm):</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.size" :id="'size-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard Printing
+                                        Method:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" v-model="printArea.method" :id="'method-' + index"
+                                        class="form-control">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button @click="removePrintArea(index)"
+                                        class="btn btn-danger btn-sm">Remove</button>
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="text" v-model="product.printing_method" class="form-control">
+                            <div class="text-end">
+                                <button type="button" @click="addPrintArea" class="btn btn-primary">Add Print
+                                    Area</button>
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>
@@ -495,6 +523,7 @@ import fileinput from './file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
     emits: ['profileUpdated'],
@@ -507,7 +536,10 @@ export default {
         return {
             loader: false,
             componentKey: 0,
-            group: '',
+            group: {
+                hs_de: '',
+                hs_cn: '',
+            },
             Dates: '',
             productOptions: [],
             selectedImages: [],
@@ -522,11 +554,11 @@ export default {
                 manual: null,
                 product_label: null,
                 packaging_label: null,
+                print_areas: []
             },
         };
     },
     mounted() {
-        this.fetchProductOptions();
         this.fetchProductDetails();
     },
     watch: {
@@ -535,6 +567,12 @@ export default {
         },
     },
     methods: {
+        addPrintArea() {
+            this.product.print_areas.push({ position: '', size: '', method: '' });
+        },
+        removePrintArea(index) {
+            this.product.print_areas.splice(index, 1);
+        },
         parseFile(fileString) {
             try {
                 const file = JSON.parse(fileString);
@@ -554,7 +592,8 @@ export default {
             try {
                 const response = await axios.get('/api/product_group_get');
                 this.productOptions = response.data;
-                console.log(this.productOptions);
+                this.group = this.productOptions.find(option => option.id == this.product.group);
+                console.log(this.productOptions, this.group, this.product.group);
             } catch (error) {
                 console.error(error);
             }
@@ -569,9 +608,13 @@ export default {
                 this.product.color = response.data.color.split(',').map(item => item.trim());
                 this.product.material = response.data.material.split(',').map(item => item.trim());
                 this.product.accessory = response.data.accessory.split(',').map(item => item.trim());
+                this.product.cargo_place = response.data.cargo_place.split(',').map(item => item.trim());
+                // this.group = this.productOptions.find(option => option.id === this.product.group);
+                // console.log(this.group, this.product.group, this.productOptions);
 
                 this.Dates = new Date(this.product.quoteExpiredDate);
                 this.componentKey += 1;
+                this.fetchProductOptions();
 
             } catch (error) {
                 console.error(error);
@@ -589,7 +632,7 @@ export default {
         sendDateOnly() {
             // Extract date part from quoteExpiredDate
             const selectedDate = new Date(this.Dates);
-            const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
+            const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
             this.product.quoteExpiredDate = formattedDate;
             // Now you can send the formattedDate to your backend
             console.log('Selected Date:', this.product.quoteExpiredDate);
@@ -601,14 +644,18 @@ export default {
 
             // Create a new FormData object
             const formData = new FormData();
-
+            console.log(this.group.id);
             formData.append('group', this.group.id);
             // Append form fields to FormData dynamically
             Object.keys(this.product).forEach((key) => {
-                formData.append(key, this.product[key]);
+                if (key === 'print_areas') {
+                    formData.append(key, JSON.stringify(this.product[key]));
+                } else {
+                    formData.append(key, this.product[key]);
+                }
             });
             for (const image of this.selectedImages) {
-                formData.append('images[]', image);
+                formData.append('newimages[]', image);
             }
 
             // Append file inputs to the FormData object
@@ -622,6 +669,7 @@ export default {
                 this.loader = false;
                 if (updateProduct.status === 200) {
                     toastr.success(updateProduct.data.message);
+                    // this.fetchProductDetails();
                     this.$router.push({
                         name: 'product'
                     });
@@ -656,8 +704,37 @@ export default {
         resetDate() {
             this.Dates = '';
         },
-        removeImage(image) {
-            this.product.images = this.product.images.filter(img => img !== image);
+        async removeImage(image) {
+            Swal.fire({
+                title: 'Delete Image?',
+                text: `Are you sure you want to delete this image?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const updateProduct = await axios.post(`/api/updprod/deleteimage/${image.id}`);
+                        this.loader = false;
+                        if (updateProduct.status === 200) {
+                            toastr.success(updateProduct.data.success);
+                            this.product.images = this.product.images.filter(img => img !== image);
+                        } else {
+                            // Handle other status codes or unexpected responses
+                            toastr.error('Unexpected response from the server');
+                        }
+                    } catch (error) {
+                        this.loader = false;
+                        if (error.response.status === 422) {
+                            const validationErrors = error.response.data.errors;
+                            this.handleValidationErrors(validationErrors);
+                        } else {
+                            toastr.error('An error occurred while updating the product');
+                        }
+                    }
+                }
+            });
         },
     },
 };

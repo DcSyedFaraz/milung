@@ -14,7 +14,7 @@ class BuyerController extends Controller
 {
     public function product($id)
     {
-        $product = Products::where('id', $id)->with('product_group', 'images')->first();
+        $product = Products::where('id', $id)->with('printAreas', 'images','product_group')->first();
         // dd($product);
         return response()->json($product, 200);
     }

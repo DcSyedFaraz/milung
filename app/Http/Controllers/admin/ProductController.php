@@ -8,6 +8,7 @@ use App\Mail\ProductNotification;
 use App\Models\InquirySupplier;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
+use App\Models\ProductImages;
 use App\Models\Products;
 use App\Models\User;
 use App\Notifications\UserNotification;
@@ -15,6 +16,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -402,18 +404,160 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function updprod(Request $request,$id)
+    public function updprod(Request $request, $id)
     {
-        dd($request->all(),$id);
+        // dd($request->all(), $id);
+        try {
+            $validatedData = $request->validate([
+                'article' => 'required|max:255',
+                'standart_packaging' => 'required|max:255',
+                'status' => 'required',
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'group' => 'required|integer|max:255',
+                'cargo' => 'nullable|string|max:255',
+                'cargo_place' => 'nullable',
+                'color' => 'required',
+                'material' => 'required',
+                'accessory' => 'required',
+                'size' => 'nullable|string|max:255',
+                'weight' => 'nullable|string|max:255',
+                'specification' => 'nullable|string',
+                'memory' => 'nullable|string|max:255',
+                'feature' => 'nullable|string|max:255',
+                'accessory_weight' => 'nullable|string|max:255',
+                'battery_type' => 'nullable|string|max:255',
+                'rated' => 'nullable|string|max:255',
+                'capacity' => 'nullable|string|max:255',
+                'voltage' => 'nullable|string|max:255',
+                'pcs' => 'nullable|integer',
+                'mAh' => 'nullable|string|max:255',
+                'mm' => 'nullable|string|max:255',
+                'gram' => 'nullable|string|max:255',
+                'edition' => 'nullable|string|max:255',
+                'msds_expiry' => 'nullable|date',
+                'un_expiry' => 'nullable|date',
+                'air_safety_expiry' => 'nullable|date',
+                'sea_safety_expiry' => 'nullable|date',
+                'quoteExpiredDate' => 'required|date',
+                'train_safety_expiry' => 'nullable|date',
+                'certificate' => 'nullable|string|max:255',
+                'printing_method' => 'nullable|string|max:255',
+                'unit_packaging_paper' => 'nullable|integer',
+                'unit_packaging_plastic' => 'nullable|integer',
+                'unit_packaging_metal' => 'nullable|integer',
+                'unit_packaging_others' => 'nullable|integer',
+                'packaging_material' => 'nullable|string|max:255',
+                'packaging_weight' => 'nullable|integer',
+
+            ]);
+            $print_areas = $request->validate([
+                'print_areas' => 'required',
+                'print_areas.*.position' => 'required|string|max:255',
+                'print_areas.*.size' => 'required|string|max:255',
+                'print_areas.*.method' => 'required|string|max:255',
+
+            ]);
+            \DB::beginTransaction();
+            $product = Products::findOrFail($id);
+            if ($validatedData['status'] !== $product->status) {
+                $this->logEvent('Product', 'Article Number ' . $product->article . ' status changed from ' . $product->status . 'to ' . $validatedData['status']);
+            }
+            $product->update($validatedData);
+            $product->printAreas()->delete();
+
+            $print_areas = json_decode($request->input('print_areas'), true);
+
+            foreach ($print_areas as $printAreaData) {
+                $product->printAreas()->create($printAreaData);
+            }
+            // Save images
+            if ($request->file('newimages')) {
+                foreach ($request->file('newimages') as $image) {
+                    $fileName = \Str::random(5) . $image->getClientOriginalName();
+                    $path = $image->storeAs('images', $fileName, 'public');
+                    // $path = $image->store('images', 'public');
+                    // Attach image to the product
+                    $product->images()->create(['path' => $path, 'name' => $image->getClientOriginalName()]);
+                }
+            }
+            $fileFields = [
+                ['field' => 'safety_sheet', 'path' => 'safety_sheets', 'key' => 'safety_sheet'],
+                ['field' => 'manual', 'path' => 'manuals', 'key' => 'manual'],
+                ['field' => 'product_label', 'path' => 'product_labels', 'key' => 'product_label'],
+                ['field' => 'packaging_label', 'path' => 'packaging_labels', 'key' => 'packaging_label'],
+            ];
+
+            // Loop through the file fields
+            foreach ($fileFields as $fileField) {
+                $file = $request->file($fileField['field']);
+
+                // Check if a new file is uploaded
+                if ($file) {
+                    // Delete the old file from storage if it exists
+                    $existingFile = json_decode($product->{$fileField['key']}, true);
+                    // dd($existingFile['path']);
+                    // Delete the old file from storage if it exists
+                    if ($existingFile && isset($existingFile['path']) && Storage::disk('public')->exists($existingFile['path'])) {
+                        Storage::disk('public')->delete($existingFile['path']);
+                    }
+
+                    // Store the new file
+                    $path = $file->store($fileField['path'], 'public');
+                    $originalName = $file->getClientOriginalName();
+
+                    // Attach new file paths to the product
+                    $product->{$fileField['key']} = ['path' => $path, 'name' => $originalName];
+                }
+            }
+
+            // Save the product
+            $product->save();
+
+            // Notification
+            // $admins = User::role(['Admin', 'Internal', 'Buyer'])->get();
+            // $productName = e($validatedData['name']);
+            // $message = "Good News! A new product with the name '$productName' has been added.";
+
+            // \Notification::send($admins, new UserNotification($message, 'New Product', null));
+
+            // $buyers = User::role('Buyer')->pluck('email');
+            // // dd($buyers);
+            // foreach ($buyers as $Buyer) {
+            //     \Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
+            // }
+
+            \DB::commit();
+
+            return response()->json(['message' => 'Product saved successfully'], 200);
+        } catch (\Exception $e) {
+
+            \DB::rollBack();
+            throw $e;
+        }
+    }
+    public function deleteimage($id)
+    {
+        $image = ProductImages::findOrFail($id);
+        $imagePath = 'public/' . $image->path;
+        if (Storage::exists($imagePath)) {
+            Storage::delete($imagePath);
+        }
+
+        // Step 3: Delete the image record from the database
+        $image->delete();
+
+        // Return a response, for example:
+        return response()->json(['success' => 'Image deleted successfully.']);
 
     }
     public function addprod(Request $request)
     {
-        // dd($request->all());
         // In your controller's validation method
         try {
             $validatedData = $request->validate([
                 'article' => 'required|max:255',
+                'standart_packaging' => 'required|max:255',
                 'status' => 'required',
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
@@ -452,15 +596,24 @@ class ProductController extends Controller
                 'unit_packaging_others' => 'nullable|integer',
                 'packaging_material' => 'nullable|string|max:255',
                 'packaging_weight' => 'nullable|integer',
-                'standart_packaging' => 'nullable|string|max:255',
-                'safety_sheet' => 'nullable',
-                'manual' => 'nullable',
-                'product_label' => 'nullable',
-                'packaging_label' => 'nullable',
+
             ]);
+            $print_areas = $request->validate([
+                'print_areas' => 'required',
+                'print_areas.*.position' => 'required|string|max:255',
+                'print_areas.*.size' => 'required|string|max:255',
+                'print_areas.*.method' => 'required|string|max:255',
+
+            ]);
+            // dd($request->print_areas);
+
             \DB::beginTransaction();
             $product = Products::create($validatedData);
+            $print_areas = json_decode($request->input('print_areas'), true);
 
+            foreach ($print_areas as $printAreaData) {
+                $product->printAreas()->create($printAreaData);
+            }
             // Save images
             if ($request->file('images')) {
                 foreach ($request->file('images') as $image) {

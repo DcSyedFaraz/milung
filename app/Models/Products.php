@@ -22,4 +22,8 @@ class Products extends Model
     {
         return $this->belongsTo(ProductGroup::class, 'group');
     }
+    public function printAreas()
+    {
+        return $this->hasMany(PrintArea::class);
+    }
 }
