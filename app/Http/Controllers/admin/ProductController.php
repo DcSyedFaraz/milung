@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Notifications\UserNotification;
 use Auth;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Storage;
@@ -25,31 +26,66 @@ class ProductController extends Controller
      */
     public function product_group_id($id)
     {
-        $prod = ProductGroup::findOrFail($id);
+        $prod = ProductGroup::where('id', $id)->with('additionalFields')->first();
         return response()->json($prod, 200);
     }
     public function product_group_update(Request $request, $id)
     {
+        // dd($request->all());
         $validatedData = $request->validate([
-            'group_name' => 'required|string|max:255',
+            'group_name' => 'required|string|max:255|unique:product_groups,group_name,' . $id,
             'description' => 'required|string|max:255',
             'profit' => 'nullable',
-            'amount' => 'nullable',
+            'amount' => 'nullable|numeric|max:99999999.99',
             'hs_de' => 'required|integer',
             'hs_cn' => 'required|integer',
+            'additionalFields' => 'array', // Validate additional fields as an array
+            'additionalFields.*.name' => 'required|string|max:255', // Validate each additional field's name
+            'additionalFields.*.value' => 'required|string|max:255',
         ]);
+        try {
+            // Start a database transaction
+            DB::beginTransaction();
+            $product = ProductGroup::findOrFail($id);
+            $product->group_name = $validatedData['group_name'];
+            $product->description = $validatedData['description'];
+            $product->profit = $validatedData['profit'];
+            $product->amount = $validatedData['amount'];
+            $product->hs_de = $validatedData['hs_de'];
+            $product->hs_cn = $validatedData['hs_cn'];
+            $product->save();
 
-        $product = ProductGroup::findOrFail($id);
-        $product->update($validatedData);
+            $product->additionalFields()->delete();
 
-        // Notification
-        $admins = User::role(['Admin', 'Internal'])->get();
-        $productName = e($validatedData['group_name']);
-        $message = "A product group with the name '$productName' has been updated.";
 
-        \Notification::send($admins, new UserNotification($message, 'Product Group Updated', 'product'));
+            // Save additional fields if they exist
+            if (isset($validatedData['additionalFields'])) {
+                foreach ($validatedData['additionalFields'] as $field) {
+                    $product->additionalFields()->create([
+                        'name' => $field['name'],
+                        'value' => $field['value']
+                    ]);
+                }
+            }
+            // Notification
+            $admins = User::role(['Admin', 'Internal'])->get();
+            $productName = e($validatedData['group_name']);
+            $message = "A product group with the name '$productName' has been updated.";
 
-        return response()->json(['message' => 'Product created successfully']);
+            $this->logEvent('Group', $message);
+            \Notification::send($admins, new UserNotification($message, 'Product Group Updated', 'product'));
+
+            DB::commit();
+
+            // Return a success response or redirect
+            return response()->json(['message' => 'Product group saved successfully!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // \Log::error($e->getMessage());
+
+            return response()->json(['message' => 'An error occurred while saving the product group.' . $e->getMessage()], 500);
+        }
     }
     public function inquiry_followup($id)
     {
@@ -370,35 +406,73 @@ class ProductController extends Controller
         }
     }
 
+    public function product_group_destroy($id)
+    {
+        try {
+
+            $group = ProductGroup::findOrFail($id);
+            $this->logEvent('Group', 'Group ' . $group->group_name . ' has been deleted. ');
+            $group->delete();
+            return response()->json(['message' => 'Group deleted successfully'], 200);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
     public function product_group(Request $request)
     {
         // dd($request->all());
         $validatedData = $request->validate([
-            'group_name' => 'required|string|max:255',
+            'group_name' => 'required|string|max:255|unique:product_groups,group_name',
             'description' => 'required|string|max:255',
             'profit' => 'nullable',
-            'amount' => 'nullable',
+            'amount' => 'nullable|numeric|max:99999999.99',
             'hs_de' => 'required|integer',
             'hs_cn' => 'required|integer',
+            'additionalFields' => 'array', // Validate additional fields as an array
+            'additionalFields.*.name' => 'required|string|max:255', // Validate each additional field's name
+            'additionalFields.*.value' => 'required|string|max:255',
         ]);
+        try {
+            // Start a database transaction
+            DB::beginTransaction();
+            $product = new ProductGroup();
+            $product->group_name = $validatedData['group_name'];
+            $product->description = $validatedData['description'];
+            $product->profit = $validatedData['profit'];
+            $product->amount = $validatedData['amount'];
+            $product->hs_de = $validatedData['hs_de'];
+            $product->hs_cn = $validatedData['hs_cn'];
+            $product->save();
 
-        $product = new ProductGroup();
-        $product->group_name = $validatedData['group_name'];
-        $product->description = $validatedData['description'];
-        $product->profit = $validatedData['profit'];
-        $product->amount = $validatedData['amount'];
-        $product->hs_de = $validatedData['hs_de'];
-        $product->hs_cn = $validatedData['hs_cn'];
-        $product->save();
+            if (isset($validatedData['additionalFields'])) {
+                foreach ($validatedData['additionalFields'] as $field) {
+                    // dd($field);
+                    $product->additionalFields()->create([
+                        'name' => $field['name'],
+                        'value' => $field['value']
+                    ]);
+                }
+            }
 
-        // Notification
-        $admins = User::role(['Admin', 'Internal'])->get();
-        $productName = e($validatedData['group_name']);
-        $message = "Good News! A new product group with the name '$productName' has been added.";
+            $this->logEvent("Group", "New Group '$product->group_name' has been created.");
+            // Notification
+            $admins = User::role(['Admin', 'Internal'])->get();
+            $productName = e($validatedData['group_name']);
+            $message = "Good News! A new product group with the name '$productName' has been added.";
 
-        \Notification::send($admins, new UserNotification($message, 'New Product Group', 'product_group_update', ['id' => $product->id]));
+            \Notification::send($admins, new UserNotification($message, 'New Product Group', 'product_group_update', ['id' => $product->id]));
+            DB::commit();
+            return response()->json(['message' => 'Product created successfully']);
+        } catch (\Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
 
-        return response()->json(['message' => 'Product created successfully']);
+            // Log the error for debugging purposes
+            \Log::error($e->getMessage());
+
+            // Return an error response
+            return response()->json(['message' => 'An error occurred while saving the product group.' . $e->getMessage()], 500);
+        }
     }
 
     /**

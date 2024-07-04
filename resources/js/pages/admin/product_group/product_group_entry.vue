@@ -49,7 +49,7 @@
                                     <div class="input-group">
                                         <input v-if="selectedOption === 'profit'" type="text" max="100"
                                             class="form-control" v-model="profit">
-                                        <input v-else type="number" class="form-control" v-model="amount">
+                                        <input v-else type="text" class="form-control" v-model="amount">
                                         <span class="input-group-text" v-if="selectedOption === 'profit'">%</span>
                                     </div>
                                 </div>
@@ -71,6 +71,29 @@
                                     <input type="number" v-model="hs_cn" class="form-control">
                                 </div>
                             </div>
+                            <!-- Add button to add additional fields -->
+                            <div class="d-flex col-11 my-2">
+                                <div class="col-5">
+                                    <p>Additional Fields:</p>
+                                </div>
+                                <div class="col-7">
+                                    <button type="button" class="btn btn-primary" @click="addField">Add Field</button>
+                                </div>
+                            </div>
+                            <!-- Render additional fields dynamically -->
+                            <div class="d-flex col-11 my-2" v-for="(field, index) in additionalFields" :key="index">
+                                <div class="col-5">
+                                    <input type="text" v-model="field.name" placeholder="Field Name"
+                                        class="form-control">
+                                </div>
+                                <div class="col-7 d-flex">
+                                    <input type="text" v-model="field.value" placeholder="Field Value"
+                                        class="form-control">
+                                    <button type="button" class="btn btn-danger ml-2"
+                                        @click="removeField(index)">Remove</button>
+                                </div>
+                            </div>
+
                             <div class="d-flex col-11 mt-4">
                                 <div class="col-5">
                                     <button class="btn btn-success  px-4" type="submit" :disabled="submitting"><span
@@ -98,6 +121,7 @@ export default {
             amount: '',
             hs_de: '',
             hs_cn: '',
+            additionalFields: [],
             submitting: false
         }
     },
@@ -109,16 +133,24 @@ export default {
         }
     },
     methods: {
+        addField() {
+            this.additionalFields.push({ name: '', value: '' });
+        },
+        removeField(index) {
+            this.additionalFields.splice(index, 1);
+        },
         fetchProductGroupData() {
             axios.get(`/api/product_group/${this.id}`)
                 .then(response => {
                     const productGroup = response.data;
+                    console.log(productGroup);
                     this.group_name = productGroup.group_name;
                     this.description = productGroup.description;
                     this.profit = productGroup.profit;
-                    this.amount = productGroup.amount;
+                    this.amount = productGroup.amount ? parseFloat(productGroup.amount).toFixed(2) : ''; // Ensure amount is in 2 decimal points
                     this.hs_de = productGroup.hs_de;
                     this.hs_cn = productGroup.hs_cn;
+                    this.additionalFields = productGroup.additional_fields  || [];
                 })
                 .catch(error => {
                     console.error(error);
@@ -148,9 +180,13 @@ export default {
             formData.append('group_name', this.group_name);
             formData.append('description', this.description);
             formData.append('profit', this.profit ?? 0);
-            formData.append('amount', this.amount ?? 0);
+            formData.append('amount', this.amount ? parseFloat(this.amount).toFixed(2) : 0); // Format amount to 2 decimal points
             formData.append('hs_de', this.hs_de);
             formData.append('hs_cn', this.hs_cn);
+            this.additionalFields.forEach((field, index) => {
+                formData.append(`additionalFields[${index}][name]`, field.name);
+                formData.append(`additionalFields[${index}][value]`, field.value);
+            });
             return formData;
         },
         submitFormData(formData) {
@@ -160,9 +196,11 @@ export default {
                     .then(response => {
                         console.log(response);
                         toastr.success(response.data.message);
+                        this.submitting = false;
                         this.$router.push({ name: 'product_group' });
                     })
                     .catch(error => {
+                        this.submitting = false;
                         if (error.response && error.response.status === 422) {
                             const validationErrors = error.response.data.errors;
                             this.handleValidationErrors(validationErrors);
@@ -180,9 +218,11 @@ export default {
                     .then(response => {
                         console.log(response);
                         toastr.success(response.data.message);
+                        this.submitting = false;
                         this.$router.push({ name: 'product_group' });
                     })
                     .catch(error => {
+                        this.submitting = false;
                         if (error.response && error.response.status === 422) {
                             const validationErrors = error.response.data.errors;
                             this.handleValidationErrors(validationErrors);
@@ -199,10 +239,7 @@ export default {
         submitForm() {
             this.submitting = true;
             const formData = this.prepareFormData();
-            this.submitFormData(formData)
-                .finally(() => {
-                    this.submitting = false;
-                });
+            this.submitFormData(formData);
         },
 
 

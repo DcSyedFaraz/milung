@@ -173,6 +173,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
     //Product-group
     Route::post('product_group', [ProductController::class, 'product_group'])->middleware('can:createProductGroup');
+    Route::delete('product_group/{id}', [ProductController::class, 'product_group_destroy'])->middleware('can:createProductGroup');
     Route::post('product_group/{id}', [ProductController::class, 'product_group_update'])->middleware('can:createProductGroup');
     Route::get('product_group/{id}', [ProductController::class, 'product_group_id'])->middleware('can:createProductGroup');
     Route::get('product_group_get', [ProductController::class, 'product_group_get'])->middleware('can:createProductGroup');

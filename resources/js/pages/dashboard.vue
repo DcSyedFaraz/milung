@@ -221,26 +221,30 @@
                         <li>
                             <router-link :to="{ name: 'Datasupplier' }"
                                 v-if="can('addNewSupplierEntry | editSupplierEntry | setEditSupplierIDCode')"
-                                :class="{ active: this.$route.name === 'supplerEntry' || this.$route.name === 'editsupplier' }" active-class="active">
+                                :class="{ active: this.$route.name === 'supplerEntry' || this.$route.name === 'editsupplier' }"
+                                active-class="active">
                                 <i class="bi bi-circle"></i><span>Supplier</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link :to="{ name: 'Databuyer' }" v-if="can('editBuyerEntry | addNewBuyerEntry')"
-                                :class="{ active: this.$route.name === 'buyerEntry' || this.$route.name === 'editbuyer' }" active-class="active">
+                                :class="{ active: this.$route.name === 'buyerEntry' || this.$route.name === 'editbuyer' }"
+                                active-class="active">
                                 <i class="bi bi-circle"></i><span>Buyer</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link :to="{ name: 'product' }"
                                 v-if="can('addProductEntry | editProductEntry | accessImportExportCertificateTestingReport')"
-                                :class="{ active: this.$route.name === 'productEntry' || this.$route.name === 'adminproductEdit'}" active-class="active">
+                                :class="{ active: this.$route.name === 'productEntry' || this.$route.name === 'adminproductEdit' }"
+                                active-class="active">
                                 <i class="bi bi-circle"></i><span>Product</span>
                             </router-link>
                         </li>
                         <li>
                             <router-link :to="{ name: 'product_group' }" v-if="can('createProductGroup')"
-                                :class="{ active: this.$route.name === 'product_group_update' }" active-class="active">
+                                :class="{ active: this.$route.name === 'product_group_update' || this.$route.name === 'product_group_entry' }"
+                                active-class="active">
                                 <i class="bi bi-circle"></i><span>Product Group</span>
                             </router-link>
                         </li>
@@ -304,7 +308,7 @@
                 <!-- End Icons Nav -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#Finance" data-bs-toggle="collapse" href="#"
-                        :class="{ active: this.$route.name === 'Transaction' || this.$route.name === 'receivable' || this.$route.name === 'payable' || this.$route.name === 'invoice_admin'}">
+                        :class="{ active: this.$route.name === 'Transaction' || this.$route.name === 'receivable' || this.$route.name === 'payable' || this.$route.name === 'invoice_admin' }">
                         <i class="bi bi-cash-coin"></i>
                         <span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
@@ -319,7 +323,8 @@
                                 v-if="can('accountReceivable')">
                                 <i class="bi bi-circle"></i><span>Accounts Receivable</span>
                             </router-link>
-                            <router-link :to="{ name: 'payable' }" active-class="active" v-if="can('accountPayable')" :class="{ active: this.$route.name === 'invoice_admin'}">
+                            <router-link :to="{ name: 'payable' }" active-class="active" v-if="can('accountPayable')"
+                                :class="{ active: this.$route.name === 'invoice_admin' }">
                                 <i class="bi bi-circle"></i><span>Accounts Payable</span>
                             </router-link>
                         </li>

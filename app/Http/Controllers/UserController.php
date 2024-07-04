@@ -302,7 +302,8 @@ class UserController extends Controller
     }
     public function products()
     {
-        $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with(['images',
+        $products = Products::select('article', 'name', 'id', 'description', 'group', 'status')->with([
+            'images',
             'product_group' => function ($query) {
                 $query->select('id', 'group_name');
             }
@@ -330,40 +331,39 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'userid' => 'required||regex:/^[^\s]+$/|unique:users,userid,' . $id,
-            'group' => 'array',
-            'group.*' => 'integer|exists:product_groups,id',
+            'buyer_id' => 'required|regex:/^[^\s]+$/|unique:buyer_profiles,buyer_id,' . $id,
             'status' => 'required|string|in:active,inactive',
-            'contact_person' => 'nullable|string',
+            'address' => 'required|string',
+            'website' => 'required|string',
+            'officePhone' => 'required|string',
+            'buyerDescription' => 'required|string',
+            'group' => 'required|array',
+            'group.*' => 'integer|exists:product_groups,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::findOrFail($id);
+        $user = BuyerProfile::findOrFail($id);
 
         if ($request->status != $user->status) {
-            $this->logEvent('Buyer', 'Buyer ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+            $this->logEvent('Buyer', 'Buyer ID ' . $user->buyer_id . ' status has been changed to ' . $request->status . '.');
+            $buyer = User::where('buyer_id', $id)->update(['status' => $request->status]);
+            
         }
-        $user->update([
-            'userid' => $request->userid,
-            'name' => $request->name,
-            'email' => $request->email,
-            'status' => $request->status,
-            'contact_person' => $request->contact_person,
-            // Add any other user-related fields
-        ]);
 
-        $user->buyerProfile()->updateOrCreate(
-            ['user_id' => $user->id],
+
+        $user->update(
             [
+                'buyer_id' => $request->buyer_id,
+                'name' => $request->name,
                 'address' => $request->address,
                 'website' => $request->website,
                 'office_phone' => $request->officePhone,
                 'buyer_description' => $request->buyerDescription,
                 'group' => $request->group,
+                'status' => $request->status,
             ]
         );
 
@@ -404,6 +404,7 @@ class UserController extends Controller
                 'office_phone' => $request->officePhone,
                 'buyer_description' => $request->buyerDescription,
                 'group' => $request->group,
+                'status' => $request->status,
                 // 'sec_group' => $request->Secgroup,
             ]);
 

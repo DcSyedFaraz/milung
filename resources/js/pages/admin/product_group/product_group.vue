@@ -10,7 +10,8 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Product Groups:</span>
+                                <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Product
+                                    Groups:</span>
                             </span>
 
                             <div class="col-4 d-flex">
@@ -50,16 +51,21 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
-                            <thead style="color: #009de1; " class="">
+                            <thead style="color: #009de1; " class="cursor-pointer">
                                 <tr style="">
-                                    <th>
-                                        Product Group
+                                    <th @click="sortTable('group_name')">
+                                        Product Group <i :class="getSortIcon('group_name')" class="ms-1"></i>
                                     </th>
-                                    <th>HS-CN Code</th>
-                                    <th>HS-DE Code</th>
-                                    <th>Fixed Profit in %</th>
-                                    <th>Fixed Amount</th>
-                                    <th>Last Changed</th>
+                                    <th @click="sortTable('hs_cn')">HS-CN Code <i :class="getSortIcon('hs_cn')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('hs_de')">HS-DE Code <i :class="getSortIcon('hs_de')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('profit')">Fixed Profit in % <i :class="getSortIcon('profit')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('amount')">Fixed Amount <i :class="getSortIcon('amount')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('updated_at')">Last Changed <i
+                                            :class="getSortIcon('updated_at')" class="ms-1"></i></th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -78,7 +84,9 @@
                                             :class="{ 'rotate-icon': accordionOpen[prodgroup.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'product_group_update', params: { id: prodgroup.id } }" class="text-dark btn btn-light">
+                                        <router-link
+                                            :to="{ name: 'product_group_update', params: { id: prodgroup.id } }"
+                                            class="text-dark btn btn-light">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -108,7 +116,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" :filterValue="'Group'" />
             </div>
         </div>
     </section>
@@ -134,6 +142,9 @@ export default {
     },
     data() {
         return {
+            componentKey: 0,
+            sortAsc: true,
+            sortKey: '',
             isLoading: true,
             bank_name: '',
             file: null,
@@ -185,6 +196,29 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         formattedDateTime(prodgroup) {
             if (prodgroup.updated_at) {
                 // Parse the datetime string using date-fns
@@ -213,7 +247,39 @@ export default {
                 toastr.error('Error fetching data');
             }
         },
+        async deleteUser(userId) {
+            // Display SweetAlert confirmation dialog
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this group group!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            });
 
+            if (result.isConfirmed) {
+                // User confirmed, proceed with the deletion
+                try {
+                    await axios.delete(`/api/product_group/${userId}`);
+
+                    // If successful, remove the product from the local data
+                    this.users = this.users.filter(product => product.id !== userId);
+                    this.componentKey += 1;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Group deleted successfully',
+                    });
+                } catch (error) {
+                    console.error('Error deleting group:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error deleting group',
+                    });
+                }
+            }
+        },
     },
 };
 </script>

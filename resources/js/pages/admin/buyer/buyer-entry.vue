@@ -299,7 +299,7 @@ export default {
         },
         async submitForm() {
             this.errors = [];
-            const requiredFields = ['name', 'buyer_id', 'email', 'address', 'website', 'buyerDescription', 'group'];
+            const requiredFields = ['name', 'buyer_id', 'address', 'website', 'buyerDescription', 'group'];
             requiredFields.forEach(field => {
                 if (!this.buyer[field] || (Array.isArray(this.buyer[field]) && !this.buyer[field].length)) {
                     this.errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required.`);
