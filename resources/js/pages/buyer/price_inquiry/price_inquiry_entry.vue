@@ -295,7 +295,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
-
+    emits: ['profileUpdated'],
     props: {
         mode: String, // "create" or "edit"
     },

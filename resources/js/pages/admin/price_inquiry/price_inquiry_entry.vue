@@ -14,7 +14,7 @@
                             <div class="col-8">
                                 <!-- <input type="text" v-model="inquiry.buyer" class="form-control"> -->
                                 <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
-                                    track-by="id">
+                                    :disabled="mode === 'edit'" track-by="id">
                                 </multiselect>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
-                                    <input class="form-check-input " type="checkbox" v-model="inquiry.urgent">
+                                    <input class="form-check-input " id="urgent" type="checkbox" v-model="inquiry.urgent">
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Urgent
                                     </label>
@@ -269,13 +269,8 @@
                     v-if="supplierData && Object.keys(supplierData).length > 0">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" v-model="supplierInquiry"
-                                :value="rows[0].user_id" :checked="rows[0].selected === 1">
-                            <label class="form-check-label">
-                                {{ index }} Inquiry Quote
-                            </label>
-                        </div>
+
+                        {{ index }} Inquiry Quote
                     </h3>
                     <table class="table table-striped table-hover">
                         <thead style="color: #009de1" class="text-center">
@@ -290,7 +285,13 @@
                         <tbody class="text-center">
                             <tr v-for="(row, indexs) in rows" :key="indexs">
                                 <td class="text-nowrap">
-                                    {{ row.capacity }}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" v-model="supplierInquiry"
+                                            :value="row.id" :checked="!!row.selected">
+                                        <label class="form-check-label">
+                                            {{ row.capacity }}
+                                        </label>
+                                    </div>
                                 </td>
                                 <td class="text-nowrap">
                                     {{ row.quantity }}
@@ -332,7 +333,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
-                                <input class="form-check-input" type="checkbox" :value="supplier.id"
+                                <input class="form-check-input" type="checkbox" :value="supplier.id" :id="supplier.id"
+                                    :checked="mode === 'edit' ? isSupplierIdChecked(supplier.id) : false"
                                     v-model="supplier.checked">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     {{ supplier.name }}
@@ -358,6 +360,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
+    emits: ['profileUpdated'],
 
     props: {
         mode: String, // "create" or "edit"
@@ -378,18 +381,38 @@ export default {
             buyers: [],
             imageLoaded: false,
             groups: [],
-            supplierInquiry: '',
+            supplierInquiry: [],
             supplier_profiles: [],
             follow_up: false,
         };
     },
     methods: {
+        precheckSelected() {
+            console.log(this.supplierData);
+            Object.values(this.supplierData).forEach(rows => {
+                rows.forEach(row => {
+                    if (row.selected) {
+                        this.supplierInquiry.push(row.id);
+                    }
+                });
+            });
+        },
+        isSupplierIdChecked(supplierId) {
+            // const index = this.selectedSupplierIds.indexOf(supplierId);
+            // if (index === -1) {
+            //     this.selectedSupplierIds.push(supplierId);
+            // } else {
+            //     this.selectedSupplierIds.splice(index, 1);
+            // }
+            // console.log( this.inquiry.supplier_ids.some(id => id.toString() === supplierId.toString()));
+            return this.inquiry.supplier_ids.some(id => id.toString() === supplierId.toString());
+        },
         async quote() {
             const inquiryid = this.$route.params.id;
             console.log(this.supplierInquiry);
             if (inquiryid) {
                 const formData = {
-                    supplierid: this.supplierInquiry
+                    quoteIds: this.supplierInquiry
                 };
                 try {
                     this.loader = true;
@@ -397,7 +420,7 @@ export default {
                     console.log(response);
                     this.loader = false;
                     toastr.success(response.data.message)
-                    // Handle the response if needed
+                    this.fetchInquiry();
                 } catch (error) {
                     this.loader = false;
                     console.error(error);
@@ -432,8 +455,12 @@ export default {
             console.log(groupId);
             axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
                 .then(response => {
-                    this.supplier_profiles = response.data;
-                    console.log(response);
+                    this.supplier_profiles = response.data.map(supplier => {
+                supplier.checked = this.mode === 'edit' ? this.isSupplierIdChecked(supplier.id) : false;
+                return supplier;
+            });
+                    console.log(this.supplier_profiles);
+
                     NProgress.done();
                 })
                 .catch(error => {
@@ -638,9 +665,9 @@ export default {
                     NProgress.done();
                     toastr.success(response.data.message);
                     this.$router.push({ name: 'price_inquiry' });
-                    if (this.mode === 'edit') {
-                        this.$emit('record-updated');
-                    }
+                    // if (this.mode === 'edit') {
+                    //     this.$emit('record-updated');
+                    // }
                 } else {
                     NProgress.done();
                     toastr.error('Something is not correct');
@@ -659,6 +686,7 @@ export default {
             }
         },
         fetchInquiry() {
+
             const inquiryid = this.$route.params.id;
             axios.get('/api/price_inquiry_get/' + inquiryid)
                 .then(response => {
@@ -700,7 +728,7 @@ export default {
                     if (this.inquiry.group) {
                         this.fetchSupplierProfiles(this.inquiry.group);
                     }
-
+                    this.precheckSelected();
                     this.updateInquiryMaterials();
                     this.updateInquiryCapacity();
 
@@ -710,7 +738,8 @@ export default {
                 });
         },
 
-    }, computed: {
+    },
+    computed: {
         totalRows() {
             return this.inquiry.capacity.length * this.inquiry.pcs.length;
         },

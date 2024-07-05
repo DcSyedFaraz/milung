@@ -60,7 +60,7 @@ class InquiryController extends Controller
             'capacity' => 'required|array',
         ]);
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $userid = Auth::id();
             // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
             $validatedData['buyer'] = $userid;

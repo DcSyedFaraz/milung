@@ -177,7 +177,7 @@ class UserController extends Controller
                 $message = "User with ID {$user->userid} has been set to inactive due to multiple failed login attempts.";
                 $admins = User::role('Admin')->pluck('email');
                 foreach ($admins as $admin) {
-                    \Mail::to($admin)->send(new PriceInquiryNotification($message, 'User Inactive Notification'));
+                    Mail::to($admin)->send(new PriceInquiryNotification($message, 'User Inactive Notification'));
                 }
 
                 return response()->json([
@@ -350,7 +350,7 @@ class UserController extends Controller
         if ($request->status != $user->status) {
             $this->logEvent('Buyer', 'Buyer ID ' . $user->buyer_id . ' status has been changed to ' . $request->status . '.');
             $buyer = User::where('buyer_id', $id)->update(['status' => $request->status]);
-            
+
         }
 
 
@@ -512,18 +512,18 @@ class UserController extends Controller
     {
         $data['users'] = User::withRole('Buyer')->select('id', 'userid')->get();
 
-        $data['sales'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', \DB::raw('SUM(information.totalpayable) as total_payable_per_buyer'))
+        $data['sales'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', DB::raw('SUM(information.totalpayable) as total_payable_per_buyer'))
             ->join('information', 'shipment_orders.id', '=', 'information.shipment_order_id')
             ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
             ->groupBy('shipment_orders.buyerid', 'users.userid')
-            ->having(\DB::raw('SUM(information.totalpayable)'), '>', 0)
+            ->having(DB::raw('SUM(information.totalpayable)'), '>', 0)
             ->get();
 
-        $data['remaining'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', \DB::raw('SUM(settle_amounts.outstanding_amount) as total_outstanding_per_buyer'))
+        $data['remaining'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', DB::raw('SUM(settle_amounts.outstanding_amount) as total_outstanding_per_buyer'))
             ->join('settle_amounts', 'shipment_orders.id', '=', 'settle_amounts.shipment_order_id')
             ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
             ->groupBy('shipment_orders.buyerid', 'users.userid')
-            ->having(\DB::raw('SUM(settle_amounts.outstanding_amount)'), '>', 0)
+            ->having(DB::raw('SUM(settle_amounts.outstanding_amount)'), '>', 0)
             ->get();
 
         return response()->json($data, 200);
@@ -710,15 +710,14 @@ class UserController extends Controller
         // Assuming $id is an integer
         $idJson = json_encode([$id]); // Convert integer to JSON array
         $supplierProfiles = SupplierProfile::whereRaw("JSON_CONTAINS(`group`, ?)", [$idJson])
-            ->with('user:id,name')
             ->get();
 
 
         // Iterate through $supplierProfiles to create the desired response structure
         $data = $supplierProfiles->map(function ($profile) {
             return [
-                'id' => $profile->user->id,
-                'name' => $profile->user->name
+                'id' => $profile->id,
+                'name' => $profile->supplier_id
             ];
         });
 

@@ -15,7 +15,7 @@ class InquirySupplier extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SupplierProfile::class);
     }
     public function userid()
     {

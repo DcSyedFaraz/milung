@@ -63,15 +63,17 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="inquiry in dataToDisplay" :key="inquiry.id" v-if="dataToDisplay.length > 0">
-                                <tr style="border-bottom-color: snow !important;">
+                            <tbody v-for="(inquiry, index) in dataToDisplay" :key="inquiry.id"
+                                v-if="dataToDisplay.length > 0">
+                                <tr :class="{ 'highlight': inquiry.urgent == 'true' }"
+                                    style="border-bottom-color: snow !important;">
                                     <td>{{ inquiry.inquiry_number }}</td>
                                     <td>
                                         <span :class="statusBadge(inquiry)">{{ inquiry.status }}</span>
                                     </td>
                                     <td>{{ updated_at(inquiry) }}</td>
                                     <td>{{ created_at(inquiry) }}</td>
-                                    <td>{{ inquiry.requirements }}</td>
+                                    <td @click="toggleAccordion(inquiry, index)">{{ inquiry.requirements }}</td>
 
 
                                     <td>
@@ -91,7 +93,13 @@
                                         </a>
                                     </td>
                                 </tr>
-
+                                <tr v-if="accordionIndex === index">
+                                    <td colspan="9">
+                                        <PriceInquiryAccordian :inquiry="inquiry" :cargo_place="inquiry.cargo_place"
+                                            :materials="inquiry.materials" :capacity="inquiry.capacity"
+                                            :supplierData="inquiry.supplierData" />
+                                    </td>
+                                </tr>
 
 
                             </tbody>
@@ -133,14 +141,14 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
-import PriceInquiry from './price_inquiry_entry.vue';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import PriceInquiryAccordian from './price_inquiry_accordian.vue';
 
 
 export default {
     components: {
-        PriceInquiry
+        PriceInquiryAccordian
     },
     name: "Transaction",
     props: {
@@ -151,10 +159,11 @@ export default {
     },
     data() {
         return {
+            accordionIndex: null,
             isLoading: true,
             bank_name: '',
             file: null,
-            users: [],
+            price_inq: [],
             accordionOpen: {},
             currentPage: 1,
             searchQuery: ''
@@ -162,25 +171,25 @@ export default {
     },
     watch: {
         data(newVal) {
-            this.users = newVal;
+            this.price_inq = newVal;
         }
     },
     computed: {
 
         filteredUsers() {
-            return this.users.filter(inquiry => {
+            return this.price_inq.filter(inquiry => {
                 return inquiry.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                     (inquiry.requirements.toLowerCase().includes(this.searchQuery));
 
             });
         },
         totalPages() {
-            return Math.ceil(this.users.length / this.perPage)
+            return Math.ceil(this.price_inq.length / this.perPage)
         },
         paginatedData() {
             const start = (this.currentPage - 1) * this.perPage
             const end = start + this.perPage
-            return this.users.slice(start, end)
+            return this.price_inq.slice(start, end)
         },
         dataToDisplay() {
             if (this.searchQuery) {
@@ -242,8 +251,12 @@ export default {
                 return '';
             }
         },
-        toggleAccordion(inquiry) {
-            this.accordionOpen[inquiry.id] = !this.accordionOpen[inquiry.id];
+        toggleAccordion(inquiry, index) {
+            if (this.accordionIndex === index) {
+                this.accordionIndex = null;
+            } else {
+                this.accordionIndex = index;
+            }
         },
         changePage(page) {
             this.currentPage = page
@@ -266,7 +279,7 @@ export default {
                     await axios.delete(`/api/PriceDelete/${userId}`);
 
                     // If successful, remove the inquiry from the local data
-                    this.users = this.users.filter(inquiry => inquiry.id !== userId);
+                    this.price_inq = this.price_inq.filter(inquiry => inquiry.id !== userId);
 
                     Swal.fire({
                         icon: 'success',
@@ -285,14 +298,14 @@ export default {
             NProgress.start();
             try {
                 const response = await axios.get('/api/price_inquiry_get');
-                this.users = response.data;
+                this.price_inq = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 
                 NProgress.done();
             } catch (error) {
                 NProgress.done();
-                console.error('Error fetching users:', error);
+                console.error('Error fetching price_inq:', error);
                 toastr.error('Error fetching data');
             }
         },
@@ -303,6 +316,11 @@ export default {
 
 <style scoped>
 @import url('./../style.css');
+
+.highlight {
+    background-color: #ffff99;
+    /* or any other highlight color you prefer */
+}
 
 .rotate-icon {
     transform: rotate(180deg);

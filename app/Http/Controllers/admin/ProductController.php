@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Mail;
 use Storage;
 
 class ProductController extends Controller
@@ -103,7 +104,7 @@ class ProductController extends Controller
                 \Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
-                \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+                Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
             }
         }
         return response()->json(['message' => 'Follow up sent successfully']);
@@ -150,7 +151,7 @@ class ProductController extends Controller
                     \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $priceInquiry->id]));
 
                     // Send the email to the supplier
-                    \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                    Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
                 }
 
                 foreach ($request->supplier_ids as $index => $supplier_id) {
@@ -205,15 +206,16 @@ class ProductController extends Controller
     }
     public function quote(Request $request, $id)
     {
+        // dd($request->all());
         $request->validate([
-            'supplierid' => 'required|exists:users,id',
+            'quoteIds' => 'required|exists:inquiry_suppliers,id',
         ]);
 
         InquirySupplier::where('price_inquiry_id', $id)
             ->update(['selected' => 0]);
 
         $inquirySupplier = InquirySupplier::where('price_inquiry_id', $id)
-            ->where('user_id', $request->supplierid)
+            ->whereIn('id', $request->input('quoteIds'))
             ->update(['selected' => 1]);
 
         if (!$inquirySupplier) {
@@ -238,7 +240,7 @@ class ProductController extends Controller
         \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation', 'buyer_price_inquiry_edit', ['id' => $inquiry->id]));
 
         // Send the email to the buyer
-        \Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
+        //Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
 
         return response()->json(['message' => 'Quote selected successfully'], 201);
     }
@@ -247,8 +249,8 @@ class ProductController extends Controller
         // dd($request->all(),$id);
         // Validate the incoming request data
         $validatedData = $request->validate([
-            'supplier_ids' => 'array|exists:users,id',
-            'buyer' => 'required|exists:users,id',
+            'supplier_ids' => 'array|exists:supplier_profiles,id',
+            // 'buyer' => 'required|exists:users,id',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
             'group' => 'required|string',
@@ -283,7 +285,7 @@ class ProductController extends Controller
                 \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
-                \Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                //Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
             }
         }
 
@@ -387,12 +389,7 @@ class ProductController extends Controller
         // Return the formatted ProductGroup collection as JSON response
         return response()->json($prod, 200);
     }
-    public function price_inquiry_get()
-    {
-        $prod = PriceInquiry::orderby('created_at', 'desc')->get();
 
-        return response()->json($prod, 200);
-    }
     public function PriceDelete($id)
     {
         // dd($id);
@@ -532,7 +529,7 @@ class ProductController extends Controller
                 'print_areas.*.method' => 'required|string|max:255',
 
             ]);
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $product = Products::findOrFail($id);
             if ($validatedData['status'] !== $product->status) {
                 $this->logEvent('Product', 'Article Number ' . $product->article . ' status changed from ' . $product->status . 'to ' . $validatedData['status']);
@@ -601,12 +598,12 @@ class ProductController extends Controller
             //     \Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
             // }
 
-            \DB::commit();
+            DB::commit();
 
             return response()->json(['message' => 'Product saved successfully'], 200);
         } catch (\Exception $e) {
 
-            \DB::rollBack();
+            DB::rollBack();
             throw $e;
         }
     }
@@ -681,7 +678,7 @@ class ProductController extends Controller
             ]);
             // dd($request->print_areas);
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $product = Products::create($validatedData);
             $print_areas = json_decode($request->input('print_areas'), true);
 
@@ -739,15 +736,15 @@ class ProductController extends Controller
             $buyers = User::role('Buyer')->pluck('email');
             // dd($buyers);
             foreach ($buyers as $Buyer) {
-                \Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
+                Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
             }
             $this->logEvent('Product', 'Article Number ' . $product->article . ' has been added. ');
-            \DB::commit();
+            DB::commit();
 
             return response()->json(['message' => 'Product saved successfully'], 201);
         } catch (\Exception $e) {
 
-            \DB::rollBack();
+            DB::rollBack();
             throw $e;
         }
 
@@ -756,13 +753,27 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
+    public function price_inquiry_get()
+    {
+        $prod = PriceInquiry::orderby('created_at', 'desc')->with('inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->get();
+        if ($prod->isNotEmpty()) {
+            $prod = $prod->map(function ($item) {
+                // Group inquirysuppliers by user ID, handle potential null values
+                $item->supplierData = $item->inquirysuppliers->groupBy(function ($supplier) {
+                    return optional($supplier->user)->supplier_id;
+                });
+                return $item;
+            });
+        }
+        return response()->json($prod, 200);
+    }
     public function show(string $id)
     {
-        $prod['price'] = PriceInquiry::where('id', $id)->with('inquirysuppliers.userid', 'inquirysuppliers.supplierremarks')->first();
+        $prod['price'] = PriceInquiry::where('id', $id)->with('inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->first();
         if ($prod) {
             // Group inquirysuppliers by user ID
             $prod['users'] = $prod['price']->inquirysuppliers->groupBy(function ($supplier) {
-                return $supplier->user->userid;
+                return $supplier->user->supplier_id;
             });
         }
         return response()->json($prod, 200);
