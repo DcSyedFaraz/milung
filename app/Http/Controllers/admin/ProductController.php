@@ -132,6 +132,7 @@ class ProductController extends Controller
             'status' => 'required|string',
             'pcs' => 'required|array',
             'capacity' => 'required|array',
+            'supplier_ids' => 'required|array',
         ]);
 
         try {
@@ -198,7 +199,7 @@ class ProductController extends Controller
             Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
 
             $priceInquiry->save();
-
+            $this->logEvent('Inquiry', 'Price Inquiry# ' . $priceInquiry->inquiry_number . ' created. ');
             return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
         } catch (\Exception $e) {
             throw $e;
@@ -241,7 +242,7 @@ class ProductController extends Controller
 
         // Send the email to the buyer
         //Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
-
+        $this->logEvent('Inquiry', 'Price Inquiry# ' . $inquiry->inquiry_number . ' supplier quoted. ');
         return response()->json(['message' => 'Quote selected successfully'], 201);
     }
     public function update_price_inquiry(Request $request, $id)
@@ -355,7 +356,7 @@ class ProductController extends Controller
         // Update the fields with the validated data
         $priceInquiry->update($validatedData);
         $priceInquiry->save();
-
+        $this->logEvent('Inquiry', 'Price Inquiry# ' . $priceInquiry->inquiry_number . ' updated. ');
         // Return a success response
         return response()->json(['message' => 'Price inquiry updated successfully'], 200);
     }
@@ -394,9 +395,9 @@ class ProductController extends Controller
     {
         // dd($id);
         try {
-            $user = PriceInquiry::findOrFail($id);
-            $user->delete();
-
+            $priceInquiry = PriceInquiry::findOrFail($id);
+            $priceInquiry->delete();
+            $this->logEvent('Inquiry', 'Price Inquiry# ' . $priceInquiry->inquiry_number . ' deleted. ');
             return response()->json(['message' => 'Inquiry deleted successfully'], 200);
         } catch (\Exception $e) {
             throw $e;
@@ -755,7 +756,7 @@ class ProductController extends Controller
      */
     public function price_inquiry_get()
     {
-        $prod = PriceInquiry::orderby('created_at', 'desc')->with('inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->get();
+        $prod = PriceInquiry::orderby('created_at', 'desc')->with('product_group','inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->get();
         if ($prod->isNotEmpty()) {
             $prod = $prod->map(function ($item) {
                 // Group inquirysuppliers by user ID, handle potential null values

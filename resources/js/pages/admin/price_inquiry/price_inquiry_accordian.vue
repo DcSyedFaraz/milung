@@ -1,7 +1,7 @@
 <template>
     <section class="section">
         <div class="container">
-            <div class="row my-5">
+            <div class="row ">
                 <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
                 <div class="col-md-6">
                     <div class="d-flex col-11 my-2">
@@ -33,7 +33,7 @@
                             <p>Product Group:</p>
                         </div>
                         <div class="col-8">
-                            <p>{{ inquiry.group_name }}</p>
+                            <p>{{ inquiry.product_group?.group_name }}</p>
                         </div>
                     </div>
                     <div class="d-flex col-11 my-2">
@@ -75,7 +75,7 @@
                             <p>Inquiry Quantity:</p>
                         </div>
                         <div class="col-8">
-                            <p v-for="(material, index) in materials" :key="index">{{ material.quantity }} Pcs</p>
+                            <p v-for="(quantity, index) in inquiry.pcs" :key="index">{{ quantity }} Pcs</p>
                         </div>
                     </div>
                     <div class="d-flex col-11 my-2">
@@ -83,7 +83,7 @@
                             <p>Product Capacity:</p>
                         </div>
                         <div class="col-8">
-                            <p v-for="(caps, index) in capacity" :key="index">{{ caps.quantity }} {{ caps.unit }}</p>
+                            <p v-for="(capacity, index) in inquiry.capacity" :key="index">{{ capacity }}</p>
                         </div>
                     </div>
                     <div class="d-flex col-11 my-2">
@@ -209,14 +209,6 @@ export default {
             required: true
         },
         cargo_place: {
-            type: Array,
-            required: true
-        },
-        materials: {
-            type: Array,
-            required: true
-        },
-        capacity: {
             type: Array,
             required: true
         },

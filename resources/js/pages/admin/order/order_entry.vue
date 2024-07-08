@@ -13,7 +13,7 @@
                                 <p for="v-model" class="my-auto fs-7">Article Number:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].article" class="form-control ">
+                                <input type="text" v-model="orders.article" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -21,7 +21,7 @@
                                 <p for="v-model" class="my-auto ">Status:</p>
                             </div>
                             <div class="col-8">
-                                <select class="fw-bold form-select" v-model="orders[0].status">
+                                <select class="fw-bold form-select" v-model="orders.status">
                                     <option value="New Order">New Order</option>
                                     <option value="Printview Confirmation">Printview Confirmation</option>
                                     <option value="Printview Reject">Printview Reject</option>
@@ -39,7 +39,7 @@
                                 <p for="v-model" class="my-auto fs-7">Buyer Order No:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].buyerorder" class="form-control ">
+                                <input type="text" v-model="orders.buyerorder" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -47,7 +47,7 @@
                                 <p for="v-model" class="my-auto fs-7">Order Reference:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].reference" class="form-control ">
+                                <input type="text" v-model="orders.reference" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -55,7 +55,7 @@
                                 <p for="v-model" class="my-auto fs-7">Related inquiry No:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].inquiry" class="form-control ">
+                                <input type="text" v-model="orders.inquiry" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -63,7 +63,7 @@
                                 <p for="v-model" class="my-auto fs-7">Milung Order No:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].milungorder" class="form-control ">
+                                <input type="text" v-model="orders.milungorder" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -71,7 +71,7 @@
                                 <p for="v-model" class="my-auto fs-7">Supplier ID:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].supplier" class="form-control "> -->
+                                <!-- <input type="text" v-model="orders.supplier" class="form-control "> -->
                                 <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing"
                                     :options="suppliers" field="id" label="userid" track-by="id">
                                 </multiselect>
@@ -82,7 +82,7 @@
                                 <p for="v-model" class="my-auto fs-7">Order Date:</p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders[0].orderdate" class="form-control ">
+                                <input type="date" v-model="orders.orderdate" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -90,7 +90,7 @@
                                 <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
                             </div>
                             <div class="col-8">
-                                <input type="email" v-model="orders[0].buyeremail" class="form-control ">
+                                <input type="email" v-model="orders.buyeremail" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -98,7 +98,7 @@
                                 <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].buyer" class="form-control "> -->
+                                <!-- <input type="text" v-model="orders.buyer" class="form-control "> -->
                                 <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
                                     track-by="id">
                                 </multiselect>
@@ -109,7 +109,7 @@
                                 <p for="v-model" class="my-auto fs-7">Order Remarks:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="orders[0].orderremarks" class="form-control" cols="30"
+                                <textarea v-model="orders.orderremarks" class="form-control" cols="30"
                                     rows="5"></textarea>
                             </div>
                         </div>
@@ -118,8 +118,7 @@
                                 <p for="v-model" class="my-auto fs-7">QC Remarks:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="orders[0].qcremarks" class="form-control" cols="30"
-                                    rows="5"></textarea>
+                                <textarea v-model="orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -127,7 +126,7 @@
                                 <p for="v-model" class="my-auto fs-7">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-select" v-model="orders[0].group">
+                                <select class=" form-select" v-model="orders.group">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
                                         {{ group1.group_name }}
@@ -140,7 +139,7 @@
                                 <p for="v-model" class="my-auto fs-7">Fty item No:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].ftyitem" class="form-control ">
+                                <input type="text" v-model="orders.ftyitem" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -148,7 +147,7 @@
                                 <p for="v-model" class="my-auto fs-7">Product Name:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].productname" class="form-control ">
+                                <input type="text" v-model="orders.productname" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -156,7 +155,7 @@
                                 <p for="v-model" class="my-auto fs-7">Product Color: (Pantone if applicable)</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].productcolor" class="form-control ">
+                                <input type="text" v-model="orders.productcolor" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -164,7 +163,7 @@
                                 <p for="v-model" class=" fs-7">Product Capacity:</p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(caps, indexs) in orders[0].capacity" :="indexs">
+                                <div class="input-group my-2" v-for="(caps, indexs) in orders.capacity" :="indexs">
                                     <input type="number" class="form-control" v-model="caps.quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select mx-2"
                                         v-model="caps.unit">
@@ -176,7 +175,7 @@
                                             @click="addcapacity(indexs)" v-if="indexs === 0">+</button>
                                         <button class="btn btn-danger  ms-2" type="button"
                                             @click="removecapacity(indexs)"
-                                            v-if="indexs !== 0 && orders[0].capacity.length > 1">-</button>
+                                            v-if="indexs !== 0 && orders.capacity.length > 1">-</button>
                                     </div>
                                 </div>
 
@@ -187,7 +186,7 @@
                                 <p for="v-model" class="my-auto fs-7">Accessories:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].accessories" class="form-control ">
+                                <input type="text" v-model="orders.accessories" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -195,7 +194,7 @@
                                 <p for="v-model" class="my-auto fs-7">Product Printing Method:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].printingmethod" class="form-control ">
+                                <input type="text" v-model="orders.printingmethod" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -203,7 +202,7 @@
                                 <p for="v-model" class="my-auto fs-7">Logo Pantone Color:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].logocolor" class="form-control ">
+                                <input type="text" v-model="orders.logocolor" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -211,7 +210,7 @@
                                 <p for="v-model" class="my-auto fs-7">Packaging:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].packaging" class="form-control ">
+                                <input type="text" v-model="orders.packaging" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -220,14 +219,14 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" v-model="orders[0].packagingprinting[0]" class="form-control">
+                                    <input type="text" v-model="orders.packagingprinting[0]" class="form-control">
                                     <button class="btn btn-outline-primary" type="button" id="button-addon2"
                                         @click="addInput">+1c Label</button>
                                 </div>
-                                <div v-for="(input, index) in orders[0].packagingprinting" :key="index">
+                                <div v-for="(input, index) in orders.packagingprinting" :key="index">
                                     <div class="input-group mt-2" v-if="index > 0">
                                         <input type="text" class="form-control"
-                                            v-model="orders[0].packagingprinting[index]">
+                                            v-model="orders.packagingprinting[index]">
                                         <button class="btn btn-outline-danger" type="button"
                                             @click="removeInput(index)">Remove</button>
                                     </div>
@@ -260,10 +259,9 @@
                             </div>
                             <div class="col-9">
                                 <div class="input-group my-2">
-                                    <input type="number" class="form-control" v-model="orders[0].quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-select"
-                                        v-model="orders[0].unit">
-                                        <option selected value="units">units</option>
+                                    <input type="number" class="form-control" v-model="orders.quantity">
+                                    <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
+                                        <option value="units">units</option>
                                         <!-- <option value="mAh">mAh</option> -->
                                     </select>
                                 </div>
@@ -276,7 +274,7 @@
                             <div class="col-8">
                                 <div class="col-12">
 
-                                    <input type="text" v-model="orders[0].logfile" class="form-control ">
+                                    <input type="text" v-model="orders.logfile" class="form-control ">
                                 </div>
                                 <div class="col-12  justify-content-between">
                                     <button type="button" class="btn px-4 btn-milung" >
@@ -288,17 +286,16 @@
                                 </div>
                             </div>
                         </div> -->
-                        <FileInputWithName label="Logo File" :files="orders[0].logoFiles"
-                            :fileData="orders[0].logoFiles" @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders[0].safetySheetFiles"
-                            :fileData="orders[0].safetySheetFiles" @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName label="Manual" :files="orders[0].manualFiles"
-                            :fileData="orders[0].manualFiles" @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Safety Sheet" :files="orders[0].labelFiles"
-                            :fileData="orders[0].labelFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Logo File" :files="orders.logoFiles" :fileData="orders.logoFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Label File" :files="orders.safetySheetFiles"
+                            :fileData="orders.safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Manual" :files="orders.manualFiles" :fileData="orders.manualFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Safety Sheet" :files="orders.labelFiles" :fileData="orders.labelFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
 
-                        <!-- <FileInputWithName label="Label File2" v-model="orders[0].multiFiles2"
+                        <!-- <FileInputWithName label="Label File2" v-model="orders.multiFiles2"
                             @update:files="updateFiles1" @export-file="exportFile" /> -->
 
 
@@ -312,7 +309,7 @@
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
-                                    <input type="text" class="form-control" disabled v-model="orders[0].buyingprice">
+                                    <input type="text" class="form-control" disabled v-model="orders.buyingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
@@ -327,7 +324,7 @@
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
                                     <input type="text" class="form-control" :disabled="!isEditing"
-                                        v-model="orders[0].sellingprice">
+                                        v-model="orders.sellingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
@@ -342,7 +339,7 @@
                                 <!-- <input type="text"  class="form-control"> -->
                                 <div class="input-group ">
                                     <input type="text" class="form-control" :disabled="!isEditing"
-                                        v-model="orders[0].totalvalue">
+                                        v-model="orders.totalvalue">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
@@ -371,7 +368,7 @@
                                 <p for="v-model" class="my-auto fs-7">Latest SendOut Date:</p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders[0].sendoutdate" class="form-control ">
+                                <input type="date" v-model="orders.sendoutdate" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -381,14 +378,14 @@
                             <div class="col-8">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="Fix Date"
-                                        v-model="orders[0].notice">
+                                        v-model="orders.notice">
                                     <label class="form-check-label">
                                         Fix Date
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="PV to Customer"
-                                        v-model="orders[0].notice">
+                                        v-model="orders.notice">
                                     <label class="form-check-label">
                                         PV to Customer
                                     </label>
@@ -400,7 +397,7 @@
                                 <p for="v-model" class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders[0].so_number" class="form-control "> -->
+                                <!-- <input type="text" v-model="orders.so_number" class="form-control "> -->
                                 <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
                                     track-by="id">
                                 </multiselect>
@@ -411,7 +408,7 @@
                                 <p for="v-model" class="my-auto fs-7">ATC#:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].atc_number" class="form-control ">
+                                <input type="text" v-model="orders.atc_number" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -419,7 +416,7 @@
                                 <p for="v-model" class="my-auto fs-7">Shipping Document#:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].ship_doc" class="form-control ">
+                                <input type="text" v-model="orders.ship_doc" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -427,7 +424,7 @@
                                 <p for="v-model" class="my-auto fs-7">Incoterm#:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders[0].incoterm" class="form-control ">
+                                <input type="text" v-model="orders.incoterm" class="form-control ">
                             </div>
                         </div>
                         <!-- <div class="d-flex col-12 my-2 bg-danger">
@@ -446,7 +443,7 @@
             </div>
         </form>
         <div class="container" v-show="showPrintView" v-if="can('printviewConfirmRejectButton')">
-            <printview :id="orders[0].id" :image="orders[0].files" />
+            <printview :id="orders.id" :image="orders.files" />
         </div>
         <progress-modal :show="showProgress"></progress-modal>
     </section>
@@ -465,6 +462,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
+    emits: ['profileUpdated'],
     components: {
         FileInputWithName,
         ProgressModal,
@@ -489,18 +487,19 @@ export default {
             inputs: [],
             files: [],
             groups: [],
-            orders: [
-                {
+            inquiry: [],
+            orders:
+            {
 
-                    packagingprinting: [],
-                    logoFiles: [],
-                    safetySheetFiles: [],
-                    manualFiles: [],
-                    labelFiles: [],
-                    notice: [],
-                    capacity: [{ quantity: '', unit: '' }],
-                }
-            ],
+                packagingprinting: [],
+                logoFiles: [],
+                safetySheetFiles: [],
+                manualFiles: [],
+                labelFiles: [],
+                notice: [],
+                capacity: [{ quantity: '', unit: '' }],
+            }
+            ,
 
         }
     },
@@ -518,24 +517,30 @@ export default {
     watch: {
         selectedBuyerId(newValue) {
             // console.log(newValue);
-            this.orders[0].buyer = newValue.id;
+            this.orders.buyer = newValue.id;
         },
         selectedsoId(newValue) {
             // console.log(newValue);
-            this.orders[0].so_number = newValue.id;
+            this.orders.so_number = newValue.id;
         },
         selectedSupplierId(newValue) {
-            this.orders[0].supplier = newValue.id;
-            // console.log(this.orders[0].supplier);
+            this.orders.supplier = newValue.id;
+            // console.log(this.orders.supplier);
         }
     },
+    created() {
+        if (this.$route.query.inquiry) {
+            this.inquiry = JSON.parse(this.$route.query.inquiry);
+            console.log(this.inquiry,' ho');
+    }
+  },
     methods: {
         fetchSuppliers() {
             axios.get('/api/Suppliers')
                 .then(response => {
                     this.suppliers = response.data;
                     // console.log(this.suppliers);
-                    const selectedSupplierId = Number(this.orders[0].supplier);
+                    const selectedSupplierId = Number(this.orders.supplier);
                     const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
                     if (selectedSupplier) {
                         this.selectedSupplierId = selectedSupplier;
@@ -551,7 +556,7 @@ export default {
                 .then(response => {
                     this.buyers = response.data;
                     // console.log(this.buyers);
-                    const selectedbuyerIds = Number(this.orders[0].buyer);
+                    const selectedbuyerIds = Number(this.orders.buyer);
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
                     if (selectedbuyer) {
                         this.selectedBuyerId = selectedbuyer;
@@ -566,8 +571,8 @@ export default {
                 .then(response => {
                     this.so = response.data;
                     console.log(this.so);
-                    // const selectedbuyerIds = Number(this.orders[0].buyer);
-                    const selectedso = this.so.find(sos => sos.id === this.orders[0].so_number);
+                    // const selectedbuyerIds = Number(this.orders.buyer);
+                    const selectedso = this.so.find(sos => sos.id === this.orders.so_number);
                     if (selectedso) {
                         this.selectedsoId = selectedso;
                     }
@@ -577,38 +582,38 @@ export default {
                 });
         },
         addInput() {
-            this.orders[0].packagingprinting.push('');
+            this.orders.packagingprinting.push('');
         },
         removeInput(index) {
-            this.orders[0].packagingprinting.splice(index, 1);
+            this.orders.packagingprinting.splice(index, 1);
         },
         updateFiles(payload) {
             console.log(payload);
 
             switch (payload.label) {
                 case 'Logo File':
-                    if (!Array.isArray(this.orders[0].logoFiles)) {
-                        this.orders[0].logoFiles = [];
+                    if (!Array.isArray(this.orders.logoFiles)) {
+                        this.orders.logoFiles = [];
                     }
-                    this.orders[0].logoFiles.push(payload);
+                    this.orders.logoFiles.push(payload);
                     break;
                 case 'Label File':
-                    if (!Array.isArray(this.orders[0].labelFiles)) {
-                        this.orders[0].labelFiles = [];
+                    if (!Array.isArray(this.orders.labelFiles)) {
+                        this.orders.labelFiles = [];
                     }
-                    this.orders[0].labelFiles.push(payload);
+                    this.orders.labelFiles.push(payload);
                     break;
                 case 'Manual':
-                    if (!Array.isArray(this.orders[0].manualFiles)) {
-                        this.orders[0].manualFiles = [];
+                    if (!Array.isArray(this.orders.manualFiles)) {
+                        this.orders.manualFiles = [];
                     }
-                    this.orders[0].manualFiles.push(payload);
+                    this.orders.manualFiles.push(payload);
                     break;
                 case 'Safety Sheet':
-                    if (!Array.isArray(this.orders[0].safetySheetFiles)) {
-                        this.orders[0].safetySheetFiles = [];
+                    if (!Array.isArray(this.orders.safetySheetFiles)) {
+                        this.orders.safetySheetFiles = [];
                     }
-                    this.orders[0].safetySheetFiles.push(payload);
+                    this.orders.safetySheetFiles.push(payload);
                     break;
                 default:
                     break;
@@ -631,7 +636,7 @@ export default {
         },
         loadImage(event) {
             const file = event.target.files[0];
-            this.orders[0].files = file;
+            this.orders.files = file;
             if (file) {
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d');
@@ -686,12 +691,12 @@ export default {
             NProgress.start();
             console.log(this.orders);
             if (this.isEditing) {
-                this.orders[0].linked_order = event.submitter.getAttribute('value');
+                this.orders.linked_order = event.submitter.getAttribute('value');
             }
             let method = 'post';
-            let url = this.isEditing ? `/api/orderentry/${this.orders[0].id}` : '/api/orderentry';
+            let url = this.isEditing ? `/api/orderentry/${this.orders.id}` : '/api/orderentry';
 
-            this.handleApiCall(method, url, this.orders[0])
+            this.handleApiCall(method, url, this.orders)
                 .then(response => {
                     setTimeout(() => {
                         this.showProgress = false;
@@ -718,10 +723,10 @@ export default {
                 });
         },
         addcapacity() {
-            this.orders[0].capacity.push({ quantity: '' });
+            this.orders.capacity.push({ quantity: '' });
         },
         removecapacity(index) {
-            this.orders[0].capacity.splice(index, 1);
+            this.orders.capacity.splice(index, 1);
         },
         fetchProductGroups() {
             NProgress.start();
@@ -765,27 +770,39 @@ export default {
             NProgress.start();
             axios.get(`/api/orderentry/${orderId}`)
                 .then(response => {
-                    this.orders[0] = response.data;
-                    console.log(this.orders[0]);
+                    this.orders = response.data;
+                    console.log(this.orders);
+                    const selectedSupplierId = Number(this.orders.supplier);
+                    const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
+                    if (selectedSupplier) {
+                        this.selectedSupplierId = selectedSupplier;
+                    }
                     // Pre-fill capacity if it exists
-                    if (this.orders[0].capacity) {
-                        this.orders[0].capacity = this.orders[0].capacity.map(capacity => {
+                    if (this.orders.capacity) {
+                        this.orders.capacity = this.orders.capacity.map(capacity => {
                             const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
                             return { quantity: parseInt(quantity), unit };
                         });
                     } else {
                         // If capacity doesn't exist, initialize it with default values
-                        this.orders[0].capacity = [{ quantity: '', unit: '' }];
+                        this.orders.capacity = [{ quantity: '', unit: '' }];
                     }
-                    if (this.orders[0].quantity_units) {
-                        const quantityString = this.orders[0].quantity_units;
-                        console.log(this.orders[0].quantity_units);
+                    if (this.orders.quantity_units) {
+                        const quantityString = this.orders.quantity_units;
+                        console.log(this.orders.quantity_units);
 
                         const quantity = parseInt(quantityString.split('units')[0]);
-                        this.orders[0].quantity = quantity;
+                        this.orders.quantity = quantity;
                     }
-                    console.log('files ', this.orders[0].files[0]['filepath']);
-                    this.loadImageFromPath(this.orders[0].files[0]['filepath'], this.$refs.canvas);
+                    // console.log('files ', this.orders.files[0]['filepath']);
+                    if (this.orders.files != null) {
+                        this.loadImageFromPath(
+                            this.orders.files['filepath'],
+                            this.$refs.canvas
+                        );
+                    }
+                    // this.loadImageFromPath(this.orders.files[0]['filepath'], this.$refs.canvas);
+                    this.orders.unit = 'units';
                     NProgress.done();
 
                     setTimeout(() => {
@@ -799,6 +816,7 @@ export default {
         },
     },
     mounted() {
+
         if (this.isEditing) {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);
@@ -818,7 +836,7 @@ export default {
     },
     computed: {
         selectedGroup() {
-            return this.groups.find(group => group.id === this.orders[0].group);
+            return this.groups.find(group => group.id === this.orders.group);
         },
         selectedProductGroupCode() {
             const selectedGroup = this.selectedGroup;
@@ -829,7 +847,7 @@ export default {
             return selectedGroup; // or any other HS code property you want to display
         },
         formattedCapacity() {
-            return this.orders[0].capacity.map(caps => `${caps.quantity}${caps.unit}`);
+            return this.orders.capacity.map(caps => `${caps.quantity}${caps.unit}`);
         },
     },
 }

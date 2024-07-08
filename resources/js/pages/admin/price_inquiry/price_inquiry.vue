@@ -50,30 +50,39 @@
 
 
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped table-hover  ">
+                        <table class="table table-striped   ">
                             <thead style="color: #009de1; " class="">
-                                <tr style="">
-                                    <th>
+                                <tr class="cursor-pointer">
+                                    <th @click="sortTable('inquiry_number')">
                                         Inquiry Number
+                                        <i :class="getSortIcon('inquiry_number')" class="ms-1"></i>
                                     </th>
-                                    <th>Status</th>
-                                    <th>Date Modified</th>
-                                    <th>Date Created</th>
-                                    <th>Special Requirements</th>
-                                    <th>Actions</th>
+                                    <th @click="sortTable('status')">Status <i :class="getSortIcon('status')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('updated_at')">Date Modified <i
+                                            :class="getSortIcon('updated_at')" class="ms-1"></i></th>
+                                    <th @click="sortTable('created_at')">Date Created <i
+                                            :class="getSortIcon('created_at')" class="ms-1"></i></th>
+                                    <th @click="sortTable('requirements')">Special Requirements <i
+                                            :class="getSortIcon('requirements')" class="ms-1"></i></th>
+                                    <th>Actions </th>
                                 </tr>
                             </thead>
                             <tbody v-for="(inquiry, index) in dataToDisplay" :key="inquiry.id"
                                 v-if="dataToDisplay.length > 0">
                                 <tr :class="{ 'highlight': inquiry.urgent == 'true' }"
                                     style="border-bottom-color: snow !important;">
-                                    <td>{{ inquiry.inquiry_number }}</td>
-                                    <td>
+                                    <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
+                                                inquiry.inquiry_number }}</td>
+                                    <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">
                                         <span :class="statusBadge(inquiry)">{{ inquiry.status }}</span>
                                     </td>
-                                    <td>{{ updated_at(inquiry) }}</td>
-                                    <td>{{ created_at(inquiry) }}</td>
-                                    <td @click="toggleAccordion(inquiry, index)">{{ inquiry.requirements }}</td>
+                                    <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
+                                                updated_at(inquiry) }}</td>
+                                    <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
+                                                created_at(inquiry) }}</td>
+                                    <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
+                                                inquiry.requirements }}</td>
 
 
                                     <td>
@@ -89,14 +98,13 @@
                                         </router-link>
 
                                         <a href="#" @click="deleteUser(inquiry.id)" class="text-dark"><i
-                                                class="bi bi-trash"></i>
+                                                class="bi bi-trash ms-1 text-danger"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr v-if="accordionIndex === index">
                                     <td colspan="9">
                                         <PriceInquiryAccordian :inquiry="inquiry" :cargo_place="inquiry.cargo_place"
-                                            :materials="inquiry.materials" :capacity="inquiry.capacity"
                                             :supplierData="inquiry.supplierData" />
                                     </td>
                                 </tr>
@@ -129,7 +137,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" :filterValue="'Inquiry'" />
             </div>
         </div>
     </section>
@@ -159,6 +167,9 @@ export default {
     },
     data() {
         return {
+            componentKey: 0,
+            sortKey: '',
+            sortAsc: true,
             accordionIndex: null,
             isLoading: true,
             bank_name: '',
@@ -199,9 +210,6 @@ export default {
             }
         }
     },
-    mounted() {
-
-    },
     created() {
         this.fetchUsers().then(() => {
             setTimeout(() => {
@@ -209,7 +217,29 @@ export default {
             }, 1000); // Delay of 1 second
         });
     },
-    methods: {
+    methods: {sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.price_inq.sort((a, b) => {
+                let result = 0;
+                if (a[key] < b[key]) {
+                    result = -1;
+                } else if (a[key] > b[key]) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         handleRecordUpdated() {
             this.accordionOpen = {};
             // Refresh the data in the parent component
@@ -219,13 +249,13 @@ export default {
             switch (inquiry.status) {
                 case 'ML Checking':
                     return 'badge bg-primary';
-                case 'ML Replied':
+                case 'Supplier Checking':
                     return 'badge bg-cyan';
-                case 'ML Follow Up':
+                case 'Buyer Follow Up':
                     return 'badge bg-success';
-                case 'Customer Follow Up':
+                case 'Supplier Follow Up':
                     return 'badge bg-pink';
-                case 'Customer Quoted':
+                case 'Supplier Replied':
                     return 'badge bg-info';
                 default:
                     return 'badge bg-secondary';
@@ -280,7 +310,7 @@ export default {
 
                     // If successful, remove the inquiry from the local data
                     this.price_inq = this.price_inq.filter(inquiry => inquiry.id !== userId);
-
+                    this.componentKey += 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'Inquiry deleted successfully',
@@ -319,7 +349,6 @@ export default {
 
 .highlight {
     background-color: #ffff99;
-    /* or any other highlight color you prefer */
 }
 
 .rotate-icon {

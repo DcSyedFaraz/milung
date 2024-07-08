@@ -36,7 +36,7 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-control" v-model="inquiry.group"
+                                <select class=" form-select" v-model="inquiry.group"
                                     @change="fetchSupplierProfiles(inquiry.group)">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
@@ -190,10 +190,11 @@
                             </div>
                             <div class="col-8"><select class="fw-bold form-control" v-model="inquiry.status">
                                     <option value="ML Checking">ML Checking</option>
-                                    <option value="ML Replied">ML Replied</option>
-                                    <option value="ML Follow Up">ML Follow Up</option>
-                                    <option value="Customer Follow Up">Customer Follow Up</option>
-                                    <option value="Cutomer Quoted">Cutomer Quoted</option>
+                                    <option value="Supplier Checking">Supplier Checking</option>
+                                    <option value="Buyer Follow Up">Buyer Follow Up</option>
+                                    <option value="Supplier Follow Up">Supplier Follow Up</option>
+                                    <option value="Supplier Replied">Supplier Replied</option>
+                                    <option value="ML Quoted">ML Quoted</option>
                                 </select></div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -254,8 +255,8 @@
                                 <button type="button" style="background-color: aqua !important;" v-show="follow_up"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3" @click="quote">Quote Buyer</button>
 
-                                <!-- <button style="background-color: #bc7803 !important;"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Create Order</button> -->
+                                <button style="background-color: #bc7803 !important;"
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3"  @click="createOrder(inquiry)">Create Order</button>
 
                                 <button type="button" style="background-color: #41b400 !important;" v-show="follow_up"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
@@ -349,6 +350,7 @@
                 </div>
             </div>
         </form>
+        <EventLogTable :filterValue="'Inquiry'" />
     </section>
     <div v-if="loader" class="loader-overlay">
         <div class="loader"></div>
@@ -387,6 +389,14 @@ export default {
         };
     },
     methods: {
+
+        createOrder(inquiry) {
+            this.$router.push({
+                name: 'order_entry',
+                query: { inquiry: JSON.stringify(inquiry) },
+            });
+        },
+
         precheckSelected() {
             console.log(this.supplierData);
             Object.values(this.supplierData).forEach(rows => {
