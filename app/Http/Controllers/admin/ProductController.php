@@ -242,7 +242,7 @@ class ProductController extends Controller
 
         // Send the email to the buyer
         //Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
-        $this->logEvent('Inquiry', 'Price Inquiry# ' . $inquiry->inquiry_number . ' supplier quoted. ');
+        $this->logEvent('Inquiry', "Price Inquiry# {$inquiry->inquiry_number} supplier quoted. ");
         return response()->json(['message' => 'Quote selected successfully'], 201);
     }
     public function update_price_inquiry(Request $request, $id)
