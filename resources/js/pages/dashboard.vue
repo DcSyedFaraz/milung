@@ -429,7 +429,7 @@ export default {
             const activeRoutes = [
                 '/admin/order_list',
                 '/admin/order_entry',
-                '/edit-order/:id',
+                '/admin/edit-order/:id',
                 '/admin/order_price_inquiry',
             ];
 

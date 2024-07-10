@@ -217,7 +217,8 @@ export default {
             }, 1000); // Delay of 1 second
         });
     },
-    methods: {sortTable(key) {
+    methods: {
+        sortTable(key) {
             if (this.sortKey === key) {
                 this.sortAsc = !this.sortAsc;
             } else {

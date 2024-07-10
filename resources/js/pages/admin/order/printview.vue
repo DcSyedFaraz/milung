@@ -1,14 +1,13 @@
 <template>
     <section class="bg-halfwhite">
         <div class="row">
-            <div class="col-4">
+            <div class="col-4 border-right-5 ">
                 <p class="text-milung fw-bold">PRINTVIEW</p>
                 <p class="text-milung fw-bold">
                     Buyer Product Photo/Printview:
                 </p>
                 <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
             </div>
-
             <div class="col-4">
                 <p class="text-milung fw-bold text-uppercase">Supplier</p>
 
@@ -63,6 +62,7 @@
             </div>
         </div>
     </section>
+    <hr>
     <section class="bg-halfwhite my-5" v-if="can('massCargoPhotoApproval')">
         <div class="row">
             <div class="col-4">
@@ -387,4 +387,13 @@ export default {
     },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.vl {
+    border-left: 6px solid green;
+    height: 500px;
+
+}
+.border-right-5 {
+    border-right: 5px solid #dee2e6;
+  }
+</style>

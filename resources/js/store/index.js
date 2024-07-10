@@ -11,8 +11,15 @@ const store = new Vuex.Store({
     state: {
         authToken: null,
         userRole: null,
+        inquiry: null
     },
     mutations: {
+        clearInquiry(state) {
+            state.inquiry = null;
+          },
+        setInquiry(state, inquiry) {
+            state.inquiry = inquiry;
+        },
         setAuthToken(state, token) {
             state.authToken = token;
             localStorage.setItem('authToken', token);
@@ -27,6 +34,12 @@ const store = new Vuex.Store({
         },
     },
     actions: {
+        updateInquiry({ commit }, inquiry) {
+            commit('setInquiry', inquiry);
+        },
+        clearInquiry({ commit }) {
+            commit('clearInquiry');
+          },
         login({ commit }, { token, role }) {
             commit('setAuthToken', token);
             commit('setUserRole', role);
@@ -34,11 +47,12 @@ const store = new Vuex.Store({
         logout({ commit }) {
             commit('clearAuth');
 
-             // Clear axios default headers
-             delete axios.defaults.headers.common['Authorization'];
+            // Clear axios default headers
+            delete axios.defaults.headers.common['Authorization'];
         },
     },
     getters: {
+        inquiry: state => state.inquiry,
         isAuthenticated: state => !!state.authToken,
     }
 });

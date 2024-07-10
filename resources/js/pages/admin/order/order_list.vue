@@ -53,59 +53,67 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
                             <thead style="color: #009de1; " class="text-center">
-                                <tr style="">
-                                    <th class="text-nowrap">Buyer ID</th>
-                                    <th class="text-nowrap"> Order Number </th>
-                                    <th class="text-nowrap">Status</th>
-                                    <th class="text-nowrap">Date Modified</th>
-                                    <th class="text-nowrap">Date Created</th>
-                                    <th class="text-nowrap">Latest SendOut Date</th>
-                                    <th class="text-nowrap">Supplier ID</th>
-                                    <th class="text-nowrap">Actions</th>
+                                <tr class="cursor-pointer">
+                                    <th class="text-nowrap" @click="sortTable('buyerid.userid')">Buyer ID <i
+                                            :class="getSortIcon('buyerid.userid')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('id')"> Order Number <i
+                                            :class="getSortIcon('id')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('status')">Status <i
+                                            :class="getSortIcon('status')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('updated_at')">Date Modified <i
+                                            :class="getSortIcon('updated_at')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('created_at')">Date Created <i
+                                            :class="getSortIcon('created_at')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('sendoutdate')">Latest SendOut Date <i
+                                            :class="getSortIcon('sendoutdate')" class="ms-1"></i></th>
+                                    <th class="text-nowrap" @click="sortTable('supplierid.userid')">Supplier ID <i
+                                            :class="getSortIcon('supplierid.userid')" class="ms-1"></i></th>
+                                    <th class="text-nowrap">Actions </th>
                                 </tr>
                             </thead>
-                            <tbody v-for="user in dataToDisplay" :key="user.id" v-if="dataToDisplay.length > 0">
+                            <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" :value="user.id"
+                                            <input class="form-check-input" type="checkbox"
+                                                v-show="order.status == 'New Order'" :value="order.id"
                                                 id="flexCheckDefault" v-model="selectedUserIds">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                {{ user.buyerid?.userid }}
+                                                {{ order.buyerid?.userid }}
                                             </label>
                                         </div>
                                     </td>
                                     <td>
-                                        {{ user.id }}
+                                        {{ order.id }}
                                     </td>
                                     <td>
-                                        <span :class="statusBadge(user)">{{ user.status }}</span>
+                                        <span :class="statusBadge(order)">{{ order.status }}</span>
                                     </td>
-                                    <td>{{ updated_at(user) }}</td>
-                                    <td>{{ created_at(user) }}</td>
-                                    <td>{{ user.sendoutdate }}</td>
-                                    <td>{{ user.supplierid?.userid }}</td>
+                                    <td>{{ updated_at(order) }}</td>
+                                    <td>{{ created_at(order) }}</td>
+                                    <td>{{ order.sendoutdate }}</td>
+                                    <td>{{ order.supplierid?.userid }}</td>
 
 
                                     <td>
-                                        <!-- <button @click="toggleAccordion(user)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[user.id] }">
+                                        <!-- <button @click="toggleAccordion(order)" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[order.id] }">
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
-                                        <router-link :to="{ name: 'order_edit', params: { id: user.id } }"
+                                        <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
                                             v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
-                                        <a href="#" @click="deleteUser(user.id)" class="text-danger"><i
+                                        <a href="#" @click="deleteUser(order.id)" class="text-danger"><i
                                                 class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <transition name="fade">
-                                    <tr v-show="accordionOpen[user.id]">
+                                    <tr v-show="accordionOpen[order.id]">
                                         <td :colspan="7">
-                                            <!-- <PriceInquiry mode="edit" :user="user" @record-updated="handleRecordUpdated" /> -->
+                                            <!-- <PriceInquiry mode="edit" :order="order" @record-updated="handleRecordUpdated" /> -->
                                         </td>
                                     </tr>
                                 </transition>
@@ -137,8 +145,11 @@
                             </ul>
                         </nav>
                         <div class="my-2">
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#supplierModal"
-                                @click="openSupplierModal" class="btn btn-warning">Pricing</button>
+                            <button type="button" :disabled="!selectedUserIds.length"
+                                :data-bs-toggle="selectedUserIds.length ? 'modal' : ''" data-bs-target="#supplierModal"
+                                @click="openSupplierModal" class="btn btn-warning">
+                                Pricing
+                            </button>
                         </div>
                         <!-- Modal -->
                         <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -163,8 +174,7 @@
                                     <div class="modal-footer">
                                         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                                         <button type="button" @click="saveChanges" class="btn btn-primary"
-                                            data-bs-dismiss="modal">Save
-                                            changes</button>
+                                            data-bs-dismiss="modal">Send</button>
                                     </div>
                                 </div>
                             </div>
@@ -191,8 +201,7 @@ import 'nprogress/nprogress.css';
 
 
 export default {
-    components: {
-    },
+    emits: ['profileUpdated'],
     name: "order list",
     props: {
         perPage: {
@@ -203,13 +212,15 @@ export default {
     data() {
         return {
             loader: false,
+            sortKey: '',
+            sortAsc: true,
             selectedUserIds: [],
             groupId: null,
             supplier_profiles: [],
             isLoading: true,
             bank_name: '',
             file: null,
-            users: [],
+            orders: [],
             accordionOpen: {},
             currentPage: 1,
             searchQuery: ''
@@ -217,25 +228,25 @@ export default {
     },
     watch: {
         data(newVal) {
-            this.users = newVal;
+            this.orders = newVal;
         }
     },
     computed: {
 
         filteredUsers() {
-            return this.users.filter(user => {
-                return user.buyer.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (user.supplier.toLowerCase().includes(this.searchQuery));
+            return this.orders.filter(order => {
+                return order.buyer.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                    (order.supplier.toLowerCase().includes(this.searchQuery));
 
             });
         },
         totalPages() {
-            return Math.ceil(this.users.length / this.perPage)
+            return Math.ceil(this.orders.length / this.perPage)
         },
         paginatedData() {
             const start = (this.currentPage - 1) * this.perPage
             const end = start + this.perPage
-            return this.users.slice(start, end)
+            return this.orders.slice(start, end)
         },
         dataToDisplay() {
             if (this.searchQuery) {
@@ -245,9 +256,6 @@ export default {
             }
         }
     },
-    mounted() {
-
-    },
     created() {
         this.fetchUsers().then(() => {
             setTimeout(() => {
@@ -256,6 +264,49 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.orders.sort((a, b) => {
+                let aValue = this.getNestedValue(a, key);
+                let bValue = this.getNestedValue(b, key);
+
+                if (aValue === null || aValue === undefined) aValue = '';
+                if (bValue === null || bValue === undefined) bValue = '';
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+
+        getNestedValue(obj, key) {
+            const keys = key.split('.');
+            let value = obj;
+            for (let i = 0; i < keys.length; i++) {
+                if (value) {
+                    value = value[keys[i]];
+                } else {
+                    return null;
+                }
+            }
+            return value;
+        },
+
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         async saveChanges() {
             this.loader = true;
             NProgress.start();
@@ -288,19 +339,27 @@ export default {
             }
         },
         openSupplierModal() {
-            // Find the first checked user
-            const checkedUser = this.users.find(user => this.selectedUserIds.includes(user.id));
+            if (!this.selectedUserIds.length) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No orders selected',
+                    text: 'Please select at least one order to proceed with pricing.'
+                });
+                return;
+            };
+            // Find the first checked order
+            const checkedUser = this.orders.find(order => this.selectedUserIds.includes(order.id));
             console.log(checkedUser);
-            // Check if a user is found and has a group ID
+            // Check if a order is found and has a group ID
             if (checkedUser && checkedUser.group) {
                 // Set the group ID
                 this.groupId = checkedUser.group;
                 console.log(this.groupId);
-                // Send selected user IDs and group ID to the server
+                // Send selected order IDs and group ID to the server
                 this.fetchSupplierProfiles(this.groupId);
             } else {
-                // Handle case where no checked user with group ID is found
-                console.error('No checked user with group ID found.');
+                // Handle case where no checked order with group ID is found
+                console.error('No checked order with group ID found.');
             }
         },
 
@@ -323,8 +382,8 @@ export default {
             // Refresh the data in the parent component
             this.fetchUsers();
         },
-        statusBadge(user) {
-            switch (user.status) {
+        statusBadge(order) {
+            switch (order.status) {
                 case 'New Order':
                     return 'badge bg-primary';
                 case 'Printview Confirmation':
@@ -345,28 +404,28 @@ export default {
                     return 'badge bg-secondary';
             }
         },
-        updated_at(user) {
-            if (user.updated_at) {
+        updated_at(order) {
+            if (order.updated_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(user.updated_at);
+                const parsedDateTime = parseISO(order.updated_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
         },
-        created_at(user) {
-            if (user.created_at) {
+        created_at(order) {
+            if (order.created_at) {
                 // Parse the datetime string using date-fns
-                const parsedDateTime = parseISO(user.created_at);
+                const parsedDateTime = parseISO(order.created_at);
                 // Format the parsed date using date-fns
                 return format(parsedDateTime, 'dd-MM-yyyy HH:mm');
             } else {
                 return '';
             }
         },
-        toggleAccordion(user) {
-            this.accordionOpen[user.id] = !this.accordionOpen[user.id];
+        toggleAccordion(order) {
+            this.accordionOpen[order.id] = !this.accordionOpen[order.id];
         },
         changePage(page) {
             this.currentPage = page
@@ -388,8 +447,8 @@ export default {
                 try {
                     await axios.delete(`/api/orderDelete/${userId}`);
 
-                    // If successful, remove the user from the local data
-                    this.users = this.users.filter(user => user.id !== userId);
+                    // If successful, remove the order from the local data
+                    this.orders = this.orders.filter(order => order.id !== userId);
 
                     Swal.fire({
                         icon: 'success',
@@ -408,14 +467,14 @@ export default {
             NProgress.start();
             try {
                 const response = await axios.get('/api/orderentry');
-                this.users = response.data;
+                this.orders = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
 
                 NProgress.done();
             } catch (error) {
                 NProgress.done();
-                console.error('Error fetching users:', error);
+                console.error('Error fetching orders:', error);
                 toastr.error('Error fetching data');
             }
         },

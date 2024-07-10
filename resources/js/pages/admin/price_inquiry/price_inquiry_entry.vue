@@ -205,7 +205,8 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
-                                    <input class="form-check-input " id="urgent" type="checkbox" v-model="inquiry.urgent">
+                                    <input class="form-check-input " id="urgent" type="checkbox"
+                                        v-model="inquiry.urgent">
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Urgent
                                     </label>
@@ -252,11 +253,14 @@
                                     class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
                                     Up</button>
 
-                                <button type="button" style="background-color: aqua !important;" v-show="follow_up"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3" @click="quote">Quote Buyer</button>
+                                <button type="button"
+                                    :style="{ 'background-color: aqua !important;': supplierInquiry.length }" style=""
+                                    v-show="follow_up" class="btn btn-sm  fw-bold btn-info m-2 col-3"
+                                    :disabled="!supplierInquiry.length" @click="quote">Quote Buyer</button>
 
-                                <button style="background-color: #bc7803 !important;"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3"  @click="createOrder(inquiry)">Create Order</button>
+                                <button style="background-color: #bc7803 !important;" v-show="follow_up" type="button"
+                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3" data-bs-toggle="modal"
+                                    data-bs-target="#createOrderModal">Create Order</button>
 
                                 <button type="button" style="background-color: #41b400 !important;" v-show="follow_up"
                                     class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
@@ -323,7 +327,7 @@
                     </table>
                 </div>
             </div>
-            <!-- Modal -->
+            <!-- Modal 1-->
             <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -349,6 +353,46 @@
                     </div>
                 </div>
             </div>
+            <!--End Modal 1-->
+            <!-- Modal 2-->
+            <div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="createOrderModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createOrderModalLabel">Select Quantity and Capacity</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Select Quantity</label>
+                                <select v-model="selectedQuantity" class="form-select" id="quantity">
+                                    <option v-for="(material, index) in materials" :key="index"
+                                        :value="material.quantity">
+                                        {{ material.quantity }} Pcs
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Select Capacity</label>
+                                <select v-model="selectedCapacity" class="form-select" id="capacity">
+                                    <option v-for="(caps, index) in capacity" :key="index"
+                                        :value="`${caps.quantity} ${caps.unit}`">
+                                        {{ caps.quantity }} {{ caps.unit }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                @click="createOrder(inquiry)">Create
+                                Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal 2-->
         </form>
         <EventLogTable :filterValue="'Inquiry'" />
     </section>
@@ -360,6 +404,8 @@
 <script>
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
     emits: ['profileUpdated'],
@@ -370,6 +416,8 @@ export default {
     },
     data() {
         return {
+            selectedQuantity: null,
+            selectedCapacity: null,
             loader: false,
             inquiry: {
                 materials: [{ quantity: '' }], // Initialize with default values
@@ -391,9 +439,15 @@ export default {
     methods: {
 
         createOrder(inquiry) {
+            const inquiryData = {
+                ...this.inquiry,
+                selectedQuantity: this.selectedQuantity,
+                selectedCapacity: this.selectedCapacity
+            };
+            this.$store.dispatch('updateInquiry', inquiryData);
             this.$router.push({
                 name: 'order_entry',
-                query: { inquiry: JSON.stringify(inquiry) },
+                // query: { inquiry: JSON.stringify(inquiry) },
             });
         },
 
@@ -418,6 +472,16 @@ export default {
             return this.inquiry.supplier_ids.some(id => id.toString() === supplierId.toString());
         },
         async quote() {
+            if (!this.supplierInquiry.length) {
+               swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select at least one quote from the supplier!',
+                });
+                NProgress.done();
+                this.loader = false;
+                return;
+            }
             const inquiryid = this.$route.params.id;
             console.log(this.supplierInquiry);
             if (inquiryid) {
@@ -466,9 +530,9 @@ export default {
             axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
                 .then(response => {
                     this.supplier_profiles = response.data.map(supplier => {
-                supplier.checked = this.mode === 'edit' ? this.isSupplierIdChecked(supplier.id) : false;
-                return supplier;
-            });
+                        supplier.checked = this.mode === 'edit' ? this.isSupplierIdChecked(supplier.id) : false;
+                        return supplier;
+                    });
                     console.log(this.supplier_profiles);
 
                     NProgress.done();

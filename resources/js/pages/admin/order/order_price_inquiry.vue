@@ -202,6 +202,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
+    emits: ['profileUpdated'],
     props: {
         perPage: {
             type: Number,

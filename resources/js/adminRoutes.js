@@ -163,7 +163,7 @@ const adminRoutes = [
         component: order_list,
     },
     {
-        path: "/edit-order/:id",
+        path: "edit-order/:id",
         name: "order_edit",
         component: order_entry,
         props: {

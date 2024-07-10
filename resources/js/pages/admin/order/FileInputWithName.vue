@@ -5,16 +5,17 @@
         </div>
         <div class="col-9">
             <div class="col-12">
-                <input type="text" class="form-control" :value="fileNames" readonly>
+                <input type="text" class="form-control" :value="fileName" readonly>
             </div>
-            <div class="col-12 ">
+            <div class="col-12">
                 <button type="button" class="btn px-4 btn-milung" @click="importFile">
                     Import
                 </button>
-                <button type="button" class="btn px-4 mx-2 btn-primary my-2" @click="exportFile">
+                <button type="button" class="btn px-4 mx-2 btn-primary my-2" v-if="fileData && fileData.filename"
+                    @click="exportFile">
                     Export
                 </button>
-                <input ref="fileInput" type="file" class="form-control d-none" @change="updateFile">
+                <input ref="fileInput" type="file" class="form-control d-none" @change="handleFileChange">
             </div>
         </div>
     </div>
@@ -22,54 +23,43 @@
 
 <script>
 export default {
-    emits: ['export-file', 'update:files'],
+    emits: ['exportFile', 'updateFiles'],
     props: {
-        label: { type: String, required: true, },
-        files: { type: Object, required: false, },
-        fileData: { type: Object, required: false, },
-
+        label: { type: String, required: true },
+        files: { type: Object, required: false, default: () => ({}) },
+        fileData: { type: Object, required: false, default: () => ({}) },
     },
     data() {
         return {
-            fileNames: '',
-            file: {
-                name: ''
-            },
+            file: null,
+            fileName: '',
         };
     },
     watch: {
         fileData: {
             handler(newVal) {
-                if (newVal && newVal.filename) {
-                    this.fileNames = newVal.filename;
-                } else {
-                    this.fileNames = '';
-                }
+                this.fileName = newVal?.filename || '';
             },
-            immediate: true
-        }
-    },
-    created() {
-        // Set fileNames initially if fileData exists
-        if (this.fileData && this.fileData.filename) {
-            console.log('set initial file names'  , this.fileData.filename);
-            this.fileNames = this.fileData.filename;
-        }
+            immediate: true,
+        },
     },
     methods: {
         importFile() {
             this.$refs.fileInput.click();
         },
-        updateFile(event) {
-            const fileInput = event.target.files[0];
-            const fileName = fileInput.name;
-            this.file = fileInput;
-            this.fileNames = fileName;
-            console.log(fileName);
-            this.$emit('update:files', { file: this.file, fileName: this.fileNames, label: this.label });
+        handleFileChange(event) {
+            const file = event.target.files[0];
+            this.file = file;
+            this.fileName = file.name;
+            this.$emit('updateFiles', { file, fileName: this.fileName, label: this.label });
         },
         exportFile() {
-            this.$emit('export-file', this.file);
+            const fileUrl = `/storage/${this.fileData.filepath}`; // Replace with your file URL
+            const fileName = this.fileData.filename;
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = fileName;
+            a.click();
         },
     },
 };

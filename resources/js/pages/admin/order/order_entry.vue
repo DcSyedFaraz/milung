@@ -3,19 +3,15 @@
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
 
             <div class="container">
+                <div class="d-flex d-flex justify-content-end col-12 my-2 ">
+                    <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
+                    <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
+                </div>
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Order Overview</h3>
                     <div class="col-md-4">
                         <h4 class="text-milung mb-4 fw-bold ">I. Order Information</h4>
 
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Article Number:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.article" class="form-control ">
-                            </div>
-                        </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto ">Status:</p>
@@ -36,6 +32,22 @@
                         </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Milung Order No:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders.milungorder" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Order Date:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" v-model="orders.orderdate" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Buyer Order No:</p>
                             </div>
                             <div class="col-8">
@@ -44,12 +56,15 @@
                         </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Order Reference:</p>
+                                <p for="v-model" class="my-auto fs-7">Previous Order Reference:</p>
                             </div>
                             <div class="col-8">
                                 <input type="text" v-model="orders.reference" class="form-control ">
                             </div>
                         </div>
+
+
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Related inquiry No:</p>
@@ -58,12 +73,24 @@
                                 <input type="text" v-model="orders.inquiry" class="form-control ">
                             </div>
                         </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Milung Order No:</p>
+                                <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.milungorder" class="form-control ">
+                                <!-- <input type="text" v-model="orders.buyer" class="form-control "> -->
+                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                    track-by="id">
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="email" v-model="orders.buyeremail" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -79,29 +106,10 @@
                         </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Order Date:</p>
+                                <p for="v-model" class="my-auto fs-7">Fty item No:</p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders.orderdate" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="email" v-model="orders.buyeremail" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
-                            </div>
-                            <div class="col-8">
-                                <!-- <input type="text" v-model="orders.buyer" class="form-control "> -->
-                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
-                                    track-by="id">
-                                </multiselect>
+                                <input type="text" v-model="orders.ftyitem" class="form-control ">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -121,6 +129,60 @@
                                 <textarea v-model="orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
                             </div>
                         </div>
+
+                        <FileInputWithName label="Logo File" :files="orders.logoFiles" :fileData="orders.logoFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Label File" :files="orders.safetySheetFiles"
+                            :fileData="orders.safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Manual" :files="orders.manualFiles" :fileData="orders.manualFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Safety Sheet" :files="orders.labelFiles" :fileData="orders.labelFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex col-12 my-2 ">
+                            <div class="col-8 my-auto">
+                                <p for="v-model my-auto">Buyer Product Photo/Print View:</p>
+                            </div>
+                            <div class="col-4">
+                                <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">
+                                    Import
+                                </button>
+                                <!-- <button>submit</button> -->
+                                <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2 ">
+                            <div class="col-8 my-aut">
+                                <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
+                            </div>
+                        </div>
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-3 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Quantity:</p>
+                            </div>
+                            <div class="col-9">
+                                <div class="input-group my-2">
+                                    <input type="number" class="form-control" v-model="orders.quantity">
+                                    <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
+                                        <option value="units">units</option>
+                                        <!-- <option value="mAh">mAh</option> -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p for="v-model" class="my-auto fs-7">Article Number:</p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders.article" class="form-control ">
+                            </div>
+                        </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Product Group:</p>
@@ -134,14 +196,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Fty item No:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.ftyitem" class="form-control ">
-                            </div>
-                        </div>
+
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Product Name:</p>
@@ -170,13 +225,13 @@
                                         <option selected value="GB">GB</option>
                                         <option value="mAh">mAh</option>
                                     </select>
-                                    <div class="input-buttons">
+                                    <!-- <div class="input-buttons">
                                         <button class="btn btn-warning btn ms-1" type="button"
                                             @click="addcapacity(indexs)" v-if="indexs === 0">+</button>
                                         <button class="btn btn-danger  ms-2" type="button"
                                             @click="removecapacity(indexs)"
                                             v-if="indexs !== 0 && orders.capacity.length > 1">-</button>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                             </div>
@@ -234,73 +289,10 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex col-12 my-2 ">
-                            <div class="col-8 my-auto">
-                                <p for="v-model my-auto">Buyer Product Photo/Print View:</p>
-                            </div>
-                            <div class="col-4">
-                                <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">
-                                    Import
-                                </button>
-                                <!-- <button>submit</button> -->
-                                <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2 ">
-                            <div class="col-8 my-aut">
-                                <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-3 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Quantity:</p>
-                            </div>
-                            <div class="col-9">
-                                <div class="input-group my-2">
-                                    <input type="number" class="form-control" v-model="orders.quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
-                                        <option value="units">units</option>
-                                        <!-- <option value="mAh">mAh</option> -->
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Log File:</p>
-                            </div>
-                            <div class="col-8">
-                                <div class="col-12">
-
-                                    <input type="text" v-model="orders.logfile" class="form-control ">
-                                </div>
-                                <div class="col-12  justify-content-between">
-                                    <button type="button" class="btn px-4 btn-milung" >
-                                        Import
-                                    </button>
-                                    <button type="button" class="btn px-4 mx-2 btn-primary my-2">
-                                        Export
-                                    </button>
-                                </div>
-                            </div>
-                        </div> -->
-                        <FileInputWithName label="Logo File" :files="orders.logoFiles" :fileData="orders.logoFiles"
-                            @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Label File" :files="orders.safetySheetFiles"
-                            :fileData="orders.safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Manual" :files="orders.manualFiles" :fileData="orders.manualFiles"
-                            @update:files="updateFiles" @export-file="exportFile" />
-                        <FileInputWithName label="Safety Sheet" :files="orders.labelFiles" :fileData="orders.labelFiles"
-                            @update:files="updateFiles" @export-file="exportFile" />
-
-                        <!-- <FileInputWithName label="Label File2" v-model="orders.multiFiles2"
-                            @update:files="updateFiles1" @export-file="exportFile" /> -->
-
 
                     </div>
                     <div class="col-md-4">
+
                         <h4 class="text-milung mb-4 fw-bold ">II. Price:</h4>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
@@ -411,7 +403,7 @@
                                 <input type="text" v-model="orders.atc_number" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
+                        <!-- <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">Shipping Document#:</p>
                             </div>
@@ -426,16 +418,9 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.incoterm" class="form-control ">
                             </div>
-                        </div>
-                        <!-- <div class="d-flex col-12 my-2 bg-danger">
-                            <p>
-                                XD Page not cleared
-                            </p>
                         </div> -->
-                        <div class="d-flex col-12 my-2 ">
-                            <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
-                            <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
-                        </div>
+
+
 
                     </div>
 
@@ -460,6 +445,7 @@ import FileInputWithName from './FileInputWithName.vue';
 import printview from "./printview.vue";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { mapGetters } from 'vuex';
 
 export default {
     emits: ['profileUpdated'],
@@ -487,7 +473,7 @@ export default {
             inputs: [],
             files: [],
             groups: [],
-            inquiry: [],
+            // inquiry: [],
             orders:
             {
 
@@ -515,6 +501,22 @@ export default {
     //     };
     // },
     watch: {
+        inquiry: {
+            immediate: true,
+            handler(newInquiry) {
+                if (newInquiry) {
+                    console.log(newInquiry, 'new');
+                    this.orders.article = newInquiry.article;
+                    this.orders.productname = newInquiry.name;
+                    this.orders.inquiry = newInquiry.inquiry_number;
+                    this.orders.incoterm = newInquiry.incoterm;
+                    this.orders.quantity = this.inquiry.selectedQuantity;
+                    const [quantity, unit] = this.inquiry.selectedCapacity.split(' ');
+                    this.orders.capacity = [{ quantity: parseInt(quantity), unit }];
+
+                }
+            }
+        },
         selectedBuyerId(newValue) {
             // console.log(newValue);
             this.orders.buyer = newValue.id;
@@ -528,12 +530,16 @@ export default {
             // console.log(this.orders.supplier);
         }
     },
+    unmounted() {
+        // console.log('beforeDestroy');
+        this.$store.dispatch('clearInquiry');
+    },
     created() {
         if (this.$route.query.inquiry) {
             this.inquiry = JSON.parse(this.$route.query.inquiry);
-            console.log(this.inquiry,' ho');
-    }
-  },
+            console.log(this.inquiry, ' ho');
+        }
+    },
     methods: {
         fetchSuppliers() {
             axios.get('/api/Suppliers')
@@ -555,9 +561,14 @@ export default {
             axios.get('/api/buyerOrder')
                 .then(response => {
                     this.buyers = response.data;
-                    // console.log(this.buyers);
-                    const selectedbuyerIds = Number(this.orders.buyer);
-                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    console.log(this.inquiry, 'hahah');
+                    let selectedBuyerIds;
+                    if (this.inquiry) {
+                        selectedBuyerIds = Number(this.inquiry.buyer);
+                    } else {
+                        selectedBuyerIds = Number(this.orders.buyer);
+                    }
+                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedBuyerIds);
                     if (selectedbuyer) {
                         this.selectedBuyerId = selectedbuyer;
                     }
@@ -768,6 +779,7 @@ export default {
         },
         fetchorder(orderId) {
             NProgress.start();
+            this.showProgress = true;
             axios.get(`/api/orderentry/${orderId}`)
                 .then(response => {
                     this.orders = response.data;
@@ -795,12 +807,12 @@ export default {
                         this.orders.quantity = quantity;
                     }
                     // console.log('files ', this.orders.files[0]['filepath']);
-                    if (this.orders.files != null) {
-                        this.loadImageFromPath(
-                            this.orders.files['filepath'],
-                            this.$refs.canvas
-                        );
+                    const firstOrderFile = this.orders?.files?.[0];
+
+                    if (firstOrderFile && firstOrderFile.filepath) {
+                        this.loadImageFromPath(firstOrderFile.filepath, this.$refs.canvas);
                     }
+
                     // this.loadImageFromPath(this.orders.files[0]['filepath'], this.$refs.canvas);
                     this.orders.unit = 'units';
                     NProgress.done();
@@ -808,21 +820,20 @@ export default {
                     setTimeout(() => {
                         this.showPrintView = true;
                     }, 1000);
+                    this.showProgress = false;
                 })
                 .catch(error => {
+                    this.showProgress = false;
                     console.error(error);
                     NProgress.done();
                 });
         },
     },
     mounted() {
-
+        this.orders.unit = 'units';
         if (this.isEditing) {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);
-
-
-
         }
         NProgress.configure({ showSpinner: false });
         this.fetchSuppliers();
@@ -835,6 +846,7 @@ export default {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);
     },
     computed: {
+        ...mapGetters(['inquiry']),
         selectedGroup() {
             return this.groups.find(group => group.id === this.orders.group);
         },

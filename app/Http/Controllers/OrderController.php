@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -76,7 +77,7 @@ class OrderController extends Controller
                     \Notification::send($user, new UserNotification($message, 'New Order', $route, $routeParams));
 
                     // Send the email to the supplier
-                    \Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order'));
+                    Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order'));
 
                 } else {
                     return response()->json(['message' => 'The supplier has not provided a price quote yet.', 'success' => false], 200);
@@ -263,14 +264,14 @@ class OrderController extends Controller
             'packaging' => 'required|string',
             'packagingprinting' => 'required',
             'quantity' => 'required|string',
-            'buyingprice' => 'nullable|integer',
-            'sellingprice' => 'nullable|integer',
-            'totalvalue' => 'nullable|integer',
+            'buyingprice' => 'nullable|numeric',
+            'sellingprice' => 'nullable|numeric',
+            'totalvalue' => 'nullable|numeric',
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
             'atc_number' => 'required|string',
-            'ship_doc' => 'required|string',
-            'incoterm' => 'required|string',
+            // 'ship_doc' => 'required|string',
+            // 'incoterm' => 'required|string',
             'orderremarks' => 'required|string',
             'qcremarks' => 'required|string',
             'status' => 'required|string',
@@ -327,7 +328,7 @@ class OrderController extends Controller
     public function orderentry(Request $request)
     {
         $data = $request->all();
-        // dd($data);
+        dd($data);
 
 
         $validatedData = Validator::make($data, [
@@ -356,8 +357,8 @@ class OrderController extends Controller
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
             'atc_number' => 'required|string',
-            'ship_doc' => 'required|string',
-            'incoterm' => 'required|string',
+            // 'ship_doc' => 'required|string',
+            // 'incoterm' => 'required|string',
             'orderremarks' => 'required|string',
             'qcremarks' => 'required|string',
             'status' => 'required|string',
