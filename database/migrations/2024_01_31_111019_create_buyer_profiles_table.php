@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('buyer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('buyer_id');
+            $table->string('buyer_id')->unique();
             $table->string('status')->default('active');
             $table->string('name');
             $table->string('address');

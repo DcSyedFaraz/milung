@@ -1,7 +1,7 @@
 INSERT INTO
     `supplier_profiles` (
         `id`,
-        `user_id`,
+        `supplier_id`,
         `address`,
         `website`,
         `office_phone`,
@@ -15,8 +15,7 @@ INSERT INTO
 VALUES
     (
         1,
-        3,
-        'Corrupti facilis qu',
+        'supplier01',
         'locowi@mailinator.com',
         'Ea sunt sit fugiat v',
         'Ad est sit mollit ve',

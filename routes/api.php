@@ -199,6 +199,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::post('placeAll', [OrderController::class, 'placeAll']);
     Route::get('shipmentsget', [ShipmentController::class, 'shipmentsget']);
     Route::get('Suppliers', [OrderController::class, 'Suppliers']);
+    Route::get('article', [OrderController::class, 'article']);
     Route::get('printview/{id}', [BuyerOrderController::class, 'printviewget'])->middleware('can:printviewConfirmRejectButton');
     Route::post('printview/{id}', [BuyerOrderController::class, 'printview'])->middleware('can:printviewConfirmRejectButton');
     Route::post('masscargo/{id}', [SupplierOrderController::class, 'masscargo'])->middleware('can:massCargoPhotoApproval');

@@ -504,7 +504,7 @@ class UserController extends Controller
     }
     public function buyerOrder()
     {
-        $users = User::withRole('Buyer')->select('id', 'userid')->get();
+        $users = BuyerProfile::select('id', 'buyer_id')->get();
 
         return response()->json($users, 200);
     }

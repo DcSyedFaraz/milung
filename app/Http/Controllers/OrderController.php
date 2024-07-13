@@ -6,6 +6,8 @@ use App\Mail\PriceInquiryNotification;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\OrderSupplier;
+use App\Models\Products;
+use App\Models\SupplierProfile;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
@@ -21,12 +23,17 @@ class OrderController extends Controller
 {
     public function orderentryget()
     {
-        $order = Order::select('id', 'buyer', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->with('buyerid', 'supplierid')->orderby('created_at', 'desc')->get();
+        $order = Order::with('buyerid', 'shipmentOrders', 'supplierid', 'product_group')->orderby('created_at', 'desc')->get();
+        return response()->json($order, 200);
+    }
+    public function article()
+    {
+        $order = Products::pluck('article');
         return response()->json($order, 200);
     }
     public function Suppliers()
     {
-        $users = User::role('Supplier')->get();
+        $users = SupplierProfile::select('id', 'supplier_id')->get();
         return response()->json($users, 200);
     }
     public function placeAll(Request $request)
@@ -246,13 +253,13 @@ class OrderController extends Controller
 
         $validatedData = Validator::make($data, [
             'group' => 'required|string',
-            'article' => 'required|string',
+            'article' => 'required|string|exists:products,article',
             'buyerorder' => 'required|string',
             'reference' => 'required|string',
             'inquiry' => 'required|string',
             'milungorder' => 'required|string',
-            'supplier' => 'exists:users,id',
-            'buyer' => 'required|exists:users,id',
+            'supplier' => 'exists:supplier_profiles,id',
+            'buyer' => 'required|exists:buyer_profiles,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
             'ftyitem' => 'required|string',
@@ -328,18 +335,18 @@ class OrderController extends Controller
     public function orderentry(Request $request)
     {
         $data = $request->all();
-        dd($data);
+        // dd($data);
 
 
         $validatedData = Validator::make($data, [
             'group' => 'required|string',
-            'article' => 'required|string',
+            'article' => 'required|string|exists:products,article',
             'buyerorder' => 'required|string',
             'reference' => 'required|string',
             'inquiry' => 'required|string',
             'milungorder' => 'required|string',
-            'supplier' => 'exists:users,id',
-            'buyer' => 'required|exists:users,id',
+            'supplier' => 'exists:supplier_profiles,id',
+            'buyer' => 'required|exists:buyer_profiles,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
             'ftyitem' => 'required|string',

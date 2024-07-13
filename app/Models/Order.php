@@ -47,15 +47,15 @@ class Order extends Model
     }
     public function buyerid()
     {
-        return $this->belongsTo(User::class, 'buyer')->select('id', 'userid');
+        return $this->belongsTo(BuyerProfile::class, 'buyer')->select('id', 'buyer_id');
     }
     public function supplierid()
     {
-        return $this->belongsTo(User::class, 'supplier')->select('id', 'userid');
+        return $this->belongsTo(SupplierProfile::class, 'supplier')->select('id', 'supplier_id');
     }
     public function supplier()
     {
-        return $this->belongsTo(User::class, 'supplier');
+        return $this->belongsTo(SupplierProfile::class, 'supplier');
     }
     public function shipmentOrders()
     {

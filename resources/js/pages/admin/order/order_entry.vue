@@ -80,7 +80,7 @@
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders.buyer" class="form-control "> -->
-                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
                                     track-by="id">
                                 </multiselect>
                             </div>
@@ -100,7 +100,7 @@
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders.supplier" class="form-control "> -->
                                 <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing"
-                                    :options="suppliers" field="id" label="userid" track-by="id">
+                                    :options="suppliers" field="id" label="supplier_id" track-by="id">
                                 </multiselect>
                             </div>
                         </div>
@@ -180,7 +180,9 @@
                                 <p for="v-model" class="my-auto fs-7">Article Number:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.article" class="form-control ">
+                                <!-- <input type="text" v-model="orders.article" class="form-control "> -->
+                                <multiselect v-model="orders.article" :options="article" >
+                            </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -465,6 +467,7 @@ export default {
             showPrintView: false,
             suppliers: [],
             so: [],
+            article: [],
             selectedSupplierId: [],
             selectedsoId: [],
             selectedBuyerId: [],
@@ -535,6 +538,7 @@ export default {
         this.$store.dispatch('clearInquiry');
     },
     created() {
+        this.articleget();
         if (this.$route.query.inquiry) {
             this.inquiry = JSON.parse(this.$route.query.inquiry);
             console.log(this.inquiry, ' ho');
@@ -556,12 +560,22 @@ export default {
                     console.error(error);
                 });
         },
+        articleget() {
+            axios.get('/api/article')
+                .then(response => {
+                    this.article = response.data;
+                    console.log('article',this.article);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
 
         fetchBuyers() {
             axios.get('/api/buyerOrder')
                 .then(response => {
                     this.buyers = response.data;
-                    console.log(this.inquiry, 'hahah');
+                    console.log(this.buyers, 'hahah');
                     let selectedBuyerIds;
                     if (this.inquiry) {
                         selectedBuyerIds = Number(this.inquiry.buyer);
@@ -788,6 +802,11 @@ export default {
                     const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
                     if (selectedSupplier) {
                         this.selectedSupplierId = selectedSupplier;
+                    }
+                   const selectedBuyerIds = Number(this.orders.buyer);
+                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedBuyerIds);
+                    if (selectedbuyer) {
+                        this.selectedBuyerId = selectedbuyer;
                     }
                     // Pre-fill capacity if it exists
                     if (this.orders.capacity) {

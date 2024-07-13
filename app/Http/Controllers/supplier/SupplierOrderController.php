@@ -9,6 +9,7 @@ use App\Models\Printview;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Storage;
 use Validator;
 
 class SupplierOrderController extends Controller
@@ -88,6 +89,7 @@ class SupplierOrderController extends Controller
             'cargo_packaging' => 'nullable|image',
             'cargo_accessories' => 'nullable|image',
             'cargo_reason' => 'nullable|string',
+            'action' => 'required|string',
         ]);
         // dd($request->all(), $id);
 
@@ -100,19 +102,31 @@ class SupplierOrderController extends Controller
         $MassCargo = MassCargo::where('order_id', $id)->first();
 
         if ($MassCargo) {
-            $MassCargo->reason = $request->input('cargo_reason');
+            if ($request->input('cargo_reason')) {
+                $MassCargo->cargo_reason = $request->input('cargo_reason');
+            }
 
             if ($request->hasFile('cargo_product')) {
-                $MassCargo->product = $request->file('cargo_product')->store('orders/images', 'public');
+                if ($MassCargo->cargo_product) {
+                    Storage::disk('public')->delete($MassCargo->cargo_product);
+                }
+                $MassCargo->cargo_product = $request->file('cargo_product')->store('orders/images', 'public');
             }
 
             if ($request->hasFile('cargo_packaging')) {
-                $MassCargo->packaging = $request->file('cargo_packaging')->store('orders/images', 'public');
+                if ($MassCargo->cargo_packaging) {
+                    Storage::disk('public')->delete($MassCargo->cargo_packaging);
+                }
+                $MassCargo->cargo_packaging = $request->file('cargo_packaging')->store('orders/images', 'public');
             }
 
             if ($request->hasFile('cargo_accessories')) {
-                $MassCargo->accessories = $request->file('cargo_accessories')->store('orders/images', 'public');
+                if ($MassCargo->cargo_accessories) {
+                    Storage::disk('public')->delete($MassCargo->cargo_accessories);
+                }
+                $MassCargo->cargo_accessories = $request->file('cargo_accessories')->store('orders/images', 'public');
             }
+            $MassCargo->action = $request->input('action');
 
             $MassCargo->save();
         } else {
@@ -121,6 +135,7 @@ class SupplierOrderController extends Controller
             }
             $MassCargo = MassCargo::create([
                 'order_id' => $id,
+                'action' => $request->input('action'),
                 'cargo_reason' => $request->input('cargo_reason'),
                 'cargo_product' => $request->hasFile('cargo_product') ? $request->file('cargo_product')->store('orders/images', 'public') : null,
                 'cargo_packaging' => $request->hasFile('cargo_packaging') ? $request->file('cargo_packaging')->store('orders/images', 'public') : null,

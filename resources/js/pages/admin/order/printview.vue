@@ -121,8 +121,11 @@
             </div>
             <div class="col-4 my-auto mx-auto">
                 <div class="">
-                    <button class="btn btn-success px-5" @click="CargoApiRequest">
-                        Send
+                    <button class="btn btn-success" @click="CargoApiRequest('approve')">
+                        Approve
+                    </button>
+                    <button class="btn btn-danger mx-2" @click="CargoApiRequest('reject')">
+                        Reject
                     </button>
                 </div>
             </div>
@@ -261,7 +264,7 @@ export default {
                     NProgress.done();
                 });
         },
-        async CargoApiRequest() {
+        async CargoApiRequest(action) {
             try {
                 if (this.$refs.cargo_productInput.files[0]) {
                     this.cargoData.append(
@@ -286,7 +289,7 @@ export default {
                 if (this.cargo_reason) {
                     this.cargoData.append("cargo_reason", this.cargo_reason);
                 }
-
+                this.cargoData.append("action", action);
                 console.log(this.cargoData);
 
                 const response = await axios.post(

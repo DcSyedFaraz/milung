@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('cargo_packaging')->nullable();
             $table->string('cargo_accessories')->nullable();
             $table->longText('cargo_reason')->nullable();
+            $table->string('action')->nullable();
             $table->timestamps();
         });
     }

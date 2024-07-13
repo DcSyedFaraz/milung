@@ -72,8 +72,8 @@
                                 </tr>
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
-                                <tr class="text-center" style="border-bottom-color: snow !important;">
-                                    <td>
+                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;">
+                                    <td  @click="toggleAccordion(order)">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
                                                 v-show="order.status == 'New Order'" :value="order.id"
@@ -83,16 +83,16 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td  @click="toggleAccordion(order)">
                                         {{ order.id }}
                                     </td>
-                                    <td>
+                                    <td  @click="toggleAccordion(order)">
                                         <span :class="statusBadge(order)">{{ order.status }}</span>
                                     </td>
-                                    <td>{{ updated_at(order) }}</td>
-                                    <td>{{ created_at(order) }}</td>
-                                    <td>{{ order.sendoutdate }}</td>
-                                    <td>{{ order.supplierid?.userid }}</td>
+                                    <td  @click="toggleAccordion(order)">{{ updated_at(order) }}</td>
+                                    <td  @click="toggleAccordion(order)">{{ created_at(order) }}</td>
+                                    <td  @click="toggleAccordion(order)">{{ order.sendoutdate }}</td>
+                                    <td @click="toggleAccordion(order)">{{ order.supplierid?.userid }}</td>
 
 
                                     <td>
@@ -101,7 +101,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button> -->
                                         <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
-                                            v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2">
+                                            v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2 btn">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -112,8 +112,8 @@
                                 </tr>
                                 <transition name="fade">
                                     <tr v-show="accordionOpen[order.id]">
-                                        <td :colspan="7">
-                                            <!-- <PriceInquiry mode="edit" :order="order" @record-updated="handleRecordUpdated" /> -->
+                                        <td :colspan="9">
+                                            <Ordershow :orders="order" />
                                         </td>
                                     </tr>
                                 </transition>
@@ -198,10 +198,14 @@ import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import Ordershow from './ordershow.vue';
 
 
 export default {
     emits: ['profileUpdated'],
+    components: {
+        Ordershow
+    },
     name: "order list",
     props: {
         perPage: {

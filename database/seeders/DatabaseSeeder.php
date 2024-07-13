@@ -26,11 +26,11 @@ class DatabaseSeeder extends Seeder
     {
         try {
             $sql = file_get_contents(base_path('database/seeders/milung.sql'));
-            $sql1 = file_get_contents(base_path('database/seeders/supplier_profiles.sql'));
+            // $sql1 = file_get_contents(base_path('database/seeders/supplier_profiles.sql'));
             $sql2 = file_get_contents(base_path('database/seeders/orders.sql'));
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement($sql);
-            DB::statement($sql1);
+            // DB::statement($sql1);
             DB::statement($sql2);
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         } catch (\Exception $e) {

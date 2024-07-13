@@ -56,12 +56,12 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr v-for="product in dataToDisplay" :key="product.id">
+                                <tr v-for="product in dataToDisplay" :key="product.id" v-if="dataToDisplay.length > 0">
                                     <td>{{ product.article }}</td>
                                     <td>
                                         <span v-if="product && product.images && product.images.length > 0">
-                                            <img class="img-thumbnail" :src="'/storage/' + product.images[0].path" alt="Product Image"
-                                                width="80" >
+                                            <img class="img-thumbnail" :src="'/storage/' + product.images[0].path"
+                                                alt="Product Image" width="80">
                                         </span>
                                     </td>
                                     <td>{{ product.name }}</td>
@@ -90,7 +90,11 @@
                                         </a>
                                     </td>
                                 </tr>
-
+                                <tr v-else>
+                                    <td colspan="10" class="text-center fst-italic">
+                                        no products availaible
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -139,7 +143,7 @@ export default {
             isLoading: true,
             users: {
                 images: []
-             },
+            },
             accordionOpen: {},
             currentPage: 1,
             searchQuery: ''
