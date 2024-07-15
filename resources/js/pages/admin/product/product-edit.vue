@@ -4,7 +4,14 @@
 
             <div class="container">
                 <div class="row">
-                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <div class="import-container">
+                            <button class="btn import-button" type="button" @click="triggerFileInput">Import</button>
+                            <div class="filename-display">{{ filename }}</div>
+                            <button class="btn browse-button" type="button" @click="triggerFileInput">Browse</button>
+                            <input type="file" ref="filenameInput" class="file-input" @change="updateFilename">
+                        </div>
+                    </div>
                     <div class="col-md-6 gap-2">
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-milung mx-2 px-4" type="submit">Save</button>
@@ -392,7 +399,8 @@
                                         class="form-control">
                                 </div>
                                 <div class="col-4">
-                                    <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard Printing
+                                    <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard
+                                        Printing
                                         Method:</label>
                                 </div>
                                 <div class="col-8">
@@ -501,6 +509,7 @@
 
                     </div>
                 </div>
+
             </div>
             <div class="container d-flex p-4" style="background-color: #14245c;">
                 <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
@@ -511,6 +520,53 @@
                 </div>
             </div>
         </form>
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header pt-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="col-6">
+                                <span class="mt-2 fw-bold fs-4" style="color: #14245c;">Order History:</span>
+                            </div>
+                            <div class="col-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body rounded-top">
+                        <table class="table table-striped display text-center">
+                            <thead style="color: #009de1;">
+                                <tr class="rounded-top-new">
+                                    <th>Order Number</th>
+                                    <th>Supplier ID</th>
+                                    <th>Quantity</th>
+                                    <th>Order Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(order, index) in product.orders" :key="index"
+                                    v-if="product.orders?.length > 0">
+                                    <td>
+                                        <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
+                                            class="text- underline">
+                                            {{ order.id }}
+                                        </router-link>
+                                    </td>
+                                    <td>{{ order.supplierid.supplier_id }}</td>
+                                    <td>{{ order.quantity_unit }}</td>
+                                    <td>{{ order.totalvalue }} USD</td>
+                                </tr>
+                                <tr v-else>
+                                    <td colspan="8" class="text-center">
+                                        No orders available
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <EventLogTable :filterValue="'Product'" />
     </section>
     <div v-if="loader" class="loader-overlay">
         <div class="loader"></div>
@@ -534,6 +590,7 @@ export default {
     },
     data() {
         return {
+            filename: 'Filename.xls',
             loader: false,
             componentKey: 0,
             group: {
@@ -542,6 +599,7 @@ export default {
             },
             Dates: '',
             productOptions: [],
+            orders: [],
             selectedImages: [],
             selectedFiles: [],
             uploadedFiles: {},
@@ -567,6 +625,13 @@ export default {
         },
     },
     methods: {
+        triggerFileInput() {
+            this.$refs.filenameInput.click();
+        },
+        updateFilename(event) {
+            const file = event.target.files[0];
+            this.filename = file ? file.name : 'No file chosen';
+        },
         addPrintArea() {
             this.product.print_areas.push({ position: '', size: '', method: '' });
         },
@@ -823,5 +888,43 @@ export default {
     text-align: center;
     padding: 20px;
     color: #999;
+}
+
+.import-container {
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.import-button {
+    background-color: #00a6e6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+}
+
+.filename-display {
+    background-color: #f0f8fc;
+    padding: 10px 20px;
+    border: 1px solid #d1e7f0;
+    font-family: sans-serif;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.browse-button {
+    background-color: #1d3c77;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.file-input {
+    display: none;
 }
 </style>

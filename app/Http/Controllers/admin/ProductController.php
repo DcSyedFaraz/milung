@@ -30,6 +30,12 @@ class ProductController extends Controller
         $prod = ProductGroup::where('id', $id)->with('additionalFields')->first();
         return response()->json($prod, 200);
     }
+    public function product($id)
+    {
+        $product = Products::where('id', $id)->with('printAreas', 'images','product_group','orders.supplierid')->first();
+        // dd($product);
+        return response()->json($product, 200);
+    }
     public function product_group_update(Request $request, $id)
     {
         // dd($request->all());

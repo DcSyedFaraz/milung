@@ -79,7 +79,7 @@
                                                 v-show="order.status == 'New Order'" :value="order.id"
                                                 id="flexCheckDefault" v-model="selectedUserIds">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                {{ order.buyerid?.userid }}
+                                                {{ order.buyerid?.buyer_id }}
                                             </label>
                                         </div>
                                     </td>
@@ -92,7 +92,7 @@
                                     <td  @click="toggleAccordion(order)">{{ updated_at(order) }}</td>
                                     <td  @click="toggleAccordion(order)">{{ created_at(order) }}</td>
                                     <td  @click="toggleAccordion(order)">{{ order.sendoutdate }}</td>
-                                    <td @click="toggleAccordion(order)">{{ order.supplierid?.userid }}</td>
+                                    <td @click="toggleAccordion(order)">{{ order.supplierid?.supplier_id }}</td>
 
 
                                     <td>
