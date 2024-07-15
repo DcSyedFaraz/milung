@@ -7,7 +7,7 @@
                     <div class="col-6"></div>
                     <div class="col-md-6 gap-2">
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-milung mx-2 px-4" type="submit">Save</button>
+                            <button class="btn btn-milung mx-2 px-2" type="submit">Save</button>
                             <button class="btn btn-warning px-4" type="reset">Clear</button>
                         </div>
                     </div>

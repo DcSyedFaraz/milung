@@ -62,8 +62,11 @@
                                             <label for="registerEmail" class="form-label">Supplier/Buyer ID</label>
                                             <multiselect v-model="selectedOption" :options="parent_id"
                                                 @change="updateParentIdAndName" label="userid"
-                                                v-if="parent_id && parent_id.length > 0" track-by="id"></multiselect>
-                                            <small v-else class=""> Selected role in not Supplier/Buyer</small>
+                                                v-if="parent_id && parent_id.length > 0 && (user.roles === 'Supplier' || user.roles === 'Buyer')">
+                                            </multiselect>
+                                            <small v-else-if="user.roles !== 'Supplier' && user.roles !== 'Buyer'"
+                                                class=""> Selected role is not Supplier/Buyer</small>
+                                            <small v-else class=""> No data available for Supplier/Buyer ID</small>
                                         </div>
                                         <div class="mb-3 col-3">
                                             <label for="registerEmail" class="form-label">Register Email</label>

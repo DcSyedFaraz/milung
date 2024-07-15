@@ -5,12 +5,31 @@
             <div class="container">
                 <div class="row">
                     <div class="col-6">
-                        <div class="import-container">
-                            <button class="btn import-button" type="button" @click="triggerFileInput">Import</button>
+                        <div class="input-group mb-3 col-8">
+                            <label class="input-group-text" for="inputGroupFile01"
+                                style=" background-color: #00a6e6; color: white;">Import</label>
                             <div class="filename-display">{{ filename }}</div>
-                            <button class="btn browse-button" type="button" @click="triggerFileInput">Browse</button>
+                            <select v-model="selectedSupplier" class="form-select">
+                                <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                                    {{ supplier.supplier_id }}
+                                </option>
+                            </select>
+                            <button class="btn btn-milung" type="button" @click="triggerFileInput">Browse</button>
                             <input type="file" ref="filenameInput" class="file-input" @change="updateFilename">
                         </div>
+                        <!-- <div class="import-container col-8">
+                            <button class="btn import-button" type="button" @click="triggerFileInput">Import</button>
+                            <div class="filename-display">{{ filename }}</div>
+                            <div class="col-4">
+
+                                <select v-model="selectedSupplier" class="form-select">
+                                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                                        {{ supplier.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <button class="btn browse-button" type="button" @click="triggerFileInput">Browse</button>
+                        </div> -->
                     </div>
                     <div class="col-md-6 gap-2">
                         <div class="d-flex justify-content-end">
@@ -509,7 +528,62 @@
 
                     </div>
                 </div>
-
+                <div class="row mt-5">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header pt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="col-6">
+                                        <span class="mt-2 fw-bold fs-4" style="color: #14245c;">7. Supplier
+                                            Quote:</span>
+                                    </div>
+                                    <div class="col-4">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body rounded-top">
+                                <table class="table table-striped display text-center">
+                                    <thead style="color: #009de1;">
+                                        <tr class="rounded-top-new">
+                                            <th>Supplier ID</th>
+                                            <th>FTY Item No.</th>
+                                            <th>MOQ</th>
+                                            <th>Buying Unit Price</th>
+                                            <th>Selling Unit Price</th>
+                                            <th>Quote Sheet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(quote, index) in product.quotes" :key="index"
+                                            v-if="product.quotes?.length > 0">
+                                            <td>
+                                                <!-- <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
+                                                    class="text- underline">
+                                                </router-link> -->
+                                                {{ quote.supplier?.supplier_id }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td> USD</td>
+                                            <td> USD</td>
+                                            <td>
+                                                <a :href="'/storage/' + quote.path" :download="quote.filename"
+                                                    class="btn px-4 mx-2 btn-outline-primary  ">
+                                                    {{ quote.filename }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td colspan="8" class="text-center">
+                                                No quotes available
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="container d-flex p-4" style="background-color: #14245c;">
                 <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
@@ -590,7 +664,9 @@ export default {
     },
     data() {
         return {
-            filename: 'Filename.xls',
+            suppliers: [],
+            selectedSupplier: null,
+            filename: 'No file chosen',
             loader: false,
             componentKey: 0,
             group: {
@@ -618,6 +694,7 @@ export default {
     },
     mounted() {
         this.fetchProductDetails();
+        this.fetchSuppliers();
     },
     watch: {
         Dates: function (newDate, oldDate) {
@@ -625,6 +702,14 @@ export default {
         },
     },
     methods: {
+        async fetchSuppliers() {
+            try {
+                const response = await axios.get('/api/Suppliers'); // Adjust the endpoint as needed
+                this.suppliers = response.data;
+            } catch (error) {
+                console.error('Error fetching suppliers:', error);
+            }
+        },
         triggerFileInput() {
             this.$refs.filenameInput.click();
         },
@@ -707,8 +792,15 @@ export default {
 
             console.log('Form submitted with images:', this.quoteExpiredDate);
 
+            const fileInput = this.$refs.filenameInput;
+            const file = fileInput.files[0];
             // Create a new FormData object
             const formData = new FormData();
+
+            if (file) {
+                formData.append('quotefile', file);
+                formData.append('supplier_id', this.selectedSupplier);
+            }
             console.log(this.group.id);
             formData.append('group', this.group.id);
             // Append form fields to FormData dynamically

@@ -158,7 +158,7 @@ class SupplierShipmentController extends Controller
         Notification::send($admins, new \App\Notifications\UserNotification($messages, 'Account Payable', 'payable'));
 
         foreach ($admins as $admin) {
-            //Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
+            Mail::to($admin->email)->send(new \App\Mail\PriceInquiryNotification($messages, 'Account Payable'));
         }
 
         return response()->json(['message' => 'The file has been uploaded successfully.'], 201);

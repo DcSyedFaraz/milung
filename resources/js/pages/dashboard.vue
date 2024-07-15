@@ -176,7 +176,7 @@
         <!-- End Header -->
 
         <!-- ======= Sidebar ======= -->
-        <aside id="sidebar" class="sidebar" :key="componentKey">
+        <aside id="sidebar" class="sidebar" :key="componentsKey">
             <div class="logo-img"><img src="../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
 
@@ -373,7 +373,7 @@ import './admin/index';
 export default {
     data() {
         return {
-            componentKey: 0,
+            componentsKey: 0,
             userDetails: {},
         }
     },
@@ -407,7 +407,7 @@ export default {
             setTimeout(() => {
                 this.$nextTick(() => {
                     // console.log('load');
-                    this.componentKey++;
+                    this.componentsKey++;
                 });
             }, 2000);
         },
@@ -421,7 +421,7 @@ export default {
             setTimeout(() => {
                 this.$nextTick(() => {
                     // console.log('load');
-                    this.componentKey++;
+                    this.componentsKey++;
                 });
             }, 2000);
         },

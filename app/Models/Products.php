@@ -26,6 +26,10 @@ class Products extends Model
     {
         return $this->hasMany(PrintArea::class);
     }
+    public function quotes()
+    {
+        return $this->hasMany(ProductQuotation::class,'product_id');
+    }
     public function orders()
     {
         return $this->hasMany(Order::class,'article','article')->select('article','supplier','id','quantity_unit','totalvalue');

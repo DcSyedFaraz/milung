@@ -9,6 +9,7 @@ use App\Models\InquirySupplier;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\ProductImages;
+use App\Models\ProductQuotation;
 use App\Models\Products;
 use App\Models\User;
 use App\Notifications\UserNotification;
@@ -32,7 +33,7 @@ class ProductController extends Controller
     }
     public function product($id)
     {
-        $product = Products::where('id', $id)->with('printAreas', 'images','product_group','orders.supplierid')->first();
+        $product = Products::where('id', $id)->with('printAreas', 'images', 'product_group', 'orders.supplierid', 'quotes.supplier')->first();
         // dd($product);
         return response()->json($product, 200);
     }
@@ -247,7 +248,7 @@ class ProductController extends Controller
         \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation', 'buyer_price_inquiry_edit', ['id' => $inquiry->id]));
 
         // Send the email to the buyer
-        //Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
+        Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
         $this->logEvent('Inquiry', "Price Inquiry# {$inquiry->inquiry_number} supplier quoted. ");
         return response()->json(['message' => 'Quote selected successfully'], 201);
     }
@@ -292,7 +293,7 @@ class ProductController extends Controller
                 \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
-                //Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
             }
         }
 
@@ -542,6 +543,26 @@ class ProductController extends Controller
                 $this->logEvent('Product', 'Article Number ' . $product->article . ' status changed from ' . $product->status . 'to ' . $validatedData['status']);
             }
             $product->update($validatedData);
+
+            if (isset($request->quotefile) && $request->hasFile('quotefile')) {
+                $file = $request->file('quotefile');
+                $existingFile = ProductQuotation::where('product_id', $id)
+                    ->where('supplier_profile_id', $request->supplier_id)
+                    ->first();
+
+                if ($existingFile && isset($existingFile->path) && Storage::disk('public')->exists($existingFile->path)) {
+                    Storage::disk('public')->delete($existingFile->path);
+                }
+
+                // Store the new file
+                $path = $file->store('quotefile', 'public');
+                $originalName = $file->getClientOriginalName();
+
+                ProductQuotation::updateOrCreate(
+                    ['product_id' => $id, 'supplier_profile_id' => $request->supplier_id],
+                    ['path' => $path, 'filename' => $originalName]
+                );
+            }
             $product->printAreas()->delete();
 
             $print_areas = json_decode($request->input('print_areas'), true);
@@ -762,7 +783,7 @@ class ProductController extends Controller
      */
     public function price_inquiry_get()
     {
-        $prod = PriceInquiry::orderby('created_at', 'desc')->with('product_group','inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->get();
+        $prod = PriceInquiry::orderby('created_at', 'desc')->with('product_group', 'inquirysuppliers.user', 'inquirysuppliers.supplierremarks')->get();
         if ($prod->isNotEmpty()) {
             $prod = $prod->map(function ($item) {
                 // Group inquirysuppliers by user ID, handle potential null values

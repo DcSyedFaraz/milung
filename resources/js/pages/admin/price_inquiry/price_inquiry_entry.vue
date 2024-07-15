@@ -13,8 +13,8 @@
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text" v-model="inquiry.buyer" class="form-control"> -->
-                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
-                                    :disabled="mode === 'edit'" track-by="id">
+                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
+                                     track-by="id">
                                 </multiselect>
                             </div>
                         </div>
@@ -272,11 +272,15 @@
                 </div>
                 <div class="row" v-for="(rows, index) in supplierData" :key="index"
                     v-if="supplierData && Object.keys(supplierData).length > 0">
-                    <h3 class="text-milung mb-4 fw-bold text-uppercase">
-
-
-                        {{ index }} Inquiry Quote
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">{{ index }} Inquiry Quote
                     </h3>
+                    <div class="d-flex justify-content-between">
+                        <label>
+                            <input type="radio" :value="index" v-model="selectedSupplier"
+                                @change="selectAllRows(index)">
+                            Select All for {{ index }}
+                        </label>
+                    </div>
                     <table class="table table-striped table-hover">
                         <thead style="color: #009de1" class="text-center">
                             <tr style="">
@@ -292,6 +296,7 @@
                                 <td class="text-nowrap">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" v-model="supplierInquiry"
+                                            :disabled="selectedSupplier !== null && selectedSupplier !== index"
                                             :value="row.id" :checked="!!row.selected">
                                         <label class="form-check-label">
                                             {{ row.capacity }}
@@ -416,6 +421,7 @@ export default {
     },
     data() {
         return {
+            selectedSupplier: null,
             selectedQuantity: null,
             selectedCapacity: null,
             loader: false,
@@ -437,7 +443,24 @@ export default {
         };
     },
     methods: {
-
+        selectAllRows(supplierIndex) {
+            this.supplierData[supplierIndex].forEach(row => {
+                row.selected = true;
+            });
+            // Uncheck and disable all other suppliers' rows
+            Object.keys(this.supplierData).forEach(key => {
+                if (key !== supplierIndex) {
+                    this.supplierData[key].forEach(row => {
+                        row.selected = false;
+                        row.disabled = true;
+                    });
+                } else {
+                    this.supplierData[key].forEach(row => {
+                        row.disabled = false;
+                    });
+                }
+            });
+        },
         createOrder(inquiry) {
             const inquiryData = {
                 ...this.inquiry,
@@ -473,7 +496,7 @@ export default {
         },
         async quote() {
             if (!this.supplierInquiry.length) {
-               swal.fire({
+                swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Please select at least one quote from the supplier!',
@@ -483,11 +506,20 @@ export default {
                 return;
             }
             const inquiryid = this.$route.params.id;
-            console.log(this.supplierInquiry);
+            console.log(this.supplierInquiry,this.selectedSupplier);
             if (inquiryid) {
-                const formData = {
-                    quoteIds: this.supplierInquiry
-                };
+                let formData
+                if(this.selectedSupplier){
+                    formData = {
+                        // quoteIds: this.supplierInquiry
+                        quoteIds: this.supplierData[this.selectedSupplier].map(row => row.id)
+                    };
+
+                } else{
+                    formData = {
+                        quoteIds: this.supplierInquiry
+                    };
+                }
                 try {
                     this.loader = true;
                     const response = await axios.post('/api/inquiry/quote/' + inquiryid, formData);
@@ -831,6 +863,16 @@ export default {
             // console.log(newValue);
             this.buyer = newValue.id;
         },
+        // inquiry: {
+        //     handler(newValue) {
+        //         const selectedbuyerIds = Number(newValue.buyer);
+        //         const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+        //         if (selectedbuyer) {
+        //             this.selectedBuyerId = selectedbuyer;
+        //         }
+        //     },
+        //     deep: true,
+        // },
     },
     mounted() {
         NProgress.configure({ showSpinner: false });

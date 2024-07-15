@@ -348,8 +348,8 @@ class UserController extends Controller
         $user = BuyerProfile::findOrFail($id);
 
         if ($request->status != $user->status) {
-            $this->logEvent('Buyer', 'Buyer ID ' . $user->buyer_id . ' status has been changed to ' . $request->status . '.');
-            $buyer = User::where('buyer_id', $id)->update(['status' => $request->status]);
+            $this->logEvent('Buyer', "Buyer ID {$user->buyer_id} status has been changed to {$request->status}.");
+             User::where('buyer_id', $id)->update(['status' => $request->status]);
 
         }
 
@@ -410,7 +410,7 @@ class UserController extends Controller
 
             // ProcessUserNotifications::dispatch($user, $request->otp);
             $admin = User::role(['Admin', 'Internal'])->get();
-            //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+            Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
             $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->buyer_id}\n\nThank you!";
 
 
@@ -480,7 +480,7 @@ class UserController extends Controller
         // $user->assignRole('Supplier');
 
         $admin = User::role(['Admin', 'Internal'])->get();
-        //Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+        Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
         $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->supplier_id}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
@@ -652,7 +652,8 @@ class UserController extends Controller
         }
 
         if ($request->status != $user->status) {
-            $this->logEvent('Supplier', 'Supplier ID ' . $user->userid . ' status has been changed to ' . $request->status . '.');
+            $this->logEvent('Supplier', "Supplier ID {$user->userid} status has been changed to {$request->status}.");
+            User::where('supplier_id', $user->id)->update(['status' => $request->status]);
         }
         // Update user information
 
