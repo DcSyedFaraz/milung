@@ -388,7 +388,7 @@
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
-                        <div class="d-flex col-11 my-2">
+                        <!-- <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
                                     Report:
@@ -397,7 +397,9 @@
                             <div class="col-8">
                                 <input type="text" v-model="product.certificate" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
+                        <certificates-input :key="componentKey" :initialCertificates="product.certificates" :isEditing="true"
+                            @update-certificates="updateCertificates"></certificates-input>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
                         <div class=" col-11 my-2">
                             <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
@@ -654,6 +656,8 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import certificatesInput from './CertificatesInput.vue';
+
 
 export default {
     emits: ['profileUpdated'],
@@ -661,6 +665,7 @@ export default {
         ImageSelector,
         fileinput,
         VueDatePicker,
+        certificatesInput
     },
     data() {
         return {
@@ -688,7 +693,8 @@ export default {
                 manual: null,
                 product_label: null,
                 packaging_label: null,
-                print_areas: []
+                print_areas: [],
+                certificates: []
             },
         };
     },
@@ -702,6 +708,9 @@ export default {
         },
     },
     methods: {
+        updateCertificates(certificates) {
+            this.product.certificates = certificates;
+        },
         async fetchSuppliers() {
             try {
                 const response = await axios.get('/api/Suppliers'); // Adjust the endpoint as needed
@@ -818,6 +827,17 @@ export default {
             // Append file inputs to the FormData object
             Object.entries(this.uploadedFiles).forEach(([inputName, fileName]) => {
                 formData.append(inputName, this.uploadedFiles[inputName]);
+            });
+
+            this.product.certificates.forEach((certificate, index) => {
+                console.log(certificate);
+                formData.append(`certificates[${index}][label]`, certificate.label);
+                if (certificate.file) {
+                    formData.append(`certificates[${index}][file]`, certificate.file);
+                } else {
+                    formData.append(`certificates[${index}][file_path]`, certificate.file_path);
+                    formData.append(`certificates[${index}][file_name]`, certificate.file_name);
+                }
             });
 
             try {

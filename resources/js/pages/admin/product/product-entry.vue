@@ -341,7 +341,7 @@
                             <ImageSelector @imagesSelected="handleImagesSelected" />
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
-                        <div class="d-flex col-11 my-2">
+                        <!-- <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
                                     Report:
@@ -350,7 +350,8 @@
                             <div class="col-8">
                                 <input type="text" v-model="product.certificate" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
+                        <certificates-input @update-certificates="updateCertificates"></certificates-input>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
                         <div class=" col-11 my-2">
                             <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
@@ -499,6 +500,7 @@ import ImageSelector from './imageselector.vue';
 import fileinput from './file-input.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import certificatesInput from './CertificatesInput.vue';
 
 
 
@@ -509,12 +511,14 @@ export default {
         ImageSelector,
         fileinput,
         VueDatePicker,
+        certificatesInput,
     },
     data() {
         return {
             loader: false,
             group: '',
             Dates: '',
+            certificates: [],
             productOptions: [],
             selectedImages: [],
             selectedFiles: [],
@@ -543,6 +547,9 @@ export default {
         }
     },
     methods: {
+        updateCertificates(certificates) {
+            this.certificates = certificates;
+        },
         addPrintArea() {
             this.product.print_areas.push({ position: '', size: '', method: '' });
         },
@@ -604,13 +611,14 @@ export default {
             Object.entries(this.uploadedFiles).forEach(([inputName, fileName]) => {
                 formData.append(inputName, this.uploadedFiles[inputName]);
             });
-            // const token = this.$store.state.authToken;
-            // if (token) {
-            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            // }
+
+            this.certificates.forEach((certificate, index) => {
+                formData.append(`certificates[${index}][label]`, certificate.label);
+                formData.append(`certificates[${index}][file]`, certificate.file);
+            });
 
             try {
-                console.log(this.group.id);
+                console.log(this.certificates);
                 // Send the form data to the API endpoint
                 const addProduct = await axios.post('/api/addprod', formData);
                 this.loader = false;

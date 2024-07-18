@@ -7,6 +7,7 @@ use App\Mail\PriceInquiryNotification;
 use App\Mail\ProductNotification;
 use App\Models\InquirySupplier;
 use App\Models\PriceInquiry;
+use App\Models\ProductCertificates;
 use App\Models\ProductGroup;
 use App\Models\ProductImages;
 use App\Models\ProductQuotation;
@@ -33,7 +34,7 @@ class ProductController extends Controller
     }
     public function product($id)
     {
-        $product = Products::where('id', $id)->with('printAreas', 'images', 'product_group', 'orders.supplierid', 'quotes.supplier')->first();
+        $product = Products::where('id', $id)->with('printAreas', 'certificates', 'images', 'product_group', 'orders.supplierid', 'quotes.supplier')->first();
         // dd($product);
         return response()->json($product, 200);
     }
@@ -544,6 +545,58 @@ class ProductController extends Controller
             }
             $product->update($validatedData);
 
+            $certificateData = $request->certificates ?? [];
+            $existingCertificates = ProductCertificates::where('products_id', $id)->get();
+
+            // Step 1: Create an array of existing file paths
+            $existingFilePaths = $existingCertificates->pluck('file_path')->toArray();
+
+            // Step 2: Filter incoming certificates to get the paths
+            $incomingFilePaths = array_map(function ($certificate) {
+                return $certificate['file_path'] ?? null;
+            }, $certificateData);
+
+            // Step 3: Identify and delete old entries
+            foreach ($existingCertificates as $certificate) {
+                if (!in_array($certificate->file_path, $incomingFilePaths)) {
+                    // Delete the file from storage
+                    Storage::disk('public')->delete($certificate->file_path);
+                    // Delete the database entry
+                    $certificate->delete();
+                }
+            }
+
+            // Step 4: Save new or updated entries
+            foreach ($certificateData as $certificate) {
+                if (isset($certificate['file'])) {
+                    // Handle the uploaded file
+                    $file = $certificate['file'];
+                    $filePath = $file->store('certificates', 'public');
+
+                    // Save the new certificate to the database
+                    ProductCertificates::create([
+                        'products_id' => $id,
+                        'label' => $certificate['label'],
+                        'file_path' => $filePath,
+                        'file_name' => $file->getClientOriginalName(),
+                    ]);
+                } elseif (in_array($certificate['file_path'], $existingFilePaths)) {
+                    // Update existing certificate
+                    $existingCertificate = ProductCertificates::where('file_path', $certificate['file_path'])->first();
+                    $existingCertificate->update([
+                        'label' => $certificate['label'],
+                    ]);
+                } else {
+                    // Create a new entry for existing file path
+                    ProductCertificates::create([
+                        'products_id' => $id,
+                        'label' => $certificate['label'],
+                        'file_path' => $certificate['file_path'],
+                        'file_name' => $certificate['file_name'],
+                    ]);
+                }
+            }
+
             if (isset($request->quotefile) && $request->hasFile('quotefile')) {
                 $file = $request->file('quotefile');
                 $existingFile = ProductQuotation::where('product_id', $id)
@@ -652,7 +705,7 @@ class ProductController extends Controller
     }
     public function addprod(Request $request)
     {
-        // In your controller's validation method
+        // dd($request->all());
         try {
             $validatedData = $request->validate([
                 'article' => 'required|max:255',
@@ -741,11 +794,25 @@ class ProductController extends Controller
             // Loop through the file fields
             foreach ($fileFields as $fileField) {
                 $file = $request->file($fileField['field']);
-                $path = $file ? $file->store($fileField['path'], 'public') : null;
-                $originalName = $file ? $file->getClientOriginalName() : null;
+                $path = $file?->store($fileField['path'], 'public');
+                $originalName = $file?->getClientOriginalName();
 
                 // Attach file paths to the product
                 $product->{$fileField['key']} = ['path' => $path, 'name' => $originalName];
+            }
+
+            if ($request->has('certificates')) {
+                $certificates = $request->certificates;
+                foreach ($certificates as $certificateData) {
+                    // dd($certificateData['file']);
+                    $file = $certificateData['file'];
+                    $filePath = $file->store('certificates', 'public');
+                    $product->certificates()->create([
+                        'label' => $certificateData['label'],
+                        'file_path' => $filePath,
+                        'file_name' => $file->getClientOriginalName(),
+                    ]);
+                }
             }
 
             // Attach user_id to the product
