@@ -410,7 +410,7 @@ class UserController extends Controller
 
             // ProcessUserNotifications::dispatch($user, $request->otp);
             $admin = User::role(['Admin', 'Internal'])->get();
-            Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+            // Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
             $message = "Hello!\n\nA new buyer has been successfully added to the system.\n\Buyer ID: {$user->buyer_id}\n\nThank you!";
 
 
