@@ -58,14 +58,15 @@
                                             <label for="registerEmail" class="form-label">Company Name</label>
                                             <input type="text" required class="form-control" v-model="user.name">
                                         </div>
-                                        <div class="mb-3 col-2">
+                                        <div class="mb-3 col-2"
+                                            v-if="parent_id && parent_id.length > 0 && (user.roles === 'Supplier' || user.roles === 'Buyer')">
                                             <label for="registerEmail" class="form-label">Supplier/Buyer ID</label>
                                             <multiselect v-model="selectedOption" :options="parent_id"
                                                 @change="updateParentIdAndName" label="userid"
                                                 v-if="parent_id && parent_id.length > 0 && (user.roles === 'Supplier' || user.roles === 'Buyer')">
                                             </multiselect>
                                             <small v-else-if="user.roles !== 'Supplier' && user.roles !== 'Buyer'"
-                                                class=""> Selected role is not Supplier/Buyer</small>
+                                                class=""><br> Selected role is not Supplier/Buyer</small>
                                             <small v-else class=""> No data available for Supplier/Buyer ID</small>
                                         </div>
                                         <div class="mb-3 col-3">
@@ -119,7 +120,8 @@
                                                     Admin</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
-                                                        v-model="admin.selectAll" @change="adminSelectAllChanged">
+                                                        :indeterminate="admin.indeterminate" v-model="admin.selectAll"
+                                                        @change="groupSelectAllChanged('admin')">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
                                                 </div>
@@ -129,7 +131,8 @@
                                                 class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="user.permissions.includes(adm.id)"
-                                                    @change="handleCheckboxChange(user, adm.id)" :value="adm.id">
+                                                    @change="handleCheckboxChange(user, adm.id, 'admin')"
+                                                    :value="adm.id">
                                                 <label class="form-check-label">{{ adm.label
                                                     }}</label>
                                             </div>
@@ -142,7 +145,9 @@
                                                     Operations </div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
-                                                        v-model="operation.selectAll" @change="operationselect">
+                                                        :indeterminate="operation.indeterminate"
+                                                        v-model="operation.selectAll"
+                                                        @change="groupSelectAllChanged('operation')">
                                                     <label class="form-check-label fs-6 " for="productEntry">Select
                                                         All</label>
                                                 </div>
@@ -151,7 +156,8 @@
                                                 class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="user.permissions.includes(ope.id)"
-                                                    @change="handleCheckboxChange(user, ope.id)" :value="ope.id">
+                                                    @change="handleCheckboxChange(user, ope.id, 'operation')"
+                                                    :value="ope.id">
 
                                                 <label class="form-check-label">{{ ope.label
                                                     }}</label>
@@ -164,6 +170,8 @@
                                                     Finance</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
+                                                        :indeterminate="finance.indeterminate"
+                                                        @change="groupSelectAllChanged('finance')"
                                                         v-model="finance.selectAll">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
@@ -173,7 +181,8 @@
                                                 class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="user.permissions.includes(fin.value)"
-                                                    @change="handleCheckboxChange(user, fin.value)" :value="fin.value">
+                                                    @change="handleCheckboxChange(user, fin.value, 'finance')"
+                                                    :value="fin.value">
 
                                                 <label class="form-check-label">{{ fin.label
                                                     }}</label>
@@ -186,17 +195,19 @@
                                                 <div class="fs-5 fw-bold col-6" style="color: #14245c;">
                                                     Statics</div>
                                                 <div class="form-check my-auto col-6">
-                                                    <input class="form-check-input" type="checkbox" v-model="selectAll"
-                                                        @change="selectAllItems" value="true">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        :indeterminate="items.indeterminate" v-model="items.selectAll"
+                                                        @change="groupSelectAllChanged('items')" value="true">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
                                                 </div>
                                             </div>
 
-                                            <div v-for="(item, index) in items" :key="index" class="form-check">
+                                            <div v-for="(item, index) in items.checkboxes" :key="index"
+                                                class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                    :checked="user.permissions.includes(item.value)" :value="item.value"
-                                                    @change="handleCheckboxChange(user, item.value)">
+                                                    :checked="user.permissions.includes(item.id)" :value="item.id"
+                                                    @change="handleCheckboxChange(user, item.id, 'items')">
 
                                                 <label class="form-check-label" :for="item.id">{{ item.label }}</label>
                                             </div>
@@ -208,7 +219,8 @@
                                                     Buyer</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
-                                                        v-model="buyer.selectAll">
+                                                        :indeterminate="buyer.indeterminate" v-model="buyer.selectAll"
+                                                        @change="groupSelectAllChanged('buyer')">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
                                                 </div>
@@ -217,7 +229,8 @@
                                                 class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="user.permissions.includes(fin.id)"
-                                                    @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
+                                                    @change="handleCheckboxChange(user, fin.id, 'buyer')"
+                                                    :value="fin.id">
 
                                                 <label class="form-check-label">{{ fin.label
                                                     }}</label>
@@ -231,6 +244,8 @@
                                                     Supplier</div>
                                                 <div class="form-check my-auto col-6">
                                                     <input class="form-check-input" type="checkbox"
+                                                        :indeterminate="supplier.indeterminate"
+                                                        @change="groupSelectAllChanged('supplier')"
                                                         v-model="supplier.selectAll">
                                                     <label class="form-check-label  " for="productEntry">Select
                                                         All</label>
@@ -240,16 +255,13 @@
                                                 class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="user.permissions.includes(fin.id)"
-                                                    @change="handleCheckboxChange(user, fin.id)" :value="fin.id">
+                                                    @change="handleCheckboxChange(user, fin.id, 'supplier')"
+                                                    :value="fin.id">
 
                                                 <label class="form-check-label">{{ fin.label
                                                     }}</label>
                                             </div>
-
-
                                         </div>
-
-
                                     </div>
                                 </div>
                             </form>
@@ -278,6 +290,7 @@ export default {
                 permissions: [],
             },
             operation: {
+                indeterminate: false,
                 selectAll: false,
                 checkboxes: [
                     { id: 'addNewSupplierEntry', label: 'Add New Supplier Entry' },
@@ -305,6 +318,7 @@ export default {
                 ],
             },
             supplier: {
+                indeterminate: false,
                 selectAll: false,
                 checkboxes: [
                     { id: 'priceInquiry', label: 'Price Inquiry' },
@@ -321,6 +335,7 @@ export default {
                 ],
             },
             buyer: {
+                indeterminate: false,
                 selectAll: false,
                 checkboxes: [
                     { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
@@ -341,6 +356,7 @@ export default {
                 ],
             },
             finance: {
+                indeterminate: false,
                 selectAll: false,
                 checkboxes: [
                     { id: 'transactionOverview', label: 'Transaction Overview', value: 'transactionOverview' },
@@ -349,6 +365,7 @@ export default {
                 ],
             },
             admin: {
+                indeterminate: false,
                 selectAll: false,
                 checkboxes: [
                     { id: 'issueNewLoginIdPassword', label: 'Issue New Login ID & Password, Reset Password' },
@@ -356,21 +373,61 @@ export default {
                     { id: 'userManagement', label: 'User Management (can edit or delete users)' },
                 ],
             },
-            selectAll: false,
-            items: [
-                { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
-                { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty', value: 'bestPurchase' },
-                { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'salesRevenue' },
-                { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
-            ],
+            items:
+            {
+                selectAll: false,
+                indeterminate: false,
+                checkboxes: [
+                    { id: 'bestSales', label: 'Best Sales 20 Item No. & Qty', value: 'bestSales' },
+                    { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty', value: 'bestPurchase' },
+                    { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'salesRevenue' },
+                    { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)', value: 'purchaseRevenue' },
+                ],
+            },
         };
     },
     mounted() {
         this.user.roles = 'Admin';
         this.user.name = 'MiLung Trade Limited';
         this.user.status = 'active';
+        this.updateSelectAllState('admin');
+        this.updateSelectAllState('operation');
+        this.updateSelectAllState('supplier');
+        this.updateSelectAllState('buyer');
+        this.updateSelectAllState('finance');
+        this.updateSelectAllState('items');
     },
     methods: {
+        groupSelectAllChanged(group) {
+            const groupData = this[group];
+            groupData.checkboxes.forEach(item => {
+                const index = this.user.permissions.indexOf(item.id);
+                if (groupData.selectAll && index === -1) {
+                    this.user.permissions.push(item.id);
+                } else if (!groupData.selectAll && index !== -1) {
+                    this.user.permissions.splice(index, 1);
+                }
+            });
+            this.updateSelectAllState(group);
+        },
+        updateSelectAllState(group) {
+            const groupData = this[group];
+            const totalItems = groupData.checkboxes.length;
+            const selectedItems = groupData.checkboxes.filter(item =>
+                this.user.permissions.includes(item.id)
+            ).length;
+
+            if (selectedItems === 0) {
+                groupData.selectAll = false;
+                groupData.indeterminate = false;
+            } else if (selectedItems === totalItems) {
+                groupData.selectAll = true;
+                groupData.indeterminate = false;
+            } else {
+                groupData.selectAll = false;
+                groupData.indeterminate = true;
+            }
+        },
         updateParentIdAndName(selectedOption) {
             console.log(selectedOption);
             if (selectedOption) {
@@ -397,7 +454,7 @@ export default {
                     toastr.error('An error occurred while updating the user');
                 });
         },
-        handleCheckboxChange(user, value) {
+        handleCheckboxChange(user, value, group) {
             const index = user.permissions.indexOf(value);
             if (index === -1) {
                 // If not found, add to permissions
@@ -406,6 +463,7 @@ export default {
                 // If found, remove from permissions
                 user.permissions.splice(index, 1);
             }
+            this.updateSelectAllState(group);
             // You can also console.log the updated permissions here to verify the changes
             console.log('Updated Permissions:', this.user.permissions);
         },
@@ -474,6 +532,14 @@ export default {
                 this.user.parent_userid = null;
                 this.user.name = '';
             }
+        },
+        'user.permissions': function () {
+            this.updateSelectAllState('admin');
+            this.updateSelectAllState('operation');
+            this.updateSelectAllState('supplier');
+            this.updateSelectAllState('buyer');
+            this.updateSelectAllState('finance');
+            this.updateSelectAllState('items');
         },
         'user.roles': function (newValue) {
             if (newValue === 'Admin' || newValue === 'Internal') {
