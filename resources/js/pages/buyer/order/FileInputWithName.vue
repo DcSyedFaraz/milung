@@ -11,9 +11,9 @@
                 <button type="button" class="btn px-4 btn-milung" @click="importFile">
                     Import
                 </button>
-                <button type="button" class="btn px-4 mx-2 btn-primary my-2" @click="exportFile">
+                <!-- <button type="button" class="btn px-4 mx-2 btn-primary my-2" @click="exportFile">
                     Export
-                </button>
+                </button> -->
                 <input ref="fileInput" type="file" class="form-control d-none" @change="updateFile">
             </div>
         </div>

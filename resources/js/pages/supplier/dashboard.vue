@@ -71,7 +71,7 @@
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'supplierdash' }">
                         <i class="bi bi-pie-chart"></i>
-                        <span>Summary</span>
+                        <span>Dashboard</span>
                     </router-link>
                 </li>
                 <!-- End Dashboard Nav -->

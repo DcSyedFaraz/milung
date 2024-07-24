@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BuyerProfile;
 use App\Models\Order;
 use App\Models\ProductGroup;
+use App\Models\SupplierProfile;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,8 +16,8 @@ class StatController extends Controller
 {
     public function statfilter()
     {
-        $data['buyers'] = User::role('buyer')->select('id', 'userid')->get();
-        $data['supplier'] = User::role('supplier')->select('id', 'userid')->get();
+        $data['buyers'] = BuyerProfile::select('id', 'buyer_id')->get();
+        $data['supplier'] = SupplierProfile::select('id', 'supplier_id')->get();
         $data['product'] = ProductGroup::select('id', 'group_name')->get();
         return $data;
     }

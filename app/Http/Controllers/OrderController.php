@@ -114,7 +114,7 @@ class OrderController extends Controller
             $orderId = $orderData['orderId'];
 
             $order_place = OrderSupplier::where('order_id', $orderId)
-                ->where('user_id', $user->id)
+                ->where('user_id', $user->supplier_id)
                 ->first();
 
             // Check if $order_place exists
@@ -223,10 +223,10 @@ class OrderController extends Controller
         $user = Auth::user();
 
         // Retrieve order_ids from the orderSuppliers table where the user ID matches the authenticated user's ID
-        $orderIds = OrderSupplier::where('user_id', $user->id)->whereNull('purchase')
+        $orderIds = OrderSupplier::where('user_id', $user->supplier_id)->whereNull('purchase')
             ->pluck('order_id')
             ->toArray();
-
+// dd($user->supplier_id);
         // Retrieve orders where the order_id is present in the array of order_ids
         $orders = Order::whereIn('id', $orderIds)->with('product_group', 'orderSuppliersOnly')
             ->get();
@@ -241,7 +241,8 @@ class OrderController extends Controller
                 // Append the thumbnail URL to the order object
                 $order->thumbnail_url = $thumbnailUrl;
             }
-            $order->userid = $user->userid;
+            // dd($user->supplierProfile);
+            $order->userid = $user->supplierProfile->supplier_id;
         }
         return response()->json($orders, 200);
     }

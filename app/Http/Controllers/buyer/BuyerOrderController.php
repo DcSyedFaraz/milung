@@ -11,6 +11,8 @@ use App\Notifications\UserNotification;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Notification;
 use Validator;
 
 class BuyerOrderController extends Controller
@@ -20,7 +22,7 @@ class BuyerOrderController extends Controller
      */
     public function index()
     {
-        $id = Auth::id();
+        $id = Auth::user()->buyer_id;
         // $id = 2;
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'status', 'group')->where('buyer', $id)->orderby('created_at', 'desc')->get();
         return response()->json($order, 200);
@@ -137,8 +139,11 @@ class BuyerOrderController extends Controller
 
 
         $data['linked_order'] = null;
-        $user = \Auth::user();
-        $data['buyer'] = $user->id;
+        $user = Auth::user();
+        if ($user->buyer_id) {
+
+            $data['buyer'] = $user->buyer_id;
+        }
         $order = Order::create($data);
 
         // Notification
@@ -147,11 +152,11 @@ class BuyerOrderController extends Controller
         $message = "A new order has been created by $user->name (User ID: {$user->userid}). Order ID: {$order->id}.";
 
         // Send the notification to the admins
-        \Notification::send($admins, new UserNotification($message, 'New Order', 'order_edit', ['id' => $$order->id]));
+        Notification::send($admins, new UserNotification($message, 'New Order', 'order_edit', ['id' => $order->id]));
 
         // Send the email to the admins
         foreach ($admins as $key => $admin) {
-            \Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'New Order'));
+            //Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'New Order'));
         }
 
         return response()->json($order, 200);

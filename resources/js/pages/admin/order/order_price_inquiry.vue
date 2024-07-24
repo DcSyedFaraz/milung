@@ -114,9 +114,9 @@
                                         <div class="form-check" v-for="(supplier, index) in order.order_suppliers"
                                             :key="index">
                                             <input class="form-check-input" type="radio" :name="order.id"
-                                                v-model="order.selectedSupplierId" :value="supplier.user.id">
+                                                v-model="order.selectedSupplierId" :value="supplier.user?.id">
                                             <label class="form-check-label">
-                                                {{ supplier.user.userid }}
+                                                {{ supplier.user?.supplier_id }}
                                             </label>
                                             <br v-if="index !== order.order_suppliers.length - 1">
                                         </div>

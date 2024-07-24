@@ -172,6 +172,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 export default {
+    emits: ['profileUpdated'],
     props: {
         perPage: {
             type: Number,
@@ -250,6 +251,7 @@ export default {
                 if (Object.keys(data).length === 0) {
                     // The data object is empty
                     toastr.error('Data is empty. Please select orders before placing.');
+                    this.loader = false;
                     return
                 }
 

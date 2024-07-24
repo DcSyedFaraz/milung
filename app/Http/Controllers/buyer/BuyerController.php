@@ -30,7 +30,7 @@ class BuyerController extends Controller
     public function Buyerdashboard()
     {
         // dd($id);
-        $id = auth()->id();
+        $id = auth()->user()->buyer_id;
         $data['Inquiry'] = PriceInquiry::where('buyer', $id)->count();
         $data['Products'] = Products::count();
         $data['Orders'] = Order::where('buyer', $id)->count();

@@ -12,6 +12,8 @@ use Auth;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Notification;
 
 class InquiryController extends Controller
 {
@@ -20,7 +22,7 @@ class InquiryController extends Controller
      */
     public function index()
     {
-        $userid = auth()->user()->id;
+        $userid = auth()->user()->buyer_id;
         // $userid = 2;
         $prod = PriceInquiry::where('buyer', $userid)->orderby('created_at', 'desc')->get();
 
@@ -61,7 +63,9 @@ class InquiryController extends Controller
         ]);
         try {
             DB::beginTransaction();
-            $userid = Auth::id();
+            $userid = Auth::user()->buyer_id;
+            // dd($userid);
+
             // Auth::check() ? $validatedData['buyer'] = Auth::id() : 2;
             $validatedData['buyer'] = $userid;
 
@@ -86,7 +90,6 @@ class InquiryController extends Controller
                 return $value !== null && $value !== 'undefined';
             });
 
-            Auth::check() ? $priceInquiry->buyer = Auth::id() : 2;
 
             $priceInquiry->save();
 
@@ -95,9 +98,9 @@ class InquiryController extends Controller
             $inquiry_number = $validatedData['inquiry_number'];
             $messages = "A price inquiry with the number '$inquiry_number' has been added.";
 
-            \Notification::send($admins, new UserNotification($messages, 'New Price Inquiry', 'price_inquiry_edit', ['id' => $priceInquiry->id]));
+            //Notification::send($admins, new UserNotification($messages, 'New Price Inquiry', 'price_inquiry_edit', ['id' => $priceInquiry->id]));
 
-            \Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+            //Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
 
             DB::commit();
             return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
@@ -112,7 +115,7 @@ class InquiryController extends Controller
      */
     public function show($id)
     {
-        $userid = auth()->user()->id;
+        $userid = auth()->user()->buyer_id;
         // $userid = 2;
         $data['inquiry'] = PriceInquiry::where('buyer', $userid)->where('id', $id)->first();
         $data['supplierData'] = InquirySupplier::where('price_inquiry_id', $id)->where('selected', 1)->with('supplierremarks')->get();
@@ -128,7 +131,7 @@ class InquiryController extends Controller
         $user = Auth::user();
         // dd($id);
         $admins = User::role(['Admin', 'Internal'])->get();
-        $inquiry = PriceInquiry::where('id', $id)->where('buyer', $user->id)->first();
+        $inquiry = PriceInquiry::where('id', $id)->where('buyer', $user->buyer_id)->first();
         // dd($InquirySupplier);
         if ($inquiry->inquiry_number) {
 
@@ -193,7 +196,7 @@ class InquiryController extends Controller
             return $value !== null && $value !== 'undefined';
         });
 
-        Auth::check() ? $priceInquiry->buyer = Auth::id() : 2;
+        Auth::check() ? $priceInquiry->buyer = Auth::user()->buyer_id : 2;
 
         $priceInquiry->save();
 

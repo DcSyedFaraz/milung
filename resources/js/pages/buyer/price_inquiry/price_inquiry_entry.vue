@@ -341,8 +341,7 @@ export default {
             // console.log(this.capacity);
             this.inquiry.capacity = this.capacity.map(capacity => ({ quantity: capacity.quantity, unit: capacity.unit }));
         },
-        fetchInquiry() {
-            const inquiryid = this.$route.params.id;
+        fetchInquiry(inquiryid) {
             axios.get('/api/buyer/price_inquiry/' + inquiryid)
                 .then(response => {
                     this.inquiry = response.data.inquiry;
@@ -592,7 +591,10 @@ export default {
     mounted() {
         NProgress.configure({ showSpinner: false });
         this.fetchProductGroups();
-        this.fetchInquiry();
+        const inquiryid = this.$route.params.id;
+        if (inquiryid) {
+            this.fetchInquiry(inquiryid);
+        }
         this.$refs.fileInput.addEventListener('change', this.loadImage);
 
     },

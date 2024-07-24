@@ -12,7 +12,7 @@ class ShipmentOrder extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'buyerid')->select('id','userid');
+        return $this->belongsTo(BuyerProfile::class,'buyerid')->select('id','buyer_id');
     }
     public function shipment()
     {
@@ -24,7 +24,7 @@ class ShipmentOrder extends Model
     }
     public function shipmentsupplier()
     {
-        return $this->hasOne(ShipmentSupplier::class);
+        return $this->hasMany(ShipmentSupplier::class);
     }
     public function settleamount()
     {

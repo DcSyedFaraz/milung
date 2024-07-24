@@ -73,12 +73,12 @@
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
                                 <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;">
-                                    <td  @click="toggleAccordion(order)">
+                                    <td  >
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
                                                 v-show="order.status == 'New Order'" :value="order.id"
                                                 id="flexCheckDefault" v-model="selectedUserIds">
-                                            <label class="form-check-label" for="flexCheckDefault">
+                                            <label class="form-check-label" for="flexCheckDefault" @click="toggleAccordion(order)">
                                                 {{ order.buyerid?.buyer_id }}
                                             </label>
                                         </div>

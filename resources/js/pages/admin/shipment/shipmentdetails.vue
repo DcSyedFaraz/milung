@@ -16,7 +16,7 @@
                         <p for="v-model" class="my-auto ">Buyer ID:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" disabled v-model="so.user.userid" class="form-control ">
+                        <input type="text" disabled v-model="so.user.buyer_id" class="form-control ">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -158,15 +158,16 @@
         </div>
         <!-- Buyer shipment End -->
         <!-- Supplier shipment -->
-        <div class="row px-2 pb-5">
-            <h3 class="text-milung text-uppercase fw-bold">Supplier Shipment Information</h3>
+        <div v-for="(supplier, index) in supplier_shipments" :key="index" class="row px-2 pb-5">
+            <h3 class="text-milung text-uppercase fw-bold">Supplier- {{ supplieruserid[index]['supplier_id'] }} Shipment
+                Information </h3>
             <div class="col-6">
                 <div class="d-flex col-12 my-2">
                     <div class="col-4 my-auto">
                         <p for="v-model" class="my-auto ">Shipping Date:</p>
                     </div>
                     <div class="col-8">
-                        <input type="date" v-model="supplier.ship_date" class="form-control ">
+                        <input type="date" v-model="supplier.ship_date" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -182,10 +183,10 @@
                 </div>
                 <div class="d-flex col-12 my-2">
                     <div class="col-4 my-auto">
-                        <p for="v-model" class="my-auto ">Tracking / Waybillt#:</p>
+                        <p for="v-model" class="my-auto ">Tracking / Waybill#:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="supplier.waybill" class="form-control ">
+                        <input type="text" v-model="supplier.waybill" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -193,7 +194,7 @@
                         <p for="v-model" class="my-auto ">Courier:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="supplier.courier" class="form-control ">
+                        <input type="text" v-model="supplier.courier" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -201,7 +202,7 @@
                         <p for="v-model" class="my-auto ">Flight:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="supplier.flight" class="form-control ">
+                        <input type="text" v-model="supplier.flight" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -209,7 +210,7 @@
                         <p for="v-model" class="my-auto ">Vessel:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="supplier.vessel" class="form-control ">
+                        <input type="text" v-model="supplier.vessel" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -217,33 +218,32 @@
                         <p for="v-model" class="my-auto ">Train:</p>
                     </div>
                     <div class="col-8">
-                        <input type="text" v-model="supplier.train" class="form-control ">
+                        <input type="text" v-model="supplier.train" class="form-control">
                     </div>
                 </div>
-
             </div>
             <div class="col-6">
-                <div class="d-flex col-12 my-2 ">
+                <div class="d-flex col-12 my-2">
                     <div class="col-4 my-auto">
                         <p for="v-model" class="my-auto ">Delivery Date:</p>
                     </div>
                     <div class="col-7">
-                        <input type="date" v-model="supplier.delivery" class="form-control ">
+                        <input type="date" v-model="supplier.delivery" class="form-control">
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
                     <div class="mt-2">
                         <label class="form-label">Remarks:</label>
-                        <textarea v-model="supplier.remarks" cols="57" rows="6" class="form-control "></textarea>
+                        <textarea v-model="supplier.remarks" cols="57" rows="6" class="form-control"></textarea>
                     </div>
                     <!-- <button @click="save">save</button> -->
                 </div>
-                <div class="d-flex col-12 my-2 justify-content-end mt-5">
-
-                    <button class="btn btn-success px-4" @click="save">Save</button>
-                </div>
             </div>
         </div>
+        <div class="d-flex col-12 my-2 justify-content-end pe-5 pb-5">
+            <button class="btn btn-lg btn-success px-4" @click="save">Save</button>
+        </div>
+
         <!-- Supplier shipment End -->
     </div>
 </template>
@@ -259,11 +259,26 @@ export default {
     data() {
         return {
             so: this.soData,
+            supplieruserid: this.soData.supplier_ids,
             buyer: this.soData.shipment ? this.soData.shipment : {},
-            supplier: this.soData.shipmentsupplier ? this.soData.shipmentsupplier : {},
+            supplier_shipments: this.initSupplierShipments()
         }
     },
     methods: {
+        initSupplierShipments() {
+            const supplierIds = this.soData.supplier_ids || [];
+            console.log(supplierIds);
+            const defaultSupplierShipment = { ship_date: '', mode_delivery: '', waybill: '', courier: '', flight: '', vessel: '', train: '', delivery: '', remarks: '' };
+            return supplierIds.map(supplierId => {
+                const preFillData = Array.isArray(this.soData.shipmentsupplier) && this.soData.shipmentsupplier.find(supplier => supplier.user_id === supplierId.id);
+                return preFillData ? preFillData : { ...defaultSupplierShipment, user_id: supplierId.id };
+            });
+        },
+        handleValidationErrors(validationErrors) {
+            validationErrors.forEach(message => {
+                toastr.error(message);
+            });
+        },
         async save() {
             console.log(this.so);
             console.log(this.buyer);
@@ -271,7 +286,7 @@ export default {
             const formData = {
                 'shipment_order': this.so,
                 'buyer': this.buyer,
-                'supplier': this.supplier
+                'supplier': this.supplier_shipments
             };
 
             try {
@@ -285,7 +300,13 @@ export default {
                 this.$emit('record-updated');
             } catch (error) {
                 console.error(error);
-                toastr.error(error.response.data.error);
+                if (error.response && error.response.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    this.handleValidationErrors(validationErrors);
+                } else {
+                    console.error(error);
+                    toastr.error('An error occurred while updating the order');
+                }
             }
         },
     }

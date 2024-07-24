@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_suppliers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
             $table->string('purchase')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();

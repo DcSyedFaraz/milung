@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-7">
                                     <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                    <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="userid"
+                                    <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
                                         track-by="id">
                                     </multiselect>
                                 </div>
@@ -108,7 +108,7 @@ export default {
             // console.log(newValue);
             this.so.buyerid = newValue.id;
         },
-       
+
     },
     methods: {
         fetchSuppliers() {

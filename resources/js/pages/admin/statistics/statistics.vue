@@ -12,7 +12,7 @@
                             v-model="selected.BuyerId"
                             :options="buyers"
                             field="id"
-                            label="userid"
+                            label="buyer_id"
                             track-by="id"
                         >
                         </multiselect>
@@ -23,7 +23,7 @@
                             v-model="selected.SupplierId"
                             :options="supplier"
                             field="id"
-                            label="userid"
+                            label="supplier_id"
                             track-by="id"
                         >
                         </multiselect>

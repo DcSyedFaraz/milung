@@ -331,7 +331,7 @@ export default {
                 this.orders = response.data;
                 // this.pagination.totalItems = response.data.total;
                 console.log(response.data);
-
+                this.isLoading = false;
                 NProgress.done();
             } catch (error) {
                 NProgress.done();
@@ -341,11 +341,7 @@ export default {
         },
     },
     created() {
-        this.fetchorders().then(() => {
-            setTimeout(() => {
-                this.isLoading = false;
-            }, 1000); // Delay of 1 second
-        });
+        this.fetchorders();
         this.initFilters();
     },
 };

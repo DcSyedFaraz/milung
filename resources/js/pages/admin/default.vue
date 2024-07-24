@@ -138,13 +138,13 @@
 
             <!-- Right side columns -->
             <div class="col-lg-4">
-                <!-- Summary -->
+                <!-- Dashboard -->
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-white">Summary</h5>
+                        <h5 class="card-title text-white">Dashboard</h5>
                         <p><i class="bi bi-clock-fill"></i> 12:24 Today, May 19</p>
 
-                        <div class="Summary activity">
+                        <div class="Dashboard activity">
                             <p>Pending Tasks or Schedule Board</p>
 
                         </div>

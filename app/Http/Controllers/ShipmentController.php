@@ -303,7 +303,7 @@ class ShipmentController extends Controller
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()->all()], 422);
         }
-        $data['user_id'] = Auth::id();
+        $data['user_id'] = Auth::user()->supplier_id;
         // $data['user_id'] = 1;
         unset($data['shipment_order'], $data['user']);
         try {
@@ -327,8 +327,8 @@ class ShipmentController extends Controller
         $supplier = $request->supplier;
 
         $validatedData = \Validator::make($data, [
-            'buyerid' => 'required|exists:users,id',
-            'supplierid' => 'required|exists:users,id',
+            'buyerid' => 'required|exists:buyer_profiles,id',
+            // 'supplierid' => 'required|exists:users,id',
             'method' => 'required|string',
             'remarks' => 'required|string',
             'port' => 'required|string',
@@ -350,10 +350,10 @@ class ShipmentController extends Controller
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()->all()], 422);
         }
-        // dd($data);
-        $supplierid = $data['supplierid'];
+        // dd($supplier);
+        // $supplierid = $data['supplierid'];
         $buyerid = $data['buyerid'];
-        unset($data['buyerid'], $data['supplierid'], $data['user'], $data['shipment'], $data['shipmentsupplier']);
+        unset($data['buyerid'], $data['supplierid'], $data['user'], $data['shipment'], $data['shipmentsupplier'], $data['supplier_ids']);
         $ShipmentOrder->update($data);
 
         Shipment::updateOrCreate(
@@ -371,20 +371,22 @@ class ShipmentController extends Controller
                 'remarks' => $buyer['remarks'],
             ]
         );
-        ShipmentSupplier::updateOrCreate(
-            ['shipment_order_id' => $ShipmentOrder->id, 'user_id' => $supplierid],
-            [
-                'ship_date' => $supplier['ship_date'],
-                'mode_delivery' => $supplier['mode_delivery'],
-                'waybill' => $supplier['waybill'],
-                'courier' => $supplier['courier'],
-                'flight' => $supplier['flight'],
-                'vessel' => $supplier['vessel'],
-                'train' => $supplier['train'],
-                'delivery' => $supplier['delivery'],
-                'remarks' => $supplier['remarks'],
-            ]
-        );
+        foreach ($supplier as $supplierShipment) {
+            ShipmentSupplier::updateOrCreate(
+                ['shipment_order_id' => $ShipmentOrder->id, 'user_id' => $supplierShipment['user_id']],
+                [
+                    'ship_date' => $supplierShipment['ship_date'],
+                    'mode_delivery' => $supplierShipment['mode_delivery'],
+                    'waybill' => $supplierShipment['waybill'],
+                    'courier' => $supplierShipment['courier'],
+                    'flight' => $supplierShipment['flight'],
+                    'vessel' => $supplierShipment['vessel'],
+                    'train' => $supplierShipment['train'],
+                    'delivery' => $supplierShipment['delivery'],
+                    'remarks' => $supplierShipment['remarks'],
+                ]
+            );
+        }
 
         return response()->json(['message' => 'Shipment Overview updated successfully']);
     }
@@ -414,8 +416,20 @@ class ShipmentController extends Controller
     }
     public function shipmentget()
     {
-        $shipment = ShipmentOrder::with('user', 'shipment', 'shipmentsupplier')->get();
-        return response()->json($shipment, 200);
+        $shipments = ShipmentOrder::with('user', 'shipment', 'shipmentsupplier')->get();
+
+        $shipments->each(function ($shipment) {
+            $orders = Order::where('so_number', $shipment->id)
+                ->whereHas('supplierid')
+                ->with('supplierid:id,supplier_id')
+                ->get();
+
+            $shipment->supplier_ids = $orders->map(function ($order) {
+                return $order->supplierid;
+            })->unique()->values();
+        });
+
+        return response()->json($shipments, 200);
     }
     public function shipmentgetid($id)
     {

@@ -183,7 +183,7 @@
                 <li class="nav-item" v-if="is('Admin')">
                     <router-link class="nav-link" :to="{ name: 'admins' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
-                        <span>Summary</span>
+                        <span>Dashboard</span>
                     </router-link>
                 </li>
                 <!-- End Dashboard Nav -->

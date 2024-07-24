@@ -21,7 +21,7 @@ class BuyerShipmentController extends Controller
      */
     public function index()
     {
-        $id = Auth::user()->id;
+        $id = Auth::user()->buyer_id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('buyer', $id);
         })->with('shipment')->get();
@@ -34,7 +34,7 @@ class BuyerShipmentController extends Controller
      */
     public function buyerSos()
     {
-        $data['order'] = Order::where('buyer', auth()->id())->whereHas('shipmentOrders')->where(function ($query) {
+        $data['order'] = Order::where('buyer', auth()->user()->buyer_id)->whereHas('shipmentOrders')->where(function ($query) {
             $query->whereDoesntHave('settleamount')
                 ->orWhereHas('settleamount', function ($query) {
                     $query->where('status', '!=', 'full payment');
@@ -42,7 +42,7 @@ class BuyerShipmentController extends Controller
         })->with('shipmentOrders', 'information')->select('id', 'status', 'sendoutdate', 'so_number', 'totalvalue')->get();
 
         $data['invoice'] = Information::whereHas('orders', function ($query) {
-            $query->where('buyer', auth()->id());
+            $query->where('buyer', auth()->user()->buyer_id);
         })->with(['settleamount', 'orders'])->select('id', 'totalpayable', 'invoice', 'created_at', 'shipment_order_id')->get();
         // $data['invoice'] = [];
 
@@ -66,7 +66,7 @@ class BuyerShipmentController extends Controller
     }
     public function buyerSo($id)
     {
-        $data = Order::where('buyer', auth()->id())->where('so_number', $id)->where(function ($query) {
+        $data = Order::where('buyer', auth()->user()->buyer_id)->where('so_number', $id)->where(function ($query) {
             $query->whereDoesntHave('settleamount')
                 ->orWhereHas('settleamount', function ($query) {
                     $query->where('status', '!=', 'full payment');
@@ -162,7 +162,7 @@ class BuyerShipmentController extends Controller
                 [
                     'information_id' => $infoId,
                     'shipment_order_id' => $shipId,
-                    'user_id' => auth()->id(),
+                    'user_id' => auth()->user()->buyer_id,
                 ],
                 [
                     'settle_amount' => $totalpayable,
@@ -227,7 +227,7 @@ class BuyerShipmentController extends Controller
                 [
                     'information_id' => $infoId,
                     'shipment_order_id' => $shipId,
-                    'user_id' => auth()->id(),
+                    'user_id' => auth()->user()->buyer_id,
                 ],
                 [
                     'settle_amount' => $totalpayable,
@@ -278,7 +278,7 @@ class BuyerShipmentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $userid = Auth::id();
+        $userid = Auth::user()->buyer_id;
         $buyer = $request->all();
 
         $validatedData = \Validator::make($request->all(), [

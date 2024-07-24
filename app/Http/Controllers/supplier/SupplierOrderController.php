@@ -16,7 +16,7 @@ class SupplierOrderController extends Controller
 {
     public function orderentryget()
     {
-        $id = Auth::id();
+        $id = Auth::user()->supplier_id;
         // $id = 3;
         $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->where('supplier', $id)->orderby('created_at', 'desc')->get();
         return response()->json($order, 200);

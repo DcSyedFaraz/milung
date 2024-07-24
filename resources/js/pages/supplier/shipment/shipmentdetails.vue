@@ -205,7 +205,7 @@ export default {
         return {
             so: this.soData,
             supplier: this.soData.shipmentsupplier
-                ? this.soData.shipmentsupplier
+                ? this.soData.shipmentsupplier[0]
                 : {},
         };
     },

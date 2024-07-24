@@ -27,7 +27,7 @@ class SupplierShipmentController extends Controller
     public function suppliershipments()
     {
         // $id = 3;
-        $id = Auth::user()->id;
+        $id = Auth::user()->supplier_id;
         $shipment['ship'] = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->select('id', 'so_number')->get();
@@ -39,7 +39,7 @@ class SupplierShipmentController extends Controller
     public function shipments()
     {
         // $id = 3;
-        $id = Auth::user()->id;
+        $id = Auth::user()->supplier_id;
         $shipment = ShipmentOrder::whereHas('orders', function ($query) use ($id) {
             $query->where('supplier', $id);
         })->with('shipmentsupplier')->get();
@@ -48,13 +48,13 @@ class SupplierShipmentController extends Controller
     public function receipt_note(Request $request)
     {
         // dd($request->all());
-        $userId = Auth::id();
+        $userId = Auth::user()->supplier_id;
         // $userId = 3;
         $orders = Order::whereIn('so_number', $request->shipIds)
             ->where('supplier', $userId)->with('product_group', 'packinglist')->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')
             ->get();
         foreach ($orders as $order) {
-            $order->userid = Auth::user()->userid;
+            $order->userid = Auth::user()->supplierProfile->supplier_id;
             // $order->userid = 'Supplier01';
         }
         // dd($orders);
@@ -64,7 +64,7 @@ class SupplierShipmentController extends Controller
     {
         // dd($request->all());
         // $userid = 3;
-        $userid = Auth::id();
+        $userid = Auth::user()->supplier_id;
         $supplier = $request->all();
 
         $validatedData = \Validator::make($request->all(), [
@@ -106,7 +106,7 @@ class SupplierShipmentController extends Controller
     public function suppliershipment($id)
     {
         // dd($id);
-        $userid = Auth::user()->id;
+        $userid = Auth::user()->supplier_id;
         // $userid = 3;
         $shipment = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'group', 'quantity_unit')->with('product_group', 'packinglist')->get();
         return response()->json($shipment, 200);
@@ -114,7 +114,7 @@ class SupplierShipmentController extends Controller
     public function shipment_details($id)
     {
         // dd($id);
-        $userid = Auth::user()->id;
+        $userid = Auth::user()->supplier_id;
         // $userid = 3;
         $shipment['orders'] = Order::where('so_number', $id)->where('supplier', $userid)->select('id', 'so_number', 'supplier', 'buyingprice', 'quantity_unit', 'status')->with('shipmentSupplier', 'shipmentOrders', 'invoice_number')->get();
         $shipment['note'] = SupplierReceipt::where('shipment_order_id', $id)->where('user_id', $userid)->first();
@@ -146,7 +146,7 @@ class SupplierShipmentController extends Controller
         // Save the data to the database
         $receipt = SupplierReceipt::create([
             'shipment_order_id' => $soNumber,
-            'user_id' => Auth::id(),
+            'user_id' => Auth::user()->supplier_id,
             'receipt_note' => $filePath,
         ]);
 
@@ -167,7 +167,7 @@ class SupplierShipmentController extends Controller
     public function invoiceShow($id)
     {
         $invoice['inv'] = SupplierInvoice::where('id', $id)->with('orders', 'orders.product_group', 'user', 'orders.shipmentOrders')->first();
-        $invoice['user'] = SupplierProfile::where('user_id', auth()->user()->id)->first();
+        $invoice['user'] = SupplierProfile::where('id', auth()->user()->supplier_id)->first();
         return response()->json($invoice, 200);
     }
     public function invoicereminder(Request $request)
@@ -237,7 +237,7 @@ class SupplierShipmentController extends Controller
                 'shipment_order_id' => $soNumbers,
                 'outstanding_amount' => $totalValue,
                 'incoterm' => $request->incoterm,
-                'user_id' => Auth::id(),
+                'user_id' => Auth::user()->supplier_id,
             ]);
 
             $invoice->orders()->attach($orderIds);
@@ -269,7 +269,7 @@ class SupplierShipmentController extends Controller
     {
 
         // $userId = 3;
-        $userId = Auth::user()->id;
+        $userId = Auth::user()->supplier_id;
 
         try {
             \DB::beginTransaction();
@@ -344,7 +344,7 @@ class SupplierShipmentController extends Controller
         if (Auth::user()->hasRole('admin')) {
             $userId = $request->input('user_id');
         } else {
-            $userId = Auth::user()->id;
+            $userId = Auth::user()->supplier_id;
         }
 
         try {

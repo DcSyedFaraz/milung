@@ -11,6 +11,6 @@ class OrderSupplier extends Model
     protected $guarded = [];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SupplierProfile::class,'user_id')->select('id','supplier_id');
     }
 }
