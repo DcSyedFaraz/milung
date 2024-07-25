@@ -3,7 +3,7 @@
         <!-- Header -->
         <div class="row my-4">
             <div class="col text-center">
-                <h1 class="text-capitalize">{{ user.company_header ?? 'not provided' }}</h1>
+                <h1 class="text-capitalize">{{ user?.company_header ?? 'not provided' }}</h1>
             </div>
         </div>
 
@@ -21,7 +21,7 @@
                 </div>
                 <div class="d-flex justify-content-between mt-2">
                     <div>Prepared By:</div>
-                    <div class="border-bottom" style="width: 60%;">{{ invoices.user?.userid }}</div>
+                    <div class="border-bottom" style="width: 60%;">{{ invoices.user?.supplier_id }}</div>
                 </div>
             </div>
         </div>
@@ -85,27 +85,27 @@
                     <tbody>
                         <tr>
                             <td>Beneficiary Bank</td>
-                            <td> {{ user.bank ?? 'not provided'}} </td>
+                            <td> {{ user?.bank ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Bank Address</td>
-                            <td> {{ user.bank_address ?? 'not provided'}} </td>
+                            <td> {{ user?.bank_address ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>SWIFT Code</td>
-                            <td> {{ user.swift_code ?? 'not provided'}} </td>
+                            <td> {{ user?.swift_code ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>CHIPS No</td>
-                            <td> {{ user.chips_no ?? 'not provided'}} </td>
+                            <td> {{ user?.chips_no ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Name</td>
-                            <td> {{ user.beneficiary_name ?? 'not provided'}} </td>
+                            <td> {{ user?.beneficiary_name ?? 'not provided'}} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Account Number</td>
-                            <td> {{ user.account_no ?? 'not provided'}} </td>
+                            <td> {{ user?.account_no ?? 'not provided'}} </td>
                         </tr>
                     </tbody>
                 </table>

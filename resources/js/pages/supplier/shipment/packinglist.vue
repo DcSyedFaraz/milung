@@ -60,33 +60,33 @@
                                 <tr v-for="(item, index) in orders" :key="index" class="text-center">
                                     <!-- Editable cells -->
 
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'carton')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'carton')">{{
                             item.packinglist?.carton }} </td>
                                     <td>{{ item.id }} </td>
                                     <td>{{ item.product_group?.group_name }} </td>
                                     <td>{{ item.quantity_unit }} </td>
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'qty')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'qty')">{{
                             item.packinglist?.qty
                         }} </td>
                                     <td>{{ calculateTotal(item.packinglist?.qty, item.quantity_unit) }}</td>
 
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'nw')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'nw')">{{
                             item.packinglist?.nw }}
                                     </td>
                                     <td>{{ item.packinglist?.nw * item.packinglist?.qty }} </td>
 
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'gw')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'gw')">{{
                             item.packinglist?.gw }}
                                     </td>
                                     <td>{{ item.packinglist?.gw * item.packinglist?.qty }} </td>
 
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'lcm')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'lcm')">{{
                             item.packinglist?.lcm
                         }} </td>
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'wcm')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'wcm')">{{
                             item.packinglist?.wcm
                         }} </td>
-                                    <td :contenteditable="item.editable" @input="updateData(index, $event, 'hcm')">{{
+                                    <td :class="{ 'editable-cell': item.editable }" :contenteditable="item.editable" @input="updateData(index, $event, 'hcm')">{{
                             item.packinglist?.hcm
                         }} </td>
                                     <td>{{ calculateVolume(item) }}</td>
@@ -254,4 +254,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.editable-cell {
+    background-color: #f0f8ff; /* Light blue background */
+    border: 1px dashed #009de1; /* Dashed border */
+    cursor: text; /* Text cursor */
+}
+</style>

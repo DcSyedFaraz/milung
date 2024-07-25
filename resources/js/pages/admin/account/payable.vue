@@ -15,7 +15,7 @@
                                     <div class="col-7">
                                         <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
                                         <multiselect v-model="selectedsupplierId" :options="suppliers" field="id"
-                                            label="userid" track-by="id">
+                                            label="supplier_id" track-by="id">
                                         </multiselect>
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                                         </p>
                                     </div>
                                     <div class="col-5">
-                                        <a v-if="note.receipt_note != null" :href="'/storage/' +
+                                        <a v-if="note != null && note.receipt_note != null" :href="'/storage/' +
                                             note.receipt_note" download class="btn px-4 mx-2 btn-outline-primary  ">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </a>
@@ -152,7 +152,7 @@
                             <Column field="note.receipt_note" header="Receipt Note" style="min-width: 10rem">
                                 <template #body="{ data }">
                                     <!-- {{note.receipt_note}} -->
-                                    <a v-if="note.receipt_note != null" :href="'/storage/' + note.receipt_note" download
+                                    <a v-if="note != null && note.receipt_note != null" :href="'/storage/' + note?.receipt_note" download
                                         class="btn px-4 mx-2 btn-outline-primary">
                                         <i class="bi bi-file-earmark-text fw-bold"></i>
                                     </a>

@@ -498,7 +498,7 @@ class UserController extends Controller
     }
     public function supplierOrder()
     {
-        $users = User::withRole('Supplier')->select('id', 'userid')->get();
+        $users = SupplierProfile::select('id', 'supplier_id')->get();
 
         return response()->json($users, 200);
     }

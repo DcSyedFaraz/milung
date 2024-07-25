@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('information_id')->constrained()->onDelete('cascade');
             $table->foreignId('shipment_order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
             $table->string('settle_amount')->nullable();
             $table->string('settle_date')->nullable();
             $table->string('outstanding_amount')->nullable();

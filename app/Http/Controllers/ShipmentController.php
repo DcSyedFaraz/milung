@@ -167,7 +167,7 @@ class ShipmentController extends Controller
             abort(404, 'Supplier invoice not found.');
         }
 
-        $user = SupplierProfile::where('user_id', $invoice->user_id)->first();
+        $user = SupplierProfile::where('id', $invoice->user_id)->first();
 
         return response()->json([
             'inv' => $invoice,
@@ -303,7 +303,7 @@ class ShipmentController extends Controller
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()->all()], 422);
         }
-        $data['user_id'] = Auth::user()->supplier_id;
+        $data['user_id'] = Auth::id();
         // $data['user_id'] = 1;
         unset($data['shipment_order'], $data['user']);
         try {

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('train')->nullable();
             $table->date('delivery')->nullable();
             $table->longText('remarks')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
             $table->foreignId('shipment_order_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

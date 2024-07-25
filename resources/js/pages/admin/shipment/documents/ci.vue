@@ -14,9 +14,7 @@
                 </div>
                 <div class="col-12">
                     <div class="row mx-6 mt-4">
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-milung"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-milung">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Invoice No: <br />
@@ -32,9 +30,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-warning"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-warning">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Date: <br />
@@ -42,9 +38,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-orange"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-orange">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Prepred By: <br />
@@ -61,9 +55,7 @@
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >Shipper:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">Shipper:</label>
                                         <p class="mb-6">{{ info.shipper }}</p>
                                         <!-- <textarea v-model="info.shipper" class="form-control" cols="58" rows="6"></textarea> -->
                                     </div>
@@ -71,18 +63,14 @@
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >consignee:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">consignee:</label>
                                         <p class="mb-6">{{ info.consignee }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-2">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >notify party:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">notify
+                                            party:</label>
                                         <p class="">{{ info.party }}</p>
                                     </div>
                                 </div>
@@ -90,37 +78,29 @@
                             <div class="col-6">
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >carton mark:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">carton
+                                            mark:</label>
                                         <p class="mb-6">{{ info.carton }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-4">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >port of loading:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">port of
+                                            loading:</label>
                                         <p class="">{{ info.loading }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-3">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >final destination:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">final
+                                            destination:</label>
                                         <p class="">{{ info.destination }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >payment:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">payment:</label>
                                         <p class="">{{ info.payment }}</p>
                                     </div>
                                 </div>
@@ -140,11 +120,7 @@
                             </p>
                         </div>
                         <div class="col-8">
-                            <input
-                                type="text"
-                                v-model="info.shipment_order_id"
-                                class="form-control"
-                            />
+                            <input type="text" v-model="info.shipment_order_id" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -156,15 +132,10 @@
                     <div class="card">
                         <div class="card-header">
                             <div class=""></div>
-                            <div
-                                class="d-flex justify-content-between align-items-center mx-3"
-                            >
+                            <div class="d-flex justify-content-between align-items-center mx-3">
                                 <span>
-                                    <span
-                                        class="fw-bold fs-4 text-uppercase"
-                                        style="color: #14245c"
-                                        >Declaration Comercial Invoice:</span
-                                    >
+                                    <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Declaration
+                                        Comercial Invoice:</span>
                                 </span>
 
                                 <div class="col-4 d-flex">
@@ -177,23 +148,16 @@
                             </div>
                         </div>
 
-                        <div
-                            class="card-body rounded-top table-responsive border-top border-bottom"
-                        >
+                        <div class="card-body rounded-top table-responsive border-top border-bottom">
                             <!-- Table with stripped rows -->
                             <table class="table table-striped table-hover">
-                                <thead
-                                    style="color: #009de1"
-                                    class="text-center fs-7"
-                                >
+                                <thead style="color: #009de1" class="text-center fs-7">
                                     <tr style="">
 
                                         <th class="text-nowrap">Description</th>
                                         <th class="text-nowrap">
                                             <span>Quantity</span> <br />
-                                            <span class="text-milung"
-                                                >Pcs or set</span
-                                            >
+                                            <span class="text-milung">Pcs or set</span>
                                         </th>
 
                                         <th class="text-nowrap">
@@ -202,17 +166,13 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
-                                    <tr
-                                        v-for="(item, index) in packinglst"
-                                        :key="index"
-                                        v-if="packinglst.length > 0"
-                                    >
+                                    <tr v-for="(item, index) in packinglst" :key="index" v-if="packinglst.length > 0">
 
                                         <td>
                                             {{
-                                                item.orders?.product_group
-                                                    ?.group_name
-                                            }}
+                                        item.orders?.product_group
+                                            ?.group_name
+                                    }}
                                         </td>
                                         <td>
                                             {{ item.orders?.quantity_unit }}
@@ -231,20 +191,13 @@
                                     </tr>
 
                                     <td colspan="3" class="fs-4 text-start">
-                                        <span class="text-milung fw-bold "
-                                            >Provisional Customes Clearance
-                                            Code:</span
-                                        ><span class="fw-bold">N325</span>
+                                        <span class="text-milung fw-bold ">Provisional Customes Clearance
+                                            Code:</span><span class="fw-bold">N325</span>
                                     </td>
                                 </tbody>
                                 <span>
-                                    <table
-                                        class="table table-striped table-hover w-25"
-                                    >
-                                        <thead
-                                            style="color: #009de1"
-                                            class="text-center fs-7"
-                                        >
+                                    <table class="table table-striped table-hover w-25">
+                                        <thead style="color: #009de1" class="text-center fs-7">
                                             <tr style="">
                                                 <th class="text-nowrap">
                                                     HS Code.
@@ -255,23 +208,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                v-for="item in packinglst"
-                                                class="text-center"
-                                            >
+                                            <tr v-for="item in packinglst" class="text-center">
                                                 <td>
                                                     {{
-                                                        item.orders
-                                                            ?.product_group
-                                                            ?.hs_de
-                                                    }}
+                                        item.orders
+                                            ?.product_group
+                                            ?.hs_de
+                                    }}
                                                 </td>
                                                 <td>
                                                     {{
-                                                        item.orders
-                                                            ?.product_group
-                                                            ?.group_name
-                                                    }}
+                                            item.orders
+                                                ?.product_group
+                                                ?.group_name
+                                        }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -279,30 +229,16 @@
                                 </span>
                                 <tbody class="w-full border-top border-3">
                                     <tr class="fw-bold">
-                                        <td
-                                            class="text-blue"
-                                            colspan="1"
-                                            style="color: #009de1"
-                                        >
+                                        <td class="text-blue" colspan="1" style="color: #009de1">
                                             Total:
                                         </td>
-                                        <td
-                                            class="text-blue"
-                                            colspan="1 "
-                                            style="color: #009de1"
-                                        >
+                                        <td class="text-blue" colspan="1 " style="color: #009de1">
                                             <span class="ms-5 text-center">{{
-                                                totalQtys
-                                            }}</span>
+                                        totalQtys
+                                                }}</span>
                                         </td>
-                                        <td
-                                            class="text-blue"
-                                            colspan="2"
-                                            style="color: #009de1"
-                                        >
-                                            <span class="text-center ms-5"
-                                                >US$ {{ totalvalue }}</span
-                                            >
+                                        <td class="text-blue" colspan="2" style="color: #009de1">
+                                            <span class="text-center ms-5">US$ {{ totalvalue }}</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -312,27 +248,17 @@
                             <div class="">
                                 <div class="d-flex col-4 my-2">
                                     <div class="col-5 my-auto">
-                                        <p
-                                            for="v-model"
-                                            class="my-auto fs-6 text-uppercase fw-bold"
-                                        >
+                                        <p for="v-model" class="my-auto fs-6 text-uppercase fw-bold">
                                             Incoterms:
                                         </p>
                                     </div>
                                     <div class="col-7">
-                                        <input
-                                            type="text"
-                                            v-model="blue.incoterm"
-                                            class="form-control"
-                                        />
+                                        <input type="text" v-model="blue.incoterm" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2 mb-5">
                                     <div class="col-3 my-auto">
-                                        <p
-                                            for="v-model"
-                                            class="my-auto fs-6 fw-bold"
-                                        >
+                                        <p for="v-model" class="my-auto fs-6 fw-bold">
                                             Total in words:
                                         </p>
                                     </div>
@@ -342,24 +268,19 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div
-                                        class="col-12 d-flex justify-content-end"
-                                    >
-                                        <div class="col-2 align-items-end">
-                                            <button
-                                                class="btn btn-milung px-5"
-                                                @click="generatePdf"
-                                            >
-                                                Export
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="col-12 d-flex justify-content-end">
+            <div class="col-2 align-items-end">
+                <button class="btn btn-milung px-5" @click="generatePdf">
+                    Export
+                </button>
             </div>
         </div>
     </div>
@@ -410,25 +331,28 @@ export default {
             const pdf = new jsPDF("p", "mm", "a4");
             const source = document.getElementById("invoice-content");
 
-            html2canvas(source)
-                .then((canvas) => {
-                    const imgData = canvas.toDataURL("image/png");
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-                    const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-                    let imgHeight = (imgWidth * canvas.height) / canvas.width;
+            html2canvas(source, { scale: 2 }).then((canvas) => {
+                const imgData = canvas.toDataURL("image/jpeg", 0.8); // Use JPEG with 80% quality
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
 
-                    if (imgHeight > pageHeight) {
-                        pdf.addPage();
-                        imgHeight = (imgWidth * canvas.height) / canvas.width;
-                    }
+                pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
 
-                    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-                    pdf.save(pdfName);
-                })
-                .catch((error) => {
-                    console.error("Error generating PDF:", error);
-                });
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save(pdfName);
+            }).catch((error) => {
+                console.error("Error generating PDF:", error);
+            });
         },
         numberToWords(num) {
             const ones = [
@@ -472,8 +396,8 @@ export default {
             const convertToHundreds = (num) => {
                 return num >= 100
                     ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(
-                          num % 100
-                      )}`
+                        num % 100
+                    )}`
                     : convertToTens(num);
             };
 
@@ -481,8 +405,8 @@ export default {
                 return num < 10
                     ? ones[num]
                     : num < 20
-                    ? teens[num - 10]
-                    : `${tens[Math.floor(num / 10)]} ${ones[num % 10]}`;
+                        ? teens[num - 10]
+                        : `${tens[Math.floor(num / 10)]} ${ones[num % 10]}`;
             };
 
             const numToWords = (num) => {
@@ -490,9 +414,8 @@ export default {
                 let words = "";
                 for (let i = 0; num > 0; i++) {
                     if (num % 1000 !== 0) {
-                        words = `${convertToHundreds(num % 1000)} ${
-                            scales[i]
-                        } ${words}`;
+                        words = `${convertToHundreds(num % 1000)} ${scales[i]
+                            } ${words}`;
                     }
                     num = Math.floor(num / 1000);
                 }
@@ -571,10 +494,11 @@ export default {
 
 <style scoped>
 .mb-6 {
-    margin-bottom: 2rem !important;
-    height: 6rem !important;
+    margin-bottom: 1rem !important;
+    height: 1rem !important;
     max-width: 10rem !important;
 }
+
 .mx-6 {
     margin-right: 11rem !important;
     margin-left: 11rem !important;
@@ -585,5 +509,11 @@ export default {
     background-color: #f67b00 !important;
     border-color: #f67b00 !important;
     color: white;
+}
+
+#invoice-content {
+    padding: 10mm;
+    /* Ensure padding does not push content out */
+    box-sizing: border-box;
 }
 </style>

@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('supplier_receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('shipment_order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
             $table->string('receipt_note');
             $table->timestamps();
         });

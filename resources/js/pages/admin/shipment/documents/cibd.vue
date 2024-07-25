@@ -423,24 +423,24 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-12">
-                                    <div
-                                        class="col-12 d-flex justify-content-end"
-                                    >
-                                        <div class="col-2 align-items-end">
-                                            <button
-                                                class="btn btn-milung px-5"
-                                                @click="generatePdf"
-                                            >
-                                                Export
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div
+            class="col-12 d-flex justify-content-end"
+        >
+            <div class="col-2 align-items-end">
+                <button
+                    class="btn btn-milung px-5"
+                    @click="generatePdf"
+                >
+                    Export
+                </button>
             </div>
         </div>
     </div>

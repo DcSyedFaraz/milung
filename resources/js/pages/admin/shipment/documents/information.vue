@@ -336,7 +336,7 @@
                                                 {{
             item.orders?.product_group
                 ?.group_name
-        }}
+                                                }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -380,26 +380,29 @@
             <!-- Align items vertically -->
             <div class="col-3">
                 <div class="d-flex">
-                    <div class="col-8 my-auto">
+                    <div class="col-7 my-auto">
                         <p for="v-model" class="my-auto fs-7">
                             Shipment Extra Cost:
                         </p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <input type="number" v-model="info.extra" class="form-control" />
                     </div>
                 </div>
             </div>
 
-            <div class="col-2">
-                <button class="btn btn-warning px-5">Save</button>
+            <div class="col-3">
+                <button class="btn btn-warning px-5" @click="submitForm" :disabled="submitting">
+                    <span v-if="submitting">Submitting...</span>
+                    <span v-else>Save</span>
+                </button>
                 <!-- Adjust padding for consistency -->
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <router-link :to="{
         name: 'cibd',
         params: {
-            id: info.id,
+            id: info.shipment_order_id,
             so_number: info.shipment_order,
         },
     }" class="btn btn-milung px-4 fs-7">
@@ -408,23 +411,18 @@
                 <!-- <button ></button> -->
             </div>
 
-            <div class="col-2">
-                <router-link :to="{
-        name: 'ci',
-        params: {
-            id: info.id,
-            so_number: info.shipment_order,
-        },
-    }" class="btn bg-blue px-4 fs-7">
+            <div class="col-3">
+                <router-link :to="{ name: 'ci', params: { id: info.shipment_order_id, so_number: info.shipment_order,
+        }, }" class="btn bg-blue px-4 fs-7">
                     <span>Generate CI</span>
                 </router-link>
             </div>
 
-            <div class="col-3">
+            <!-- <div class="col-3">
                 <button class="btn btn-success px-4" type="button">
                     Export Shipping Docs
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -664,7 +662,7 @@ export default {
                 this.info.shipment_order = this.$route.params.so_number;
                 this.info.shipment_order_id = soId;
                 // this.pagination.totalItems = response.data.total;
-                console.log(response.data);
+                console.log(this.info);
 
                 NProgress.done();
             } catch (error) {

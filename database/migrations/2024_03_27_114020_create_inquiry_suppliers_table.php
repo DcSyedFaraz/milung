@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inquiry_suppliers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('price_inquiry_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
             $table->string('quantity');
             $table->string('capacity');
             $table->integer('exw')->nullable();

@@ -20,6 +20,6 @@ class SupplierInvoice extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(SupplierProfile::class,'user_id','id');
     }
 }
