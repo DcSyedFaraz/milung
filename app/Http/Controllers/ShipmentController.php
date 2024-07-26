@@ -322,23 +322,59 @@ class ShipmentController extends Controller
     public function shipment(Request $request, $id)
     {
         // dd($request->all());
+        $valid = $request->all();
         $data = $request->shipment_order;
         $buyer = $request->buyer;
         $supplier = $request->supplier;
 
-        $validatedData = \Validator::make($data, [
-            'buyerid' => 'required|exists:buyer_profiles,id',
+        $validatedData = \Validator::make($valid, [
             // 'supplierid' => 'required|exists:users,id',
-            'method' => 'required|string',
-            'remarks' => 'required|string',
-            'port' => 'required|string',
-            'destination' => 'required|string',
-            'incoterm' => 'required|string',
-            'so_number' => [
-                'required',
-                'string',
-                Rule::unique('shipment_orders', 'so_number')->ignore($id),
-            ],
+            'shipment_order.id' => 'required|integer',
+            'shipment_order.so_number' => "required|string|max:255|unique:shipment_orders,so_number,$id",
+            'shipment_order.buyerid' => 'required|integer|exists:buyer_profiles,id',
+            'shipment_order.method' => 'required|string|max:255',
+            'shipment_order.port' => 'required|string|max:255',
+            'shipment_order.remarks' => 'nullable|string|max:255',
+            'shipment_order.destination' => 'required|string|max:255',
+            'shipment_order.incoterm' => 'required|string|max:255',
+            'shipment_order.created_at' => 'required|date',
+            'shipment_order.updated_at' => 'required|date',
+            'shipment_order.supplier_ids.*.id' => 'required|integer',
+            'shipment_order.supplier_ids.*.supplier_id' => 'required|string|max:255',
+            'shipment_order.user.id' => 'required|integer',
+            'shipment_order.user.buyer_id' => 'required|string|max:255',
+            'shipment_order.shipmentsupplier.*.id' => 'required|integer',
+            'shipment_order.shipmentsupplier.*.ship_date' => 'required|date',
+            'shipment_order.shipmentsupplier.*.mode_delivery' => 'required|string|max:255',
+            'shipment_order.shipmentsupplier.*.waybill' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.courier' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.flight' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.vessel' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.train' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.delivery' => 'required|date',
+            'shipment_order.shipmentsupplier.*.remarks' => 'nullable|string|max:255',
+            'shipment_order.shipmentsupplier.*.user_id' => 'required|integer',
+            'shipment_order.shipmentsupplier.*.shipment_order_id' => 'required|integer',
+            'buyer.ship_date' => 'required|date',
+            'buyer.ship_agent' => 'nullable|string|max:255',
+            'buyer.waybill' => 'nullable|string|max:255',
+            'buyer.courier' => 'nullable|string|max:255',
+            'buyer.flight' => 'nullable|string|max:255',
+            'buyer.vessel' => 'nullable|string|max:255',
+            'buyer.train' => 'nullable|string|max:255',
+            'buyer.delivery' => 'required|date',
+            'buyer.atc_no' => 'nullable|string|max:255',
+            'buyer.remarks' => 'nullable|string|max:255',
+            'supplier.*.ship_date' => 'required|date',
+            'supplier.*.mode_delivery' => 'required|string|max:255',
+            'supplier.*.waybill' => 'nullable|string|max:255',
+            'supplier.*.courier' => 'nullable|string|max:255',
+            'supplier.*.flight' => 'nullable|string|max:255',
+            'supplier.*.vessel' => 'nullable|string|max:255',
+            'supplier.*.train' => 'nullable|string|max:255',
+            'supplier.*.delivery' => 'required|date',
+            'supplier.*.remarks' => 'nullable|string|max:255',
+            'supplier.*.user_id' => 'required|integer',
         ]);
         $ShipmentOrder = ShipmentOrder::findOrFail($id);
 
@@ -358,7 +394,7 @@ class ShipmentController extends Controller
 
         Shipment::updateOrCreate(
             ['shipment_order_id' => $ShipmentOrder->id, 'user_id' => $buyerid],
-            [
+            array_filter([
                 'ship_date' => $buyer['ship_date'],
                 'ship_agent' => $buyer['ship_agent'],
                 'waybill' => $buyer['waybill'],
@@ -369,23 +405,29 @@ class ShipmentController extends Controller
                 'delivery' => $buyer['delivery'],
                 'atc_no' => $buyer['atc_no'],
                 'remarks' => $buyer['remarks'],
-            ]
+            ], function ($value) {
+                return !is_null($value);
+            })
         );
-        foreach ($supplier as $supplierShipment) {
-            ShipmentSupplier::updateOrCreate(
-                ['shipment_order_id' => $ShipmentOrder->id, 'user_id' => $supplierShipment['user_id']],
-                [
-                    'ship_date' => $supplierShipment['ship_date'],
-                    'mode_delivery' => $supplierShipment['mode_delivery'],
-                    'waybill' => $supplierShipment['waybill'],
-                    'courier' => $supplierShipment['courier'],
-                    'flight' => $supplierShipment['flight'],
-                    'vessel' => $supplierShipment['vessel'],
-                    'train' => $supplierShipment['train'],
-                    'delivery' => $supplierShipment['delivery'],
-                    'remarks' => $supplierShipment['remarks'],
-                ]
-            );
+        if ($supplier) {
+            foreach ($supplier as $supplierShipment) {
+                ShipmentSupplier::updateOrCreate(
+                    ['shipment_order_id' => $ShipmentOrder->id, 'user_id' => $supplierShipment['user_id']],
+                    array_filter([
+                        'ship_date' => $supplierShipment['ship_date'],
+                        'mode_delivery' => $supplierShipment['mode_delivery'],
+                        'waybill' => $supplierShipment['waybill'],
+                        'courier' => $supplierShipment['courier'],
+                        'flight' => $supplierShipment['flight'],
+                        'vessel' => $supplierShipment['vessel'],
+                        'train' => $supplierShipment['train'],
+                        'delivery' => $supplierShipment['delivery'],
+                        'remarks' => $supplierShipment['remarks'],
+                    ], function ($value) {
+                        return !is_null($value);
+                    })
+                );
+            }
         }
 
         return response()->json(['message' => 'Shipment Overview updated successfully']);

@@ -480,7 +480,7 @@ class UserController extends Controller
         // $user->assignRole('Supplier');
 
         $admin = User::role(['Admin', 'Internal'])->get();
-        Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+       // Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
         $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->supplier_id}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));

@@ -77,17 +77,14 @@
             <h3 class="text-milung fw-bold text-uppercase fw-bold">
                 Supplier Shipment Information
             </h3>
+            <!-- {{ supplier }} -->
             <div class="col-6">
                 <div class="d-flex col-12 my-2">
                     <div class="col-4 my-auto">
                         <p for="v-model" class="my-auto">Shipping Date:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="date"
-                            v-model="supplier.ship_date"
-                            class="form-control"
-                        />
+                        <input type="date" v-model="supplier.ship_date" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -95,10 +92,7 @@
                         <p for="v-model" class="my-auto">Mode Of Delivery:</p>
                     </div>
                     <div class="col-8">
-                        <select
-                            class="fw-bold form-select"
-                            v-model="supplier.mode_delivery"
-                        >
+                        <select class="fw-bold form-select" v-model="supplier.mode_delivery">
                             <option value="Forwarder Pickup">
                                 Forwarder Pickup
                             </option>
@@ -113,11 +107,7 @@
                         </p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            v-model="supplier.waybill"
-                            class="form-control"
-                        />
+                        <input type="text" v-model="supplier.waybill" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -125,11 +115,7 @@
                         <p for="v-model" class="my-auto">Courier:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            v-model="supplier.courier"
-                            class="form-control"
-                        />
+                        <input type="text" v-model="supplier.courier" class="form-control" />
                     </div>
                 </div>
             </div>
@@ -139,11 +125,7 @@
                         <p for="v-model" class="my-auto">Flight:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            v-model="supplier.flight"
-                            class="form-control"
-                        />
+                        <input type="text" v-model="supplier.flight" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -151,11 +133,7 @@
                         <p for="v-model" class="my-auto">Vessel:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            v-model="supplier.vessel"
-                            class="form-control"
-                        />
+                        <input type="text" v-model="supplier.vessel" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -163,11 +141,7 @@
                         <p for="v-model" class="my-auto">Train:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            v-model="supplier.train"
-                            class="form-control"
-                        />
+                        <input type="text" v-model="supplier.train" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2">
@@ -175,11 +149,7 @@
                         <p for="v-model" class="my-auto">Delivery Date:</p>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="date"
-                            v-model="supplier.delivery"
-                            class="form-control"
-                        />
+                        <input type="date" v-model="supplier.delivery" class="form-control" />
                     </div>
                 </div>
                 <div class="d-flex col-12 my-2 justify-content-end mt-5">
@@ -195,6 +165,7 @@
 
 <script>
 export default {
+    emits: ['profileUpdated'],
     props: {
         soData: {
             type: Object,
@@ -204,9 +175,18 @@ export default {
     data() {
         return {
             so: this.soData,
-            supplier: this.soData.shipmentsupplier
+            supplier: this.soData.shipmentsupplier && this.soData.shipmentsupplier.length > 0
                 ? this.soData.shipmentsupplier[0]
-                : {},
+                : {
+                    ship_date: '',
+                    mode_delivery: '',
+                    waybill: '',
+                    courier: '',
+                    flight: '',
+                    vessel: '',
+                    train: '',
+                    delivery: '',
+                },
         };
     },
     methods: {

@@ -62,18 +62,18 @@
                                         </div>
                                     </td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipmentsupplier?.ship_date == null, 'fst-italic': ship?.shipmentsupplier?.ship_date == null }">
-                                        {{ ship?.shipmentsupplier?.ship_date ?? 'null' }}
+                                        :class="{ 'text-muted': ship?.shipmentsupplier[0]?.ship_date == null, 'fst-italic': ship?.shipmentsupplier[0]?.ship_date == null }">
+                                        {{ ship?.shipmentsupplier[0]?.ship_date ?? 'null' }}
                                     </td>
                                     <td>
                                         <span>{{ ship.method }}</span>
                                     </td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipmentsupplier?.waybill == null, 'fst-italic': ship?.shipmentsupplier?.waybill == null }">
-                                        {{ ship?.shipmentsupplier?.waybill ?? 'null' }}</td>
+                                        :class="{ 'text-muted': ship?.shipmentsupplier[0]?.waybill == null, 'fst-italic': ship?.shipmentsupplier[0]?.waybill == null }">
+                                        {{ ship?.shipmentsupplier[0]?.waybill ?? 'null' }}</td>
                                     <td
-                                        :class="{ 'text-muted': ship?.shipmentsupplier?.delivery == null, 'fst-italic': ship?.shipmentsupplier?.delivery == null }">
-                                        {{ ship?.shipmentsupplier?.delivery ?? 'null'
+                                        :class="{ 'text-muted': ship?.shipmentsupplier[0]?.delivery == null, 'fst-italic': ship?.shipmentsupplier[0]?.delivery == null }">
+                                        {{ ship?.shipmentsupplier[0]?.delivery ?? 'null'
                                         }}</td>
                                     <td>
                                         <router-link class="btn btn-light text-black" :to="{ name: 'packinglist' }" v-if="can('inputPackingList')">
@@ -150,6 +150,7 @@ import 'nprogress/nprogress.css';
 
 
 export default {
+    emits: ['profileUpdated'],
     components: {
         shipmentdetails
     },
@@ -276,7 +277,7 @@ export default {
                 const response = await axios.get('/api/supplier/shipments');
                 this.shipment = response.data;
                 // this.pagination.totalItems = response.data.total;
-                console.log(response.data);
+                console.log(this.shipment);
 
                 NProgress.done();
             } catch (error) {

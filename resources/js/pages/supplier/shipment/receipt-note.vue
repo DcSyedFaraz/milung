@@ -189,7 +189,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 export default {
-
+    emits: ['profileUpdated'],
     data() {
 
         return {
@@ -241,10 +241,23 @@ export default {
 
             const printContent = document.getElementById('print-container');
 
-            html2canvas(printContent, { useCORS: true }).then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
+            html2canvas(printContent, { useCORS: true, scale: 1 }).then((canvas) => {
+                const imgData = canvas.toDataURL('image/jpeg', 1); // use JPEG for better compression and set quality to 0.5
 
-                doc.addImage(imgData, 'PNG', 10, 10, 190, 0);
+                const imgWidth = 190; // width of the image in PDF
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // maintain aspect ratio
+
+                let position = 10;
+
+                // If the image height exceeds the page height, create a new page and adjust position
+                if (imgHeight > pageHeight - 20) {
+                    doc.addPage();
+                    position = 10;
+                }
+
+                doc.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight);
 
                 doc.save('Receipt Note.pdf');
             });
