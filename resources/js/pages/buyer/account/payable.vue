@@ -54,7 +54,7 @@
                                         Shipping Invoice#
                                     </th>
                                     <th class="text-nowrap">Order Value</th>
-                                    <th class="text-nowrap">Reciept Note</th>
+                                    <th class="text-nowrap">Receipt Note</th>
                                 </tr>
                             </thead>
 

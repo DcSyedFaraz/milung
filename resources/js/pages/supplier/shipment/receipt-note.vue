@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-9">
                 <h3 class="text-center py-5 text-milung fw-bold" style="margin-left: 12rem !important;">
-                    Reciept Note
+                    Receipt Note
                 </h3>
             </div>
             <div class="col-3 ">

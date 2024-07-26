@@ -510,19 +510,19 @@ class UserController extends Controller
     }
     public function buyerFinance()
     {
-        $data['users'] = User::withRole('Buyer')->select('id', 'userid')->get();
+        $data['users'] = BuyerProfile::select('id', 'buyer_id')->get();
 
-        $data['sales'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', DB::raw('SUM(information.totalpayable) as total_payable_per_buyer'))
+        $data['sales'] = ShipmentOrder::select('shipment_orders.buyerid', 'buyer_profiles.buyer_id', DB::raw('SUM(information.totalpayable) as total_payable_per_buyer'))
             ->join('information', 'shipment_orders.id', '=', 'information.shipment_order_id')
-            ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
-            ->groupBy('shipment_orders.buyerid', 'users.userid')
+            ->join('buyer_profiles', 'shipment_orders.buyerid', '=', 'buyer_profiles.id')
+            ->groupBy('shipment_orders.buyerid', 'buyer_profiles.buyer_id')
             ->having(DB::raw('SUM(information.totalpayable)'), '>', 0)
             ->get();
 
-        $data['remaining'] = ShipmentOrder::select('shipment_orders.buyerid', 'users.userid', DB::raw('SUM(settle_amounts.outstanding_amount) as total_outstanding_per_buyer'))
+        $data['remaining'] = ShipmentOrder::select('shipment_orders.buyerid', 'buyer_profiles.buyer_id', DB::raw('SUM(settle_amounts.outstanding_amount) as total_outstanding_per_buyer'))
             ->join('settle_amounts', 'shipment_orders.id', '=', 'settle_amounts.shipment_order_id')
-            ->join('users', 'shipment_orders.buyerid', '=', 'users.id')
-            ->groupBy('shipment_orders.buyerid', 'users.userid')
+            ->join('buyer_profiles', 'shipment_orders.buyerid', '=', 'buyer_profiles.id')
+            ->groupBy('shipment_orders.buyerid', 'buyer_profiles.buyer_id')
             ->having(DB::raw('SUM(settle_amounts.outstanding_amount)'), '>', 0)
             ->get();
 

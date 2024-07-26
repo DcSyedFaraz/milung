@@ -37,7 +37,7 @@
                                 <div class="d-flex col-11  justify-content-end">
                                     <div class="col-4 my-auto">
                                         <p class="text-milung my-auto">
-                                            Reciept/Delivery Note:
+                                            Receipt/Delivery Note:
                                         </p>
                                     </div>
                                     <div class="col-5">
@@ -173,7 +173,7 @@
                                         Shipping Invoice#
                                     </th>
                                     <th class="text-nowrap">Order Value</th>
-                                    <th class="text-nowrap">Reciept Note</th>
+                                    <th class="text-nowrap">Receipt Note</th>
                                 </tr>
                             </thead>
 

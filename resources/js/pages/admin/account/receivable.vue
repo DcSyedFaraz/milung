@@ -15,7 +15,7 @@
                                     </div>
                                     <div class="col-7">
                                         <!-- <input type="text" v-model="so.buyerid" class="form-control"> -->
-                                        <multiselect v-model="selectedUserId" :options="users" label="userid"
+                                        <multiselect v-model="selectedUserId" :options="users" label="buyer_id"
                                             track-by="id">
                                         </multiselect>
                                     </div>
@@ -81,7 +81,7 @@
                                             class="form-control">
                                         <span v-else>USD {{ item.settleamount?.settle_amount ?? 0 }}</span>
                                     </td>
-                                    <td>{{ item.settleamount?.settle_date }}</td>
+                                    <td>{{ item.settleamount?.settle_date ?? 'Not settled yet'}}</td>
 
                                     <td :class="{ 'text-danger': item.settleamount?.outstanding_amount > 0 }">
                                         <span v-if="item.settleamount?.outstanding_amount"
@@ -90,7 +90,7 @@
                                             USD {{ item.settleamount?.outstanding_amount }}
                                         </span>
                                         <span v-else class="text-danger">
-                                            {{ item.information?.totalpayable }}
+                                           USD {{ item.information?.totalpayable }}
 
                                         </span>
                                     </td>
@@ -167,7 +167,7 @@
                                     </thead>
                                     <tbody class="text-center">
                                         <tr v-for="(item, index) in remaining" :key="index" v-if="remaining.length > 0">
-                                            <td>{{ item.userid }}</td>
+                                            <td>{{ item.buyer_id }}</td>
                                             <td>USD {{ item.total_outstanding_per_buyer }}</td>
                                         </tr>
                                         <tr v-else>
@@ -204,7 +204,7 @@
                                     </thead>
                                     <tbody class="text-center">
                                         <tr v-for="(item, index) in sales" :key="index" v-if="sales.length > 0">
-                                            <td>{{ item.userid }}</td>
+                                            <td>{{ item.buyer_id }}</td>
                                             <td>USD {{ item.total_payable_per_buyer }}</td>
                                         </tr>
                                         <tr v-else>

@@ -29,7 +29,7 @@
                             <div class="col-4 d-flex">
                                 <div class="col-4 my-auto">
                                     <p for="v-model" class="my-auto fs-7 fw-bold">
-                                        Reciept Note:</p>
+                                        Receipt Note:</p>
                                 </div>
                                 <div class="col-8" v-if="note == null">
                                     <input type="file" ref="note" style="display: none" @change="handleFileUpload" />
@@ -71,7 +71,7 @@
                                     <th>SO #</th>
                                     <th>Invoice #</th>
                                     <th>Order Payable Amount</th>
-                                    <th>Reciept Note</th>
+                                    <th>Receipt Note</th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
