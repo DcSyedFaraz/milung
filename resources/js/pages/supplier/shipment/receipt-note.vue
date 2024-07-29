@@ -53,7 +53,7 @@
                     <div class="card-body rounded-top table-responsive">
 
                         <!-- Table with stripped rows -->
-                        <table class="table table-striped table-hover mt-0 ">
+                        <table class="table mt-0 ">
                             <thead style="color: #009de1; " class="text-center fs-7 ">
                                 <tr style="">
 

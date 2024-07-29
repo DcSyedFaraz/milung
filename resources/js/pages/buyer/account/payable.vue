@@ -72,7 +72,7 @@
                                     <td>{{ item.totalvalue }}</td>
                                     <td>
                                         <router-link class="fw-bold" style="color: #009de1 !important" :to="{
-                                            name: 'information',
+                                            name: 'buyer_information',
                                             params: {
                                                 id: item.so_number,
                                                 so_number:

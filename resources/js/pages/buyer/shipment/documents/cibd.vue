@@ -362,6 +362,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 export default {
+    emits: ['profileUpdated'],
     data() {
         return {
             info: {},

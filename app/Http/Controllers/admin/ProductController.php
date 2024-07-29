@@ -20,6 +20,7 @@ use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Mail;
+use Notification;
 use Storage;
 
 class ProductController extends Controller
@@ -82,7 +83,7 @@ class ProductController extends Controller
             $message = "A product group with the name '$productName' has been updated.";
 
             $this->logEvent('Group', $message);
-            \Notification::send($admins, new UserNotification($message, 'Product Group Updated', 'product'));
+            Notification::send($admins, new UserNotification($message, 'Product Group Updated', 'product'));
 
             DB::commit();
 
@@ -106,13 +107,15 @@ class ProductController extends Controller
             $messages = "Admin wanted to follow up on the recent addition of a price inquiry with the number '$inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
             foreach ($InquirySupplier as $supplierId) {
                 // Get the supplier
-                $supplier = User::where('id', $supplierId)->first();
+                $supplier = User::where('supplier_id', $supplierId)->get();
                 // dd($supplier->email);
                 // Send the notification to the supplier
-                \Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up', 'supplier_price_inquiry_entry', ['id' => $id]));
+                Notification::send($supplier, new UserNotification($messages, 'Price Inquiry Follow Up', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
-                Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+                foreach ($supplier as $key => $user) {
+                    //Mail::to($user->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+                }
             }
         }
         return response()->json(['message' => 'Follow up sent successfully']);
@@ -154,13 +157,15 @@ class ProductController extends Controller
                 $messages = "A price inquiry with the number '$inquiry_number' has been added.";
                 foreach ($request->supplier_ids as $supplierId) {
                     // Get the supplier
-                    $supplier = User::find($supplierId);
+                    $suppliers = User::where('supplier_id', $supplierId)->get();
 
                     // Send the notification to the supplier
-                    \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $priceInquiry->id]));
+                    Notification::send($suppliers, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $priceInquiry->id]));
 
                     // Send the email to the supplier
-                    Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                    foreach ($suppliers as $key => $supplier) {
+                        Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                    }
                 }
 
                 foreach ($request->supplier_ids as $index => $supplier_id) {
@@ -237,19 +242,21 @@ class ProductController extends Controller
             return response()->json(['error' => 'Price inquiry not found'], 404);
         }
 
-        $buyer = User::find($inquiry->buyer);
+        $buyers = User::where('buyer_id', $inquiry->buyer)->get();
 
-        if (!$buyer) {
+        if (!$buyers) {
             return response()->json(['error' => 'Buyer not found'], 404);
         }
 
         $message = "We have sent the quotation for your price inquiry #{$inquiry->inquiry_number}. Please review it. Contact us if you have any questions.";
 
         // Send the notification to the buyer
-        \Notification::send($buyer, new UserNotification($message, 'Price Inquiry Quotation', 'buyer_price_inquiry_edit', ['id' => $inquiry->id]));
+        Notification::send($buyers, new UserNotification($message, 'Price Inquiry Quotation', 'buyer_price_inquiry_edit', ['id' => $inquiry->id]));
 
         // Send the email to the buyer
-        Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
+        foreach ($buyers as $key => $buyer) {
+            Mail::to($buyer->email)->send(new PriceInquiryNotification($message, 'Price Inquiry Quotation'));
+        }
         $this->logEvent('Inquiry', "Price Inquiry# {$inquiry->inquiry_number} supplier quoted. ");
         return response()->json(['message' => 'Quote selected successfully'], 201);
     }
@@ -288,13 +295,16 @@ class ProductController extends Controller
             $messages = "A price inquiry with the number '$inquiry_number' has been added.";
             foreach ($request->supplier_ids as $supplierId) {
                 // Get the supplier
-                $supplier = User::find($supplierId);
+                $suppliers = User::where('supplier_id', $supplierId)->get();
 
                 // Send the notification to the supplier
-                \Notification::send($supplier, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
+                Notification::send($suppliers, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
 
                 // Send the email to the supplier
-                Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                foreach ($suppliers as $key => $supplier) {
+
+                    Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                }
             }
         }
 
@@ -466,7 +476,7 @@ class ProductController extends Controller
             $productName = e($validatedData['group_name']);
             $message = "Good News! A new product group with the name '$productName' has been added.";
 
-            \Notification::send($admins, new UserNotification($message, 'New Product Group', 'product_group_update', ['id' => $product->id]));
+            Notification::send($admins, new UserNotification($message, 'New Product Group', 'product_group_update', ['id' => $product->id]));
             DB::commit();
             return response()->json(['message' => 'Product created successfully']);
         } catch (\Exception $e) {
@@ -826,14 +836,14 @@ class ProductController extends Controller
             $productName = e($validatedData['name']);
             $message = "Good News! A new product with the name '$productName' has been added.";
 
-            \Notification::send($admins, new UserNotification($message, 'New Product', null));
+            Notification::send($admins, new UserNotification($message, 'New Product', null));
 
             $buyers = User::role('Buyer')->pluck('email');
             // dd($buyers);
             foreach ($buyers as $Buyer) {
                 Mail::to($Buyer)->send(new ProductNotification($validatedData, 'create'));
             }
-            $this->logEvent('Product', 'Article Number ' . $product->article . ' has been added. ');
+            $this->logEvent('Product', "Article Number {$product->article} has been added. ");
             DB::commit();
 
             return response()->json(['message' => 'Product saved successfully'], 201);

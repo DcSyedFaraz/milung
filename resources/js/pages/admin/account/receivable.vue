@@ -153,7 +153,7 @@
                             <div class="col-md-6">
                                 <span class="fw-bold fs-6 text-uppercase" style="color: #14245c">General Outstanding
                                     account
-                                    Recievable:</span>
+                                    Receivable:</span>
 
                                 <!-- Table with stripped rows -->
                                 <table class="table table-striped table-hover">

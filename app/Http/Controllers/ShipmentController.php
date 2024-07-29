@@ -19,7 +19,9 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Notification;
 
 class ShipmentController extends Controller
 {
@@ -128,14 +130,16 @@ class ShipmentController extends Controller
 
             $invoiceList = implode(', ', $invoiceNumbers);
             $message = "Payment has been received for the following invoice(s): $invoiceList. Please review and confirm the receipt.";
-            $supplier = User::find($supplierId);
+            $supplier = User::where('supplier_id', $supplierId)->get();
 
             $route = 'supplier_recievables';
             // Send the notification to the supplier
-            \Notification::send($supplier, new UserNotification($message, 'Account Receivable - Payment Received', $route));
+            Notification::send($supplier, new UserNotification($message, 'Account Receivable - Payment Received', $route));
 
             // Send the email to the supplier
-            //\Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));
+            foreach ($supplierId as $key => $user) {
+                //Mail::to($user->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));
+            }
             \DB::commit();
             return response()->json($SupplierInvoice, 200);
         } catch (\Exception $e) {

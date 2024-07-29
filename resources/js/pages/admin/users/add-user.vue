@@ -54,10 +54,6 @@
                                             </div>
 
                                         </div>
-                                        <div class="mb-3 col-3">
-                                            <label for="registerEmail" class="form-label">Company Name</label>
-                                            <input type="text" required class="form-control" v-model="user.name">
-                                        </div>
                                         <div class="mb-3 col-2"
                                             v-if="parent_id && parent_id.length > 0 && (user.roles === 'Supplier' || user.roles === 'Buyer')">
                                             <label for="registerEmail" class="form-label">Supplier/Buyer ID</label>
@@ -68,6 +64,10 @@
                                             <small v-else-if="user.roles !== 'Supplier' && user.roles !== 'Buyer'"
                                                 class=""><br> Selected role is not Supplier/Buyer</small>
                                             <small v-else class=""> No data available for Supplier/Buyer ID</small>
+                                        </div>
+                                        <div class="mb-3 col-3">
+                                            <label for="registerEmail" class="form-label">Company Name</label>
+                                            <input type="text" required class="form-control" v-model="user.name">
                                         </div>
                                         <div class="mb-3 col-3">
                                             <label for="registerEmail" class="form-label">Register Email</label>

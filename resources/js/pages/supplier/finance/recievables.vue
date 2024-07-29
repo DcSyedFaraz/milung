@@ -9,7 +9,7 @@
 
                             <span>
                                 <span class=" fw-bold fs-4 text-uppercase" style="color: #14245c;">Supplier Account
-                                    Recievable:</span>
+                                    Receivable:</span>
                             </span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
@@ -299,7 +299,7 @@
                     <!-- <div class="row justify-content-around">
                         <div class="col-6 border">
                             <h5 class="text-uppercase text-milung fw-bold">
-                                General Outstanding Account Recievable:
+                                General Outstanding Account Receivable:
                             </h5>
                             <table class="table table-striped table-hover  ">
                                 <thead class="text-blue">

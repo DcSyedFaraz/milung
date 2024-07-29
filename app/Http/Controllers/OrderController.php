@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Notification;
 
 class OrderController extends Controller
 {
@@ -74,17 +75,19 @@ class OrderController extends Controller
                     $order->assigned_to_supplier_at = Carbon::now();
                     $order->save();
 
-                    $user = User::find($supplierId);
+                    $user = User::where('supplier_id', $supplierId)->get();
                     // Notification
                     $message = "Dear Supplier, an admin has placed an order with the ID #$orderId. Please review the details at your earliest convenience.";
 
                     $route = 'supplier_order_edit';
                     $routeParams = ['id' => $orderId];
                     // Send the notification to the supplier
-                    \Notification::send($user, new UserNotification($message, 'New Order', $route, $routeParams));
+                    Notification::send($user, new UserNotification($message, 'New Order', $route, $routeParams));
 
                     // Send the email to the supplier
-                    Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order'));
+                    foreach ($user as $value) {
+                        Mail::to($value->email)->send(new PriceInquiryNotification($message, 'New Order'));
+                    }
 
                 } else {
                     return response()->json(['message' => 'The supplier has not provided a price quote yet.', 'success' => false], 200);
@@ -130,7 +133,7 @@ class OrderController extends Controller
 
                     $route = 'order_price_inquiry';
                     // Send the notification to the supplier
-                    \Notification::send($admins, new UserNotification($message, 'Order Price Inquiry', $route));
+                    Notification::send($admins, new UserNotification($message, 'Order Price Inquiry', $route));
 
                     // Send the email to the supplier
                     foreach ($admins as $key => $admin) {
@@ -180,11 +183,14 @@ class OrderController extends Controller
                             'user_id' => $supplierId,
                         ]);
 
-                        $supplier = User::find($supplierId);
+                        $supplier = User::where('supplier_id', $supplierId)->get();
 
-                        \Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry', $route));
 
-                        \Mail::to($supplier->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+                        Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry', $route));
+
+                        foreach ($supplier as $key => $user) {
+                            Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+                        }
 
                     }
                 }
@@ -226,7 +232,7 @@ class OrderController extends Controller
         $orderIds = OrderSupplier::where('user_id', $user->supplier_id)->whereNull('purchase')
             ->pluck('order_id')
             ->toArray();
-// dd($user->supplier_id);
+        // dd($user->supplier_id);
         // Retrieve orders where the order_id is present in the array of order_ids
         $orders = Order::whereIn('id', $orderIds)->with('product_group', 'orderSuppliersOnly')
             ->get();

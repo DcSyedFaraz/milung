@@ -397,6 +397,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
 export default {
+    emits: ['profileUpdated'],
     data() {
         return {
             info: {
