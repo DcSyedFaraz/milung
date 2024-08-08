@@ -51,7 +51,7 @@ class Order extends Model
     }
     public function supplierid()
     {
-        return $this->belongsTo(SupplierProfile::class, 'supplier')->select('id', 'supplier_id');
+        return $this->belongsTo(SupplierProfile::class, 'supplier','id')->select('id', 'supplier_id');
     }
     public function supplier()
     {

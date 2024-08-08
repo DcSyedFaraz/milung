@@ -5,234 +5,190 @@
             <div class="container">
                 <div class="row">
                     <div class="col-6">
-                        <div class="input-group mb-3 col-8">
-                            <label class="input-group-text" for="inputGroupFile01"
-                                style=" background-color: #00a6e6; color: white;">Import</label>
-                            <div class="filename-display">{{ filename }}</div>
-                            <select v-model="selectedSupplier" class="form-select">
-                                <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
-                                    {{ supplier.supplier_id }}
-                                </option>
-                            </select>
-                            <button class="btn btn-milung" type="button" @click="triggerFileInput">Browse</button>
-                            <input type="file" ref="filenameInput" class="file-input" @change="updateFilename">
-                        </div>
-                        <!-- <div class="import-container col-8">
-                            <button class="btn import-button" type="button" @click="triggerFileInput">Import</button>
-                            <div class="filename-display">{{ filename }}</div>
-                            <div class="col-4">
 
-                                <select v-model="selectedSupplier" class="form-select">
-                                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
-                                        {{ supplier.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <button class="btn browse-button" type="button" @click="triggerFileInput">Browse</button>
-                        </div> -->
+                        <InputGroup class=" mb-3 col-8">
+                            <InputGroupAddon style=" background-color: #00a6e6; color: white;">
+                                <label class="-text" for="inputGroupFile01">Import</label>
+                            </InputGroupAddon>
+                            <InputText placeholder="Keyword" :value="filename" disabled />
+                            <Select v-model="selectedSupplier" :options="suppliers" optionLabel="supplier_id"
+                                optionValue="id">
+                            </Select>
+                            <Button class="p-button " type="button" @click="triggerFileInput" label="Browse"></Button>
+                        </InputGroup>
+                        <input type="file" ref="filenameInput" class="file-input" @change="updateFilename">
                     </div>
                     <div class="col-md-6 gap-2">
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-milung mx-2 px-4" type="submit">Save</button>
-                            <button class="btn btn-warning px-4" type="reset">Clear</button>
+                            <Button class="p-button px-3 mx-2" type="submit" severity="success" label="Save"></Button>
+                            <Button class="p-button-warning" type="reset" severity="info" label="Clear"></Button>
                         </div>
                     </div>
-
                 </div>
                 <div class="row my-5">
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">1. Product Information</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Article Number:</p>
-                            </div>
-                            <div class="col-8"><input type="text" v-model="product.article" class="form-control"></div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Status:</p>
+                                <label class="my-2">Article Number:</label>
                             </div>
                             <div class="col-8">
-                                <select v-model="product.status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">InActive</option>
-                                </select>
+                                <InputText class="w-100" v-model="product.article" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Name:</p>
+                                <label class="my-2">Status:</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.name" class="form-control">
+                                <Select v-model="product.status" optionLabel="label" optionValue="value"
+                                    placeholder="Select status" class="w-100" :options="statusOptions" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Description:</p>
+                                <label class="my-2">Product Name:</label>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="product.description" class="form-control" cols="36"
-                                    rows="10"></textarea>
+                                <InputText class="w-100" v-model="product.name" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Group:</p>
+                                <label class="my-2">Product Description:</label>
                             </div>
                             <div class="col-8">
-                                <multiselect v-model="group" :options="productOptions" label="group_name" track-by="id">
-                                </multiselect>
+                                <Textarea v-model="product.description" rows="4" cols="36" class="w-100" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Cargo Classification:</p>
+                                <label class="my-2">Product Group:</label>
+                            </div>
+                            <div class="col-8">
+                                <Select class="w-100" v-model="group" :options="productOptions"
+                                    placeholder="Select Product Group" optionLabel="group_name" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">Cargo Classification:</label>
                             </div>
                             <div class="col-8">
                                 <div class="d-flex">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" value="general"
-                                            v-model="product.cargo">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            General Cargo
-                                        </label>
+                                        <RadioButton v-model="product.cargo" inputId="general" value="general" />
+                                        <label class="ms-2" for="general">General Cargo</label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" value="danger"
-                                            v-model="product.cargo">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Danger Goods
-                                        </label>
+                                        <RadioButton v-model="product.cargo" inputId="danger" value="danger" />
+                                        <label class="ms-2" for="danger">Danger Goods</label>
                                     </div>
                                 </div>
                                 <div class="d-flex my-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" v-model="product.cargo_place"
-                                            value="hongkong">
-                                        <label class="form-check-label" for="flexCheckDefault1">
-                                            Hong Kong
-                                        </label>
+                                        <Checkbox v-model="product.cargo_place" inputId="hongkong" value="hongkong" />
+                                        <label class="ms-2" for="hongkong">Hong Kong</label>
                                     </div>
                                     <div class="form-check mx-2">
-                                        <input class="form-check-input" type="checkbox" v-model="product.cargo_place"
-                                            value="china">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Mainland China
-                                        </label>
+                                        <Checkbox v-model="product.cargo_place" inputId="china" value="china" />
+                                        <label class="ms-2" for="china">Mainland China</label>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                        <div class="d-flex col-11 ">
+                        <div class="d-flex col-11 my-2">
                             <div class="col-4 my-auto">
-                                <label for="chips-input">Product Colors:</label>
+                                <label class="my-2" for="chips-input">Product Colors:</label>
                             </div>
                             <div class="col-8">
-                                <Chips v-model="product.color" />
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="">Product Material:</p>
-                            </div>
-                            <div class="col-7">
-                                <div class="input-group">
-                                    <Chips v-model="product.material" />
-                                    <!-- <span class="input-group-text">mm</span> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="">Product Size (L*W*H)/(L*Dia):</p>
-                            </div>
-                            <div class="col-5">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" v-model="product.size" />
-                                    <span class="input-group-text">mm</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="" style="font-size: 0.9rem!important;">Product Net Weight
-                                    (Product
-                                    Only
-                                    per
-                                    pcs):</p>
-                            </div>
-                            <div class="col-5">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" v-model="product.weight" />
-                                    <span class="input-group-text">g</span>
-                                </div>
+                                <Chips class="w-100" v-model="product.color" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Specifications:</p>
+                                <label class="my-2">Product Material:</label>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="product.specification" class="form-control" cols="36"
-                                    rows="10"></textarea>
+                                <Chips class="w-100" v-model="product.material" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Product Memory Storage (if
-                                    applicable):
-                                </p>
+                                <label class="my-2">Product Size (L*W*H)/(L*Dia):</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.memory" class="form-control">
+                                <InputGroup class="w-100">
+                                    <InputText class="w-100" v-model="product.size" />
+                                    <InputGroupAddon addonType="append">mm</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Features:</p>
+                                <label class="my-2">Product Net Weight (Product Only per pcs):</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.feature" class="form-control">
+                                <InputGroup class="w-100">
+                                    <InputText class="w-100" v-model="product.weight" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Specify Accrssories (i.e
-                                    Cable,Manual,etc):
-                                </p>
+                                <label class="my-2">Product Specifications:</label>
                             </div>
                             <div class="col-8">
-                                <Chips v-model="product.accessory" />
-                                <!-- <input type="text" v-model="product.accessory" class="form-control"> -->
+                                <Textarea v-model="product.specification" rows="4" cols="36" class="w-100" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Accessories Total Net Weight
-                                    (Accessories
-                                    Only per pc):</p>
+                                <label class="my-2">Product Memory Storage (if applicable):</label>
                             </div>
-                            <div class="col-6">
-                                <div class="input-group d-flex">
-                                    <input type="text" class="form-control" v-model="product.accessory_weight" />
-                                    <span class="input-group-text">g</span>
-                                </div>
+                            <div class="col-8">
+                                <InputText class="w-100" v-model="product.memory" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS-DE Code:</p>
+                            <div class="col-4">
+                                <label class="my-2">Product Features:</label>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="w-100" v-model="product.feature" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">Specify Accessories (i.e Cable, Manual, etc):</label>
+                            </div>
+                            <div class="col-8">
+                                <Chips class="w-100" v-model="product.accessory" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">Accessories Total Net Weight (Accessories Only per pc):</label>
+                            </div>
+                            <div class="col-8">
+                                <InputGroup class="w-100">
+                                    <InputText class="w-100" v-model="product.accessory_weight" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">HS-DE Code:</label>
                             </div>
                             <div class="col-8">
                                 <p>{{ group.hs_de }}</p>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS-CN Code:</p>
+                            <div class="col-4">
+                                <label class="my-2">HS-CN Code:</label>
                             </div>
                             <div class="col-8">
                                 <p>{{ group.hs_cn }}</p>
@@ -241,125 +197,77 @@
                         <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Battey Type:</p>
-                            </div>
-                            <div class="col-8"><input type="text" v-model="product.battery_type" class="form-control">
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Battey Rated Capacity:</p>
+                                <label class="my-2">Battery Type:</label>
                             </div>
                             <div class="col-8">
-                                <div class="input-group">
-                                    <input type="text" v-model="product.rated" class="form-control">
-                                    <input type="text" v-model="product.capacity" class="form-control">
-                                    <span class="input-group-text px-3"> mAh/Wh </span>
-                                </div>
+                                <InputText class="w-100" v-model="product.battery_type" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Battey Nominal Voltage:</p>
-                            </div>
-                            <div class="col-8"><input type="text" v-model="product.voltage" class="form-control"></div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">No. of Battey Contained:</p>
+                                <label class="my-2">Battery Rated Capacity:</label>
                             </div>
                             <div class="col-8">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.pcs" class="form-control">
-                                    <span class="input-group-text px-3"> pcs </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputText v-model="product.rated" />
+                                    <InputText v-model="product.capacity" />
+                                    <InputGroupAddon addonType="append">mAh/Wh</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Battery Capacity:</p>
+                                <label class="my-2">Battery Nominal Voltage:</label>
                             </div>
                             <div class="col-8">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.mAh" class="form-control">
-                                    <span class="input-group-text px-3"> mAh </span>
-                                </div>
+                                <InputText class="w-100" v-model="product.voltage" />
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Battery Size (LxWxH):</p>
+                                <label class="my-2">No. of Battery Contained:</label>
                             </div>
                             <div class="col-8">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.mm" class="form-control">
-                                    <span class="input-group-text px-3"> mm </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.pcs" />
+                                    <InputGroupAddon addonType="append">pcs</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Battery Net Weight (per pc):</p>
+                                <label class="my-2">Product Battery Capacity:</label>
                             </div>
                             <div class="col-8">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.gram" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.mAh" />
+                                    <InputGroupAddon addonType="append">mAh</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">MSDS IATA Edition No.:</p>
+                                <label class="my-2">Battery Size (LxWxH):</label>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="product.edition" class="form-control">
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.mm" />
+                                    <InputGroupAddon addonType="append">mm</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">MSDS Expiry Date:</p>
+                                <label class="my-2">Battery Net Weight (per pc):</label>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="product.msds_expiry" class="form-control">
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.gram" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">UN38.3 Expiry Date:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="date" v-model="product.un_expiry" class="form-control">
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Air Safety Report Expiry Date:
-                                </p>
-                            </div>
-                            <div class="col-8 ">
-                                <input type="date" v-model="product.air_safety_expiry" class="form-control">
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Sea Safety Report Expiry Date:
-                                </p>
-                            </div>
-                            <div class="col-8 ">
-                                <input type="date" v-model="product.sea_safety_expiry" class="form-control">
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">CN Train Safety Report Expiry
-                                    Date:
-                                </p>
-                            </div>
-                            <div class="col-8">
-                                <input type="date" v-model="product.train_safety_expiry" class="form-control">
-                            </div>
-                        </div>
+
                     </div>
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">2. Product Photo</h3>
@@ -388,134 +296,120 @@
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
-                        <!-- <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Validate Certificate & Testing
-                                    Report:
-                                    (CE,ROHS,RED,REACH,LFGB,FSC,etc.)</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="product.certificate" class="form-control">
-                            </div>
-                        </div> -->
-                        <certificates-input :key="componentKey" :initialCertificates="product.certificates" :isEditing="true"
-                            @update-certificates="updateCertificates"></certificates-input>
+                        <certificates-input :key="componentKey" :initialCertificates="product.certificates"
+                            :isEditing="true" @update-certificates="updateCertificates"></certificates-input>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
-                        <div class=" col-11 my-2">
+                        <div class="col-11 my-2">
                             <div v-for="(printArea, index) in product.print_areas" :key="index" class="row mb-3">
                                 <div class="col-4">
                                     <label :for="'position-' + index" style="font-size: 0.9rem!important;">Print Area
                                         Position:</label>
                                 </div>
                                 <div class="col-8">
-                                    <input type="text" v-model="printArea.position" :id="'position-' + index"
-                                        class="form-control">
+                                    <InputText class="w-100 my-2" v-model="printArea.position"
+                                        :id="'position-' + index" />
                                 </div>
                                 <div class="col-4">
                                     <label :for="'size-' + index" style="font-size: 0.9rem!important;">Max. Print Area
                                         Size (mm):</label>
                                 </div>
                                 <div class="col-8">
-                                    <input type="text" v-model="printArea.size" :id="'size-' + index"
-                                        class="form-control">
+                                    <InputText class="w-100 my-2" v-model="printArea.size" :id="'size-' + index" />
                                 </div>
                                 <div class="col-4">
                                     <label :for="'method-' + index" style="font-size: 0.9rem!important;">Standard
-                                        Printing
-                                        Method:</label>
+                                        Printing Method:</label>
                                 </div>
                                 <div class="col-8">
-                                    <input type="text" v-model="printArea.method" :id="'method-' + index"
-                                        class="form-control">
+                                    <InputText class="w-100 my-2" v-model="printArea.method" :id="'method-' + index" />
                                 </div>
                                 <div class="col-12 text-end">
-                                    <button @click="removePrintArea(index)"
-                                        class="btn btn-danger btn-sm">Remove</button>
+                                    <Button @click="removePrintArea(index)" class="p-button-danger p-button-sm"
+                                        label="Remove"></Button>
                                 </div>
                             </div>
                             <div class="text-end">
-                                <button type="button" @click="addPrintArea" class="btn btn-primary">Add Print
-                                    Area</button>
+                                <Button type="button" @click="addPrintArea" class="p-button"
+                                    label="Add Print Area"></Button>
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">5. Packing Details</h3>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight
-                                    (not include product) -Paper:</p>
+                                <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
+                                    Paper:</label>
                             </div>
                             <div class="col-6">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.unit_packaging_paper" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-6">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight
-                                    (not include product) -Plastic:</p>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.unit_packaging_plastic" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.unit_packaging_paper" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight
-                                    (not include product) -Metal:</p>
+                                <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
+                                    Plastic:</label>
                             </div>
                             <div class="col-6">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.unit_packaging_metal" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-6">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Unit Packaging (1 pc) Net Weight
-                                    (not include product) -Others:</p>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.unit_packaging_others" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.unit_packaging_plastic" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
-                                <p for="v-model">Specify Packaging Material:</p>
+                                <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
+                                    Metal:</label>
                             </div>
                             <div class="col-6">
-                                <input type="text" v-model="product.packaging_material" class="form-control">
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-6">
-                                <p for="v-model" style="font-size: 0.9rem!important;">Total Packaging Net Weight:</p>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group">
-                                    <input type="number" v-model="product.packaging_weight" class="form-control">
-                                    <span class="input-group-text px-3"> g </span>
-                                </div>
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.unit_packaging_metal" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
-                                <p for="v-model">Standard Packaging:</p>
+                                <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
+                                    Others:</label>
                             </div>
                             <div class="col-6">
-                                <input type="text" v-model="product.standart_packaging" class="form-control">
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.unit_packaging_others" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-6">
+                                <label class="my-2">Specify Packaging Material:</label>
+                            </div>
+                            <div class="col-6">
+                                <InputText class="w-100" v-model="product.packaging_material" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-6">
+                                <label class="my-2">Total Packaging Net Weight:</label>
+                            </div>
+                            <div class="col-6">
+                                <InputGroup class="w-100">
+                                    <InputNumber class="w-100" v-model="product.packaging_weight" />
+                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-6">
+                                <label class="my-2">Standard Packaging:</label>
+                            </div>
+                            <div class="col-6">
+                                <InputText class="w-100" v-model="product.standart_packaging" />
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
-
                         <fileinput :key="componentKey" label="Safety Sheet:" inputName="safety_sheet"
                             :initialFile="parseFile(product.safety_sheet)" @file-uploaded="handleFileUploaded">
                         </fileinput>
@@ -527,7 +421,58 @@
                         <fileinput :key="componentKey" label="Packaging Label:" inputName="packaging_label"
                             :initialFile="parseFile(product.packaging_label)" @file-uploaded="handleFileUploaded">
                         </fileinput>
-
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">MSDS IATA Edition No:</label>
+                            </div>
+                            <div class="col-8">
+                                <InputText class="w-100" v-model="product.edition" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">MSDS Expiry Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" class="form-control" v-model="product.msds_expiry" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">UN38.3 Expiry Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" class="form-control" v-model="product.un_expiry"
+                                    dateFormat="yy-mm-dd" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">CN Air Safety Report Expiry Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" class="form-control" v-model="product.air_safety_expiry"
+                                    dateFormat="yy-mm-dd" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">CN Sea Safety Report Expiry Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" class="form-control" v-model="product.sea_safety_expiry"
+                                    dateFormat="yy-mm-dd" />
+                            </div>
+                        </div>
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <label class="my-2">CN Train Safety Report Expiry Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="date" class="form-control" v-model="product.train_safety_expiry"
+                                    dateFormat="yy-mm-dd" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-5">
@@ -539,54 +484,48 @@
                                         <span class="mt-2 fw-bold fs-4" style="color: #14245c;">7. Supplier
                                             Quote:</span>
                                     </div>
-                                    <div class="col-4">
-                                    </div>
+                                    <div class="col-4"></div>
                                 </div>
                             </div>
                             <div class="card-body rounded-top">
-                                <table class="table table-striped display text-center">
-                                    <thead style="color: #009de1;">
-                                        <tr class="rounded-top-new">
-                                            <th>Supplier ID</th>
-                                            <th>FTY Item No.</th>
-                                            <th>MOQ</th>
-                                            <th>Buying Unit Price</th>
-                                            <th>Selling Unit Price</th>
-                                            <th>Quote Sheet</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(quote, index) in product.quotes" :key="index"
-                                            v-if="product.quotes?.length > 0">
-                                            <td>
-                                                <!-- <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
-                                                    class="text- underline">
-                                                </router-link> -->
-                                                {{ quote.supplier?.supplier_id }}
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td> USD</td>
-                                            <td> USD</td>
-                                            <td>
-                                                <a :href="'/storage/' + quote.path" :download="quote.filename"
-                                                    class="btn px-4 mx-2 btn-outline-primary  ">
-                                                    {{ quote.filename }}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr v-else>
-                                            <td colspan="8" class="text-center">
-                                                No quotes available
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <DataTable :value="product.quotes" responsiveLayout="scroll">
+                                    <Column header="Supplier ID" :headerStyle="{ color: '#009de1' }">
+                                        <template #body="slotProps">
+                                            {{ slotProps.data.supplier?.supplier_id }}
+                                        </template>
+                                    </Column>
+                                    <Column header="FTY Item No." :headerStyle="{ color: '#009de1' }"></Column>
+                                    <Column header="MOQ" :headerStyle="{ color: '#009de1' }"></Column>
+                                    <Column header="Buying Unit Price" :headerStyle="{ color: '#009de1' }">
+                                        <template #body="slotProps">
+                                            USD
+                                        </template>
+                                    </Column>
+                                    <Column header="Selling Unit Price" :headerStyle="{ color: '#009de1' }">
+                                        <template #body="slotProps">
+                                            USD
+                                        </template>
+                                    </Column>
+                                    <Column header="Quote Sheet" :headerStyle="{ color: '#009de1' }">
+                                        <template #body="slotProps">
+                                            <a :href="'/storage/' + slotProps.data.path"
+                                                :download="slotProps.data.filename"
+                                                class="btn px-4 mx-2 btn-outline-primary">
+                                                {{ slotProps.data.filename }}
+                                            </a>
+                                        </template>
+                                    </Column>
+                                    <template #empty>
+                                        <td colspan="6" class="text-center">No quotes available</td>
+                                    </template>
+                                </DataTable>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="container d-flex p-4" style="background-color: #14245c;">
                 <div class="text-uppercase text-white col-4 fw-bolder my-auto">8. Quote Expire Date:</div>
                 <div class="col-6 d-flex">
@@ -679,6 +618,11 @@ export default {
                 hs_cn: '',
             },
             Dates: '',
+            statusOptions: [
+                { label: 'Active', value: 'active' },
+                { label: 'Inactive', value: 'inactive' }
+            ],
+            validationErrors: {},
             productOptions: [],
             orders: [],
             selectedImages: [],

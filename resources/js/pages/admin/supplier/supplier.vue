@@ -38,7 +38,7 @@
                                         Supplier ID
                                         <i :class="getSortIcon('supplier_id')" class="ms-1"></i>
                                     </th>
-                                    <th @click="sortTable('name')">Comapny Name
+                                    <th @click="sortTable('name')">Company Name
                                         <i :class="getSortIcon('name')" class="ms-1"></i>
                                     </th>
                                     <th @click="sortTable('supplier_profile.address')">
@@ -229,7 +229,7 @@
                                                                         class="col-12 d-flex justify-content-between mb-3">
                                                                         <div class="fs-5 fw-bold col-6"
                                                                             style="color: #14245c;">
-                                                                            Statics</div>
+                                                                            Statistics</div>
                                                                         <div class="form-check my-auto col-6">
                                                                             <input class="form-check-input"
                                                                                 type="checkbox" v-model="selectAll"
@@ -380,7 +380,7 @@ export default {
             }
             return 'fas fa-sort';
         },
-       
+
         toggleAccordion(user) {
             this.accordionOpen[user.id] = !this.accordionOpen[user.id];
         },

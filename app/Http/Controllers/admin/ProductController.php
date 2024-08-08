@@ -831,6 +831,26 @@ class ProductController extends Controller
             // Save the product
             $product->save();
 
+            if (isset($request->quotefile) && $request->hasFile('quotefile')) {
+                $file = $request->file('quotefile');
+                $existingFile = ProductQuotation::where('product_id', $product->id)
+                    ->where('supplier_profile_id', $request->supplier_id)
+                    ->first();
+
+                if ($existingFile && isset($existingFile->path) && Storage::disk('public')->exists($existingFile->path)) {
+                    Storage::disk('public')->delete($existingFile->path);
+                }
+
+                // Store the new file
+                $path = $file->store('quotefile', 'public');
+                $originalName = $file->getClientOriginalName();
+
+                ProductQuotation::updateOrCreate(
+                    ['product_id' => $product->id, 'supplier_profile_id' => $request->supplier_id],
+                    ['path' => $path, 'filename' => $originalName]
+                );
+            }
+
             // Notification
             $admins = User::role(['Admin', 'Internal', 'Buyer'])->get();
             $productName = e($validatedData['name']);

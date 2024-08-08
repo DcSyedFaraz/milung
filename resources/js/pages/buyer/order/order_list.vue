@@ -203,18 +203,9 @@ import { format } from "date-fns";
 import { parseISO } from "date-fns";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
-
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
-
 
 export default {
-    components: {
-        IconField,
-        InputIcon
-        // other components...
-    },
+
     props: {
         perPage: {
             type: Number,

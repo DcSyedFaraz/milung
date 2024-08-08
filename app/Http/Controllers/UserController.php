@@ -607,14 +607,14 @@ class UserController extends Controller
     {
         // $buyer = User::with('buyerProfile')->findOrFail($id);
         $buyer['user'] = BuyerProfile::where('id', $id)->with('person')->first();
-        $buyer['orders'] = Order::where('buyer', $id)->select('id', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
+        $buyer['orders'] = Order::where('buyer', $id)->with('supplierid')->select('id','supplier', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->orderby('created_at', 'desc')->get();
 
         return response()->json($buyer);
     }
     public function suppliersShow($id)
     {
         $supplier['user'] = SupplierProfile::where('id', $id)->with('person')->first();
-        $supplier['orders'] = Order::where('supplier', $id)->select('id', 'buyingprice', 'article', 'orderdate', 'quantity_unit')->take(3)->orderby('created_at', 'desc')->get();
+        $supplier['orders'] = Order::where('supplier', $id)->select('id', 'buyingprice', 'article', 'orderdate', 'quantity_unit')->orderby('created_at', 'desc')->get();
         return response()->json($supplier);
     }
     public function suppliersUpdate(Request $request, $userid)

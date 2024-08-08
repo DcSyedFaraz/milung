@@ -38,7 +38,7 @@
                                         Buyer ID
                                         <i :class="getSortIcon('userid')" class="ms-1"></i>
                                     </th>
-                                    <th @click="sortTable('name')">Comapny Name
+                                    <th @click="sortTable('name')">Company Name
                                         <i :class="getSortIcon('name')" class="ms-1"></i>
                                     </th>
                                     <th @click="sortTable('buyer_profile.address')">

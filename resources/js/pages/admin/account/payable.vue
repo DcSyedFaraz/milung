@@ -473,7 +473,6 @@ import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 export default {
 

@@ -40,12 +40,12 @@ Schema::create('products', function (Blueprint $table) {
     $table->string('mm')->nullable();
     $table->string('gram')->nullable();
     $table->string('edition')->nullable();
-    $table->date('msds_expiry')->nullable();
-    $table->date('un_expiry')->nullable();
+    $table->string('msds_expiry')->nullable();
+    $table->string('un_expiry')->nullable();
     $table->string('quoteExpiredDate')->nullable();
-    $table->date('air_safety_expiry')->nullable();
-    $table->date('sea_safety_expiry')->nullable();
-    $table->date('train_safety_expiry')->nullable();
+    $table->string('air_safety_expiry')->nullable();
+    $table->string('sea_safety_expiry')->nullable();
+    $table->string('train_safety_expiry')->nullable();
     $table->string('certificate')->nullable();
     $table->string('printing_method')->nullable();
     $table->integer('unit_packaging_paper')->nullable();

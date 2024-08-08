@@ -12,13 +12,10 @@
                                         <p for="name">Status:</p>
                                     </div>
                                     <div class="col-6">
-                                        <select class="form-select" v-model="supplier.status" required>
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
-                                        </select>
-                                        <div v-if="validationErrors.status" class="invalid-feedback">
-                                            {{ validationErrors.status[0] }}
-                                        </div>
+                                        <Select v-model="supplier.status" :options="statusOptions" optionValue="value"
+                                            optionLabel="label" class="w-100" />
+                                        <Message class="my-2" v-if="validationErrors.status" severity="error">
+                                            {{ validationErrors.status[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -28,15 +25,14 @@
                                         <p for="userid">Supplier ID:</p>
                                     </div>
                                     <div class="col-6 my-auto">
-                                        <input type="text" v-model="supplier.supplier_id" class="form-control"
-                                            :disabled="isEditMode"
-                                            :class="{ 'is-invalid': !userIdPatternValid || validationErrors.supplier_id, 'is-valid': userIdPatternValid }">
-                                        <div v-if="!userIdPatternValid" class="invalid-feedback">
-                                            User ID must be alphanumeric and between 1 and 10 characters long.
-                                        </div>
-                                        <div v-if="validationErrors.supplier_id" class="invalid-feedback">
-                                            {{ validationErrors.supplier_id[0] }}
-                                        </div>
+                                        <InputText v-model="supplier.supplier_id" :disabled="isEditMode"
+                                            :class="{ 'p-invalid': !userIdPatternValid || validationErrors.supplier_id }" />
+                                        <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
+                                            be alphanumeric and between 1 and 10 characters long.</Message>
+                                        <Message class="my-2" v-if="validationErrors.supplier_id" severity="error"
+                                            :text="validationErrors.supplier_id[0]">{{ validationErrors.supplier_id[0]
+                                            }}
+                                        </Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-auto">
@@ -44,11 +40,10 @@
                                         <p for="name">Supplier Company Header:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.company_header" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.company_header }">
-                                        <div v-if="validationErrors.company_header" class="invalid-feedback">
-                                            {{ validationErrors.company_header[0] }}
-                                        </div>
+                                        <InputText v-model="supplier.company_header"
+                                            :class="{ 'p-invalid': validationErrors.company_header }" />
+                                        <Message class="my-2" v-if="validationErrors.company_header" severity="error"
+                                            :text="validationErrors.company_header[0]" />
                                     </div>
                                 </div>
                             </div>
@@ -58,11 +53,10 @@
                                         <p for="name">Company Name:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.name" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.name }">
-                                        <div v-if="validationErrors.name" class="invalid-feedback">
-                                            {{ validationErrors.name[0] }}
-                                        </div>
+                                        <InputText v-model="supplier.name"
+                                            :class="{ 'p-invalid': validationErrors.name }" />
+                                        <Message class="my-2" v-if="validationErrors.name" severity="error"
+                                            :text="validationErrors.name[0]" />
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -70,11 +64,10 @@
                                         <p for="officePhone">Office Phone/Mobile:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="tel" v-model="supplier.officePhone" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.officePhone }">
-                                        <div v-if="validationErrors.officePhone" class="invalid-feedback">
-                                            {{ validationErrors.officePhone[0] }}
-                                        </div>
+                                        <InputText v-model="supplier.officePhone"
+                                            :class="{ 'p-invalid': validationErrors.officePhone }" />
+                                        <Message class="my-2" v-if="validationErrors.officePhone" severity="error"
+                                            :text="validationErrors.officePhone[0]" />
                                     </div>
                                 </div>
                             </div>
@@ -84,11 +77,10 @@
                                         <p for="address">Address:</p>
                                     </div>
                                     <div class="col-6">
-                                        <textarea v-model="supplier.address" class="form-control" cols="30" rows="1"
-                                            :class="{ 'is-invalid': validationErrors.address }"></textarea>
-                                        <div v-if="validationErrors.address" class="invalid-feedback">
-                                            {{ validationErrors.address[0] }}
-                                        </div>
+                                        <Textarea v-model="supplier.address" class="w-100"
+                                            :class="{ 'p-invalid': validationErrors.address }" />
+                                        <Message class="my-2" v-if="validationErrors.address" severity="error"
+                                            :text="validationErrors.address[0]" />
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -96,132 +88,151 @@
                                         <p for="website">Website:</p>
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" v-model="supplier.website" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.website }">
-                                        <div v-if="validationErrors.website" class="invalid-feedback">
-                                            {{ validationErrors.website[0] }}
-                                        </div>
+                                        <InputText v-model="supplier.website"
+                                            :class="{ 'p-invalid': validationErrors.website }" />
+                                        <Message class="my-2" v-if="validationErrors.website" severity="error"
+                                            :text="validationErrors.website[0]" />
                                     </div>
                                 </div>
                             </div>
                             <h3 class="fw-bold" style="color: #14245c;">Bank Details</h3>
                             <div class="row my-1">
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="address">Beneficiary Bank:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.bank" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.bank }">
-                                        <div v-if="validationErrors.bank" class="invalid-feedback">
-                                            {{ validationErrors.bank[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.bank" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.bank }" />
+                                        <Message class="my-2" v-if="validationErrors.bank" severity="error"
+                                            :text="validationErrors.bank[0]" />
                                     </div>
                                 </div>
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="website">Beneficiary Bank Address:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.bank_address" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.bank_address }">
-                                        <div v-if="validationErrors.bank_address" class="invalid-feedback">
-                                            {{ validationErrors.bank_address[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.bank_address" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.bank_address }" />
+                                        <Message class="my-2" v-if="validationErrors.bank_address" severity="error"
+                                            :text="validationErrors.bank_address[0]" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="address">SWIFT Code:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.swift_code" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.swift_code }">
-                                        <div v-if="validationErrors.swift_code" class="invalid-feedback">
-                                            {{ validationErrors.swift_code[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.swift_code" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.swift_code }" />
+                                        <Message class="my-2" v-if="validationErrors.swift_code" severity="error"
+                                            :text="validationErrors.swift_code[0]" />
                                     </div>
                                 </div>
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="website">CHIPS No:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.chips_no" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.chips_no }">
-                                        <div v-if="validationErrors.chips_no" class="invalid-feedback">
-                                            {{ validationErrors.chips_no[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.chips_no" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.chips_no }" />
+                                        <Message class="my-2" v-if="validationErrors.chips_no" severity="error"
+                                            :text="validationErrors.chips_no[0]" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="address">Beneficiary Name:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.beneficiary_name" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.beneficiary_name }">
-                                        <div v-if="validationErrors.beneficiary_name" class="invalid-feedback">
-                                            {{ validationErrors.beneficiary_name[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.beneficiary_name" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.beneficiary_name }" />
+                                        <Message class="my-2" v-if="validationErrors.beneficiary_name" severity="error"
+                                            :text="validationErrors.beneficiary_name[0]" />
                                     </div>
                                 </div>
-                                <div class="d-flex col-6">
-                                    <div class="col-6">
+                                <div class="d-flex col-12">
+                                    <div class="col-3">
                                         <p for="website">Beneficiary Account Number:</p>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="text" v-model="supplier.account_no" class="form-control"
-                                            :class="{ 'is-invalid': validationErrors.account_no }">
-                                        <div v-if="validationErrors.account_no" class="invalid-feedback">
-                                            {{ validationErrors.account_no[0] }}
-                                        </div>
+                                    <div class="col-9">
+                                        <InputText v-model="supplier.account_no" class="w-full my-2"
+                                            :class="{ 'p-invalid': validationErrors.account_no }" />
+                                        <Message class="my-2" v-if="validationErrors.account_no" severity="error"
+                                            :text="validationErrors.account_no[0]" />
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row my-3" v-if="isEditMode">
+                            <h3 class="fw-bold" style="color: #14245c;">Contact Person</h3>
+                            <DataTable :value="supplier.person" responsiveLayout="scroll" sortMode="multiple"
+                                removableSort>
+                                <Column field="userid" header="User ID" sortable>
+                                    <template #body="slotProps">
+                                        <router-link :to="{ name: 'edituser', params: { id: slotProps.data.id } }">
+                                            {{ slotProps.data.userid }}
+                                        </router-link>
+                                    </template>
+                                </Column>
+                                <Column field="name" header="Full Name" sortable></Column>
+                                <Column field="email" header="Email" sortable></Column>
+                                <Column field="status" header="Status" sortable>
+                                    <template #body="slotProps">
+                                        <span
+                                            :class="{ 'badge': true, 'bg-success-new': slotProps.data.status === 'active', 'bg-danger': slotProps.data.status !== 'active' }">
+                                            {{ slotProps.data.status === 'active' ? 'Active' : 'InActive' }}
+                                        </span>
+                                    </template>
+                                </Column>
+                                <template #empty>
+                                    <div class="text-center">
 
+                                        No user available
+                                    </div>
+                                </template>
+                            </DataTable>
+                        </div>
                         <div class="form-group">
                             <label for="supplierDescription" class="form-label">Supplier Description</label>
-                            <textarea class="form-control" id="supplierDescription"
-                                v-model="supplier.supplierDescription" rows="3" style="height: 120px;"
-                                :class="{ 'is-invalid': validationErrors.supplierDescription }"></textarea>
-                            <div v-if="validationErrors.supplierDescription" class="invalid-feedback">
-                                {{ validationErrors.supplierDescription[0] }}
-                            </div>
+                            <Textarea class="w-100" id="supplierDescription" v-model="supplier.supplierDescription"
+                                rows="3" style="height: 120px;"
+                                :class="{ 'p-invalid': validationErrors.supplierDescription }" />
+                            <Message class="my-2" v-if="validationErrors.supplierDescription" severity="error"
+                                :text="validationErrors.supplierDescription[0]" />
                         </div>
                         <div class="row my-3">
                             <div class="form-group col-6 my-2">
                                 <label class="form-label">Primary Product Group</label>
                                 <div class="form-group">
-                                    <multiselect v-model="supplier.group" :options="productOptions" :multiple="true"
-                                        label="group_name" track-by="id"
-                                        :class="{ 'is-invalid': validationErrors.group }"></multiselect>
-                                    <div v-if="validationErrors.group" class="invalid-feedback">
-                                        {{ validationErrors.group[0] }}
-                                    </div>
+                                    <MultiSelect display="chip" filter placeholder="Select Group" optionValue="id"
+                                        v-model="supplier.group" :options="productOptions" :multiple="true"
+                                        optionLabel="group_name" class="w-100" />
                                 </div>
+                                <Message class="my-2" v-if="validationErrors.group" severity="error">
+                                    {{ validationErrors.group[0] }}</Message>
                             </div>
                             <div class="form-group col-6 my-2">
                                 <label class="form-label">Secondary Product Group</label>
                                 <div class="form-group">
-                                    <multiselect v-model="supplier.Secgroup" :options="productOptions" :multiple="true"
-                                        label="group_name" track-by="id"
-                                        :class="{ 'is-invalid': validationErrors.Secgroup }"></multiselect>
-                                    <div v-if="validationErrors.Secgroup" class="invalid-feedback">
-                                        {{ validationErrors.Secgroup[0] }}
-                                    </div>
+                                    <MultiSelect display="chip" filter placeholder="Select Group" optionValue="id"
+                                        v-model="supplier.Secgroup" :options="productOptions" :multiple="true"
+                                        optionLabel="group_name" class="w-100" />
                                 </div>
+                                <Message class="my-2" v-if="validationErrors.Secgroup" severity="error">
+                                    {{ validationErrors.Secgroup[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex gap-2 my-2">
-                            <button type="submit" class="btn col-1 btn-milung" style="height: 45px;">Submit</button>
-                            <button type="reset" class="btn btn-warning col-1" style="height: 45px;"
-                                @click="resetForm">Clear</button>
+                            <Button type="submit" severity="success" label="Submit" class="col-1"
+                                style="height: 45px;" />
+                            <Button type="reset" severity="warn" label="Clear" class="btn btn-warning col-1"
+                                style="height: 45px;" @click="resetForm" />
                         </div>
                     </form>
                 </div>
@@ -235,34 +246,27 @@
                             </div>
                         </div>
                         <div class="card-body rounded-top">
-                            <table class="table table-striped display text-center">
-                                <thead style="color: #009de1;">
-                                    <tr class="rounded-top-new">
-                                        <th>Order Number</th>
-                                        <th>Order Date</th>
-                                        <th>Quantity</th>
-                                        <th>Article Number</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(order, index) in orders" :key="index" v-if="orders.length > 0">
-                                        <td>
-                                            <router-link :to="{ name: 'order_edit', params: { id: order.id } }"
-                                                class="text-underline">
-                                                {{ order.id }}
-                                            </router-link>
-                                        </td>
-                                        <td>{{ order.orderdate }}</td>
-                                        <td>{{ order.quantity_unit }}</td>
-                                        <td>{{ order.article }}</td>
-                                    </tr>
-                                    <tr v-else>
-                                        <td colspan="8" class="text-center">
-                                            No orders available
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <DataTable :value="orders" responsiveLayout="scroll" :rows="10" stripedRows
+                                sortMode="multiple" removableSort>
+                                <Column field="id" header="Order Number" sortable>
+                                    <template #body="slotProps">
+                                        <router-link :to="{ name: 'order_edit', params: { id: slotProps.data.id } }"
+                                            class="text-underline">
+                                            {{ slotProps.data.id }}
+                                        </router-link>
+                                    </template>
+                                </Column>
+                                <Column field="orderdate" header="Order Date" sortable></Column>
+                                <Column field="quantity_unit" header="Quantity" sortable></Column>
+                                <Column field="article" header="Article Number" sortable></Column>
+
+                                <template #empty>
+                                    <div class="text-center">
+
+                                        No orders available
+                                    </div>
+                                </template>
+                            </DataTable>
                         </div>
                     </div>
                 </div>
@@ -275,9 +279,12 @@
     </div>
 </template>
 
+
 <script>
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+
+
 
 export default {
     emits: ['profileUpdated'],
@@ -302,7 +309,11 @@ export default {
             errors: [],
             orders: {},
             validationErrors: {},
-            isEditMode: false
+            isEditMode: false,
+            statusOptions: [
+                { label: 'Active', value: 'active' },
+                { label: 'Inactive', value: 'inactive' }
+            ]
         }
     },
     methods: {
@@ -368,8 +379,8 @@ export default {
             if (!this.errors.length) {
                 const formData = {
                     ...this.supplier,
-                    group: this.supplier.group.map(option => option.id),
-                    Secgroup: this.supplier.Secgroup.map(option => option.id)
+                    group: this.supplier.group,
+                    Secgroup: this.supplier.Secgroup
                 };
 
                 try {
@@ -445,20 +456,8 @@ export default {
                     website: supplierData.website,
                     officePhone: supplierData.office_phone,
                     supplierDescription: supplierData.supplier_description,
-                    group: supplierData.group.map(groupItem => {
-                        const option = this.productOptions.find(option => option.id === groupItem);
-                        return {
-                            id: option.id,
-                            group_name: option.group_name
-                        };
-                    }),
-                    Secgroup: supplierData.sec_group.map(groupItem => {
-                        const option = this.productOptions.find(option => option.id === groupItem);
-                        return {
-                            id: option.id,
-                            group_name: option.group_name
-                        };
-                    }),
+                    group: supplierData.group,
+                    Secgroup: supplierData.sec_group,
                     account_no: supplierData.account_no,
                     bank: supplierData.bank,
                     bank_address: supplierData.bank_address,
@@ -498,15 +497,7 @@ export default {
 }
 </script>
 <style>
-.multiselect__tag {
-    background-color: #14245c !important;
-    color: white;
-}
 
-.multiselect__tag-icon::after {
-    color: white !important;
-
-}
 
 .table {
     border-collapse: separate;
