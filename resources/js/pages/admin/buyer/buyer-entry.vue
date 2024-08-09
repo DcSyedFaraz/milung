@@ -12,10 +12,13 @@
                                         <label for="buyerId">Buyer ID:</label>
                                     </div>
                                     <div class="col-6">
-                                        <InputText class="w-100" id="buyerId" v-model="buyer.buyer_id" required pattern="[a-zA-Z0-9]{1,10}"
-                                            :disabled="isEditMode" :class="{ 'p-invalid': !userIdPatternValid }"/>
-                                        <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must be alphanumeric and between 1 and 10 characters long.</Message>
-                                        <Message class="my-2" v-if="errors.buyer_id" severity="error">{{ errors.buyer_id[0] }}</Message>
+                                        <InputText class="w-100" id="buyerId" v-model="buyer.buyer_id" required
+                                            pattern="[a-zA-Z0-9]{1,10}" :disabled="isEditMode"
+                                            :class="{ 'p-invalid': !userIdPatternValid }" />
+                                        <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
+                                            be alphanumeric and between 1 and 10 characters long.</Message>
+                                        <Message class="my-2" v-if="errors.buyer_id" severity="error">{{
+                        errors.buyer_id[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -23,8 +26,11 @@
                                         <label for="status">Status:</label>
                                     </div>
                                     <div class="col-6">
-                                        <Select id="status" v-model="buyer.status" placeholder="Select status" class="w-100" :options="statusOptions" optionLabel="label" optionValue="value" required/>
-                                        <Message class="my-2" v-if="errors.status" severity="error">{{ errors.status[0] }}</Message>
+                                        <Select id="status" v-model="buyer.status" placeholder="Select status"
+                                            class="w-100" :options="statusOptions" optionLabel="label"
+                                            optionValue="value" required />
+                                        <Message class="my-2" v-if="errors.status" severity="error">{{ errors.status[0]
+                                            }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -34,8 +40,9 @@
                                         <label for="companyName">Company Name:</label>
                                     </div>
                                     <div class="col-6">
-                                        <InputText class="w-100" id="companyName" v-model="buyer.name"/>
-                                        <Message class="my-2" v-if="errors.name" severity="error">{{ errors.name[0] }}</Message>
+                                        <InputText class="w-100" id="companyName" v-model="buyer.name" />
+                                        <Message class="my-2" v-if="errors.name" severity="error">{{ errors.name[0] }}
+                                        </Message>
                                     </div>
                                 </div>
 
@@ -44,8 +51,9 @@
                                         <label for="officePhone">Office Phone/Mobile:</label>
                                     </div>
                                     <div class="col-6">
-                                        <InputText class="w-100" id="officePhone" v-model="buyer.officePhone"/>
-                                        <Message class="my-2" v-if="errors.officePhone" severity="error">{{ errors.officePhone[0] }}</Message>
+                                        <InputText class="w-100" id="officePhone" v-model="buyer.officePhone" />
+                                        <Message class="my-2" v-if="errors.officePhone" severity="error">{{
+                        errors.officePhone[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +65,8 @@
                                     </div>
                                     <div class="col-6">
                                         <Textarea v-model="buyer.address" class="w-100" cols="30" rows="1"></Textarea>
-                                        <Message class="my-2" v-if="errors.address" severity="error">{{ errors.address[0] }}</Message>
+                                        <Message class="my-2" v-if="errors.address" severity="error">{{
+                        errors.address[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -65,15 +74,17 @@
                                         <label for="website">Website:</label>
                                     </div>
                                     <div class="col-6">
-                                        <InputText id="website" class="w-100" v-model="buyer.website"/>
-                                        <Message class="my-2" v-if="errors.website" severity="error">{{ errors.website[0] }}</Message>
+                                        <InputText id="website" class="w-100" v-model="buyer.website" />
+                                        <Message class="my-2" v-if="errors.website" severity="error">{{
+                        errors.website[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
                             <div class="row my-3" v-if="isEditMode">
                                 <h3 class="fw-bold" style="color: #14245c;">Contact Person</h3>
-                                <DataTable :value="buyer.person" responsiveLayout="scroll" :paginator="buyer.person.length > 10" :rows="10"
-                                    dataKey="id" :rowHover="true" :loading="loader" >
+                                <DataTable :value="buyer.person" responsiveLayout="scroll"
+                                    :paginator="buyer.person.length > 10" :rows="10" dataKey="id" :rowHover="true"
+                                    :loading="loader">
                                     <template #loading>
                                         Loading contact persons...
                                     </template>
@@ -81,8 +92,10 @@
                                         No contact persons available
                                     </template>
                                     <Column field="userid" header="User ID" sortable style="min-width:12rem">
-                                        <template #body="{data}">
-                                                                                <router-link :to="{ name: 'edituser', params: { id: data.id } }" v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2 btn">
+                                        <template #body="{ data }">
+                                            <router-link :to="{ name: 'edituser', params: { id: data.id } }"
+                                                v-if="can('editOrderDetails | voidOrder')"
+                                                class="text-success mx-2 btn">
                                                 {{ data.id }}
                                             </router-link>
                                         </template>
@@ -90,8 +103,9 @@
                                     <Column field="name" header="Full Name" sortable style="min-width:12rem"></Column>
                                     <Column field="email" header="Email" sortable style="min-width:12rem"></Column>
                                     <Column field="status" header="Status" sortable style="min-width:12rem">
-                                        <template #body="{data}">
-                                            <span :class="{ 'badge': true, 'bg-success-new': data.status === 'active', 'bg-danger': data.status !== 'active' }">
+                                        <template #body="{ data }">
+                                            <span
+                                                :class="{ 'badge': true, 'bg-success-new': data.status === 'active', 'bg-danger': data.status !== 'active' }">
                                                 {{ data.status === 'active' ? 'Active' : 'Inactive' }}
                                             </span>
                                         </template>
@@ -101,19 +115,26 @@
                         </div>
                         <div class="form-group">
                             <label for="buyerDescription" class="form-label">Buyer Description</label>
-                            <Textarea id="buyerDescription" v-model="buyer.buyerDescription" class="w-100" rows="3" style="height: 120px;"></Textarea>
-                            <Message class="my-2" v-if="errors.buyerDescription" severity="error">{{ errors.buyerDescription[0] }}</Message>
+                            <Textarea id="buyerDescription" v-model="buyer.buyerDescription" class="w-100" rows="3"
+                                style="height: 120px;"></Textarea>
+                            <Message class="my-2" v-if="errors.buyerDescription" severity="error">{{
+                        errors.buyerDescription[0] }}</Message>
                         </div>
                         <div class="form-group col-6 my-2">
                             <label class="form-label">Product Group</label>
                             <div class="form-group">
-                                <MultiSelect display="chip" filter placeholder="Select Group" v-model="buyer.group" class="w-100" :options="productOptions" optionLabel="group_name" optionValue="id" multiple/>
-                                <Message class="my-2" v-if="errors.group" severity="error">{{ errors.group[0] }}</Message>
+                                <MultiSelect display="chip" filter placeholder="Select Group" v-model="buyer.group"
+                                    class="w-100" :options="productOptions" optionLabel="group_name" optionValue="id"
+                                    multiple />
+                                <Message class="my-2" v-if="errors.group" severity="error">{{ errors.group[0] }}
+                                </Message>
                             </div>
                         </div>
                         <div class="d-flex gap-2 my-2">
-                            <Button type="submit" severity="success" label="Submit" class="p-button p-button-primary" style="height: 45px;" />
-                            <Button type="reset" severity="warn" label="Clear" class="p-button p-button-warning" style="height: 45px;" />
+                            <Button type="submit" severity="success" label="Submit" class="p-button p-button-primary"
+                                style="height: 45px;" />
+                            <Button type="reset" severity="warn" label="Clear" class="p-button p-button-warning"
+                                style="height: 45px;" />
                         </div>
                     </form>
                 </div>
@@ -127,8 +148,8 @@
                             </div>
                         </div>
                         <div class="card-body rounded-top">
-                            <DataTable :value="orders" responsiveLayout="scroll" :paginator="orders.length > 10" :rows="10"
-                                dataKey="id" :rowHover="true" :loading="loader" >
+                            <DataTable :value="orders" responsiveLayout="scroll" :paginator="orders.length > 10"
+                                :rows="10" dataKey="id" :rowHover="true" :loading="loader">
                                 <template #loading>
                                     Loading orders...
                                 </template>
@@ -137,15 +158,19 @@
                                 </template>
                                 <Column field="id" header="Order Number" sortable style="min-width:12rem">
                                     <template #body="{data}">
-                                        <router-link :to="{ name: 'order_edit', params: { id: data.id } }" v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2 btn">
+                                        <router-link :to="{ name: 'order_edit', params: { id: data.id } }"
+                                            v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2 btn">
                                             {{ data.id }}
                                         </router-link>
                                     </template>
                                 </Column>
                                 <Column field="orderdate" header="Order Date" sortable style="min-width:12rem"></Column>
-                                <Column field="supplierid.supplier_id" header="Supplier ID" sortable style="min-width:12rem"></Column>
-                                <Column field="quantity_unit" header="Quantity" sortable style="min-width:12rem"></Column>
-                                <Column field="article" header="Article Number" sortable style="min-width:12rem"></Column>
+                                <Column field="supplierid.supplier_id" header="Supplier ID" sortable
+                                    style="min-width:12rem"></Column>
+                                <Column field="quantity_unit" header="Quantity" sortable style="min-width:12rem">
+                                </Column>
+                                <Column field="article" header="Article Number" sortable style="min-width:12rem">
+                                </Column>
                             </DataTable>
                         </div>
                     </div>

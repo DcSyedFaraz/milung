@@ -73,25 +73,26 @@
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
                                 <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;">
-                                    <td  >
+                                    <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
                                                 v-show="order.status == 'New Order'" :value="order.id"
                                                 id="flexCheckDefault" v-model="selectedUserIds">
-                                            <label class="form-check-label" for="flexCheckDefault" @click="toggleAccordion(order)">
+                                            <label class="form-check-label" for="flexCheckDefault"
+                                                @click="toggleAccordion(order)">
                                                 {{ order.buyerid?.buyer_id }}
                                             </label>
                                         </div>
                                     </td>
-                                    <td  @click="toggleAccordion(order)">
+                                    <td @click="toggleAccordion(order)">
                                         {{ order.id }}
                                     </td>
-                                    <td  @click="toggleAccordion(order)">
+                                    <td @click="toggleAccordion(order)">
                                         <span :class="statusBadge(order)">{{ order.status }}</span>
                                     </td>
-                                    <td  @click="toggleAccordion(order)">{{ updated_at(order) }}</td>
-                                    <td  @click="toggleAccordion(order)">{{ created_at(order) }}</td>
-                                    <td  @click="toggleAccordion(order)">{{ order.sendoutdate }}</td>
+                                    <td @click="toggleAccordion(order)">{{ updated_at(order) }}</td>
+                                    <td @click="toggleAccordion(order)">{{ created_at(order) }}</td>
+                                    <td @click="toggleAccordion(order)">{{ order.sendoutdate }}</td>
                                     <td @click="toggleAccordion(order)">{{ order.supplierid?.supplier_id }}</td>
 
 
@@ -239,9 +240,11 @@ export default {
 
         filteredUsers() {
             return this.orders.filter(order => {
-                return order.buyer.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (order.supplier.toLowerCase().includes(this.searchQuery));
-
+                return (
+                    (order.buyerid && order.buyerid.buyer_id.toString().toLowerCase().includes(this.searchQuery.toLowerCase())) ||
+                    (order.supplierid && order.supplierid.supplier_id.toString().toLowerCase().includes(this.searchQuery.toLowerCase())) ||
+                    (order.status.toString().toLowerCase().includes(this.searchQuery.toLowerCase()))
+                );
             });
         },
         totalPages() {

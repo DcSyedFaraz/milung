@@ -134,7 +134,7 @@
                             <p>Notice:</p>
                         </div>
                         <div class="col-8">
-                            <p>{{ inquiry.urgent ? 'Urgent' : 'Not Urgent' }}</p>
+                            <p>{{ inquiry.urgent === 'true' ? 'Urgent' : 'Not Urgent' }}</p>
                         </div>
                     </div>
                     <div class="d-flex col-11 my-2">

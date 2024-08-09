@@ -1,10 +1,10 @@
 <template>
     <div class="d-flex my-2">
-        <div class="col-3 mt-3">{{ label }}</div>
+        <div class="col-4 mt-3">{{ label }}</div>
         <div class="col-5 mt-2">
             <input type="text" :name="inputName" disabled v-model="selectedFileName" class="form-control w-full">
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <button type="button" class="btn-sm btn btn-light rotate-icon" @click="uploadFile"><i
                     class="bi bi-arrow-up-right-square fs-2 text-success"></i></button>
             <input ref="fileInput" type="file" style="display: none" @change="handleFileChange">

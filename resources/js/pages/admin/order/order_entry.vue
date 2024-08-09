@@ -181,8 +181,8 @@
                             </div>
                             <div class="col-8">
                                 <!-- <input type="text" v-model="orders.article" class="form-control "> -->
-                                <multiselect v-model="orders.article" :options="article" >
-                            </multiselect>
+                                <multiselect v-model="orders.article" :options="article">
+                                </multiselect>
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -536,6 +536,7 @@ export default {
     unmounted() {
         // console.log('beforeDestroy');
         this.$store.dispatch('clearInquiry');
+        this.$store.dispatch('CLEAR_INQUIRY_DATA');
     },
     created() {
         this.articleget();
@@ -564,7 +565,7 @@ export default {
             axios.get('/api/article')
                 .then(response => {
                     this.article = response.data;
-                    console.log('article',this.article);
+                    console.log('article', this.article);
                 })
                 .catch(error => {
                     console.error(error);
@@ -803,7 +804,7 @@ export default {
                     if (selectedSupplier) {
                         this.selectedSupplierId = selectedSupplier;
                     }
-                   const selectedBuyerIds = Number(this.orders.buyer);
+                    const selectedBuyerIds = Number(this.orders.buyer);
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedBuyerIds);
                     if (selectedbuyer) {
                         this.selectedBuyerId = selectedbuyer;
@@ -854,6 +855,11 @@ export default {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);
         }
+        const inquiryData = this.$store.getters.getInquiryData;
+        if (inquiryData) {
+            this.orders = { ...this.orders, ...inquiryData };
+            console.log(this.orders, ' ho');
+        };
         NProgress.configure({ showSpinner: false });
         this.fetchSuppliers();
         this.fetchBuyers();

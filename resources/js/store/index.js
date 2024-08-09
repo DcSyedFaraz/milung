@@ -11,12 +11,19 @@ const store = new Vuex.Store({
     state: {
         authToken: null,
         userRole: null,
+        inquiryData: {},
         inquiry: null
     },
     mutations: {
+        SET_INQUIRY_DATA(state, payload) {
+            state.inquiryData = payload;
+        },
+        CLEAR_INQUIRY_DATA(state) {
+            state.inquiryData = null;
+        },
         clearInquiry(state) {
             state.inquiry = null;
-          },
+        },
         setInquiry(state, inquiry) {
             state.inquiry = inquiry;
         },
@@ -34,12 +41,18 @@ const store = new Vuex.Store({
         },
     },
     actions: {
+        setInquiryData({ commit }, inquiryData) {
+            commit('SET_INQUIRY_DATA', inquiryData);
+        },
         updateInquiry({ commit }, inquiry) {
             commit('setInquiry', inquiry);
         },
         clearInquiry({ commit }) {
             commit('clearInquiry');
-          },
+        },
+        CLEAR_INQUIRY_DATA({ commit }) {
+            commit('CLEAR_INQUIRY_DATA');
+        },
         login({ commit }, { token, role }) {
             commit('setAuthToken', token);
             commit('setUserRole', role);
@@ -52,6 +65,7 @@ const store = new Vuex.Store({
         },
     },
     getters: {
+        getInquiryData: (state) => state.inquiryData,
         inquiry: state => state.inquiry,
         isAuthenticated: state => !!state.authToken,
     }

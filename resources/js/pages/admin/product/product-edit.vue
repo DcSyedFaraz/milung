@@ -21,7 +21,11 @@
                     <div class="col-md-6 gap-2">
                         <div class="d-flex justify-content-end">
                             <Button class="p-button px-3 mx-2" type="submit" severity="success" label="Save"></Button>
-                            <Button class="p-button-warning" type="reset" severity="info" label="Clear"></Button>
+                            <Button class="mx-2" type="reset" severity="info" label="Clear"></Button>
+                            <Button class="p-button-warning mx-2" type="botton" severity="warn" label="Create Inquiry"
+                                @click="createInquiry"></Button>
+                            <Button class="p-button-warning" type="botton" severity="help" label="Create Order"
+                                @click="createOrder"></Button>
                         </div>
                     </div>
                 </div>
@@ -511,7 +515,7 @@
                                             <a :href="'/storage/' + slotProps.data.path"
                                                 :download="slotProps.data.filename"
                                                 class="btn px-4 mx-2 btn-outline-primary">
-                                                {{ slotProps.data.filename }}
+                                                {{ truncate(slotProps.data.filename, 10) }}
                                             </a>
                                         </template>
                                     </Column>
@@ -652,6 +656,42 @@ export default {
         },
     },
     methods: {
+        createOrder() {
+            // Dispatch the action to save order data in Vuex
+            this.$store.dispatch('setInquiryData', {
+                inquiryNumber: this.product.inquiry_number,
+                article: this.product.article,
+                group: this.product.group,
+                packaging: this.product.standart_packaging,
+                accessories: this.product.accessory,
+            });
+            // Navigate to the Order Entry component
+            this.$router.push({ name: 'order_entry' });
+        },
+        createInquiry() {
+            // Dispatch the action to save product data in Vuex
+            this.$store.dispatch('setInquiryData', {
+                selectedBuyerId: this.product.buyer_id,
+                inquiryNumber: this.product.inquiry_number,
+                article: this.product.article,
+                group: this.product.group,
+                name: this.product.name,
+                description: this.product.description,
+                cargo: this.product.cargo,
+                cargoPlace: this.product.cargo_place,
+                incoterm: this.product.incoterm,
+                method: this.product.method,
+                color: this.product.color,
+                packaging: this.product.standart_packaging,
+                requirements: this.product.requirements,
+                status: this.product.status
+            });
+            // Navigate to the Inquiry Create component
+            this.$router.push({ name: 'price_inquiry_entry' });
+        },
+        truncate(text, length) {
+            return text.length > length ? text.substring(0, length) + '...' : text;
+        },
         updateCertificates(certificates) {
             this.product.certificates = certificates;
         },

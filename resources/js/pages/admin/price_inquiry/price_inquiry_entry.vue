@@ -1,218 +1,214 @@
 <template>
     <section class="section">
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
-
             <div class="container">
-
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
+
+                    <!-- Left Column -->
                     <div class="col-md-6">
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Buyer ID:</p>
+                                <p for="v-model">Buyer ID<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="inquiry.buyer" class="form-control"> -->
-                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
-                                     track-by="id">
-                                </multiselect>
+                                <Select v-model="buyer" optionLabel="buyer_id" optionValue="id"
+                                    placeholder="Select Buyer" class="w-100" :options="buyers" />
+                                <Message v-if="errors.buyer">{{ errors.buyer }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Inquiry Number:</p>
+                                <p for="v-model">Inquiry Number<span class="text-danger">*</span>:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.inquiry_number" class="form-control">
+                            <div class="col-8">
+                                <InputText v-model="inquiry.inquiry_number" class="w-100" />
+                                <Message v-if="errors.inquiry_number">{{ errors.inquiry_number }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Article Number:</p>
+                                <p for="v-model">Article Number<span class="text-danger">*</span>:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.article" class="form-control"></div>
+                            <div class="col-8">
+                                <InputText v-model="inquiry.article" class="w-100" />
+                                <Message v-if="errors.article">{{ errors.article }}</Message>
+                            </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-select" v-model="inquiry.group"
-                                    @change="fetchSupplierProfiles(inquiry.group)">
-                                    <option selected disabled>Select a product group</option>
-                                    <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
-                                        {{ group1.group_name }}
-                                    </option>
-                                </select>
+                                <Select v-model="inquiry.group" :options="groups" optionLabel="group_name"
+                                    optionValue="id" placeholder="Select a product group" class="w-100"
+                                    @change="fetchSupplierProfiles(inquiry.group)" />
+                            </div>
+                        </div>
 
-                            </div>
-                        </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Name:</p>
-                            </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.name" class="form-control"></div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <p for="v-model">Product Description/ Specification:</p>
+                                <p for="v-model">Product Name<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="inquiry.description" class="form-control" cols="36"
-                                    rows="10"></textarea>
+                                <InputText v-model="inquiry.name" class="w-100" />
+                                <Message v-if="errors.name">{{ errors.name }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Cargo Classification:</p>
+                                <p for="v-model">Product Description/Specification<span class="text-danger">*</span>:
+                                </p>
+                            </div>
+                            <div class="col-8">
+                                <Textarea v-model="inquiry.description" class="w-100" rows="10" />
+                                <Message v-if="errors.description">{{ errors.description }}</Message>
+                            </div>
+                        </div>
+
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <p for="v-model">Cargo Classification<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
                                 <div class="d-flex">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" value="general"
-                                            v-model="inquiry.cargo">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            General Cargo
-                                        </label>
-                                    </div>
-                                    <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" value="danger"
-                                            v-model="inquiry.cargo">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Danger Goods
-                                        </label>
-                                    </div>
+                                    <RadioButton class="mx-2" inputId="generalCargo" v-model="inquiry.cargo"
+                                        value="general" />
+                                    <label for="generalCargo" class="ml-2">General Cargo</label>
+                                    <RadioButton class="mx-2" inputId="dangerCargo" v-model="inquiry.cargo"
+                                        value="danger" />
+                                    <label for="dangerCargo" class="ml-2">Danger Goods</label>
                                 </div>
                                 <div class="d-flex my-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
-                                            value="hongkong">
-                                        <label class="form-check-label" for="flexCheckDefault1">
-                                            Hong Kong
-                                        </label>
-                                    </div>
-                                    <div class="form-check mx-2">
-                                        <input class="form-check-input" type="checkbox" v-model="cargo_place"
-                                            value="china">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            Mainland China
-                                        </label>
-                                    </div>
+                                    <Checkbox class="mx-2" inputId="hongkong" v-model="cargo_place" value="hongkong" />
+                                    <label for="hongkong" class="ml-2">Hong Kong</label>
+                                    <Checkbox inputId="china" v-model="cargo_place" value="china" class="mx-2" />
+                                    <label for="china" class="ml-2">Mainland China</label>
                                 </div>
+                                <Message v-if="errors.cargo">{{ errors.cargo }}</Message>
+                            </div>
+                        </div>
 
-                            </div>
-                        </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Incoterm:</p>
+                                <p for="v-model">Incoterm<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="inquiry.incoterm" class="form-control">
+                                <InputText v-model="inquiry.incoterm" class="w-100" />
+                                <Message v-if="errors.incoterm">{{ errors.incoterm }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Inquiry Quantity:</p>
+                                <p for="v-model">Inquiry Quantity<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(material, index) in materials" :="index">
-                                    <input type="number" class="form-control" v-model="materials[index].quantity"
+                                <div v-for="(material, index) in materials" :key="index"
+                                    class="d-flex align-items-center my-2">
+                                    <InputNumber v-model="materials[index].quantity" class="w-75"
                                         @input="updateInquiryMaterials" />
-                                    <span class="input-group-text mx-2 fw-bold" style="color: #41b400;">Pcs</span>
+                                    <span class="mx-2 fw-bold" style="color: #41b400;">Pcs</span>
                                     <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button"
-                                            @click="addMaterial(index)" v-if="index === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button"
-                                            @click="removeMaterial(index)"
-                                            v-if="index !== 0 && materials.length > 1">-</button>
+                                        <Button icon="pi pi-plus" class="p-button-warning ml-2"
+                                            @click="addMaterial(index)" v-if="index === 0" />
+                                        <Button icon="pi pi-minus" class="p-button-danger ml-2"
+                                            @click="removeMaterial(index)" v-if="index !== 0 && materials.length > 1" />
                                     </div>
                                 </div>
-
+                                <Message v-if="errors.pcs">{{ errors.pcs }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Capacity:</p>
+                                <p for="v-model">Product Capacity<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(caps, indexs) in capacity" :="indexs">
-                                    <input type="number" class="form-control" v-model="capacity[indexs].quantity"
+                                <div v-for="(caps, indexs) in capacity" :key="indexs"
+                                    class="d-flex align-items-center my-2">
+                                    <InputNumber v-model="capacity[indexs].quantity" class="w-75"
                                         @input="updateInquiryCapacity" />
-                                    <select style="color: #41b400;" class="fw-bold form-control mx-2"
-                                        v-model="capacity[indexs].unit">
-                                        <option value="GB">GB</option>
-                                        <option value="mAh">mAh</option>
-                                    </select>
+                                    <Select v-model="capacity[indexs].unit" :options="['GB', 'mAh']"
+                                        class="w-25 mx-2" />
                                     <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button"
-                                            @click="addcapacity(indexs)" v-if="indexs === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button"
+                                        <Button icon="pi pi-plus" class="p-button-warning ml-2"
+                                            @click="addcapacity(indexs)" v-if="indexs === 0" />
+                                        <Button icon="pi pi-minus" class="p-button-danger ml-2"
                                             @click="removecapacity(indexs)"
-                                            v-if="indexs !== 0 && capacity.length > 1">-</button>
+                                            v-if="indexs !== 0 && capacity.length > 1" />
                                     </div>
                                 </div>
-
+                                <Message v-if="errors.capacity">{{ errors.capacity }}</Message>
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Printing Method:</p>
+                                <p for="v-model">Printing Method<span class="text-danger">*</span>:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.method" class="form-control"></div>
+                            <div class="col-8">
+                                <InputText v-model="inquiry.method" class="w-100" />
+                                <Message v-if="errors.method">{{ errors.method }}</Message>
+                            </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Printing Color:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.color" class="form-control"></div>
+                            <div class="col-8">
+                                <InputText v-model="inquiry.color" class="w-100" />
+                            </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Standard Packaging:</p>
                             </div>
-                            <div class="col-8"><input type="text" v-model="inquiry.packaging" class="form-control">
+                            <div class="col-8">
+                                <InputText v-model="inquiry.packaging" class="w-100" />
                             </div>
                         </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Special Requirement:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="inquiry.requirements" class="form-control" cols="36"
-                                    rows="10"></textarea>
+                                <Textarea v-model="inquiry.requirements" class="w-100" rows="10" />
                             </div>
                         </div>
                     </div>
 
+                    <!-- Right Column -->
                     <div class="col-md-6">
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model" class="my-1">Status:</p>
-                            </div>
-                            <div class="col-8"><select class="fw-bold form-control" v-model="inquiry.status">
-                                    <option value="ML Checking">ML Checking</option>
-                                    <option value="Supplier Checking">Supplier Checking</option>
-                                    <option value="Buyer Follow Up">Buyer Follow Up</option>
-                                    <option value="Supplier Follow Up">Supplier Follow Up</option>
-                                    <option value="Supplier Replied">Supplier Replied</option>
-                                    <option value="ML Quoted">ML Quoted</option>
-                                </select></div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Notice
-                                </label>
+                                <p for="v-model" class="my-1">Status<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <div class="form-check">
-                                    <input class="form-check-input " id="urgent" type="checkbox"
-                                        v-model="inquiry.urgent">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Urgent
-                                    </label>
-                                </div>
+                                <Select v-model="inquiry.status"
+                                    :options="['ML Checking', 'Supplier Checking', 'Buyer Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']"
+                                    class="w-100" />
+                                <Message v-if="errors.status">{{ errors.status }}</Message>
                             </div>
                         </div>
+
+                        <div class="d-flex col-11 my-2">
+                            <div class="col-4">
+                                <p for="v-model">Notice:</p>
+                            </div>
+                            <div class="col-8">
+                                <Checkbox inputId="urgent" v-model="inquiry.urgent" />
+                                <label for="urgent" class="mx-2">Urgent</label>
+                            </div>
+                        </div>
+
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Buyer Product Photo/3D Artwork:</p>
@@ -243,164 +239,97 @@
                                 <canvas ref="canvas1" width="322" height="300" class="border border-2"></canvas>
                             </div>
                         </div>
+
                         <div class="col-12 my-2">
                             <div class="row ms-2">
+                                <Button label="Send To Supplier" class="p-button-sm p-button-milung m-2 col-3"
+                                    @click="openSupplierModal" />
+                                <Button v-show="follow_up" label="Follow Up"
+                                    class="p-button-sm p-button-warning m-2 col-3 text-white" @click="followup" />
+                                <Button v-show="follow_up" label="Quote Buyer"
+                                    class="p-button-sm p-button-info m-2 col-3" :disabled="!supplierInquiry.length"
+                                    @click="quote" :style="{ backgroundColor: supplierInquiry.length ? 'aqua' : '' }" />
 
-                                <button type="button" class="btn btn-sm  fw-bold btn-milung m-2 col-3"
-                                    data-bs-toggle="modal" data-bs-target="#supplierModal">Send To Supplier</button>
+                                <Button v-show="follow_up" label="Create Order"
+                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #bc7803;"
+                                    @click="openOrderModal()" />
 
-                                <button type="button" v-show="follow_up" @click="followup"
-                                    class="btn btn-sm  fw-bold btn-warning m-2 col-3 text-white">Follow
-                                    Up</button>
-
-                                <button type="button"
-                                    :style="{ 'background-color: aqua !important;': supplierInquiry.length }" style=""
-                                    v-show="follow_up" class="btn btn-sm  fw-bold btn-info m-2 col-3"
-                                    :disabled="!supplierInquiry.length" @click="quote">Quote Buyer</button>
-
-                                <button style="background-color: #bc7803 !important;" v-show="follow_up" type="button"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3" data-bs-toggle="modal"
-                                    data-bs-target="#createOrderModal">Create Order</button>
-
-                                <button type="button" style="background-color: #41b400 !important;" v-show="follow_up"
-                                    class="btn btn-sm  fw-bold btn-milung m-2 col-3">Supplier To Buyer</button>
-
+                                <Button v-show="follow_up" label="Supplier To Buyer"
+                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #41b400;" />
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                <!-- Supplier Inquiry Quote Table -->
                 <div class="row" v-for="(rows, index) in supplierData" :key="index"
                     v-if="supplierData && Object.keys(supplierData).length > 0">
-                    <h3 class="text-milung mb-4 fw-bold text-uppercase">{{ index }} Inquiry Quote
-                    </h3>
-                    <div class="d-flex justify-content-between">
-                        <label>
-                            <input type="radio" :value="index" v-model="selectedSupplier"
-                                @change="selectAllRows(index)">
-                            Select All for {{ index }}
+                    <h3 class="text-milung mb-4 fw-bold text-uppercase">{{ index }} Inquiry Quote</h3>
+                    <div class="">
+                        <RadioButton v-model="selectedSupplier" :value="index" @change="selectAllRows(index)">
+                        </RadioButton>
+                        <label class="mx-2">Select
+                            All for {{ index }}
                         </label>
                     </div>
-                    <table class="table table-striped table-hover">
-                        <thead style="color: #009de1" class="text-center">
-                            <tr style="">
-                                <th class="text-nowrap">Product Capacity</th>
-                                <th class="text-nowrap">Quantity</th>
-                                <th class="text-nowrap">Currency</th>
-                                <th class="text-nowrap">EXW Price</th>
-                                <th class="text-nowrap">Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr v-for="(row, indexs) in rows" :key="indexs">
-                                <td class="text-nowrap">
+                    <DataTable :value="rows" class="w-100">
+                        <Column header="Product Capacity">
+                            <template #body="slotProps">
+                                <div class="flex flex-wrap gap-2">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" v-model="supplierInquiry"
-                                            :disabled="selectedSupplier !== null && selectedSupplier !== index"
-                                            :value="row.id" :checked="!!row.selected">
+                                            :disabled="selectedSupplier !== null && selectedSupplier !== slotProps.index"
+                                            :value="slotProps.data.id" :checked="!!slotProps.data.selected">
                                         <label class="form-check-label">
-                                            {{ row.capacity }}
+                                            {{ slotProps.data.capacity }}
                                         </label>
                                     </div>
-                                </td>
-                                <td class="text-nowrap">
-                                    {{ row.quantity }}
-                                </td>
-                                <td class="text-nowrap">USD</td>
-                                <td class="text-nowrap" style="width: 13% !important">
+                                </div>
+                            </template>
+                        </Column>
 
-                                    <span v-if="row.exw">
-                                        {{ row.exw }}
-                                    </span>
-
-                                    <span v-else class="fst-italic text-muted">
-                                        Not Provided
-                                    </span>
-                                </td>
-                                <td v-show="indexs === 0" :rowspan="totalRows">
-
-                                    <span v-if="row.supplierremarks?.remarks">
-                                        {{ row.supplierremarks?.remarks }}
-                                    </span>
-
-                                    <span v-else class="fst-italic text-muted">
-                                        Not Provided
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <Column field="quantity" header="Quantity" />
+                        <Column field="currency" header="Currency" :body="() => 'USD'" />
+                        <Column field="exw" header="EXW Price"
+                            :body="(row) => row.exw || '<span class=\'fst-italic text-muted\'>Not Provided</span>'" />
+                        <Column field="remarks" header="Remarks"
+                            :body="(row) => row.supplierremarks?.remarks || '<span class=\'fst-italic text-muted\'>Not Provided</span>'"
+                            :rowspan="totalRows" v-show="index === 0" />
+                    </DataTable>
                 </div>
             </div>
-            <!-- Modal 1-->
-            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Select Supplier</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-check" v-for="(supplier, index) in supplier_profiles" :key="index">
-                                <input class="form-check-input" type="checkbox" :value="supplier.id" :id="supplier.id"
-                                    :checked="mode === 'edit' ? isSupplierIdChecked(supplier.id) : false"
-                                    v-model="supplier.checked">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    {{ supplier.name }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                            <button class="btn btn-primary" data-bs-dismiss="modal">Create Inquiry</button>
-                        </div>
-                    </div>
+
+            <!-- Modals -->
+            <!-- Supplier Modal -->
+            <Dialog header="Select Supplier" v-model:visible="showSupplierModal" :style="{ width: '450px' }"
+                :modal="true">
+                <div class="my-2" v-for="(supplier, index) in supplier_profiles" :key="index">
+                    <input class="form-check-input mx-2" type="checkbox" :value="supplier.id" :id="supplier.id"
+                        :checked="mode === 'edit' ? isSupplierIdChecked(supplier.id) : false"
+                        v-model="supplier.checked">
+                    <label for="flexCheckDefault" class="ml-2">{{ supplier.name }}</label>
                 </div>
-            </div>
-            <!--End Modal 1-->
-            <!-- Modal 2-->
-            <div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="createOrderModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="createOrderModalLabel">Select Quantity and Capacity</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="quantity" class="form-label">Select Quantity</label>
-                                <select v-model="selectedQuantity" class="form-select" id="quantity">
-                                    <option v-for="(material, index) in materials" :key="index"
-                                        :value="material.quantity">
-                                        {{ material.quantity }} Pcs
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="capacity" class="form-label">Select Capacity</label>
-                                <select v-model="selectedCapacity" class="form-select" id="capacity">
-                                    <option v-for="(caps, index) in capacity" :key="index"
-                                        :value="`${caps.quantity} ${caps.unit}`">
-                                        {{ caps.quantity }} {{ caps.unit }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                @click="createOrder(inquiry)">Create
-                                Order</button>
-                        </div>
-                    </div>
+                <Button label="Create Inquiry" class="my-2" @click="closeSupplierModal" />
+            </Dialog>
+
+            <!-- Create Order Modal -->
+            <Dialog header="Select Quantity and Capacity" v-model:visible="showOrderModal" :style="{ width: '450px' }"
+                :modal="true">
+                <div class="mb-3">
+                    <label for="quantity" class="form-label mx-2">Select Quantity</label>
+                    <Select v-model="selectedQuantity" class="w-100" :options="materials.map((m) => m.quantity)" />
                 </div>
-            </div>
-            <!--End Modal 2-->
+                <div class="mb-3">
+                    <label for="capacity" class="form-label mx-2">Select Capacity</label>
+                    <Select v-model="selectedCapacity" class="w-100"
+                        :options="capacity.map((c) => `${c.quantity} ${c.unit}`)" />
+                </div>
+                <Button label="Create Order" class="p-button-primary" @click="createOrder(inquiry)" />
+            </Dialog>
         </form>
         <EventLogTable :filterValue="'Inquiry'" />
     </section>
+
     <div v-if="loader" class="loader-overlay">
         <div class="loader"></div>
     </div>
@@ -435,14 +364,30 @@ export default {
             capacity: [{ quantity: '', unit: '' }],
             selectedBuyerId: [],
             buyers: [],
+            buyer: '',
             imageLoaded: false,
             groups: [],
+            errors: [],
             supplierInquiry: [],
             supplier_profiles: [],
             follow_up: false,
+            showSupplierModal: false,
+            showOrderModal: false,
         };
     },
     methods: {
+        openSupplierModal() {
+            this.showSupplierModal = true;
+        },
+        closeSupplierModal() {
+            this.showSupplierModal = false;
+        },
+        openOrderModal() {
+            this.showOrderModal = true;
+        },
+        closeOrderModal() {
+            this.showOrderModal = false;
+        },
         selectAllRows(supplierIndex) {
             this.supplierData[supplierIndex].forEach(row => {
                 row.selected = true;
@@ -506,16 +451,16 @@ export default {
                 return;
             }
             const inquiryid = this.$route.params.id;
-            console.log(this.supplierInquiry,this.selectedSupplier);
+            console.log(this.supplierInquiry, this.selectedSupplier);
             if (inquiryid) {
                 let formData
-                if(this.selectedSupplier){
+                if (this.selectedSupplier) {
                     formData = {
                         // quoteIds: this.supplierInquiry
                         quoteIds: this.supplierData[this.selectedSupplier].map(row => row.id)
                     };
 
-                } else{
+                } else {
                     formData = {
                         quoteIds: this.supplierInquiry
                     };
@@ -561,11 +506,20 @@ export default {
             console.log(groupId);
             axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
                 .then(response => {
+                    const supplierIds = this.inquiry.supplier_ids.map(id => Number(id));
+
                     this.supplier_profiles = response.data.map(supplier => {
-                        supplier.checked = this.mode === 'edit' ? this.isSupplierIdChecked(supplier.id) : false;
+                        const supplierId = Number(supplier.id);
+                        // console.log('Checking Supplier ID:', supplierId, 'in', this.inquiry.supplier_ids);
+
+                        supplier.checked = supplierIds.includes(supplierId);
+                        // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+
                         return supplier;
                     });
-                    console.log(this.supplier_profiles);
+
+                    // console.log('Final Supplier Profiles:', this.supplier_profiles);
+
 
                     NProgress.done();
                 })
@@ -825,11 +779,12 @@ export default {
                         }) : [{ quantity: '', unit: '' }];
                     }
 
-                    const selectedbuyerIds = Number(this.inquiry.buyer);
-                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
-                    if (selectedbuyer) {
-                        this.selectedBuyerId = selectedbuyer;
-                    }
+                    this.buyer = Number(this.inquiry.buyer);
+                    this.inquiry.group = Number(this.inquiry.group);
+                    // const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    // if (selectedbuyer) {
+                    //     this.selectedBuyerId = selectedbuyer;
+                    // }
 
                     if (this.inquiry.group) {
                         this.fetchSupplierProfiles(this.inquiry.group);
@@ -859,10 +814,10 @@ export default {
         },
     },
     watch: {
-        selectedBuyerId(newValue) {
-            // console.log(newValue);
-            this.buyer = newValue.id;
-        },
+        // selectedBuyerId(newValue) {
+        //     // console.log(newValue);
+        //     this.buyer = newValue.id;
+        // },
         // inquiry: {
         //     handler(newValue) {
         //         const selectedbuyerIds = Number(newValue.buyer);
@@ -874,8 +829,16 @@ export default {
         //     deep: true,
         // },
     },
+    unmounted() {
+        // console.log('beforeDestroy');
+        this.$store.dispatch('CLEAR_INQUIRY_DATA');
+    },
     mounted() {
         NProgress.configure({ showSpinner: false });
+        const inquiryData = this.$store.getters.getInquiryData;
+        if (inquiryData) {
+            this.inquiry = { ...this.inquiry, ...inquiryData };
+        };
         this.fetchProductGroups();
         this.fetchBuyers();
         this.$refs.fileInput.addEventListener('change', this.loadImage);
