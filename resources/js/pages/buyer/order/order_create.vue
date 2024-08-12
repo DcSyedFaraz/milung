@@ -320,7 +320,7 @@
                         </div>
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Latest SendOut Date:</p>
+                                <p for="v-model" class="my-auto fs-7">Latest Send Out  Date:</p>
                             </div>
                             <div class="col-8">
                                 <input type="date" v-model="orders[0].sendoutdate" class="form-control ">

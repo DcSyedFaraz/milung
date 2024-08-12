@@ -255,7 +255,7 @@
                     </div>
                     <div class="d-flex col-12 my-2">
                         <div class="col-4 my-auto">
-                            <p class="my-auto fs-7">Latest SendOut Date:</p>
+                            <p class="my-auto fs-7">Latest Send Out  Date:</p>
                         </div>
                         <div class="col-8">
                             <p class="my-auto">{{ orders.sendoutdate }}</p>

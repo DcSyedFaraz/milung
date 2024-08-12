@@ -397,7 +397,7 @@
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
                                 <p class="my-auto fs-7">
-                                    Latest SendOut Date:
+                                    Latest Send Out  Date:
                                 </p>
                             </div>
                             <div class="col-8">

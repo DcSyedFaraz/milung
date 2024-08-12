@@ -104,6 +104,7 @@ class PermissionTableSeeder extends Seeder
             'userid' => 'Buyer01',
             'name' => 'buyer',
             'email' => 'buyer@gmail.com',
+            'buyer_id' => '1',
             'password' => Hash::make('12345678'),
             'email_verified_at' => date('Y-m-d h:i:s'),
         ];
@@ -115,6 +116,7 @@ class PermissionTableSeeder extends Seeder
         $supp = [
             'userid' => 'Supplier01',
             'name' => 'supplier',
+            'supplier_id' => '1',
             'email' => 'supplier@gmail.com',
             'password' => Hash::make('12345678'),
             'email_verified_at' => date('Y-m-d h:i:s'),

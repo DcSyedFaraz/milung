@@ -18,6 +18,32 @@
                                             {{ validationErrors.status[0] }}</Message>
                                     </div>
                                 </div>
+                                <div class="d-flex col-6 my-2">
+                                    <div class="col-6 my-auto">
+                                        <p for="userid">Company Logo(Optional):</p>
+                                    </div>
+                                    <div class="col-6 my-auto">
+                                        <FileUpload name="demo[]" accept="image/*" :fileLimit="1" :maxFileSize="10485760"
+                                            :showUploadButton="false" @select="handleFileSelect($event)"
+                                            :showCancelButton="false">
+                                            <template #empty>
+                                                <img :src="`/storage/${supplier.company_logo}`" class="w-25" alt="Initial Image"
+                                                    v-if="supplier.company_logo">
+                                                <span v-if="supplier.company_logo"><br> Drag and drop files to here to
+                                                    upload.</span>
+                                                <span v-else>Drag and drop files to here to
+                                                    upload.</span>
+                                            </template>
+                                            <template #default>
+                                            </template>
+                                        </FileUpload>
+                                        <Message class="my-2" v-if="validationErrors.supplier_id" severity="error"
+                                            :text="validationErrors.supplier_id[0]">{{
+                        validationErrors.supplier_id[0]
+                    }}
+                                        </Message>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row my-3">
                                 <div class="d-flex col-6 my-2">
@@ -25,7 +51,7 @@
                                         <p for="userid">Supplier ID:</p>
                                     </div>
                                     <div class="col-6 my-auto">
-                                        <InputText v-model="supplier.supplier_id" :disabled="isEditMode"
+                                        <InputText class="w-100" v-model="supplier.supplier_id" :disabled="isEditMode"
                                             :class="{ 'p-invalid': !userIdPatternValid || validationErrors.supplier_id }" />
                                         <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
                                             be alphanumeric and between 1 and 10 characters long.</Message>
@@ -40,7 +66,7 @@
                                         <p for="name">Supplier Company Header:</p>
                                     </div>
                                     <div class="col-6">
-                                        <InputText v-model="supplier.company_header"
+                                        <InputText class="w-100" v-model="supplier.company_header"
                                             :class="{ 'p-invalid': validationErrors.company_header }" />
                                         <Message class="my-2" v-if="validationErrors.company_header" severity="error"
                                             :text="validationErrors.company_header[0]" />
@@ -53,7 +79,7 @@
                                         <p for="name">Company Name:</p>
                                     </div>
                                     <div class="col-6">
-                                        <InputText v-model="supplier.name"
+                                        <InputText class="w-100" v-model="supplier.name"
                                             :class="{ 'p-invalid': validationErrors.name }" />
                                         <Message class="my-2" v-if="validationErrors.name" severity="error"
                                             :text="validationErrors.name[0]" />
@@ -64,7 +90,7 @@
                                         <p for="officePhone">Office Phone/Mobile:</p>
                                     </div>
                                     <div class="col-6">
-                                        <InputText v-model="supplier.officePhone"
+                                        <InputText class="w-100" v-model="supplier.officePhone"
                                             :class="{ 'p-invalid': validationErrors.officePhone }" />
                                         <Message class="my-2" v-if="validationErrors.officePhone" severity="error"
                                             :text="validationErrors.officePhone[0]" />
@@ -88,7 +114,7 @@
                                         <p for="website">Website:</p>
                                     </div>
                                     <div class="col-6">
-                                        <InputText v-model="supplier.website"
+                                        <InputText class="w-100" v-model="supplier.website"
                                             :class="{ 'p-invalid': validationErrors.website }" />
                                         <Message class="my-2" v-if="validationErrors.website" severity="error"
                                             :text="validationErrors.website[0]" />
@@ -102,7 +128,7 @@
                                         <p for="address">Beneficiary Bank:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.bank" class="w-full my-2"
+                                        <InputText v-model="supplier.bank" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank }" />
                                         <Message class="my-2" v-if="validationErrors.bank" severity="error"
                                             :text="validationErrors.bank[0]" />
@@ -113,7 +139,7 @@
                                         <p for="website">Beneficiary Bank Address:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.bank_address" class="w-full my-2"
+                                        <InputText v-model="supplier.bank_address" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank_address }" />
                                         <Message class="my-2" v-if="validationErrors.bank_address" severity="error"
                                             :text="validationErrors.bank_address[0]" />
@@ -126,7 +152,7 @@
                                         <p for="address">SWIFT Code:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.swift_code" class="w-full my-2"
+                                        <InputText v-model="supplier.swift_code" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.swift_code }" />
                                         <Message class="my-2" v-if="validationErrors.swift_code" severity="error"
                                             :text="validationErrors.swift_code[0]" />
@@ -137,7 +163,7 @@
                                         <p for="website">CHIPS No:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.chips_no" class="w-full my-2"
+                                        <InputText v-model="supplier.chips_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.chips_no }" />
                                         <Message class="my-2" v-if="validationErrors.chips_no" severity="error"
                                             :text="validationErrors.chips_no[0]" />
@@ -150,7 +176,7 @@
                                         <p for="address">Beneficiary Name:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.beneficiary_name" class="w-full my-2"
+                                        <InputText v-model="supplier.beneficiary_name" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.beneficiary_name }" />
                                         <Message class="my-2" v-if="validationErrors.beneficiary_name" severity="error"
                                             :text="validationErrors.beneficiary_name[0]" />
@@ -161,7 +187,7 @@
                                         <p for="website">Beneficiary Account Number:</p>
                                     </div>
                                     <div class="col-9">
-                                        <InputText v-model="supplier.account_no" class="w-full my-2"
+                                        <InputText v-model="supplier.account_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.account_no }" />
                                         <Message class="my-2" v-if="validationErrors.account_no" severity="error"
                                             :text="validationErrors.account_no[0]" />
@@ -310,6 +336,7 @@ export default {
             orders: {},
             validationErrors: {},
             isEditMode: false,
+            file: '',
             statusOptions: [
                 { label: 'Active', value: 'active' },
                 { label: 'Inactive', value: 'inactive' }
@@ -317,6 +344,12 @@ export default {
         }
     },
     methods: {
+        handleFileSelect(event) {
+            // Get the selected file
+            this.file = event.files[0];
+            console.log(this.file);
+
+        },
         sortTable(key) {
             if (this.sortKey === key) {
                 this.sortAsc = !this.sortAsc;
@@ -377,11 +410,27 @@ export default {
             if (!this.supplier.group.length) this.errors.push('Product group is required.');
 
             if (!this.errors.length) {
-                const formData = {
-                    ...this.supplier,
-                    group: this.supplier.group,
-                    Secgroup: this.supplier.Secgroup
-                };
+                const formData = new FormData();
+                if (this.file) {
+                    formData.append('logo', this.file);
+                }
+
+                // Append other fields from `this.supplier` to the FormData
+                this.supplier.group.forEach((item) => {
+                    formData.append('group[]', item);
+                });
+
+                // Append each item in the Secgroup array individually
+                this.supplier.Secgroup.forEach((item) => {
+                    formData.append('Secgroup[]', item);
+                });
+
+                // Append any other fields in `this.supplier`
+                for (const [key, value] of Object.entries(this.supplier)) {
+                    if (key !== 'group' && key !== 'Secgroup') {
+                        formData.append(key, value);
+                    }
+                }
 
                 try {
                     let response;
@@ -456,8 +505,8 @@ export default {
                     website: supplierData.website,
                     officePhone: supplierData.office_phone,
                     supplierDescription: supplierData.supplier_description,
-                    group: supplierData.group,
-                    Secgroup: supplierData.sec_group,
+                    group: supplierData.group ? supplierData.group.map(Number) : [], // Convert to array of integers
+                    Secgroup: supplierData.sec_group ? supplierData.sec_group.map(Number) : [],
                     account_no: supplierData.account_no,
                     bank: supplierData.bank,
                     bank_address: supplierData.bank_address,
@@ -469,6 +518,7 @@ export default {
                     company_header: supplierData.company_header,
                     contact: supplierData.contact,
                     person: supplierData.person,
+                    company_logo: supplierData.company_logo,
                 };
 
                 this.isEditMode = true;
@@ -497,8 +547,6 @@ export default {
 }
 </script>
 <style>
-
-
 .table {
     border-collapse: separate;
     border-spacing: 0;

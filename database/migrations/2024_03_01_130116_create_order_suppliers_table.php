@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained('supplier_profiles')->onDelete('cascade');
-            $table->string('purchase')->nullable();
+            $table->decimal('purchase', 10, 2)->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

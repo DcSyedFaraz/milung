@@ -258,43 +258,42 @@ class OrderController extends Controller
         $existingOrder = Order::findOrFail($id);
         //    dd($data);
 
-        $validatedData = Validator::make($data, [
+        $validatedData = $request->validate([
             'group' => 'required|string',
-            'article' => 'required|string|exists:products,article',
+            'article' => 'nullable|string|exists:products,article',
             'buyerorder' => 'required|string',
-            'reference' => 'required|string',
-            'inquiry' => 'required|string',
+            'reference' => 'nullable|string',
+            'inquiry' => 'nullable|string',
             'milungorder' => 'required|string',
             'supplier' => 'exists:supplier_profiles,id',
             'buyer' => 'required|exists:buyer_profiles,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
-            'ftyitem' => 'required|string',
+            'ftyitem' => 'nullable|string',
             'productname' => 'required|string',
-            'productcolor' => 'required|string',
+            'productcolor' => 'nullable|string',
             'accessories' => 'required|string',
             'printingmethod' => 'required|string',
-            'logocolor' => 'required|string',
-            'packaging' => 'required|string',
-            'packagingprinting' => 'required',
+            'logocolor' => 'nullable',
+            'packaging' => 'nullable|string',
+            'packagingprinting' => 'nullable',
             'quantity' => 'required|string',
-            'buyingprice' => 'nullable|numeric',
-            'sellingprice' => 'nullable|numeric',
-            'totalvalue' => 'nullable|numeric',
+            'buyingprice' => 'nullable',
+            'sellingprice' => 'nullable',
+            'totalvalue' => 'nullable',
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
             'atc_number' => 'required|string',
-            // 'ship_doc' => 'required|string',
-            // 'incoterm' => 'required|string',
-            'orderremarks' => 'required|string',
-            'qcremarks' => 'required|string',
+            'orderremarks' => 'nullable|string',
+            'qcremarks' => 'nullable|string',
             'status' => 'required|string',
             'unit' => 'required|string',
+            'linked_order' => 'nullable|string',
         ]);
 
-        if ($validatedData->fails()) {
-            return response()->json(['errors' => $validatedData->errors()->all()], 422);
-        }
+        // if ($validatedData->fails()) {
+        //     return response()->json(['errors' => $validatedData->errors()->all()], 422);
+        // }
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
         unset($data['quantity'], $data['unit'], $data['quantity_units']);
@@ -319,8 +318,8 @@ class OrderController extends Controller
         $this->saveFiles($data, 'manualFiles');
         $this->saveFiles($data, 'safetySheetFiles');
 
-        if ($data['linked_order'] === 'create') {
-            $data['linked_order'] = $data['id'];
+        if ($validatedData['linked_order'] === 'create') {
+            $validatedData['linked_order'] = $data['id'];
             unset($data['id']);
             $order = Order::create($data);
         } else {
@@ -345,25 +344,25 @@ class OrderController extends Controller
         // dd($data);
 
 
-        $validatedData = Validator::make($data, [
+        $validatedData = $request->validate([
             'group' => 'required|string',
-            'article' => 'required|string|exists:products,article',
+            'article' => 'nullable|string|exists:products,article',
             'buyerorder' => 'required|string',
-            'reference' => 'required|string',
-            'inquiry' => 'required|string',
+            'reference' => 'nullable|string',
+            'inquiry' => 'nullable|string',
             'milungorder' => 'required|string',
             'supplier' => 'exists:supplier_profiles,id',
             'buyer' => 'required|exists:buyer_profiles,id',
             'orderdate' => 'required|date',
             'buyeremail' => 'required|email',
-            'ftyitem' => 'required|string',
+            'ftyitem' => 'nullable|string',
             'productname' => 'required|string',
-            'productcolor' => 'required|string',
+            'productcolor' => 'nullable|string',
             'accessories' => 'required|string',
             'printingmethod' => 'required|string',
-            'logocolor' => 'required|string',
-            'packaging' => 'required|string',
-            'packagingprinting' => 'required',
+            'logocolor' => 'nullable',
+            'packaging' => 'nullable|string',
+            'packagingprinting' => 'nullable',
             'quantity' => 'required|string',
             'buyingprice' => 'nullable',
             'sellingprice' => 'nullable',
@@ -371,17 +370,15 @@ class OrderController extends Controller
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
             'atc_number' => 'required|string',
-            // 'ship_doc' => 'required|string',
-            // 'incoterm' => 'required|string',
-            'orderremarks' => 'required|string',
-            'qcremarks' => 'required|string',
+            'orderremarks' => 'nullable|string',
+            'qcremarks' => 'nullable|string',
             'status' => 'required|string',
             'unit' => 'required|string',
         ]);
 
-        if ($validatedData->fails()) {
-            return response()->json(['errors' => $validatedData->errors()->all()], 422);
-        }
+        // if ($validatedData->fails()) {
+        //     return response()->json(['errors' => $validatedData->errors()->all()], 422);
+        // }
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
         unset($data['quantity'], $data['unit']);

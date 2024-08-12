@@ -136,7 +136,7 @@ class ProductController extends Controller
             'cargo_place' => 'required|array',
             'cargo_place.*' => 'string',
             'incoterm' => 'required|string',
-            'urgent' => 'nullable|boolean',
+            'urgent' => 'nullable',
             'method' => 'required|string',
             'color' => 'nullable|string',
             'packaging' => 'nullable|string',
@@ -282,7 +282,7 @@ class ProductController extends Controller
             'cargo_place' => 'required|array',
             'cargo_place.*' => 'string',
             'incoterm' => 'required|string',
-            'urgent' => 'nullable|boolean',
+            'urgent' => 'nullable',
             'method' => 'required|string',
             'color' => 'nullable|string',
             'packaging' => 'nullable|string',
@@ -315,7 +315,7 @@ class ProductController extends Controller
                 // Send the email to the supplier
                 foreach ($suppliers as $key => $supplier) {
 
-                    Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                    //Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
                 }
             }
         }

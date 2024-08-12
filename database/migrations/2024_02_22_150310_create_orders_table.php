@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('buyeremail')->nullable();
             $table->string('buyerorder')->nullable();
             $table->string('ftyitem')->nullable();
-            $table->string('logocolor')->nullable();
+            $table->json('logocolor')->nullable();
             $table->integer('group')->nullable();
             $table->string('incoterm')->nullable();
             $table->string('inquiry')->nullable();
@@ -48,9 +48,9 @@ return new class extends Migration {
             $table->string('status')->nullable();
             $table->integer('buyer')->nullable();
             $table->integer('supplier')->nullable();
-            $table->string('sellingprice')->nullable();
-            $table->string('buyingprice')->nullable();
-            $table->string('totalvalue')->nullable();
+            $table->decimal('sellingprice', 10, 2)->nullable();
+            $table->decimal('buyingprice', 10, 2)->nullable();
+            $table->decimal('totalvalue', 10, 2)->nullable();
             $table->string('assigned_to_supplier_at')->nullable();
             $table->timestamps();
         });

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->integer('group')->nullable(); // Nullable
             $table->string('name');
             $table->text('description');
-            $table->string('cargo');
+            $table->json('cargo');
             $table->json('cargo_place');
             $table->string('incoterm');
             $table->string('urgent')->default(false);

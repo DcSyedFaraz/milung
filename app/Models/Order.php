@@ -11,6 +11,7 @@ class Order extends Model
     protected $guarded = [];
     protected $casts = [
         'files' => 'array',
+        'logocolor' => 'array',
         'packagingprinting' => 'array',
         'notice' => 'array',
         'capacity' => 'array',

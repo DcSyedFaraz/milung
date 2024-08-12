@@ -65,7 +65,7 @@
                                     <th class="text-nowrap">Date Modified</th>
                                     <th class="text-nowrap">Date Created</th>
                                     <th class="text-nowrap">
-                                        Latest SendOut Date
+                                        Latest Send Out  Date
                                     </th>
                                     <th class="text-nowrap">Actions</th>
                                 </tr>

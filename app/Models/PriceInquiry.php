@@ -11,6 +11,7 @@ class PriceInquiry extends Model
     protected $guarded = [];
     protected $casts = [
         'cargo_place' => 'array',
+        'cargo' => 'array',
         'pcs' => 'array',
         'capacity' => 'array',
         'supplier_ids' => 'array',

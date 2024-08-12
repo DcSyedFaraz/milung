@@ -1,23 +1,24 @@
 <template>
     <section class="section">
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
-
             <div class="container">
-                <div class="d-flex d-flex justify-content-end col-12 my-2 ">
-                    <button class="btn btn-milung mx-2 px-3" name="action" value="save">Save </button>
-                    <button class="btn btn-warning mx-2" name="action" value="create">Create New Order</button>
+                <div class="d-flex justify-content-end col-12 my-2">
+                    <button value="save" class="btn btn-milung mx-2 px-3" v-if="isEditing">Save</button>
+                    <button value="create" class="btn btn-warning mx-2" type="submit">Create New Order</button>
                 </div>
+
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Order Overview</h3>
                     <div class="col-md-4">
-                        <h4 class="text-milung mb-4 fw-bold ">I. Order Information</h4>
+                        <h4 class="text-milung mb-4 fw-bold">I. Order Information</h4>
 
+                        <!-- Status -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto ">Status:</p>
+                                <p class="my-auto">Status: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <select class="fw-bold form-select" v-model="orders.status">
+                                <select v-model="orders.status" class="fw-bold form-select">
                                     <option value="New Order">New Order</option>
                                     <option value="Printview Confirmation">Printview Confirmation</option>
                                     <option value="Printview Reject">Printview Reject</option>
@@ -26,110 +27,150 @@
                                     <option value="Shipment Approval">Shipment Approval</option>
                                     <option value="Export/Import">Export/Import</option>
                                     <option value="Delivered">Delivered</option>
-
                                 </select>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Milung Order No:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.milungorder" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Order Date:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="date" v-model="orders.orderdate" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Order No:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.buyerorder" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Previous Order Reference:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.reference" class="form-control ">
+                                <Message v-if="errors.status" severity="error" class="my-2">{{ errors.status[0] }}
+                                </Message>
                             </div>
                         </div>
 
-
-
+                        <!-- Milung Order No -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Related inquiry No:</p>
+                                <p class="my-auto fs-7">Milung Order No: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.inquiry" class="form-control ">
+                                <input type="text" v-model="orders.milungorder" class="form-control">
+                                <Message v-if="errors.milungorder" severity="error" class="my-2">{{
+            errors.milungorder[0] }}</Message>
                             </div>
                         </div>
 
+                        <!-- Order Date -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer ID:</p>
+                                <p class="my-auto fs-7">Order Date: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders.buyer" class="form-control "> -->
+                                <input type="date" v-model="orders.orderdate" class="form-control">
+                                <Message v-if="errors.orderdate" severity="error" class="my-2">{{ errors.orderdate[0] }}
+                                </Message>
+                            </div>
+                        </div>
+
+                        <!-- Buyer Order No -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p class="my-auto fs-7">Buyer Order No: <span class="text-danger">*</span></p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders.buyerorder" class="form-control">
+                                <Message v-if="errors.buyerorder" severity="error" class="my-2">{{ errors.buyerorder[0]
+                                    }}</Message>
+                            </div>
+                        </div>
+
+                        <!-- Previous Order Reference -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p class="my-auto fs-7">Previous Order Reference: </p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders.reference" class="form-control">
+                                <Message v-if="errors.reference" severity="error" class="my-2">{{ errors.reference[0] }}
+                                </Message>
+                            </div>
+                        </div>
+
+                        <!-- Related Inquiry No -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p class="my-auto fs-7">Related Inquiry No: </p>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" v-model="orders.inquiry" class="form-control">
+                                <Message v-if="errors.inquiry" severity="error" class="my-2">{{ errors.inquiry[0] }}
+                                </Message>
+                            </div>
+                        </div>
+
+                        <!-- Buyer ID -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4 my-auto">
+                                <p class="my-auto fs-7">Buyer ID: <span class="text-danger">*</span></p>
+                            </div>
+                            <div class="col-8">
                                 <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
                                     track-by="id">
                                 </multiselect>
+                                <Message v-if="errors.buyer" severity="error" class="my-2">{{ errors.buyer[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Buyer Email -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
+                                <p class="my-auto fs-7">Buyer Email: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="email" v-model="orders.buyeremail" class="form-control ">
+                                <input type="email" v-model="orders.buyeremail" class="form-control">
+                                <Message v-if="errors.buyeremail" severity="error" class="my-2">{{ errors.buyeremail[0]
+                                    }}</Message>
                             </div>
                         </div>
+
+                        <!-- Supplier ID -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Supplier ID:</p>
+                                <p class="my-auto fs-7">Supplier ID: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders.supplier" class="form-control "> -->
-                                <multiselect v-model="selectedSupplierId" :disabled="!this.isEditing"
-                                    :options="suppliers" field="id" label="supplier_id" track-by="id">
+                                <multiselect v-model="selectedSupplierId" :disabled="!isEditing" :options="suppliers"
+                                    field="id" label="supplier_id" track-by="id">
                                 </multiselect>
+                                <Message v-if="errors.supplier" severity="error" class="my-2">{{ errors.supplier[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Fty Item No -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Fty item No:</p>
+                                <p class="my-auto fs-7">Fty Item No: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.ftyitem" class="form-control ">
+                                <input type="text" v-model="orders.ftyitem" class="form-control">
+                                <Message v-if="errors.ftyitem" severity="error" class="my-2">{{ errors.ftyitem[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Order Remarks -->
                         <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="my-auto fs-7">Order Remarks:</p>
+                            <div class="col-4">
+                                <p class="my-auto fs-7">Order Remarks:</p>
                             </div>
                             <div class="col-8">
                                 <textarea v-model="orders.orderremarks" class="form-control" cols="30"
                                     rows="5"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class="my-auto fs-7">QC Remarks:</p>
-                            </div>
-                            <div class="col-8">
-                                <textarea v-model="orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
+                                <Message v-if="errors.orderremarks" severity="error" class="my-2">{{
+            errors.orderremarks[0] }}</Message>
                             </div>
                         </div>
 
+                        <!-- QC Remarks -->
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-4">
+                                <p class="my-auto fs-7">QC Remarks:</p>
+                            </div>
+                            <div class="col-8">
+                                <textarea v-model="orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
+                                <Message v-if="errors.qcremarks" severity="error" class="my-2">{{ errors.qcremarks[0] }}
+                                </Message>
+                            </div>
+                        </div>
+
+                        <!-- File Inputs -->
                         <FileInputWithName label="Logo File" :files="orders.logoFiles" :fileData="orders.logoFiles"
                             @update:files="updateFiles" @export-file="exportFile" />
                         <FileInputWithName label="Label File" :files="orders.safetySheetFiles"
@@ -138,141 +179,173 @@
                             @update:files="updateFiles" @export-file="exportFile" />
                         <FileInputWithName label="Safety Sheet" :files="orders.labelFiles" :fileData="orders.labelFiles"
                             @update:files="updateFiles" @export-file="exportFile" />
-
-
                     </div>
+
                     <div class="col-md-4">
-                        <div class="d-flex col-12 my-2 ">
+                        <!-- Buyer Product Photo/Print View -->
+                        <div class="d-flex col-12 my-2">
                             <div class="col-8 my-auto">
-                                <p for="v-model my-auto">Buyer Product Photo/Print View:</p>
+                                <p class="my-auto">Buyer Product Photo/Print View:</p>
                             </div>
                             <div class="col-4">
-                                <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">
-                                    Import
-                                </button>
-                                <!-- <button>submit</button> -->
+                                <button @click="importImage" type="button"
+                                    class="btn btn-sm px-4 btn-milung">Import</button>
                                 <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2 ">
-                            <div class="col-8 my-aut">
+                        <div class="d-flex col-12 my-2">
+                            <div class="col-8 my-auto">
                                 <canvas ref="canvas" width="353" height="300" class="border border-2"></canvas>
                             </div>
                         </div>
+
+                        <!-- Quantity and Unit -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-3 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Quantity:</p>
+                                <p class="my-auto fs-7">Quantity: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-9">
                                 <div class="input-group my-2">
                                     <input type="number" class="form-control" v-model="orders.quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
                                         <option value="units">units</option>
-                                        <!-- <option value="mAh">mAh</option> -->
+                                        <option value="pairs">pairs</option>
+                                        <option value="sets">sets</option>
                                     </select>
                                 </div>
+                                <Message v-if="errors.quantity" severity="error" class="my-2">{{ errors.quantity[0] }}
+                                </Message>
+                                <Message v-if="errors.unit" severity="error" class="my-2">{{ errors.unit[0] }}</Message>
                             </div>
                         </div>
 
-
+                        <!-- Article Number -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Article Number:</p>
+                                <p class="my-auto fs-7">Article Number:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders.article" class="form-control "> -->
-                                <multiselect v-model="orders.article" :options="article">
-                                </multiselect>
+                                <multiselect v-model="orders.article" :options="article"></multiselect>
+                                <Message v-if="errors.article" severity="error" class="my-2">{{ errors.article[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Product Group -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Group:</p>
+                                <p class="my-auto fs-7">Product Group: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <select class=" form-select" v-model="orders.group">
+                                <select class="form-select" v-model="orders.group">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
                                         {{ group1.group_name }}
                                     </option>
                                 </select>
+                                <Message v-if="errors.group" severity="error" class="my-2">{{ errors.group[0] }}
+                                </Message>
                             </div>
                         </div>
 
+                        <!-- Product Name -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Name:</p>
+                                <p class="my-auto fs-7">Product Name: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.productname" class="form-control ">
+                                <input type="text" v-model="orders.productname" class="form-control">
+                                <Message v-if="errors.productname" severity="error" class="my-2">{{
+            errors.productname[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Product Color -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Color: (Pantone if applicable)</p>
+                                <p class="my-auto fs-7">Product Color: (Pantone if applicable)</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.productcolor" class="form-control ">
+                                <input type="text" v-model="orders.productcolor" class="form-control">
+                                <Message v-if="errors.productcolor" severity="error" class="my-2">{{
+            errors.productcolor[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Product Capacity -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 mt-2">
-                                <p for="v-model" class=" fs-7">Product Capacity:</p>
+                                <p class="fs-7">Product Capacity:</p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(caps, indexs) in orders.capacity" :="indexs">
+                                <div class="input-group my-2" v-for="(caps, indexs) in orders.capacity" :key="indexs">
                                     <input type="number" class="form-control" v-model="caps.quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select mx-2"
                                         v-model="caps.unit">
                                         <option selected value="GB">GB</option>
                                         <option value="mAh">mAh</option>
                                     </select>
-                                    <!-- <div class="input-buttons">
-                                        <button class="btn btn-warning btn ms-1" type="button"
-                                            @click="addcapacity(indexs)" v-if="indexs === 0">+</button>
-                                        <button class="btn btn-danger  ms-2" type="button"
-                                            @click="removecapacity(indexs)"
-                                            v-if="indexs !== 0 && orders.capacity.length > 1">-</button>
-                                    </div> -->
                                 </div>
+                                <Message v-if="errors.capacity" severity="error" class="my-2">{{ errors.capacity[0] }}
+                                </Message>
+                            </div>
+                        </div>
 
-                            </div>
-                        </div>
+                        <!-- Accessories -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Accessories:</p>
+                                <p class="my-auto fs-7">Accessories: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.accessories" class="form-control ">
+                                <input type="text" v-model="orders.accessories" class="form-control">
+                                <Message v-if="errors.accessories" severity="error" class="my-2">{{
+            errors.accessories[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Logo Printing Method -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Product Printing Method:</p>
+                                <p class="my-auto fs-7">Logo Printing Method: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.printingmethod" class="form-control ">
+                                <input type="text" v-model="orders.printingmethod" class="form-control">
+                                <Message v-if="errors.printingmethod" severity="error" class="my-2">{{
+            errors.printingmethod[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Logo Pantone Color -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Logo Pantone Color:</p>
+                                <p class="my-auto fs-7">Logo Pantone Color:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.logocolor" class="form-control ">
+                                <Chips class="w-100" v-model="orders.logocolor"
+                                    :class="{ 'p-invalid': errors.logocolor }" />
+                                <!-- <input type="text" v-model="orders.logocolor" class="form-control"> -->
+                                <Message v-if="errors.logocolor" severity="error" class="my-2">{{ errors.logocolor[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Packaging -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Packaging:</p>
+                                <p class="my-auto fs-7">Packaging:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.packaging" class="form-control ">
+                                <input type="text" v-model="orders.packaging" class="form-control">
+                                <Message v-if="errors.packaging" severity="error" class="my-2">{{ errors.packaging[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- Packaging Printing -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Packaging Printing: <br> (if applicable)</p>
+                                <p class="my-auto fs-7">Packaging Printing: </p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
@@ -288,150 +361,160 @@
                                             @click="removeInput(index)">Remove</button>
                                     </div>
                                 </div>
+                                <Message v-if="errors.packagingprinting" severity="error" class="my-2">{{
+            errors.packagingprinting[0] }}
+                                </Message>
                             </div>
                         </div>
-
-
                     </div>
-                    <div class="col-md-4">
 
-                        <h4 class="text-milung mb-4 fw-bold ">II. Price:</h4>
+                    <div class="col-md-4">
+                        <h4 class="text-milung mb-4 fw-bold">II. Price:</h4>
+
+                        <!-- Buying Price -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Byuing Price:</p>
+                                <p class="my-auto fs-7">Buying Price:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
+                                <div class="input-group">
                                     <input type="text" class="form-control" disabled v-model="orders.buyingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
+                                <Message v-if="errors.buyingprice" severity="error" class="my-2">{{
+            errors.buyingprice[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Selling Price -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Selling Price:</p>
+                                <p class="my-auto fs-7">Selling Price:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
+                                <div class="input-group">
                                     <input type="text" class="form-control" :disabled="!isEditing"
                                         v-model="orders.sellingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
+                                <Message v-if="errors.sellingprice" severity="error" class="my-2">{{
+            errors.sellingprice[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Total Order Value -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Total Order Value:</p>
+                                <p class="my-auto fs-7">Total Order Value:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text"  class="form-control"> -->
-                                <div class="input-group ">
+                                <div class="input-group">
                                     <input type="text" class="form-control" :disabled="!isEditing"
                                         v-model="orders.totalvalue">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
+                                <Message v-if="errors.totalvalue" severity="error" class="my-2">{{ errors.totalvalue[0]
+                                    }}</Message>
                             </div>
                         </div>
-                        <h5 class="text-milung mb-4 fw-bold mt-3">III. Delivery/Shipping Information:</h5>
+
+                        <h5 class="text-milung mb-4 fw-bold mt-3">III. Shipping Information:</h5>
+
+                        <!-- HS Code -->
                         <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS Code:</p>
+                            <div class="col-4">
+                                <p class="fs-7">HS Code:</p>
                             </div>
                             <div class="col-8">
                                 <p>{{ selectedProductGroupCode.hs_de }}</p>
                             </div>
                         </div>
+
+                        <!-- HS-CN Code -->
                         <div class="d-flex col-12 my-2">
-                            <div class="col-4 ">
-                                <p for="v-model" class=" fs-7">HS-CN Code:</p>
+                            <div class="col-4">
+                                <p class="fs-7">HS-CN Code:</p>
                             </div>
                             <div class="col-8">
                                 <p>{{ selectedProductGroupCode.hs_cn }}</p>
                             </div>
                         </div>
+
+                        <!-- Latest Send Out  Date -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Latest SendOut Date:</p>
+                                <p class="my-auto fs-7">Latest Send Out Date: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="orders.sendoutdate" class="form-control ">
+                                <input type="date" v-model="orders.sendoutdate" class="form-control">
+                                <Message v-if="errors.sendoutdate" severity="error" class="my-2">{{
+            errors.sendoutdate[0] }}</Message>
                             </div>
                         </div>
+
+                        <!-- Notice -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Notice:</p>
+                                <p class="my-auto fs-7">Notice:</p>
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="Fix Date"
                                         v-model="orders.notice">
-                                    <label class="form-check-label">
-                                        Fix Date
-                                    </label>
+                                    <label class="form-check-label">Fix Date</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="PV to Customer"
                                         v-model="orders.notice">
-                                    <label class="form-check-label">
-                                        PV to Customer
-                                    </label>
+                                    <label class="form-check-label">PV to Customer</label>
                                 </div>
+                                <Message v-if="errors.notice" severity="error" class="my-2">{{ errors.notice[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- SO# -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">SO#:</p>
+                                <p class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                <!-- <input type="text" v-model="orders.so_number" class="form-control "> -->
                                 <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
                                     track-by="id">
                                 </multiselect>
+                                <Message v-if="errors.so_number" severity="error" class="my-2">{{ errors.so_number[0] }}
+                                </Message>
                             </div>
                         </div>
+
+                        <!-- ATC# -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">ATC#:</p>
+                                <p class="my-auto fs-7">ATC#: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="orders.atc_number" class="form-control ">
+                                <input type="text" v-model="orders.atc_number" class="form-control">
+                                <Message v-if="errors.atc_number" severity="error" class="my-2">{{ errors.atc_number[0]
+                                    }}</Message>
                             </div>
                         </div>
-                        <!-- <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Shipping Document#:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.ship_doc" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Incoterm#:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" v-model="orders.incoterm" class="form-control ">
-                            </div>
-                        </div> -->
-
-
-
                     </div>
-
                 </div>
             </div>
         </form>
+
+        <!-- Print View Component -->
         <div class="container" v-show="showPrintView" v-if="can('printviewConfirmRejectButton')">
             <printview :id="orders.id" :image="orders.files" />
         </div>
+
+        <!-- Progress Modal -->
         <progress-modal :show="showProgress"></progress-modal>
     </section>
 </template>
@@ -476,10 +559,11 @@ export default {
             inputs: [],
             files: [],
             groups: [],
-            // inquiry: [],
+            errors: [],
             orders:
             {
-
+                status: 'New Order', // Set default status to 'New Order'
+                orderdate: new Date().toISOString().split('T')[0],
                 packagingprinting: [],
                 logoFiles: [],
                 safetySheetFiles: [],
@@ -655,10 +739,15 @@ export default {
             this.$refs.fileInput.click();
         },
         handleValidationErrors(validationErrors) {
-            // Assuming you have a function to display toastr error messages
-            validationErrors.forEach(message => {
-                toastr.error(message);
-            });
+            for (const key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    const messages = validationErrors[key];
+                    // Display each validation error message
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
         },
         loadImage(event) {
             const file = event.target.files[0];
@@ -741,6 +830,7 @@ export default {
 
                     if (error.response && error.response.status === 422) {
                         const validationErrors = error.response.data.errors;
+                        this.errors = validationErrors;
                         this.handleValidationErrors(validationErrors);
                     } else {
                         console.error(error);

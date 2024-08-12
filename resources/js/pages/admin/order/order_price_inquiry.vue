@@ -50,38 +50,107 @@
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
-                            <thead style="color: #009de1; " class="text-center fs-7 ">
-                                <tr style="">
-                                    <th class="text-nowrap"> Order Number </th>
-                                    <th class="text-nowrap">AN Ref./ <br> Old Order Number</th>
-                                    <th class="text-nowrap">Product Group</th>
-                                    <th class="text-nowrap">Product</th>
-                                    <th class="text-nowrap">Storage/Capacity</th>
-                                    <th class="text-nowrap">Accessories</th>
-                                    <th class="text-nowrap text-milung">Method</th>
-                                    <th class="text-nowrap"><span>Printing</span> <br>
-                                        <span class="text-milung">Pantone</span>
+                            <thead style="color: #009de1;" class="text-center fs-7">
+                                <tr>
+                                    <th class="text-nowrap" @click="sortBy('id')">
+                                        Order Number
+                                        <i v-if="sortKey === 'id'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                                     </th>
-
-                                    <th class="text-nowrap text-milung">Label</th>
-                                    <th class="text-nowrap"><span>Packaging</span> <br>
-                                        <span class="text-milung">Type</span>
+                                    <th class="text-nowrap" @click="sortBy('oldOrderNumber')">
+                                        AN Ref./ <br> Old Order Number
+                                        <i v-if="sortKey === 'oldOrderNumber'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                                     </th>
-                                    <th class="text-nowrap text-milung">Label</th>
-                                    <th class="text-nowrap ">Shipment Date</th>
-                                    <th class="text-nowrap ">Supplier ID</th>
-
-                                    <th class="text-nowrap text-milung">Purchase Price</th>
-                                    <th class="text-nowrap"><span>Final Quote</span> <br>
-                                        <span class="text-milung">Profit</span>
+                                    <th class="text-nowrap" @click="sortBy('product_group')">
+                                        Product Group
+                                        <i v-if="sortKey === 'product_group'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
                                     </th>
-                                    <th class="text-nowrap text-milung">Selling Price</th>
-                                    <th class="text-nowrap text-milung">Remarks</th>
+                                    <th class="text-nowrap" @click="sortBy('article')">
+                                        Product
+                                        <i v-if="sortKey === 'article'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortBy('capacity')">
+                                        Storage/Capacity
+                                        <i v-if="sortKey === 'capacity'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortBy('accessories')">
+                                        Accessories
+                                        <i v-if="sortKey === 'accessories'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap text-milung" @click="sortBy('printingmethod')">
+                                        Method
+                                        <i v-if="sortKey === 'printingmethod'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap">
+                                        <span @click="sortBy('logocolor')">
+                                            Printing <br> <span class="text-milung">Pantone</span>
+                                            <i v-if="sortKey === 'logocolor'"
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-nowrap text-milung" @click="sortBy('packagingprinting')">
+                                        Label
+                                        <i v-if="sortKey === 'packagingprinting'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap">
+                                        <span @click="sortBy('packaging')">
+                                            Packaging <br> <span class="text-milung">Type</span>
+                                            <i v-if="sortKey === 'packaging'"
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-nowrap text-milung">
+                                        <span @click="sortBy('packaging')">
+                                            Label
+                                            <i v-if="sortKey === 'packaging'"
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortBy('sendoutdate')">
+                                        Shipment Date
+                                        <i v-if="sortKey === 'sendoutdate'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortBy('supplier_id')">
+                                        Supplier ID
+                                        <i v-if="sortKey === 'supplier_id'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap text-milung" @click="sortBy('purchase_price')">
+                                        Buying Price
+                                        <i v-if="sortKey === 'purchase_price'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap">
+                                        <span @click="sortBy('final_quote_profit')">
+                                            Final Quote <br> <span class="text-milung">Profit</span>
+                                            <i v-if="sortKey === 'final_quote_profit'"
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-nowrap text-milung" @click="sortBy('selling_price')">
+                                        Selling Price
+                                        <i v-if="sortKey === 'selling_price'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortBy('remarks')">
+                                        Remarks
+                                        <i v-if="sortKey === 'remarks'"
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                    </th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                <tr v-if="dataToDisplay.length > 0" class="text-center"
-                                    style="border-bottom-color: snow !important;" v-for="order in dataToDisplay"
+                                <tr v-if="filteredAndSortedData.length > 0" class="text-center"
+                                    style="border-bottom-color: snow !important;" v-for="order in filteredAndSortedData"
                                     :key="order.id">
                                     <td>
                                         <div class="form-check">
@@ -93,7 +162,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {{ order.id }}
+                                        {{ order.linked_order ?? 'N/A' }}
                                     </td>
                                     <td>{{ order.product_group?.group_name }}</td>
                                     <td><span class="my-2">{{ order.article }}</span> <br>
@@ -105,7 +174,7 @@
                                     <td>{{ order.capacity?.join(', ') }}</td>
                                     <td>{{ order.accessories }}</td>
                                     <td>{{ order.printingmethod }}</td>
-                                    <td>{{ order.logocolor }}</td>
+                                    <td>{{ order.logocolor.join(', ') }}</td>
                                     <td>{{ order.packagingprinting.join(', ') ?? 'N/A' }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.packaging }}</td>
@@ -124,7 +193,7 @@
                                     </td>
                                     <td>
                                         <span v-for="(supplier, index) in order.order_suppliers" :key="index">
-                                            {{ supplier.purchase ? supplier.purchase : 'null' }}
+                                            {{ supplier.purchase ? supplier.purchase : 'N/A' }}
                                             <br v-if="index !== order.order_suppliers.length - 1">
                                         </span>
                                     </td>
@@ -142,7 +211,7 @@
                                                             (parseFloat(supplier.purchase) * parseFloat(order.product_group.profit) /
                                                                 100)))
                                                     :
-                                                    'null'
+                                                    'N/A'
                                             }}
                                             <br v-if="index !== order.order_suppliers.length - 1">
                                         </span>
@@ -170,7 +239,7 @@
                         <ul class="pagination d-flex justify-content-center">
                             <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
                                 <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)"><i
-                                        class="bi bi-arrow-left"></i> Previous</a>
+                                        class="fas fa-arrow-left"></i> Previous</a>
                             </li>
                             <li class="page-item" v-for="page in totalPages" :key="page"
                                 :class="{ active: page === currentPage }">
@@ -178,7 +247,7 @@
                             </li>
                             <li class="page-item ms-auto fw-bold" :class="{ disabled: currentPage === totalPages }">
                                 <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next <i
-                                        class="bi bi-arrow-right"></i> </a>
+                                        class="fas fa-arrow-right"></i> </a>
                             </li>
                         </ul>
                     </nav>
@@ -218,17 +287,32 @@ export default {
             file: null,
             orders: [],
             currentPage: 1,
-            searchQuery: ''
+            searchQuery: '',
+            sortKey: '', // key to sort by
+            sortAsc: true,
         }
     },
     computed: {
 
-        filteredorders() {
-            return this.orders.filter(order => {
-                return order.buyer.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (order.supplier.toLowerCase().includes(this.searchQuery));
-
+        filteredAndSortedData() {
+            // Filter data
+            let filteredData = this.orders.filter(order => {
+                return Object.values(order).some(val =>
+                    String(val).toLowerCase().includes(this.searchQuery.toLowerCase())
+                );
             });
+
+            // Sort data
+            if (this.sortKey) {
+                filteredData.sort((a, b) => {
+                    let modifier = this.sortAsc ? 1 : -1;
+                    if (a[this.sortKey] < b[this.sortKey]) return -1 * modifier;
+                    if (a[this.sortKey] > b[this.sortKey]) return 1 * modifier;
+                    return 0;
+                });
+            }
+
+            return filteredData;
         },
         totalPages() {
             return Math.ceil(this.orders.length / this.perPage)
@@ -254,6 +338,14 @@ export default {
         });
     },
     methods: {
+        sortBy(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+        },
         async placeAll() {
             this.loader = true;
             // Get the IDs of selected orders

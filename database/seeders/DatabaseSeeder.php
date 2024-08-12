@@ -3,6 +3,13 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\BuyerProfile;
+use App\Models\Order;
+use App\Models\PriceInquiry;
+use App\Models\ProductGroup;
+use App\Models\Products;
+use App\Models\SupplierProfile;
+use App\Models\User;
 use DB;
 use Illuminate\Database\Seeder;
 
@@ -11,10 +18,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         try {
-             $this->call([
-            PermissionTableSeeder::class,
-        ]);
-        $this->seedSupplierProfiles();
+            $this->call([
+                // PermissionTableSeeder::class,
+            ]);
+            $this->seedothers();
             // $this->call([OtherSeeder::class]); // Example of calling additional seeders
         } catch (\Exception $e) {
             // Handle errors gracefully
@@ -22,20 +29,27 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function seedSupplierProfiles()
+    private function seedothers()
     {
-        try {
-            $sql = file_get_contents(base_path('database/seeders/milung.sql'));
-            // $sql1 = file_get_contents(base_path('database/seeders/supplier_profiles.sql'));
-            $sql2 = file_get_contents(base_path('database/seeders/orders.sql'));
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-            DB::statement($sql);
-            // DB::statement($sql1);
-            DB::statement($sql2);
-            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        } catch (\Exception $e) {
-            // Handle file reading errors
-            echo "Error reading SQL file: " . $e->getMessage();
-        }
+        // try {
+            ProductGroup::factory()->count(5)->create();
+
+            SupplierProfile::factory()->count(5)->create();
+
+            BuyerProfile::factory()->count(5)->create();
+
+            User::factory()->count(10)->Supplier()->create();
+            User::factory()->count(10)->Buyer()->create();
+
+            Products::factory()->count(5)->create();
+
+            PriceInquiry::factory()->count(5)->create();
+
+            Order::factory()->count(5)->create();
+
+        // } catch (\Exception $e) {
+        //     // Handle file reading errors
+        //     echo "Error reading SQL file: " . $e->getMessage();
+        // }
     }
 }

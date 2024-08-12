@@ -46,7 +46,7 @@
                                     <th class="text-nowrap">Date Modified</th>
                                     <th class="text-nowrap">Date Created</th>
                                     <th class="text-nowrap">
-                                        Latest SendOut Date
+                                        Latest Send Out  Date
                                     </th>
                                     <th class="text-nowrap">Actions</th>
                                 </tr>
@@ -150,7 +150,7 @@
                                     {{ created_at(data.created_at) }}
                                 </template>
                             </Column>
-                            <Column field="sendoutdate" header="Latest SendOut Date" sortable style="width: 20%">
+                            <Column field="sendoutdate" header="Latest Send Out  Date" sortable style="width: 20%">
                             </Column>
                             <Column field="actions" header="Actions" style="width: 10%">
                                 <template #body="{ data }">

@@ -83,7 +83,7 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Product Name</th>
-                                            <th scope="col">SendOut Date</th>
+                                            <th scope="col">Send Out  Date</th>
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>

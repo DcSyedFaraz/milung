@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('group');
             $table->json('sec_group');
             $table->string('company_header')->nullable();
+            $table->string('company_logo')->nullable();
             $table->string('bank')->nullable();
             $table->string('bank_address')->nullable();
             $table->string('swift_code')->nullable();

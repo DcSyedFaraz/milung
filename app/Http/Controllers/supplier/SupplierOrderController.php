@@ -70,6 +70,9 @@ class SupplierOrderController extends Controller
             if (!$request->hasFile('product') && !$request->hasFile('packaging') && !$request->hasFile('accessories')) {
                 return response()->json(['errors' => 'At least one file must be uploaded.'], 422);
             }
+            $order = Order::findOrFail($id);
+            $order->status = 'Printview Confirmation';
+            $order->save();
             $printView = Printview::create([
                 'order_id' => $id,
                 'reason' => $request->input('reason'),

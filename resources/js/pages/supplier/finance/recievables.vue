@@ -67,7 +67,7 @@
                                 <tr style="">
                                     <th>Order#</th>
                                     <th> Status</th>
-                                    <th>Supplier SendOut Date</th>
+                                    <th>Supplier Send Out  Date</th>
                                     <th>SO #</th>
                                     <th>Invoice #</th>
                                     <th>Order Payable Amount</th>

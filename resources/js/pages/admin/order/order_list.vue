@@ -64,7 +64,7 @@
                                             :class="getSortIcon('updated_at')" class="ms-1"></i></th>
                                     <th class="text-nowrap" @click="sortTable('created_at')">Date Created <i
                                             :class="getSortIcon('created_at')" class="ms-1"></i></th>
-                                    <th class="text-nowrap" @click="sortTable('sendoutdate')">Latest SendOut Date <i
+                                    <th class="text-nowrap" @click="sortTable('sendoutdate')">Latest Send Out  Date <i
                                             :class="getSortIcon('sendoutdate')" class="ms-1"></i></th>
                                     <th class="text-nowrap" @click="sortTable('supplierid.userid')">Supplier ID <i
                                             :class="getSortIcon('supplierid.userid')" class="ms-1"></i></th>

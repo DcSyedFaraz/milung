@@ -2,6 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\BuyerProfile;
+use App\Models\ProductGroup;
+use App\Models\Products;
+use App\Models\SupplierProfile;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,46 +22,54 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'linked_order' => null,
-            'accessories' => $faker->sentence,
-            'article' => $faker->word,
-            'atc_number' => $faker->word,
-            'buyer' => $faker->name,
-            'capacity' => $faker->randomFloat(2, 0, 100),
-            'buyeremail' => $faker->safeEmail,
-            'buyerorder' => $faker->word,
-            'buyingprice' => $faker->randomFloat(2, 0, 100),
-            'ftyitem' => $faker->word,
-            'logocolor' => $faker->colorName,
-            'group' => $faker->randomDigitNotNull,
-            'incoterm' => $faker->word,
-            'inquiry' => $faker->sentence,
-            'milungorder' => $faker->word,
-            'notice' => '[]',
-            'orderdate' => $faker->date,
-            'orderremarks' => $faker->sentence,
-            'packaging' => $faker->word,
-            'packagingprinting' => $faker->word,
-            'printingmethod' => $faker->word,
-            'productcolor' => $faker->colorName,
-            'productname' => $faker->word,
-            'qcremarks' => $faker->sentence,
-            'quantity_unit' => $faker->word,
-            'reference' => $faker->word,
-            'logoFiles' => '[]',
-            'manualFiles' => '[]',
-            'safetySheetFiles' => '[]',
-            'labelFiles' => '[]',
-            'files' => '[]',
-            'sellingprice' => $faker->randomFloat(2, 0, 100),
-            'sendoutdate' => $faker->date,
-            'ship_doc' => $faker->word,
-            'so_number' => $faker->word,
-            'status' => $faker->word,
-            'supplier' => $faker->name,
-            'totalvalue' => $faker->randomFloat(2, 0, 100),
-            'created_at' => $faker->dateTime,
-            'updated_at' => $faker->dateTime,
+            'accessories' => $this->faker->word,
+            'article' => Products::inRandomOrder()->first()->article,
+            'atc_number' => $this->faker->word,
+            'capacity' => array_map(function () {
+                return $this->faker->numberBetween(1, 1024) . $this->faker->randomElement(['GB', 'mAh']);
+            }, range(1, $this->faker->numberBetween(1, 3))),
+            'buyeremail' => $this->faker->email,
+            // 'buyerorder' => $this->faker->word,
+            'ftyitem' => $this->faker->word,
+            'logocolor' => array_map(function () {
+                return $this->faker->colorName;
+            }, range(1, $this->faker->numberBetween(1, 3))),
+            'group' => ProductGroup::inRandomOrder()->first()->id,
+            'incoterm' => $this->faker->word,
+            'inquiry' => $this->faker->word,
+            'milungorder' => $this->faker->word,
+            'notice' => ["PV to Customer"],
+            'orderdate' => $this->faker->date,
+            'orderremarks' => $this->faker->sentence,
+            'packaging' => $this->faker->word,
+            'packagingprinting' => array_map(function () {
+                return $this->faker->words($this->faker->numberBetween(2, 5));
+            }, range(1, $this->faker->numberBetween(1, 3))),
+            'printingmethod' => $this->faker->word,
+            'productcolor' => $this->faker->word,
+            'productname' => $this->faker->word,
+            'qcremarks' => $this->faker->sentence,
+            'quantity_unit' => $this->faker->numberBetween(1, 1024) . $this->faker->randomElement(['units', 'pairs', 'sets']),
+            'reference' => $this->faker->word,
+            'sendoutdate' => $this->faker->date,
+            'ship_doc' => $this->faker->word,
+            'so_number' => $this->faker->randomNumber(),
+            'status' => $this->faker->randomElement([
+                'New Order',
+                'Printview Confirmation',
+                'Printview Reject',
+                'Order Confirm',
+                'Cargo Ready',
+                'Shipment Approval',
+                'Export/Import',
+                'Delivered',
+            ]),
+            'buyer' => BuyerProfile::inRandomOrder()->first()->id,
+            'supplier' => SupplierProfile::inRandomOrder()->first()->id,
+            'sellingprice' => number_format($this->faker->randomFloat(2, 1, 100), 2),
+            'buyingprice' => number_format($this->faker->randomFloat(2, 1, 99.99), 2),
+            'totalvalue' => number_format($this->faker->randomFloat(2, 1, 99.99), 2),
+
         ];
     }
 }

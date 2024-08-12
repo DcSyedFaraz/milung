@@ -349,7 +349,7 @@ class UserController extends Controller
 
         if ($request->status != $user->status) {
             $this->logEvent('Buyer', "Buyer ID {$user->buyer_id} status has been changed to {$request->status}.");
-             User::where('buyer_id', $id)->update(['status' => $request->status]);
+            User::where('buyer_id', $id)->update(['status' => $request->status]);
 
         }
 
@@ -428,6 +428,7 @@ class UserController extends Controller
     }
     public function suppliers(Request $request)
     {
+        // dd($request->all());
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -448,6 +449,7 @@ class UserController extends Controller
             'chips_no' => 'required',
             'beneficiary_name' => 'required|string|max:255',
             'account_no' => 'required',
+            'logo' => 'nullable|file',
         ]);
 
         if ($validator->fails()) {
@@ -476,11 +478,21 @@ class UserController extends Controller
             'account_no' => $request->account_no,
         ]);
 
+        if ($request->file('logo')) {
+            $image = $request->file('logo');
+            $fileName = \Str::random(5) . $image->getClientOriginalName();
+            $path = $image->storeAs('logo', $fileName, 'public');
+            // $path = $image->store('images', 'public');
+            // Attach image to the product
+            $user->company_logo = $path;
+            $user->save();
+
+        }
         // Assign the 'Supplier' role using Spatie permissions
         // $user->assignRole('Supplier');
 
         $admin = User::role(['Admin', 'Internal'])->get();
-       // Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
+        // Mail::to($user->email)->send(new AccountCreated($user, $request->otp));
         $message = "Hello!\n\nA new supplier has been successfully added to the system.\n\nSupplier ID: {$user->supplier_id}\n\nThank you!";
 
         Notification::send($admin, new UserNotification($message, 'New Supplier', 'editsupplier', ['id' => $user->id]));
@@ -607,7 +619,7 @@ class UserController extends Controller
     {
         // $buyer = User::with('buyerProfile')->findOrFail($id);
         $buyer['user'] = BuyerProfile::where('id', $id)->with('person')->first();
-        $buyer['orders'] = Order::where('buyer', $id)->with('supplierid')->select('id','supplier', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->orderby('created_at', 'desc')->get();
+        $buyer['orders'] = Order::where('buyer', $id)->with('supplierid')->select('id', 'supplier', 'sellingprice', 'article', 'orderdate', 'quantity_unit')->orderby('created_at', 'desc')->get();
 
         return response()->json($buyer);
     }

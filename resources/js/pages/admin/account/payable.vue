@@ -120,7 +120,7 @@
                                         placeholder="Search by status" />
                                 </template>
                             </Column>
-                            <Column field="sendoutdate" header="Supplier SendOut Date" style="min-width: 12rem">
+                            <Column field="sendoutdate" header="Supplier Send Out  Date" style="min-width: 12rem">
                                 <template #body="{ data }">
                                     {{ data.sendoutdate }}
                                 </template>
@@ -166,7 +166,7 @@
                                     <th class="text-nowrap">Order Number</th>
                                     <th class="text-nowrap">Status</th>
                                     <th class="text-nowrap">
-                                        Supplier SendOut Date
+                                        Supplier Send Out  Date
                                     </th>
                                     <th class="text-nowrap">SO#</th>
                                     <th class="text-nowrap">

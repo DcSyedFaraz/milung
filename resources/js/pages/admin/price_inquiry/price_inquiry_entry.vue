@@ -14,7 +14,8 @@
                             <div class="col-8">
                                 <Select v-model="buyer" optionLabel="buyer_id" optionValue="id"
                                     placeholder="Select Buyer" class="w-100" :options="buyers" />
-                                <Message v-if="errors.buyer">{{ errors.buyer }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.buyer">{{ errors.buyer[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -24,7 +25,8 @@
                             </div>
                             <div class="col-8">
                                 <InputText v-model="inquiry.inquiry_number" class="w-100" />
-                                <Message v-if="errors.inquiry_number">{{ errors.inquiry_number }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.inquiry_number">{{
+            errors.inquiry_number[0] }}</Message>
                             </div>
                         </div>
 
@@ -34,7 +36,8 @@
                             </div>
                             <div class="col-8">
                                 <InputText v-model="inquiry.article" class="w-100" />
-                                <Message v-if="errors.article">{{ errors.article }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.article">{{ errors.article[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -55,7 +58,7 @@
                             </div>
                             <div class="col-8">
                                 <InputText v-model="inquiry.name" class="w-100" />
-                                <Message v-if="errors.name">{{ errors.name }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.name">{{ errors.name[0] }}</Message>
                             </div>
                         </div>
 
@@ -66,7 +69,8 @@
                             </div>
                             <div class="col-8">
                                 <Textarea v-model="inquiry.description" class="w-100" rows="10" />
-                                <Message v-if="errors.description">{{ errors.description }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.description">{{
+            errors.description[0] }}</Message>
                             </div>
                         </div>
 
@@ -89,7 +93,8 @@
                                     <Checkbox inputId="china" v-model="cargo_place" value="china" class="mx-2" />
                                     <label for="china" class="ml-2">Mainland China</label>
                                 </div>
-                                <Message v-if="errors.cargo">{{ errors.cargo }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.cargo">{{ errors.cargo[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -99,7 +104,8 @@
                             </div>
                             <div class="col-8">
                                 <InputText v-model="inquiry.incoterm" class="w-100" />
-                                <Message v-if="errors.incoterm">{{ errors.incoterm }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.incoterm">{{ errors.incoterm[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -110,7 +116,7 @@
                             <div class="col-8">
                                 <div v-for="(material, index) in materials" :key="index"
                                     class="d-flex align-items-center my-2">
-                                    <InputNumber v-model="materials[index].quantity" class="w-75"
+                                    <input type="number" v-model="materials[index].quantity" class="w-75 form-control"
                                         @input="updateInquiryMaterials" />
                                     <span class="mx-2 fw-bold" style="color: #41b400;">Pcs</span>
                                     <div class="input-buttons">
@@ -120,7 +126,7 @@
                                             @click="removeMaterial(index)" v-if="index !== 0 && materials.length > 1" />
                                     </div>
                                 </div>
-                                <Message v-if="errors.pcs">{{ errors.pcs }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.pcs">{{ errors.pcs[0] }}</Message>
                             </div>
                         </div>
 
@@ -131,10 +137,10 @@
                             <div class="col-8">
                                 <div v-for="(caps, indexs) in capacity" :key="indexs"
                                     class="d-flex align-items-center my-2">
-                                    <InputNumber v-model="capacity[indexs].quantity" class="w-75"
+                                    <input type="number" v-model="capacity[indexs].quantity" class="w-75 form-control"
                                         @input="updateInquiryCapacity" />
                                     <Select v-model="capacity[indexs].unit" :options="['GB', 'mAh']"
-                                        class="w-25 mx-2" />
+                                        @select="updateInquiryCapacity" class="w-25 mx-2" />
                                     <div class="input-buttons">
                                         <Button icon="pi pi-plus" class="p-button-warning ml-2"
                                             @click="addcapacity(indexs)" v-if="indexs === 0" />
@@ -143,7 +149,8 @@
                                             v-if="indexs !== 0 && capacity.length > 1" />
                                     </div>
                                 </div>
-                                <Message v-if="errors.capacity">{{ errors.capacity }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.capacity">{{ errors.capacity[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -153,7 +160,8 @@
                             </div>
                             <div class="col-8">
                                 <InputText v-model="inquiry.method" class="w-100" />
-                                <Message v-if="errors.method">{{ errors.method }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.method">{{ errors.method[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -195,7 +203,8 @@
                                 <Select v-model="inquiry.status"
                                     :options="['ML Checking', 'Supplier Checking', 'Buyer Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']"
                                     class="w-100" />
-                                <Message v-if="errors.status">{{ errors.status }}</Message>
+                                <Message severity="error" class="my-1" v-if="errors.status">{{ errors.status[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -204,7 +213,7 @@
                                 <p for="v-model">Notice:</p>
                             </div>
                             <div class="col-8">
-                                <Checkbox inputId="urgent" v-model="inquiry.urgent" />
+                                <input class="form-check-input " id="urgent" type="checkbox" v-model="inquiry.urgent" />
                                 <label for="urgent" class="mx-2">Urgent</label>
                             </div>
                         </div>
@@ -355,13 +364,14 @@ export default {
             selectedCapacity: null,
             loader: false,
             inquiry: {
-                materials: [{ quantity: '' }], // Initialize with default values
-                capacity: [{ quantity: '', unit: '' }],
+                urgent: false,
+                materials: [{ quantity: 0 }], // Initialize with default values
+                capacity: [{ quantity: 0, unit: '' }],
             },
             cargo_place: [],
             supplierData: {},
-            materials: [{ quantity: '' }],
-            capacity: [{ quantity: '', unit: '' }],
+            materials: [{ quantity: 0 }],
+            capacity: [{ quantity: 0, unit: '' }],
             selectedBuyerId: [],
             buyers: [],
             buyer: '',
@@ -381,6 +391,7 @@ export default {
         },
         closeSupplierModal() {
             this.showSupplierModal = false;
+            this.onSubmit();
         },
         openOrderModal() {
             this.showOrderModal = true;
@@ -483,8 +494,8 @@ export default {
             this.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
         },
         updateInquiryCapacity() {
-            // console.log(this.capacity);
             this.inquiry.capacity = this.capacity.map(capacity => ({ quantity: capacity.quantity, unit: capacity.unit }));
+            console.log(this.capacity, this.inquiry.capacity);
         },
         fetchBuyers() {
             axios.get('/api/buyerOrder')
@@ -506,19 +517,25 @@ export default {
             console.log(groupId);
             axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
                 .then(response => {
-                    const supplierIds = this.inquiry.supplier_ids.map(id => Number(id));
+                    if (this.inquiry.supplier_ids) {
 
-                    this.supplier_profiles = response.data.map(supplier => {
-                        const supplierId = Number(supplier.id);
-                        // console.log('Checking Supplier ID:', supplierId, 'in', this.inquiry.supplier_ids);
+                        const supplierIds = this.inquiry.supplier_ids.map(id => Number(id));
+
+                        this.supplier_profiles = response.data.map(supplier => {
+                            const supplierId = Number(supplier.id);
 
                         supplier.checked = supplierIds.includes(supplierId);
+                        supplier.checked = supplierIds.includes(supplierId);
+                        // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+                            supplier.checked = supplierIds.includes(supplierId);
                         // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
 
-                        return supplier;
-                    });
+                            return supplier;
+                        });
+                    } else {
+                        this.supplier_profiles = response.data;
+                    }
 
-                    // console.log('Final Supplier Profiles:', this.supplier_profiles);
 
 
                     NProgress.done();
@@ -692,14 +709,19 @@ export default {
                     formData.append('cargo_place[]', place);
                 });
                 formData.append('incoterm', this.inquiry.incoterm);
-                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false');
+                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false' );
                 formData.append('method', this.inquiry.method);
                 formData.append('color', this.inquiry.color);
                 formData.append('packaging', this.inquiry.packaging);
                 formData.append('requirements', this.inquiry.requirements);
                 formData.append('status', this.inquiry.status);
-                formData.append('file', this.$refs.fileInput.files[0]);
-                formData.append('file1', this.$refs.fileInput1.files[0]);
+                if (this.$refs.fileInput.files[0]) {
+                    formData.append('file', this.$refs.fileInput.files[0]);
+                }
+
+                if (this.$refs.fileInput1.files[0]) {
+                    formData.append('file1', this.$refs.fileInput1.files[0]);
+                };
 
                 this.selectedSupplierIds.forEach(id => {
                     formData.append('supplier_ids[]', id);
@@ -738,6 +760,7 @@ export default {
                 NProgress.done();
                 if (error.response && error.response.status === 422) {
                     const validationErrors = error.response.data.errors;
+                    this.errors = validationErrors;
                     this.handleValidationErrors(validationErrors);
                 } else {
                     console.error(error);
@@ -814,6 +837,11 @@ export default {
         },
     },
     watch: {
+        'capacity[indexs].quantity': function (newVal) {
+            console.log(newVal);
+
+            this.updateInquiryCapacity(newVal);
+        }
         // selectedBuyerId(newValue) {
         //     // console.log(newValue);
         //     this.buyer = newValue.id;
