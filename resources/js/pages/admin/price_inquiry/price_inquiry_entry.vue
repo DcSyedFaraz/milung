@@ -253,18 +253,18 @@
                             <div class="row ms-2">
                                 <Button label="Send To Supplier" class="p-button-sm p-button-milung m-2 col-3"
                                     @click="openSupplierModal" />
-                                <Button v-show="follow_up" label="Follow Up"
+                                <Button v-show="follow_up" label="Follow Up" severity="warn"
                                     class="p-button-sm p-button-warning m-2 col-3 text-white" @click="followup" />
                                 <Button v-show="follow_up" label="Quote Buyer"
                                     class="p-button-sm p-button-info m-2 col-3" :disabled="!supplierInquiry.length"
                                     @click="quote" :style="{ backgroundColor: supplierInquiry.length ? 'aqua' : '' }" />
 
                                 <Button v-show="follow_up" label="Create Order"
-                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #bc7803;"
+                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #bc7803; border-color: #bc7803;"
                                     @click="openOrderModal()" />
 
-                                <Button v-show="follow_up" label="Supplier To Buyer"
-                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #41b400;" />
+                                <Button v-show="follow_up" severity="success" label="Supplier To Buyer"
+                                    class="p-button-sm p-button-milung m-2 col-3"  />
                             </div>
                         </div>
                     </div>

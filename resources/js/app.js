@@ -25,6 +25,7 @@ import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 
 import DatePicker from 'primevue/datepicker';
+import { definePreset } from '@primevue/themes';
 
 
 import Notifications from './pages/notifications.vue';
@@ -50,16 +51,35 @@ app.component('InputGroup', InputGroup);
 app.component('InputGroupAddon', InputGroupAddon);
 app.component('DatePicker', DatePicker);
 
+
+const MyPreset = definePreset(Aura, {
+    semantic: {
+        primary: {
+            50: '#14245c',
+            100: '#14245c',
+            200: '#14245c',
+            300: '#14245c',
+            400: '#14245c',
+            500: '#14245c',
+            600: '#14245c',
+            700: '#14245c',
+            800: '#14245c',
+            900: '#14245c',
+            950: '#14245c'
+        }
+    }
+});
+
 app.use(PrimeVue, {
     ripple: true,
     theme: {
-        preset: Aura,
+        preset: MyPreset,
         options: {
             darkModeSelector: 'off',
         },
         colors: {
-            primary: '#14245c', // apna primary color hash yaha daalein
-        }
+            primary: '#0000', 
+        },
     }
 });
 app.use(ConfirmationService);
