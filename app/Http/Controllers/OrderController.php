@@ -261,7 +261,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'group' => 'required|string',
             'article' => 'nullable|string|exists:products,article',
-            'buyerorder' => 'required|string',
+            'buyerorder' => 'nullable|string',
             'reference' => 'nullable|string',
             'inquiry' => 'nullable|string',
             'milungorder' => 'required|string',

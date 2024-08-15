@@ -27,7 +27,7 @@
                                     <div class="col-4 mx-2">
                                         <router-link :to="{ name: 'order_entry' }"
                                             v-if="can('orderGeneralSinglePage | createNewOrder')"
-                                            class="btn btn-warning fw-bold text-dark">Create New
+                                            class="btn btn-warning fw-bold text-dark">Create New Order
                                         </router-link>
                                     </div>
 
