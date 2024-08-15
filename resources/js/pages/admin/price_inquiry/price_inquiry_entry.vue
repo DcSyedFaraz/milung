@@ -1,9 +1,11 @@
 <template>
     <section class="section">
+        <button class="btn btn-secondary ms-4" @click="$router.back()">Back</button>
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
             <div class="container">
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
+                    <!-- Back button -->
 
                     <!-- Left Column -->
                     <div class="col-md-6">
@@ -201,7 +203,7 @@
                             </div>
                             <div class="col-8">
                                 <Select v-model="inquiry.status"
-                                    :options="['ML Checking', 'Supplier Checking', 'Buyer Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']"
+                                    :options="['ML Checking', 'Supplier Checking', 'ML Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']"
                                     class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.status">{{ errors.status[0] }}
                                 </Message>
@@ -260,11 +262,12 @@
                                     @click="quote" :style="{ backgroundColor: supplierInquiry.length ? 'aqua' : '' }" />
 
                                 <Button v-show="follow_up" label="Create Order"
-                                    class="p-button-sm p-button-milung m-2 col-3" style="background-color: #bc7803; border-color: #bc7803;"
+                                    class="p-button-sm p-button-milung m-2 col-3"
+                                    style="background-color: #bc7803; border-color: #bc7803;"
                                     @click="openOrderModal()" />
 
                                 <Button v-show="follow_up" severity="success" label="Supplier To Buyer"
-                                    class="p-button-sm p-button-milung m-2 col-3"  />
+                                    class="p-button-sm p-button-milung m-2 col-3" />
                             </div>
                         </div>
                     </div>
@@ -374,7 +377,7 @@ export default {
             capacity: [{ quantity: 0, unit: '' }],
             selectedBuyerId: [],
             buyers: [],
-            buyer: '',
+            buyer: null,
             imageLoaded: false,
             groups: [],
             errors: [],
@@ -524,11 +527,11 @@ export default {
                         this.supplier_profiles = response.data.map(supplier => {
                             const supplierId = Number(supplier.id);
 
-                        supplier.checked = supplierIds.includes(supplierId);
-                        supplier.checked = supplierIds.includes(supplierId);
-                        // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
                             supplier.checked = supplierIds.includes(supplierId);
-                        // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+                            supplier.checked = supplierIds.includes(supplierId);
+                            // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+                            supplier.checked = supplierIds.includes(supplierId);
+                            // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
 
                             return supplier;
                         });
@@ -556,6 +559,7 @@ export default {
                     console.log(response);
                     this.loader = false;
                     toastr.success(response.data.message);
+                    this.inquiry.status = 'ML Follow Up';
                     NProgress.done();
                 })
                 .catch(error => {
@@ -709,7 +713,7 @@ export default {
                     formData.append('cargo_place[]', place);
                 });
                 formData.append('incoterm', this.inquiry.incoterm);
-                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false' );
+                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false');
                 formData.append('method', this.inquiry.method);
                 formData.append('color', this.inquiry.color);
                 formData.append('packaging', this.inquiry.packaging);
@@ -857,10 +861,6 @@ export default {
         //     deep: true,
         // },
     },
-    unmounted() {
-        // console.log('beforeDestroy');
-        this.$store.dispatch('CLEAR_INQUIRY_DATA');
-    },
     mounted() {
         NProgress.configure({ showSpinner: false });
         const inquiryData = this.$store.getters.getInquiryData;
@@ -883,6 +883,11 @@ export default {
         if (this.mode === 'edit' && this.file1) {
             this.loadImageFromPath(this.file1, this.$refs.canvas1);
         }
+    },
+
+    unmounted() {
+        // console.log('beforeDestroy');
+        this.$store.dispatch('CLEAR_INQUIRY_DATA');
     },
     beforeUnmount() {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);

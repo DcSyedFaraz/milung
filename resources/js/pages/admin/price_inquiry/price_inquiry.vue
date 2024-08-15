@@ -189,9 +189,12 @@ export default {
 
         filteredUsers() {
             return this.price_inq.filter(inquiry => {
-                return inquiry.inquiry_number.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    (inquiry.requirements.toLowerCase().includes(this.searchQuery));
+                const inquiryNumber = inquiry.inquiry_number ? inquiry.inquiry_number.toLowerCase() : '';
+                const requirements = inquiry.requirements ? inquiry.requirements.toLowerCase() : '';
+                const status = inquiry.status ? inquiry.status.toLowerCase() : '';
+                const searchQuery = this.searchQuery.toLowerCase();
 
+                return inquiryNumber.includes(searchQuery) || requirements.includes(searchQuery) || status.includes(searchQuery);
             });
         },
         totalPages() {
@@ -252,7 +255,7 @@ export default {
                     return 'badge bg-primary';
                 case 'Supplier Checking':
                     return 'badge bg-cyan';
-                case 'Buyer Follow Up':
+                case 'ML Follow Up':
                     return 'badge bg-success';
                 case 'Supplier Follow Up':
                     return 'badge bg-pink';
@@ -348,9 +351,7 @@ export default {
 <style scoped>
 @import url('./../style.css');
 
-.highlight {
-    background-color: #ffff99;
-}
+
 
 .rotate-icon {
     transform: rotate(180deg);

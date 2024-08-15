@@ -3,7 +3,13 @@
         <!-- Header -->
         <div class="row my-4">
             <div class="col text-center">
-                <h1 class="text-capitalize">{{ user.company_header ?? 'not provided' }}</h1>
+                <div v-if="user && user.company_logo">
+                    <img :src="'/storage/' + user.company_logo" alt="Company Logo" class="company-logo">
+                </div>
+                <div v-else>
+                    <h1 class="text-capitalize">{{ user.company_header ?? 'not provided' }}</h1>
+                </div>
+
             </div>
         </div>
 
@@ -85,27 +91,27 @@
                     <tbody>
                         <tr>
                             <td>Beneficiary Bank</td>
-                            <td> {{ user.bank ?? 'not provided'}} </td>
+                            <td> {{ user.bank ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Bank Address</td>
-                            <td> {{ user.bank_address ?? 'not provided'}} </td>
+                            <td> {{ user.bank_address ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>SWIFT Code</td>
-                            <td> {{ user.swift_code ?? 'not provided'}} </td>
+                            <td> {{ user.swift_code ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>CHIPS No</td>
-                            <td> {{ user.chips_no ?? 'not provided'}} </td>
+                            <td> {{ user.chips_no ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Name</td>
-                            <td> {{ user.beneficiary_name ?? 'not provided'}} </td>
+                            <td> {{ user.beneficiary_name ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Account Number</td>
-                            <td> {{ user.account_no ?? 'not provided'}} </td>
+                            <td> {{ user.account_no ?? 'not provided' }} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -285,5 +291,14 @@ h2 {
 
 .border-bottom {
     border-bottom: 1px solid #000;
+}
+
+.company-logo {
+    width: 100%;
+    max-width: 690px;
+    max-height: 150px;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
 }
 </style>

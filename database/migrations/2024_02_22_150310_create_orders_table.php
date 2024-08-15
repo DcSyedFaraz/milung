@@ -37,6 +37,7 @@ return new class extends Migration {
             $table->string('qcremarks')->nullable();
             $table->string('quantity_unit')->nullable();
             $table->string('reference')->nullable();
+            $table->string('unit')->nullable();
             $table->json('logoFiles')->nullable();
             $table->json('manualFiles')->nullable();
             $table->json('safetySheetFiles')->nullable();

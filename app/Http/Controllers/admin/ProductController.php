@@ -100,11 +100,14 @@ class ProductController extends Controller
     public function inquiry_followup($id)
     {
         $InquirySupplier = InquirySupplier::where('price_inquiry_id', $id)->pluck('user_id');
-        $inquiry_number = PriceInquiry::where('id', $id)->value('inquiry_number');
+        $inquiry = PriceInquiry::find($id);
+        $inquiryNumber = $inquiry->inquiry_number;
+        $inquiry->status = 'Supplier Follow Up';
+        $inquiry->save();
         // dd($InquirySupplier);
         if ($InquirySupplier) {
 
-            $messages = "Admin wanted to follow up on the recent addition of a price inquiry with the number '$inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
+            $messages = "Admin wanted to follow up on the recent addition of a price inquiry with the number '$inquiryNumber'. Could you please provide an update or any necessary actions required for this inquiry?";
             foreach ($InquirySupplier as $supplierId) {
                 // Get the supplier
                 $supplier = User::where('supplier_id', $supplierId)->get();
@@ -243,6 +246,8 @@ class ProductController extends Controller
         }
 
         $inquiry = PriceInquiry::find($id);
+        $inquiry->status = 'ML Quoted';
+        $inquiry->save();
 
         if (!$inquiry) {
             return response()->json(['error' => 'Price inquiry not found'], 404);

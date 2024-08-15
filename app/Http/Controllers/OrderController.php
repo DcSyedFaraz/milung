@@ -86,7 +86,7 @@ class OrderController extends Controller
 
                     // Send the email to the supplier
                     foreach ($user as $value) {
-                        Mail::to($value->email)->send(new PriceInquiryNotification($message, 'New Order'));
+                        //Mail::to($value->email)->send(new PriceInquiryNotification($message, 'New Order'));
                     }
 
                 } else {
@@ -189,7 +189,7 @@ class OrderController extends Controller
                         Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry', $route));
 
                         foreach ($supplier as $key => $user) {
-                            Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+                            //Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
                         }
 
                     }
@@ -261,7 +261,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'group' => 'required|string',
             'article' => 'nullable|string|exists:products,article',
-            'buyerorder' => 'required|string',
+            'buyerorder' => 'nullable|string',
             'reference' => 'nullable|string',
             'inquiry' => 'nullable|string',
             'milungorder' => 'required|string',
@@ -296,7 +296,7 @@ class OrderController extends Controller
         // }
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
-        unset($data['quantity'], $data['unit'], $data['quantity_units']);
+        unset($data['quantity'], $data['quantity_units']);
 
         $data['capacity'] = array_map(function ($entry) {
             return $entry['quantity'] . $entry['unit'];

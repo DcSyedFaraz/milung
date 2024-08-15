@@ -84,7 +84,6 @@ class SuppProductController extends Controller
             ['price_inquiry_id' => $id, 'user_id' => $userId],
             ['remarks' => $request->input('remarks')]
         );
-
         // Handle file uploads
 
         if ($request->hasFile('image')) {
@@ -95,6 +94,10 @@ class SuppProductController extends Controller
 
             $priceInquiry->save();
         }
+        // Update the price inquiry records
+        $priceInquiry->status = 'Supplier Replied';
+        $priceInquiry->save();
+
         foreach ($request->price as $index => $data) {
             // Find the corresponding inquiry supplier record
             $inquirySupplier = $priceInquiry->inquirysuppliers()

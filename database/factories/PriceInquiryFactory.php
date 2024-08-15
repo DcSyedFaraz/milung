@@ -27,18 +27,19 @@ class PriceInquiryFactory extends Factory
             'group' => ProductGroup::inRandomOrder()->first()->id,
             'name' => $this->faker->word,
             'description' => $this->faker->paragraph,
-            'cargo' => array_map(function () {
-                return $this->faker->randomElement(['danger', 'general']);
+            'cargo' => $this->faker->randomElement(['danger', 'general']),
+
+            'cargo_place' => array_map(function () {
+                $this->faker->randomElement(['china', 'hongkong']);
             }, range(1, $this->faker->numberBetween(1, 2))),
 
-            'cargo_place' => $this->faker->randomElement(['china', 'hongkong']),
             'incoterm' => $this->faker->randomElement(['FOB', 'CIF', 'EXW', 'DDP']),
             'urgent' => $this->faker->randomElement(['true', 'false']),
             'method' => $this->faker->word,
             'color' => $this->faker->optional()->colorName,
             'packaging' => $this->faker->optional()->word,
             'requirements' => $this->faker->optional()->sentence,
-            'status' => $this->faker->randomElement(['ML Checking', 'Supplier Checking', 'Buyer Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']),
+            'status' => $this->faker->randomElement(['ML Checking', 'Supplier Checking', 'ML Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']),
             'pcs' => array_map(function () {
                 return $this->faker->numberBetween(1, 100);
             }, range(1, $this->faker->numberBetween(1, 3))),

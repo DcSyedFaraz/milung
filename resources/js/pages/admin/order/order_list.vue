@@ -27,7 +27,7 @@
                                     <div class="col-4 mx-2">
                                         <router-link :to="{ name: 'order_entry' }"
                                             v-if="can('orderGeneralSinglePage | createNewOrder')"
-                                            class="btn btn-warning fw-bold text-dark">Create New
+                                            class="btn btn-warning fw-bold text-dark">Create New Order
                                         </router-link>
                                     </div>
 
@@ -72,7 +72,7 @@
                                 </tr>
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
-                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;">
+                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;" :class="{ 'highlight': order.notice.includes('Fix Date')}">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"

@@ -154,7 +154,7 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::post('buyers/{id}', [UserController::class, 'buyersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::get('buyers/{id}', [UserController::class, 'buyersShow'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::get('suppliers/{id}', [UserController::class, 'suppliersShow'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
-    Route::put('suppliers/{id}', [UserController::class, 'suppliersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
+    Route::post('suppliers/{id}', [UserController::class, 'suppliersUpdate'])->middleware('can:addNewBuyerEntry,editBuyerEntry');
     Route::post('addsuppliers', [UserController::class, 'suppliers'])->middleware('can:setEditSupplierIDCode,editSupplierEntry');
 
     // Updating Users

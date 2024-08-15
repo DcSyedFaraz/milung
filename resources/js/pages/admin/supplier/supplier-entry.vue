@@ -23,12 +23,12 @@
                                         <p for="userid">Company Logo(Optional):</p>
                                     </div>
                                     <div class="col-6 my-auto">
-                                        <FileUpload name="demo[]" accept="image/*" :fileLimit="1" :maxFileSize="10485760"
-                                            :showUploadButton="false" @select="handleFileSelect($event)"
-                                            :showCancelButton="false">
+                                        <FileUpload name="demo[]" accept="image/*" :fileLimit="1"
+                                            :maxFileSize="10485760" :showUploadButton="false"
+                                            @select="handleFileSelect($event)" :showCancelButton="false">
                                             <template #empty>
-                                                <img :src="`/storage/${supplier.company_logo}`" class="w-25" alt="Initial Image"
-                                                    v-if="supplier.company_logo">
+                                                <img :src="`/storage/${supplier.company_logo}`" class="w-25"
+                                                    alt="Initial Image" v-if="supplier.company_logo">
                                                 <span v-if="supplier.company_logo"><br> Drag and drop files to here to
                                                     upload.</span>
                                                 <span v-else>Drag and drop files to here to
@@ -37,9 +37,8 @@
                                             <template #default>
                                             </template>
                                         </FileUpload>
-                                        <Message class="my-2" v-if="validationErrors.supplier_id" severity="error"
-                                            :text="validationErrors.supplier_id[0]">{{
-                        validationErrors.supplier_id[0]
+                                        <Message class="my-2" v-if="validationErrors.logo" severity="error">{{
+                        validationErrors.logo[0]
                     }}
                                         </Message>
                                     </div>
@@ -55,8 +54,8 @@
                                             :class="{ 'p-invalid': !userIdPatternValid || validationErrors.supplier_id }" />
                                         <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
                                             be alphanumeric and between 1 and 10 characters long.</Message>
-                                        <Message class="my-2" v-if="validationErrors.supplier_id" severity="error"
-                                            :text="validationErrors.supplier_id[0]">{{ validationErrors.supplier_id[0]
+                                        <Message class="my-2" v-if="validationErrors.supplier_id" severity="error">
+                                            {{ validationErrors.supplier_id[0]
                                             }}
                                         </Message>
                                     </div>
@@ -68,8 +67,8 @@
                                     <div class="col-6">
                                         <InputText class="w-100" v-model="supplier.company_header"
                                             :class="{ 'p-invalid': validationErrors.company_header }" />
-                                        <Message class="my-2" v-if="validationErrors.company_header" severity="error"
-                                            :text="validationErrors.company_header[0]" />
+                                        <Message class="my-2" v-if="validationErrors.company_header" severity="error">
+                                            {{ validationErrors.company_header[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +80,8 @@
                                     <div class="col-6">
                                         <InputText class="w-100" v-model="supplier.name"
                                             :class="{ 'p-invalid': validationErrors.name }" />
-                                        <Message class="my-2" v-if="validationErrors.name" severity="error"
-                                            :text="validationErrors.name[0]" />
+                                        <Message class="my-2" v-if="validationErrors.name" severity="error">
+                                            {{ validationErrors.name[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -92,8 +91,9 @@
                                     <div class="col-6">
                                         <InputText class="w-100" v-model="supplier.officePhone"
                                             :class="{ 'p-invalid': validationErrors.officePhone }" />
-                                        <Message class="my-2" v-if="validationErrors.officePhone" severity="error"
-                                            :text="validationErrors.officePhone[0]" />
+                                        <Message class="my-2" v-if="validationErrors.officePhone" severity="error">
+
+                                            {{ validationErrors.officePhone[0] }} </Message>
                                     </div>
                                 </div>
                             </div>
@@ -105,8 +105,9 @@
                                     <div class="col-6">
                                         <Textarea v-model="supplier.address" class="w-100"
                                             :class="{ 'p-invalid': validationErrors.address }" />
-                                        <Message class="my-2" v-if="validationErrors.address" severity="error"
-                                            :text="validationErrors.address[0]" />
+                                        <Message class="my-2" v-if="validationErrors.address" severity="error">
+                                            {{ validationErrors.address[0] }}
+                                        </Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6">
@@ -116,8 +117,9 @@
                                     <div class="col-6">
                                         <InputText class="w-100" v-model="supplier.website"
                                             :class="{ 'p-invalid': validationErrors.website }" />
-                                        <Message class="my-2" v-if="validationErrors.website" severity="error"
-                                            :text="validationErrors.website[0]" />
+                                        <Message class="my-2" v-if="validationErrors.website" severity="error"> {{
+                        validationErrors.website[0] }}
+                                        </Message>
                                     </div>
                                 </div>
                             </div>
@@ -130,8 +132,8 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.bank" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank }" />
-                                        <Message class="my-2" v-if="validationErrors.bank" severity="error"
-                                            :text="validationErrors.bank[0]" />
+                                        <Message class="my-2" v-if="validationErrors.bank" severity="error">{{
+                        validationErrors.bank[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -141,8 +143,8 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.bank_address" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank_address }" />
-                                        <Message class="my-2" v-if="validationErrors.bank_address" severity="error"
-                                            :text="validationErrors.bank_address[0]" />
+                                        <Message class="my-2" v-if="validationErrors.bank_address" severity="error">{{
+                        validationErrors.bank_address[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -154,8 +156,9 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.swift_code" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.swift_code }" />
-                                        <Message class="my-2" v-if="validationErrors.swift_code" severity="error"
-                                            :text="validationErrors.swift_code[0]" />
+                                        <Message class="my-2" v-if="validationErrors.swift_code" severity="error">{{
+                        validationErrors.swift_code[0]
+                    }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -165,8 +168,9 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.chips_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.chips_no }" />
-                                        <Message class="my-2" v-if="validationErrors.chips_no" severity="error"
-                                            :text="validationErrors.chips_no[0]" />
+                                        <Message class="my-2" v-if="validationErrors.chips_no" severity="error">{{
+                        validationErrors.chips_no[0] }}
+                                        </Message>
                                     </div>
                                 </div>
                             </div>
@@ -178,8 +182,9 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.beneficiary_name" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.beneficiary_name }" />
-                                        <Message class="my-2" v-if="validationErrors.beneficiary_name" severity="error"
-                                            :text="validationErrors.beneficiary_name[0]" />
+                                        <Message class="my-2" v-if="validationErrors.beneficiary_name" severity="error">
+                                            {{
+                        validationErrors.beneficiary_name[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -189,8 +194,9 @@
                                     <div class="col-9">
                                         <InputText v-model="supplier.account_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.account_no }" />
-                                        <Message class="my-2" v-if="validationErrors.account_no" severity="error"
-                                            :text="validationErrors.account_no[0]" />
+                                        <Message class="my-2" v-if="validationErrors.account_no" severity="error">{{
+                        validationErrors.account_no[0]
+                    }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -229,8 +235,8 @@
                             <Textarea class="w-100" id="supplierDescription" v-model="supplier.supplierDescription"
                                 rows="3" style="height: 120px;"
                                 :class="{ 'p-invalid': validationErrors.supplierDescription }" />
-                            <Message class="my-2" v-if="validationErrors.supplierDescription" severity="error"
-                                :text="validationErrors.supplierDescription[0]" />
+                            <Message class="my-2" v-if="validationErrors.supplierDescription" severity="error">{{
+                        validationErrors.supplierDescription[0] }}</Message>
                         </div>
                         <div class="row my-3">
                             <div class="form-group col-6 my-2">
@@ -436,7 +442,8 @@ export default {
                     let response;
                     if (this.isEditMode) {
                         const id = this.$route.params.id;
-                        response = await axios.put(`/api/suppliers/${id}`, formData);
+                        response = await axios.post(`/api/suppliers/${id}`, formData);
+                        
                     } else {
                         response = await axios.post('/api/addsuppliers', formData);
                     }
