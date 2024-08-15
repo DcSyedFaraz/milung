@@ -82,7 +82,7 @@
                                     <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
                                                 created_at(inquiry) }}</td>
                                     <td @click="toggleAccordion(inquiry, index)" class="cursor-pointer">{{
-                                                inquiry.requirements }}</td>
+                                                inquiry.requirements ?? '' }}</td>
 
 
                                     <td>

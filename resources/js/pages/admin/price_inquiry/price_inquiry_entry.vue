@@ -715,9 +715,15 @@ export default {
                 formData.append('incoterm', this.inquiry.incoterm);
                 formData.append('urgent', this.inquiry.urgent ? 'true' : 'false');
                 formData.append('method', this.inquiry.method);
-                formData.append('color', this.inquiry.color);
-                formData.append('packaging', this.inquiry.packaging);
-                formData.append('requirements', this.inquiry.requirements);
+                if (this.inquiry.color !== null && this.inquiry.color !== undefined) {
+                    formData.append('color', this.inquiry.color);
+                }
+                if (this.inquiry.packaging !== null && this.inquiry.packaging !== undefined) {
+                    formData.append('packaging', this.inquiry.packaging);
+                }
+                if (this.inquiry.requirements !== null && this.inquiry.requirements !== undefined) {
+                    formData.append('requirements', this.inquiry.requirements);
+                }
                 formData.append('status', this.inquiry.status);
                 if (this.$refs.fileInput.files[0]) {
                     formData.append('file', this.$refs.fileInput.files[0]);
