@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\BuyerProfile;
 use App\Models\ProductGroup;
 use App\Models\Products;
+use App\Models\ShipmentOrder;
 use App\Models\SupplierProfile;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -50,10 +51,11 @@ class OrderFactory extends Factory
             'productname' => $this->faker->word,
             'qcremarks' => $this->faker->sentence,
             'quantity_unit' => $this->faker->numberBetween(1, 1024) . $this->faker->randomElement(['units', 'pairs', 'sets']),
+            'unit' => $this->faker->randomElement(['units', 'pairs', 'sets', 'pcs']),
             'reference' => $this->faker->word,
             'sendoutdate' => $this->faker->date,
             'ship_doc' => $this->faker->word,
-            'so_number' => $this->faker->randomNumber(),
+            'so_number' => ShipmentOrder::inRandomOrder()->first()->id,
             'status' => $this->faker->randomElement([
                 'New Order',
                 'Printview Confirmation',
@@ -64,8 +66,8 @@ class OrderFactory extends Factory
                 'Export/Import',
                 'Delivered',
             ]),
-            'buyer' => BuyerProfile::inRandomOrder()->first()->id,
-            'supplier' => SupplierProfile::inRandomOrder()->first()->id,
+            'buyer' => 1,
+            'supplier' => 1,
             'sellingprice' => number_format($this->faker->randomFloat(2, 1, 100), 2),
             'buyingprice' => number_format($this->faker->randomFloat(2, 1, 99.99), 2),
             'totalvalue' => number_format($this->faker->randomFloat(2, 1, 99.99), 2),

@@ -482,8 +482,6 @@ class UserController extends Controller
             $image = $request->file('logo');
             $fileName = \Str::random(5) . $image->getClientOriginalName();
             $path = $image->storeAs('logo', $fileName, 'public');
-            // $path = $image->store('images', 'public');
-            // Attach image to the product
             $user->company_logo = $path;
             $user->save();
 
@@ -631,7 +629,7 @@ class UserController extends Controller
     }
     public function suppliersUpdate(Request $request, $userid)
     {
-        // dd($request->all());
+        // dd($request->all(), $userid);
         // Fetch the existing user
         $user = SupplierProfile::where('id', $userid)->firstOrFail();
 
@@ -656,6 +654,7 @@ class UserController extends Controller
             'chips_no' => 'required',
             'beneficiary_name' => 'required|string|max:255',
             'account_no' => 'required',
+            'logo' => 'nullable|file',
         ]);
 
         if ($validator->fails()) {
@@ -688,6 +687,20 @@ class UserController extends Controller
             'beneficiary_name' => $request->beneficiary_name,
             'account_no' => $request->account_no,
         ]);
+        if ($request->file('logo')) {
+
+            if ($user->company_logo) {
+                // Delete the old logo from storage
+                \Storage::disk('public')->delete($user->company_logo);
+            }
+
+            $image = $request->file('logo');
+            $fileName = \Str::random(5) . $image->getClientOriginalName();
+            $path = $image->storeAs('logo', $fileName, 'public');
+            $user->company_logo = $path;
+            $user->save();
+
+        }
 
         // Optionally, update roles using Spatie permissions
         // $user->syncRoles(['Supplier']);

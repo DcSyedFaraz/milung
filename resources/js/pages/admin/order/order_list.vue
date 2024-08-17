@@ -72,7 +72,7 @@
                                 </tr>
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
-                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;">
+                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;" :class="{ 'highlight': order.notice.includes('Fix Date')}">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"

@@ -59,8 +59,8 @@
                                 <tr v-for="user in paginatedData" :key="user.id" v-if="paginatedData.length > 0">
                                     <td>{{ user.supplier_id }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user?.address }}</td>
-                                    <td>{{ user?.group_names.join(', ') }}</td>
+                                    <td class="w-25">{{ user?.address }}</td>
+                                    <td class="w-25">{{ user?.group_names.join(', ') }}</td>
 
 
                                     <td>

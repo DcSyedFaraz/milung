@@ -132,15 +132,17 @@ class InquiryController extends Controller
         // dd($id);
         $admins = User::role(['Admin', 'Internal'])->get();
         $inquiry = PriceInquiry::where('id', $id)->where('buyer', $user->buyer_id)->first();
+        $inquiry->status = 'ML Follow Up';
+        $inquiry->save();
         // dd($InquirySupplier);
         if ($inquiry->inquiry_number) {
 
             $messages = "Buyer with User ID:'$user->userid' wanted to follow up on the recent addition of a price inquiry with the number '$inquiry->inquiry_number'. Could you please provide an update or any necessary actions required for this inquiry?";
-            \Notification::send($admins, new UserNotification($messages, 'Price Inquiry Follow Up', 'price_inquiry_edit', ['id' => $id]));
+            Notification::send($admins, new UserNotification($messages, 'Price Inquiry Follow Up', 'price_inquiry_edit', ['id' => $id]));
 
             foreach ($admins as $admin) {
 
-                \Mail::to($admin->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+                Mail::to($admin->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
             }
             $inquiry->status = 'Buyer Follow Up';
             $inquiry->save();
@@ -198,6 +200,7 @@ class InquiryController extends Controller
 
         Auth::check() ? $priceInquiry->buyer = Auth::user()->buyer_id : 2;
 
+        $priceInquiry->status = 'ML Checking';
         $priceInquiry->save();
 
         return response()->json(['message' => 'Price inquiry submitted successfully'], 201);

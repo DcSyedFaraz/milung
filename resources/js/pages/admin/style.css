@@ -7,10 +7,12 @@
 /* @import './../../../assets/vendor/simple-datatables/style.css'; */
 @import './../../../assets/css/style.css';
 @import './../../../css/select2.css';
+
 .btn-milung {
     background-color: #14245c !important;
     color: white;
 }
+
 .page-link {
     border: none !important;
     color: #14245c;
@@ -27,28 +29,34 @@
     color: #14245c;
     border-color: #14245c;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 700ms;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 700ms;
 }
+
 .text-milung {
     color: #14245c !important;
 }
+
 .text-blue {
     color: #009de1 !important;
 }
+
 .form-check-input:checked {
     background-color: #41b400 !important;
     border-color: #41b400 !important;
-  }
-  .fs-7 {
+}
+
+.fs-7 {
     font-size: 14px !important;
 }
+
 .btn-success {
     background-color: #41b400 !important;
     border-color: #41b400 !important;
 }
+
 .loader-overlay {
     position: fixed;
     top: 0;
@@ -87,6 +95,7 @@
         transform: rotate(360deg);
     }
 }
+
 .p-multiselect-label .p-chip {
     background-color: #14245c !important;
     color: white;
@@ -94,5 +103,15 @@
 
 .p-chip-remove-icon {
     color: white !important;
+}
 
+.p-select-option.p-select-option-selected.p-focus {
+    color: white !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+.highlight {
+    background-color: #ffff99;
 }

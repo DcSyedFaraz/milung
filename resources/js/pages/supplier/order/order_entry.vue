@@ -169,7 +169,7 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                {{ orders[0].logocolor }}
+                                {{ orders[0].logocolor.join(',', '') }}
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
@@ -192,7 +192,7 @@
                             <div class="col-8">
                                 <div class="input-group">
                                     <ul class="my-1">
-                                        <li v-for="item in orders[0].packagingprinting">{{ item }}</li>
+                                        <li v-for="item in orders[0].packagingprinting">{{ item.join(',', '') }}</li>
                                     </ul>
 
                                 </div>
@@ -443,7 +443,7 @@
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
                                 <p for="v-model" class="my-auto fs-7">
-                                    Latest Send Out  Date:
+                                    Latest Send Out Date:
                                 </p>
                             </div>
                             <div class="col-8">
@@ -470,9 +470,9 @@
                             </div>
                             <div class="col-8">
                                 {{
-            orders[0].shipment_orders?.so_number ??
-            "not provided yet"
-        }}
+                                orders[0].shipment_orders?.so_number ??
+                                "not provided yet"
+                                }}
                             </div>
                         </div>
 
@@ -511,7 +511,8 @@
             </div>
         </form>
         <progress-modal :show="showProgress"></progress-modal>
-        <div class="container" v-show="isEditing" v-if="can('uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')">
+        <div class="container" v-show="isEditing"
+            v-if="can('uploadPrintview | uploadMassCargoPhoto | cargoReadyConfirmation')">
             <printview :id="orders[0].id" :image="orders[0].files" />
         </div>
     </section>

@@ -60,7 +60,7 @@
                         <!-- Buyer Order No -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p class="my-auto fs-7">Buyer Order No: <span class="text-danger">*</span></p>
+                                <p class="my-auto fs-7">Buyer Order No: </p>
                             </div>
                             <div class="col-8">
                                 <input type="text" v-model="orders.buyerorder" class="form-control">
@@ -208,6 +208,7 @@
                                 <div class="input-group my-2">
                                     <input type="number" class="form-control" v-model="orders.quantity">
                                     <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
+                                        <option value="pcs">pcs</option>
                                         <option value="units">units</option>
                                         <option value="pairs">pairs</option>
                                         <option value="sets">sets</option>
@@ -924,7 +925,6 @@ export default {
                     }
 
                     // this.loadImageFromPath(this.orders.files[0]['filepath'], this.$refs.canvas);
-                    this.orders.unit = 'units';
                     NProgress.done();
 
                     setTimeout(() => {
@@ -940,7 +940,6 @@ export default {
         },
     },
     mounted() {
-        this.orders.unit = 'units';
         if (this.isEditing) {
             const orderId = this.$route.params.id;
             this.fetchorder(orderId);

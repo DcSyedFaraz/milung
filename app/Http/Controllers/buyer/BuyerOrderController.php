@@ -68,6 +68,9 @@ class BuyerOrderController extends Controller
                 'action' => $request->input('action'),
             ]);
         }
+        $order = Order::find($id);
+        $order->status = ($request->input('action') == 'reject') ? 'Printview Reject' : 'Order Confirm';
+        $order->save();
 
 
         return response()->json(['message' => 'PrintView saved successfully.'], 200);
@@ -83,20 +86,19 @@ class BuyerOrderController extends Controller
 
         $validatedData = Validator::make($data, [
             'group' => 'required|string',
-            'buyerorder' => 'required|string',
-            'reference' => 'required|string',
-            'inquiry' => 'required|string',
+            'buyerorder' => 'nullable|string',
+            'reference' => 'nullable|string',
+            'inquiry' => 'nullable|string',
             'milungorder' => 'required|string',
             'orderdate' => 'required|date',
-            'buyeremail' => 'required|email',
-            'ftyitem' => 'required|string',
+            'ftyitem' => 'nullable|string',
             'productname' => 'required|string',
-            'productcolor' => 'required|string',
+            'productcolor' => 'nullable|string',
             'accessories' => 'required|string',
             'printingmethod' => 'required|string',
-            'logocolor' => 'required|string',
-            'packaging' => 'required|string',
-            'packagingprinting' => 'required',
+            'logocolor' => 'nullable|string',
+            'packaging' => 'nullable|string',
+            'packagingprinting' => 'nullable',
             'quantity' => 'required|string',
             'buyingprice' => 'nullable|integer',
             'sellingprice' => 'nullable|integer',
@@ -105,7 +107,7 @@ class BuyerOrderController extends Controller
             'atc_number' => 'required|string',
             'ship_doc' => 'required|string',
             'incoterm' => 'required|string',
-            'orderremarks' => 'required|string',
+            'orderremarks' => 'nullable|string',
             'status' => 'required|string',
             'unit' => 'required|string',
         ]);
@@ -115,7 +117,7 @@ class BuyerOrderController extends Controller
         }
 
         $data['quantity_unit'] = $data['quantity'] . $data['unit'];
-        unset($data['quantity'], $data['unit'], $data['quantity_units']);
+        unset($data['quantity'], $data['quantity_units']);
 
         $data['capacity'] = array_map(function ($entry) {
             return $entry['quantity'] . $entry['unit'];
@@ -145,7 +147,9 @@ class BuyerOrderController extends Controller
             $data['buyer'] = $user->buyer_id;
         }
         $order = Order::create($data);
-
+        $order->status = 'New Order';
+        $order->buyeremail = auth()->user()->email;
+        $order->save();
         // Notification
         $admins = User::role(['Admin', 'Internal'])->get();
 

@@ -145,6 +145,9 @@ class SupplierOrderController extends Controller
                 'cargo_accessories' => $request->hasFile('cargo_accessories') ? $request->file('cargo_accessories')->store('orders/images', 'public') : null,
             ]);
         }
+        $order = Order::find($id);
+        $order->status = 'Cargo Ready';
+        $order->save();
 
 
         return response()->json(['message' => 'MassCargo saved successfully.'], 200);

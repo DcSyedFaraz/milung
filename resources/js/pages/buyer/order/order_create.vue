@@ -68,15 +68,7 @@
                                 <input type="date" v-model="orders[0].orderdate" class="form-control ">
                             </div>
                         </div>
-                        <div class="d-flex col-12 my-2">
-                            <div class="col-4 my-auto">
-                                <p for="v-model" class="my-auto fs-7">Buyer Email:</p>
-                            </div>
-                            <div class="col-8">
-                                <input type="email" v-model="orders[0].buyeremail" class="form-control ">
-                            </div>
-                        </div>
-
+                        
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 ">
                                 <p for="v-model" class="my-auto fs-7">Order Remarks:</p>

@@ -51,99 +51,117 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover  ">
                             <thead style="color: #009de1;" class="text-center fs-7">
-                                <tr>
+                                <tr class="cursor-pointer">
                                     <th class="text-nowrap" @click="sortBy('id')">
                                         Order Number
                                         <i v-if="sortKey === 'id'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
+
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('oldOrderNumber')">
                                         AN Ref./ <br> Old Order Number
                                         <i v-if="sortKey === 'oldOrderNumber'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('product_group')">
                                         Product Group
                                         <i v-if="sortKey === 'product_group'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('article')">
                                         Product
                                         <i v-if="sortKey === 'article'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('capacity')">
                                         Storage/Capacity
                                         <i v-if="sortKey === 'capacity'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('accessories')">
                                         Accessories
                                         <i v-if="sortKey === 'accessories'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap text-milung" @click="sortBy('printingmethod')">
                                         Method
                                         <i v-if="sortKey === 'printingmethod'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap">
                                         <span @click="sortBy('logocolor')">
                                             Printing <br> <span class="text-milung">Pantone</span>
                                             <i v-if="sortKey === 'logocolor'"
-                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                                class="fas fa-sort" v-else></i>
                                         </span>
                                     </th>
                                     <th class="text-nowrap text-milung" @click="sortBy('packagingprinting')">
                                         Label
                                         <i v-if="sortKey === 'packagingprinting'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap">
                                         <span @click="sortBy('packaging')">
                                             Packaging <br> <span class="text-milung">Type</span>
                                             <i v-if="sortKey === 'packaging'"
-                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                                class="fas fa-sort" v-else></i>
                                         </span>
                                     </th>
                                     <th class="text-nowrap text-milung">
                                         <span @click="sortBy('packaging')">
                                             Label
                                             <i v-if="sortKey === 'packaging'"
-                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                                class="fas fa-sort" v-else></i>
                                         </span>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('sendoutdate')">
                                         Shipment Date
                                         <i v-if="sortKey === 'sendoutdate'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('supplier_id')">
                                         Supplier ID
                                         <i v-if="sortKey === 'supplier_id'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap text-milung" @click="sortBy('purchase_price')">
                                         Buying Price
                                         <i v-if="sortKey === 'purchase_price'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap">
                                         <span @click="sortBy('final_quote_profit')">
                                             Final Quote <br> <span class="text-milung">Profit</span>
                                             <i v-if="sortKey === 'final_quote_profit'"
-                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                                :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                                class="fas fa-sort" v-else></i>
                                         </span>
                                     </th>
                                     <th class="text-nowrap text-milung" @click="sortBy('selling_price')">
                                         Selling Price
                                         <i v-if="sortKey === 'selling_price'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                     <th class="text-nowrap" @click="sortBy('remarks')">
                                         Remarks
                                         <i v-if="sortKey === 'remarks'"
-                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+                                            :class="sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i> <i
+                                            class="fas fa-sort" v-else></i>
                                     </th>
                                 </tr>
                             </thead>
