@@ -13,7 +13,7 @@
                                 <div class="col-6">
 
                                     <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                        ref="search" placeholder="Write here..." />
+                                        ref="search" placeholder="Search products..." />
                                 </div>
                                 <div class="col-6 mx-2">
                                     <router-link :to="{ name: 'productEntry' }"

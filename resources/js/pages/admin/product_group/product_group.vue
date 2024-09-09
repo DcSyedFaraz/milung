@@ -21,7 +21,7 @@
                                             <span class="input-group-text" id="basic-addon1"><i style="color: #41b400;"
                                                     class="bx bx-filter-alt fw-bold fs-4"></i></span>
                                             <input type="text" name="search" class="form-control " v-model="searchQuery"
-                                                ref="search" placeholder="Write here to filter..." />
+                                                ref="search" placeholder="Search Product groups..." />
                                         </div>
                                     </div>
                                     <div class="col-4 mx-2">
