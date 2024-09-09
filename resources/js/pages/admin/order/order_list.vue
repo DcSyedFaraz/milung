@@ -64,7 +64,7 @@
                                             :class="getSortIcon('updated_at')" class="ms-1"></i></th>
                                     <th class="text-nowrap" @click="sortTable('created_at')">Date Created <i
                                             :class="getSortIcon('created_at')" class="ms-1"></i></th>
-                                    <th class="text-nowrap" @click="sortTable('sendoutdate')">Latest Send Out  Date <i
+                                    <th class="text-nowrap" @click="sortTable('sendoutdate')">Latest Send Out Date <i
                                             :class="getSortIcon('sendoutdate')" class="ms-1"></i></th>
                                     <th class="text-nowrap" @click="sortTable('supplierid.userid')">Supplier ID <i
                                             :class="getSortIcon('supplierid.userid')" class="ms-1"></i></th>
@@ -72,7 +72,8 @@
                                 </tr>
                             </thead>
                             <tbody v-for="order in dataToDisplay" :key="order.id" v-if="dataToDisplay.length > 0">
-                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;" :class="{ 'highlight': order.notice.includes('Fix Date')}">
+                                <tr class="text-center cursor-pointer" style="border-bottom-color: snow !important;"
+                                    :class="{ 'highlight': order.notice.includes('Fix Date') }">
                                     <td>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
@@ -182,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" :filterValue="'Order'" />
             </div>
         </div>
     </section>
@@ -228,6 +229,7 @@ export default {
             orders: [],
             accordionOpen: {},
             currentPage: 1,
+            componentKey: 0,
             searchQuery: ''
         };
     },
@@ -333,6 +335,8 @@ export default {
                 this.loader = false;
                 if (response.status == 200) {
                     NProgress.done();
+                    this.componentKey += 1;
+                    this.fetchUsers();
                     toastr.success(response.data.message);
                 } else {
                     NProgress.done();
@@ -405,6 +409,8 @@ export default {
                     return 'badge bg-info';
                 case 'Export/Import':
                     return 'badge bg-dark';
+                case 'Price':
+                    return 'badge bg-dark';
                 case 'Delivered':
                     return 'badge bg-secondary';
                 default:
@@ -456,7 +462,7 @@ export default {
 
                     // If successful, remove the order from the local data
                     this.orders = this.orders.filter(order => order.id !== userId);
-
+                    this.componentKey += 1;
                     Swal.fire({
                         icon: 'success',
                         title: 'Order deleted successfully',

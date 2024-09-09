@@ -60,8 +60,10 @@
                                     <td>{{ product.article }}</td>
                                     <td>
                                         <span v-if="product && product.images && product.images.length > 0">
-                                            <img class="img-thumbnail" :src="'/storage/' + product.images[0].path"
-                                                alt="Product Image" width="80">
+                                            <a data-fancybox="gallery" :href="'/storage/' + product.images[0].path">
+                                                <img class="img-thumbnail" :src="'/storage/' + product.images[0].path"
+                                                    alt="Product Image" width="100">
+                                            </a>
                                         </span>
                                     </td>
                                     <td>{{ product.name }}</td>
@@ -124,6 +126,8 @@
 <script>
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { Fancybox } from "@fancyapps/ui";
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
 
 
@@ -177,7 +181,15 @@ export default {
         }
     },
     mounted() {
-
+        Fancybox.bind('[data-fancybox="gallery"]', {
+        // dragToClose: false,
+        // Image: {
+        //     zoom: true,
+        // },
+        // Toolbar: {
+        //     display: ['zoom', 'slideshow', 'fullScreen', 'download', 'thumbs', 'close'],
+        // },
+    });
     },
     created() {
         this.fetchUsers().then(() => {

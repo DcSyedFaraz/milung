@@ -4,6 +4,18 @@
             <div class="justify-content-start">
                 <div class="col-md-12">
                     <h3 class="fw-bold mb-4" style="color: #14245c;">Buyer Entry</h3>
+                    <div class="mb-4 d-flex">
+
+                        <FileUpload name="excel[]" mode="basic" accept=".xlsx" :maxFileSize="10485760"
+                            :showUploadButton="false" @select="handleExcelSelect($event)"
+                             chooseLabel="Import">
+
+                        </FileUpload>
+                        <a href="../../../../assets/excelTemplate/buyer entry.xlsx" download
+                            class="mx-2 fw-bold btn btn-info">
+                            Download Excel Template
+                        </a>
+                    </div>
                     <form @submit.prevent="submitForm">
                         <div>
                             <div class="row">
@@ -18,7 +30,7 @@
                                         <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
                                             be alphanumeric and between 1 and 10 characters long.</Message>
                                         <Message class="my-2" v-if="errors.buyer_id" severity="error">{{
-                        errors.buyer_id[0] }}</Message>
+                            errors.buyer_id[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -53,7 +65,7 @@
                                     <div class="col-6">
                                         <InputText class="w-100" id="officePhone" v-model="buyer.officePhone" />
                                         <Message class="my-2" v-if="errors.officePhone" severity="error">{{
-                        errors.officePhone[0] }}</Message>
+                            errors.officePhone[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +78,7 @@
                                     <div class="col-6">
                                         <Textarea v-model="buyer.address" class="w-100" cols="30" rows="1"></Textarea>
                                         <Message class="my-2" v-if="errors.address" severity="error">{{
-                        errors.address[0] }}</Message>
+                            errors.address[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -76,7 +88,7 @@
                                     <div class="col-6">
                                         <InputText id="website" class="w-100" v-model="buyer.website" />
                                         <Message class="my-2" v-if="errors.website" severity="error">{{
-                        errors.website[0] }}</Message>
+                            errors.website[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +130,7 @@
                             <Textarea id="buyerDescription" v-model="buyer.buyerDescription" class="w-100" rows="3"
                                 style="height: 120px;"></Textarea>
                             <Message class="my-2" v-if="errors.buyerDescription" severity="error">{{
-                        errors.buyerDescription[0] }}</Message>
+                            errors.buyerDescription[0] }}</Message>
                         </div>
                         <div class="form-group col-6 my-2">
                             <label class="form-label">Product Group</label>
@@ -157,7 +169,7 @@
                                     No orders available
                                 </template>
                                 <Column field="id" header="Order Number" sortable style="min-width:12rem">
-                                    <template #body="{data}">
+                                    <template #body="{ data }">
                                         <router-link :to="{ name: 'order_edit', params: { id: data.id } }"
                                             v-if="can('editOrderDetails | voidOrder')" class="text-success mx-2 btn">
                                             {{ data.id }}
@@ -185,6 +197,8 @@
 </template>
 
 <script>
+import { read, utils } from "xlsx";
+
 
 export default {
     emits: ['profileUpdated'],
@@ -215,6 +229,47 @@ export default {
         };
     },
     methods: {
+        handleExcelSelect(event) {
+            // Get the selected file
+            const file = event.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                // Parse the Excel data into a JSON array
+                const excelData = utils.sheet_to_json(firstSheet, { header: 1 });
+
+                // Assuming the first row in Excel contains the headers
+                const headers = excelData[0];
+                const rows = excelData.slice(1); // Data without headers
+
+                // Map the data to your supplier fields based on the headers
+                rows.forEach((row) => {
+                    headers.forEach((header, index) => {
+                        if (header.toLowerCase() === 'name') {
+                            this.buyer.name = row[index];
+                        } else if (header.toLowerCase() === 'buyer_id') {
+                            this.buyer.buyer_id = row[index];
+                        } else if (header.toLowerCase() === 'address') {
+                            this.buyer.address = row[index];
+                        } else if (header.toLowerCase() === 'website') {
+                            this.buyer.website = row[index];
+                        } else if (header.toLowerCase() === 'officephone') {
+                            this.buyer.officePhone = row[index];
+                        } else if (header.toLowerCase() === 'description') {
+                            this.buyer.buyerDescription = row[index];
+                        }
+                    });
+                });
+
+                console.log(this.buyer); // For debugging, see the mapped data
+            };
+
+            reader.readAsArrayBuffer(file);
+        },
         async fetchProductOptions() {
             try {
                 const response = await axios.get('/api/product_group_get');

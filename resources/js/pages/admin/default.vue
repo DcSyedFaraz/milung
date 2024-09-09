@@ -103,13 +103,18 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Product Name</th>
-                                            <th scope="col">Send Out  Date</th>
+                                            <th scope="col">Send Out Date</th>
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="orders in data.Order" v-if="data.Order">
-                                            <th scope="row">{{ orders.id }}</th>
+                                            <th scope="row"> <router-link
+                                                    :to="{ name: 'order_edit', params: { id: orders.id } }"
+
+                                                    class="">
+                                                    {{ orders.id }}
+                                                </router-link></th>
                                             <td>{{ orders.productname }}</td>
                                             <td>
                                                 {{ orders.sendoutdate }}
@@ -183,7 +188,7 @@
                         <!-- Summay Ends -->
                         <div>
                             <h5 class="card-title text-white">Top Categories</h5>
-                            <p><i class="bi bi-clock-fill"></i> 12:24 Taday, May 19</p>
+                            <p><i class="bi bi-clock-fill"></i> 12:24 Today, May 19</p>
                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                             <div class="icon-card">
                                 <div class="img-cad">

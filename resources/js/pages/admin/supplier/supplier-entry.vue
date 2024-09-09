@@ -4,6 +4,19 @@
             <div class="justify-content-start">
                 <div class="col-md-12">
                     <h3 class="fw-bold mb-4" style="color: #14245c;">Supplier Entry</h3>
+                    <div class=" d-flex">
+
+                        <FileUpload name="excel[]" mode="basic" accept=".xlsx" :fileLimit="1" :maxFileSize="10485760"
+                            :showUploadButton="false" @select="handleExcelSelect($event)" :showCancelButton="false"
+                            :auto="true" chooseLabel="Import">
+
+                        </FileUpload>
+                        <a href="../../../../assets/excelTemplate/supplier entry.xlsx" download
+                            class="mx-2 fw-bold btn btn-info">
+                            Download Excel Template
+                        </a>
+                    </div>
+
                     <form @submit.prevent="submitForm">
                         <div>
                             <div class="row">
@@ -38,8 +51,8 @@
                                             </template>
                                         </FileUpload>
                                         <Message class="my-2" v-if="validationErrors.logo" severity="error">{{
-                        validationErrors.logo[0]
-                    }}
+                            validationErrors.logo[0]
+                        }}
                                         </Message>
                                     </div>
                                 </div>
@@ -118,7 +131,7 @@
                                         <InputText class="w-100" v-model="supplier.website"
                                             :class="{ 'p-invalid': validationErrors.website }" />
                                         <Message class="my-2" v-if="validationErrors.website" severity="error"> {{
-                        validationErrors.website[0] }}
+                            validationErrors.website[0] }}
                                         </Message>
                                     </div>
                                 </div>
@@ -133,7 +146,7 @@
                                         <InputText v-model="supplier.bank" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank }" />
                                         <Message class="my-2" v-if="validationErrors.bank" severity="error">{{
-                        validationErrors.bank[0] }}</Message>
+                            validationErrors.bank[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -144,7 +157,7 @@
                                         <InputText v-model="supplier.bank_address" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.bank_address }" />
                                         <Message class="my-2" v-if="validationErrors.bank_address" severity="error">{{
-                        validationErrors.bank_address[0] }}</Message>
+                            validationErrors.bank_address[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -157,8 +170,8 @@
                                         <InputText v-model="supplier.swift_code" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.swift_code }" />
                                         <Message class="my-2" v-if="validationErrors.swift_code" severity="error">{{
-                        validationErrors.swift_code[0]
-                    }}</Message>
+                            validationErrors.swift_code[0]
+                        }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -169,7 +182,7 @@
                                         <InputText v-model="supplier.chips_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.chips_no }" />
                                         <Message class="my-2" v-if="validationErrors.chips_no" severity="error">{{
-                        validationErrors.chips_no[0] }}
+                            validationErrors.chips_no[0] }}
                                         </Message>
                                     </div>
                                 </div>
@@ -184,7 +197,7 @@
                                             :class="{ 'p-invalid': validationErrors.beneficiary_name }" />
                                         <Message class="my-2" v-if="validationErrors.beneficiary_name" severity="error">
                                             {{
-                        validationErrors.beneficiary_name[0] }}</Message>
+                            validationErrors.beneficiary_name[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
@@ -195,8 +208,8 @@
                                         <InputText v-model="supplier.account_no" class="w-100 my-2"
                                             :class="{ 'p-invalid': validationErrors.account_no }" />
                                         <Message class="my-2" v-if="validationErrors.account_no" severity="error">{{
-                        validationErrors.account_no[0]
-                    }}</Message>
+                            validationErrors.account_no[0]
+                        }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +249,7 @@
                                 rows="3" style="height: 120px;"
                                 :class="{ 'p-invalid': validationErrors.supplierDescription }" />
                             <Message class="my-2" v-if="validationErrors.supplierDescription" severity="error">{{
-                        validationErrors.supplierDescription[0] }}</Message>
+                            validationErrors.supplierDescription[0] }}</Message>
                         </div>
                         <div class="row my-3">
                             <div class="form-group col-6 my-2">
@@ -315,6 +328,8 @@
 <script>
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { read, utils } from "xlsx";
+
 
 
 
@@ -350,6 +365,59 @@ export default {
         }
     },
     methods: {
+        handleExcelSelect(event) {
+            // Get the selected file
+            const file = event.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                // Parse the Excel data into a JSON array
+                const excelData = utils.sheet_to_json(firstSheet, { header: 1 });
+
+                // Assuming the first row in Excel contains the headers
+                const headers = excelData[0];
+                const rows = excelData.slice(1); // Data without headers
+
+                // Map the data to your supplier fields based on the headers
+                rows.forEach((row) => {
+                    headers.forEach((header, index) => {
+                        if (header.toLowerCase() === 'name') {
+                            this.supplier.name = row[index];
+                        } else if (header.toLowerCase() === 'supplier_id') {
+                            this.supplier.supplier_id = row[index];
+                        } else if (header.toLowerCase() === 'address') {
+                            this.supplier.address = row[index];
+                        } else if (header.toLowerCase() === 'website') {
+                            this.supplier.website = row[index];
+                        } else if (header.toLowerCase() === 'officephone') {
+                            this.supplier.officePhone = row[index];
+                        } else if (header.toLowerCase() === 'description') {
+                            this.supplier.supplierDescription = row[index];
+                        } else if (header.toLowerCase() === 'bank') {
+                            this.supplier.bank = row[index];
+                        } else if (header.toLowerCase() === 'bank_address') {
+                            this.supplier.bank_address = row[index];
+                        } else if (header.toLowerCase() === 'swift_code') {
+                            this.supplier.swift_code = row[index];
+                        } else if (header.toLowerCase() === 'chips_no') {
+                            this.supplier.chips_no = row[index];
+                        } else if (header.toLowerCase() === 'beneficiary_name') {
+                            this.supplier.beneficiary_name = row[index];
+                        } else if (header.toLowerCase() === 'account_no') {
+                            this.supplier.account_no = row[index];
+                        }
+                    });
+                });
+
+                console.log(this.supplier); // For debugging, see the mapped data
+            };
+
+            reader.readAsArrayBuffer(file);
+        },
         handleFileSelect(event) {
             // Get the selected file
             this.file = event.files[0];
@@ -408,8 +476,8 @@ export default {
         async submitForm() {
             this.loader = true;
             this.errors = [];
-            if (!this.supplier.name) this.errors.push('Supplier name is required.');
-            if (!this.supplier.address) this.errors.push('Address is required.');
+            // if (!this.supplier.name) this.errors.push('Supplier name is required.');
+            // if (!this.supplier.address) this.errors.push('Address is required.');
             if (!this.supplier.website) this.errors.push('Website is required.');
             if (!this.supplier.supplierDescription) this.errors.push('Supplier description is required.');
             if (!this.supplier.supplier_id) this.errors.push('Supplier ID is required.');
@@ -443,7 +511,7 @@ export default {
                     if (this.isEditMode) {
                         const id = this.$route.params.id;
                         response = await axios.post(`/api/suppliers/${id}`, formData);
-                        
+
                     } else {
                         response = await axios.post('/api/addsuppliers', formData);
                     }

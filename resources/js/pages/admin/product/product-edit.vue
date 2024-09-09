@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-5">
+                <div class="row mt-5">
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">1. Product Information</h3>
                         <div class="d-flex col-11 my-2">
@@ -198,79 +198,7 @@
                                 <p>{{ group.hs_cn }}</p>
                             </div>
                         </div>
-                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Type:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputText class="w-100" v-model="product.battery_type" />
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Rated Capacity:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup class="w-100">
-                                    <InputText v-model="product.rated" />
-                                    <InputText v-model="product.capacity" />
-                                    <InputGroupAddon addonType="append">mAh/Wh</InputGroupAddon>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Nominal Voltage:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputText class="w-100" v-model="product.voltage" />
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">No. of Battery Contained:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup class="w-100">
-                                    <InputNumber class="w-100" v-model="product.pcs" />
-                                    <InputGroupAddon addonType="append">pcs</InputGroupAddon>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Product Battery Capacity:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup class="w-100">
-                                    <InputNumber class="w-100" v-model="product.mAh" />
-                                    <InputGroupAddon addonType="append">mAh</InputGroupAddon>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Size (LxWxH):</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup class="w-100">
-                                    <InputNumber class="w-100" v-model="product.mm" />
-                                    <InputGroupAddon addonType="append">mm</InputGroupAddon>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Net Weight (per pc):</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup class="w-100">
-                                    <InputNumber class="w-100" v-model="product.gram" />
-                                    <InputGroupAddon addonType="append">g</InputGroupAddon>
-                                </InputGroup>
-                            </div>
-                        </div>
+
 
                     </div>
                     <div class="col-md-6">
@@ -425,56 +353,136 @@
                         <fileinput :key="componentKey" label="Packaging Label:" inputName="packaging_label"
                             :initialFile="parseFile(product.packaging_label)" @file-uploaded="handleFileUploaded">
                         </fileinput>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">MSDS IATA Edition No:</label>
+
+                    </div>
+                    <div class="row">
+                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
+                        <div class="col-6">
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Battery Type:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputText class="w-100" v-model="product.battery_type" />
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <InputText class="w-100" v-model="product.edition" />
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Battery Rated Capacity:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputGroup class="w-100">
+                                        <InputText v-model="product.rated" />
+                                        <InputText v-model="product.capacity" />
+                                        <InputGroupAddon addonType="append">mAh/Wh</InputGroupAddon>
+                                    </InputGroup>
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Battery Nominal Voltage:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputText class="w-100" v-model="product.voltage" />
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">No. of Battery Contained:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputGroup class="w-100">
+                                        <InputNumber class="w-100" v-model="product.pcs" />
+                                        <InputGroupAddon addonType="append">pcs</InputGroupAddon>
+                                    </InputGroup>
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Product Battery Capacity:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputGroup class="w-100">
+                                        <InputNumber class="w-100" v-model="product.mAh" />
+                                        <InputGroupAddon addonType="append">mAh</InputGroupAddon>
+                                    </InputGroup>
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Battery Size (LxWxH):</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputGroup class="w-100">
+                                        <InputNumber class="w-100" v-model="product.mm" />
+                                        <InputGroupAddon addonType="append">mm</InputGroupAddon>
+                                    </InputGroup>
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">Battery Net Weight (per pc):</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputGroup class="w-100">
+                                        <InputNumber class="w-100" v-model="product.gram" />
+                                        <InputGroupAddon addonType="append">g</InputGroupAddon>
+                                    </InputGroup>
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">MSDS Expiry Date:</label>
+                        <div class="col-6">
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">MSDS IATA Edition No:</label>
+                                </div>
+                                <div class="col-8">
+                                    <InputText class="w-100" v-model="product.edition" />
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="date" class="form-control" v-model="product.msds_expiry" />
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">MSDS Expiry Date:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" v-model="product.msds_expiry" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">UN38.3 Expiry Date:</label>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">UN38.3 Expiry Date:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" v-model="product.un_expiry"
+                                        dateFormat="yy-mm-dd" />
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="date" class="form-control" v-model="product.un_expiry"
-                                    dateFormat="yy-mm-dd" />
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">CN Air Safety Report Expiry Date:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" v-model="product.air_safety_expiry"
+                                        dateFormat="yy-mm-dd" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Air Safety Report Expiry Date:</label>
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">CN Sea Safety Report Expiry Date:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" v-model="product.sea_safety_expiry"
+                                        dateFormat="yy-mm-dd" />
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="date" class="form-control" v-model="product.air_safety_expiry"
-                                    dateFormat="yy-mm-dd" />
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Sea Safety Report Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date" class="form-control" v-model="product.sea_safety_expiry"
-                                    dateFormat="yy-mm-dd" />
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Train Safety Report Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date" class="form-control" v-model="product.train_safety_expiry"
-                                    dateFormat="yy-mm-dd" />
+                            <div class="d-flex col-12 my-2">
+                                <div class="col-4">
+                                    <label class="my-2">CN Train Safety Report Expiry Date:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" v-model="product.train_safety_expiry"
+                                        dateFormat="yy-mm-dd" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -528,6 +536,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="container d-flex p-4" style="background-color: #14245c;">
@@ -659,6 +668,7 @@ export default {
         createOrder() {
             // Dispatch the action to save order data in Vuex
             this.$store.dispatch('setInquiryData', {
+                productname: this.product.name,
                 inquiryNumber: this.product.inquiry_number,
                 article: this.product.article,
                 group: this.product.group,
@@ -674,7 +684,7 @@ export default {
                 selectedBuyerId: this.product.buyer_id,
                 inquiryNumber: this.product.inquiry_number,
                 article: this.product.article,
-                group: this.product.group,
+                group: parseInt(this.product.group),
                 name: this.product.name,
                 description: this.product.description,
                 cargo: this.product.cargo,

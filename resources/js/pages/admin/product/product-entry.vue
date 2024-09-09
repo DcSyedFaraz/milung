@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-5">
+                <div class="row mt-5">
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">1. Product Information</h3>
                         <div class="d-flex col-11 my-2">
@@ -256,108 +256,7 @@
                                 <p>{{ group.hs_cn }}</p>
                             </div>
                         </div>
-                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Type:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputText class="w-100 " v-model="product.battery_type"
-                                    :class="{ 'p-invalid': validationErrors.battery_type }" />
-                                <Message class="my-2" v-if="validationErrors.battery_type" severity="error">{{
-            validationErrors.battery_type[0] }}
-                                </Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Rated Capacity:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup>
-                                    <InputText v-model="product.rated"
-                                        :class="{ 'p-invalid': validationErrors.rated }" />
-                                    <InputText v-model="product.capacity"
-                                        :class="{ 'p-invalid': validationErrors.capacity }" />
-                                    <InputGroupAddon>mAh/Wh</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.rated" severity="error">{{
-            validationErrors.rated[0]
-        }}</Message>
-                                    <Message class="my-2" v-if="validationErrors.capacity" severity="error">{{
-            validationErrors.capacity[0] }}
-                                    </Message>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Nominal Voltage:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputText class="w-100 " v-model="product.voltage"
-                                    :class="{ 'p-invalid': validationErrors.voltage }" />
-                                <Message class="my-2" v-if="validationErrors.voltage" severity="error">{{
-            validationErrors.voltage[0]
-        }}</Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">No. of Battery Contained:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup>
-                                    <InputNumber v-model="product.pcs" :class="{ 'p-invalid': validationErrors.pcs }" />
-                                    <InputGroupAddon>pcs</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.pcs" severity="error">{{
-            validationErrors.pcs[0] }}
-                                    </Message>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Product Battery Capacity:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup>
-                                    <InputNumber v-model="product.mAh" :class="{ 'p-invalid': validationErrors.mAh }" />
-                                    <InputGroupAddon>mAh</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.mAh" severity="error">{{
-            validationErrors.mAh[0] }}
-                                    </Message>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Size (LxWxH):</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup>
-                                    <InputNumber v-model="product.mm" :class="{ 'p-invalid': validationErrors.mm }" />
-                                    <InputGroupAddon>mm</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.mm" severity="error">{{
-            validationErrors.mm[0] }}
-                                    </Message>
-                                </InputGroup>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">Battery Net Weight (per pc):</label>
-                            </div>
-                            <div class="col-8">
-                                <InputGroup>
-                                    <InputNumber v-model="product.gram"
-                                        :class="{ 'p-invalid': validationErrors.gram }" />
-                                    <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.gram" severity="error">{{
-            validationErrors.gram[0]
-        }}</Message>
-                                </InputGroup>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="col-md-6">
                         <h3 class="text-milung fw-bold text-uppercase">2. Product Photo</h3>
@@ -539,75 +438,201 @@
                         <Message class="my-2" v-if="validationErrors.packaging_label" severity="error">{{
             validationErrors.packaging_label[0] }}
                         </Message>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">MSDS IATA Edition No.:</label>
-                            </div>
-                            <div class="col-8">
-                                <InputText class="w-100 " v-model="product.edition"
-                                    :class="{ 'p-invalid': validationErrors.edition }" />
-                                <Message class="my-2" v-if="validationErrors.edition" severity="error">{{
-            validationErrors.edition[0]
-        }}
-                                </Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">MSDS Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date"  class="form-control" v-model="product.msds_expiry" dateFormat="yy-mm-dd"
-                                    :class="{ 'p-invalid': validationErrors.msds_expiry }" />
-                                <Message class="my-2" v-if="validationErrors.msds_expiry" severity="error">{{
-                                    validationErrors.msds_expiry[0] }}
-                                </Message>
-                            </div>
-                        </div>
 
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">UN38.3 Expiry Date:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="text-milung fw-bold text-uppercase">7. Battery Details</h3>
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Battery Type:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputText class="w-100 " v-model="product.battery_type"
+                                            :class="{ 'p-invalid': validationErrors.battery_type }" />
+                                        <Message class="my-2" v-if="validationErrors.battery_type" severity="error">{{
+            validationErrors.battery_type[0] }}
+                                        </Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Battery Rated Capacity:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputGroup>
+                                            <InputText v-model="product.rated"
+                                                :class="{ 'p-invalid': validationErrors.rated }" />
+                                            <InputText v-model="product.capacity"
+                                                :class="{ 'p-invalid': validationErrors.capacity }" />
+                                            <InputGroupAddon>mAh/Wh</InputGroupAddon>
+                                            <Message class="my-2" v-if="validationErrors.rated" severity="error">{{
+            validationErrors.rated[0]
+        }}</Message>
+                                            <Message class="my-2" v-if="validationErrors.capacity" severity="error">{{
+            validationErrors.capacity[0] }}
+                                            </Message>
+                                        </InputGroup>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Battery Nominal Voltage:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputText class="w-100 " v-model="product.voltage"
+                                            :class="{ 'p-invalid': validationErrors.voltage }" />
+                                        <Message class="my-2" v-if="validationErrors.voltage" severity="error">{{
+            validationErrors.voltage[0]
+        }}</Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">No. of Battery Contained:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputGroup>
+                                            <InputNumber v-model="product.pcs"
+                                                :class="{ 'p-invalid': validationErrors.pcs }" />
+                                            <InputGroupAddon>pcs</InputGroupAddon>
+                                            <Message class="my-2" v-if="validationErrors.pcs" severity="error">{{
+            validationErrors.pcs[0] }}
+                                            </Message>
+                                        </InputGroup>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Product Battery Capacity:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputGroup>
+                                            <InputNumber v-model="product.mAh"
+                                                :class="{ 'p-invalid': validationErrors.mAh }" />
+                                            <InputGroupAddon>mAh</InputGroupAddon>
+                                            <Message class="my-2" v-if="validationErrors.mAh" severity="error">{{
+            validationErrors.mAh[0] }}
+                                            </Message>
+                                        </InputGroup>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Battery Size (LxWxH):</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputGroup>
+                                            <InputNumber v-model="product.mm"
+                                                :class="{ 'p-invalid': validationErrors.mm }" />
+                                            <InputGroupAddon>mm</InputGroupAddon>
+                                            <Message class="my-2" v-if="validationErrors.mm" severity="error">{{
+            validationErrors.mm[0] }}
+                                            </Message>
+                                        </InputGroup>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">Battery Net Weight (per pc):</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputGroup>
+                                            <InputNumber v-model="product.gram"
+                                                :class="{ 'p-invalid': validationErrors.gram }" />
+                                            <InputGroupAddon>g</InputGroupAddon>
+                                            <Message class="my-2" v-if="validationErrors.gram" severity="error">{{
+            validationErrors.gram[0]
+        }}</Message>
+                                        </InputGroup>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <input type="date"  class="form-control" v-model="product.un_expiry" dateFormat="yy-mm-dd"
-                                    :class="{ 'p-invalid': validationErrors.un_expiry }" />
-                                <Message class="my-2" v-if="validationErrors.un_expiry" severity="error">{{
-                                    validationErrors.un_expiry[0] }}
-                                </Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Air Safety Report Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date"  class="form-control" v-model="product.air_safety_expiry" dateFormat="yy-mm-dd"
-                                    :class="{ 'p-invalid': validationErrors.air_safety_expiry }" />
-                                <Message class="my-2" v-if="validationErrors.air_safety_expiry" severity="error">{{
-                                    validationErrors.air_safety_expiry[0] }}</Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Sea Safety Report Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date"  class="form-control" v-model="product.sea_safety_expiry" dateFormat="yy-mm-dd"
-                                    :class="{ 'p-invalid': validationErrors.sea_safety_expiry }" />
-                                <Message class="my-2" v-if="validationErrors.sea_safety_expiry" severity="error">{{
-                                    validationErrors.sea_safety_expiry[0] }}</Message>
-                            </div>
-                        </div>
-                        <div class="d-flex col-11 my-2">
-                            <div class="col-4">
-                                <label class="my-2">CN Train Safety Report Expiry Date:</label>
-                            </div>
-                            <div class="col-8">
-                                <input type="date"  class="form-control" v-model="product.train_safety_expiry" dateFormat="yy-mm-dd"
-                                    :class="{ 'p-invalid': validationErrors.train_safety_expiry }" />
-                                <Message class="my-2" v-if="validationErrors.train_safety_expiry" severity="error">{{
-                                    validationErrors.train_safety_expiry[0] }}</Message>
+                            <div class="col-6">
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">MSDS IATA Edition No.:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <InputText class="w-100 " v-model="product.edition"
+                                            :class="{ 'p-invalid': validationErrors.edition }" />
+                                        <Message class="my-2" v-if="validationErrors.edition" severity="error">{{
+            validationErrors.edition[0] }}
+                                        </Message>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">MSDS Expiry Date:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" v-model="product.msds_expiry"
+                                            dateFormat="yy-mm-dd"
+                                            :class="{ 'p-invalid': validationErrors.msds_expiry }" />
+                                        <Message class="my-2" v-if="validationErrors.msds_expiry" severity="error">{{
+                                            validationErrors.msds_expiry[0] }}
+                                        </Message>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">UN38.3 Expiry Date:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" v-model="product.un_expiry"
+                                            dateFormat="yy-mm-dd"
+                                            :class="{ 'p-invalid': validationErrors.un_expiry }" />
+                                        <Message class="my-2" v-if="validationErrors.un_expiry" severity="error">{{
+                                            validationErrors.un_expiry[0] }}
+                                        </Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">CN Air Safety Report Expiry Date:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" v-model="product.air_safety_expiry"
+                                            dateFormat="yy-mm-dd"
+                                            :class="{ 'p-invalid': validationErrors.air_safety_expiry }" />
+                                        <Message class="my-2" v-if="validationErrors.air_safety_expiry"
+                                            severity="error">{{
+                                            validationErrors.air_safety_expiry[0] }}</Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">CN Sea Safety Report Expiry Date:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" v-model="product.sea_safety_expiry"
+                                            dateFormat="yy-mm-dd"
+                                            :class="{ 'p-invalid': validationErrors.sea_safety_expiry }" />
+                                        <Message class="my-2" v-if="validationErrors.sea_safety_expiry"
+                                            severity="error">{{
+                                            validationErrors.sea_safety_expiry[0] }}</Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 my-2">
+                                    <div class="col-4">
+                                        <label class="my-2">CN Train Safety Report Expiry Date:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" v-model="product.train_safety_expiry"
+                                            dateFormat="yy-mm-dd"
+                                            :class="{ 'p-invalid': validationErrors.train_safety_expiry }" />
+                                        <Message class="my-2" v-if="validationErrors.train_safety_expiry"
+                                            severity="error">{{
+                                            validationErrors.train_safety_expiry[0] }}</Message>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

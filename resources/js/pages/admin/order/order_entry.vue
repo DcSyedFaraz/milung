@@ -20,6 +20,7 @@
                             <div class="col-8">
                                 <select v-model="orders.status" class="fw-bold form-select">
                                     <option value="New Order">New Order</option>
+                                    <option value="Price">Price</option>
                                     <option value="Printview Confirmation">Printview Confirmation</option>
                                     <option value="Printview Reject">Printview Reject</option>
                                     <option value="Order Confirm">Order Confirm</option>
@@ -497,7 +498,7 @@
                         <!-- ATC# -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
-                                <p class="my-auto fs-7">ATC#: <span class="text-danger">*</span></p>
+                                <p class="my-auto fs-7">ATC#: </p>
                             </div>
                             <div class="col-8">
                                 <input type="text" v-model="orders.atc_number" class="form-control">
@@ -517,6 +518,7 @@
 
         <!-- Progress Modal -->
         <progress-modal :show="showProgress"></progress-modal>
+        <EventLogTable :filterValue="'Order'" />
     </section>
 </template>
 

@@ -16,10 +16,10 @@ return new class extends Migration
             // $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('supplier_id')->unique();
             $table->string('status')->default('active');
-            $table->string('name');
-            $table->string('address');
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
             $table->string('website');
-            $table->string('office_phone');
+            $table->string('office_phone')->nullable();
             $table->string('supplier_description');
             $table->json('group');
             $table->json('sec_group');

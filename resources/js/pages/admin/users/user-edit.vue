@@ -244,7 +244,7 @@ export default {
                     { id: 'editProductEntry', label: 'Edit Product Entry' },
                     { id: 'accessImportExportCertificateTestingReport', label: 'Access/Import/Export Certificate & Testing Report' },
                     { id: 'createProductGroup', label: 'Create Product Group' },
-                    { id: 'accessNotifyImportExportFunctionForMinorEKPrice', label: 'Access/Notify/Import/Export Function for Minor EK Price' },
+                    // { id: 'accessNotifyImportExportFunctionForMinorEKPrice', label: 'Access/Notify/Import/Export Function for Minor EK Price' },
                     { id: 'createPriceInquiry', label: 'Create Price Inquiry' },
                     { id: 'orderGeneralSinglePage', label: 'Order General & Single Page' },
                     { id: 'createNewOrder', label: 'Create New Order' },
@@ -292,7 +292,7 @@ export default {
                     { id: 'bestPurchase', label: 'Best Purchase 20 Item No. & Qty' },
                     { id: 'salesRevenue', label: 'Sales Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
                     { id: 'purchaseRevenue', label: 'Purchase Revenue (Qty/Volume/Weight Weekly/Monthly/Yearly)' },
-                    { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
+                    // { id: 'accessToUSBChipPrice', label: 'Access to USB Chip Price' },
                 ]
             },
             finance: {

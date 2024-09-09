@@ -69,8 +69,26 @@ class BuyerOrderController extends Controller
             ]);
         }
         $order = Order::find($id);
-        $order->status = ($request->input('action') == 'reject') ? 'Printview Reject' : 'Order Confirm';
-        $order->save();
+
+        // Determine the new status based on the action
+        $newStatus = ($request->input('action') == 'reject') ? 'Printview Reject' : 'Order Confirm';
+
+        // Only update and log if the status has changed
+        if ($order->status !== $newStatus) {
+            $order->status = $newStatus;
+            $order->save();
+
+            // Log the appropriate event based on the action
+            switch ($request->input('action')) {
+                case 'reject':
+                    $this->logEvent('Order', "Order ID {$order->id} printview has been rejected.");
+                    break;
+                default:
+                    $this->logEvent('Order', "Order ID {$order->id} printview has been accepted.");
+                    break;
+            }
+        }
+
 
 
         return response()->json(['message' => 'PrintView saved successfully.'], 200);

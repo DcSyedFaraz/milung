@@ -189,14 +189,17 @@ class OrderController extends Controller
                         Notification::send($supplier, new UserNotification($message, 'New Order Price Inquiry', $route));
 
                         foreach ($supplier as $key => $user) {
-                            //Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
+                            Mail::to($user->email)->send(new PriceInquiryNotification($message, 'New Order Price Inquiry'));
                         }
 
                     }
+                    Order::where('id', $orderId)->update([
+                        'status' => 'Price',
+                    ]);
                 }
             }
 
-
+            $this->logEvent('Order', "Price inquiry has been sent for the following order(s): $orderList.");
             // Return success response
             return response()->json(['message' => 'Inquiry sent successfully'], 200);
         } catch (\Exception $e) {
@@ -283,7 +286,7 @@ class OrderController extends Controller
             'totalvalue' => 'nullable',
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
-            'atc_number' => 'required|string',
+            'atc_number' => 'nullable|string',
             'orderremarks' => 'nullable|string',
             'qcremarks' => 'nullable|string',
             'status' => 'required|string',
@@ -318,6 +321,8 @@ class OrderController extends Controller
         $this->saveFiles($data, 'manualFiles');
         $this->saveFiles($data, 'safetySheetFiles');
 
+        $originalData = $existingOrder->toArray();
+
         if ($validatedData['linked_order'] === 'create') {
             $validatedData['linked_order'] = $data['id'];
             unset($data['id']);
@@ -328,6 +333,24 @@ class OrderController extends Controller
 
         }
 
+        $updatedData = $existingOrder->toArray();
+
+        // Capture the names of the fields that have changed
+        $changedFields = [];
+        foreach ($updatedData as $key => $value) {
+            if ($key !== 'updated_at' && isset($originalData[$key]) && $originalData[$key] != $value) {
+                $changedFields[] = ucfirst(str_replace('_', ' ', $key)); // Convert snake_case to readable format
+            }
+        }
+
+        // Log the updated fields in a user-friendly way
+        if (!empty($changedFields)) {
+            $updatedFieldsList = implode(', ', $changedFields);
+            $this->logEvent('Order', "Order ID {$existingOrder->id} has been updated. Updated fields: {$updatedFieldsList}");
+        } else {
+            // If no changes, log a generic message
+            $this->logEvent('Order', "Order ID {$existingOrder->id} has been updated with no fields changed.");
+        }
 
         return response()->json($order, 201);
     }
@@ -369,7 +392,7 @@ class OrderController extends Controller
             'totalvalue' => 'nullable',
             'sendoutdate' => 'required|date',
             'so_number' => 'nullable',
-            'atc_number' => 'required|string',
+            'atc_number' => 'nullable|string',
             'orderremarks' => 'nullable|string',
             'qcremarks' => 'nullable|string',
             'status' => 'required|string',
@@ -404,6 +427,7 @@ class OrderController extends Controller
         $this->saveFiles($data, 'safetySheetFiles');
 
         $order = Order::create($data);
+        $this->logEvent('Order', "Order ID {$order->id} has been created.");
 
         return response()->json($order, 201);
     }
@@ -436,7 +460,7 @@ class OrderController extends Controller
         try {
             $user = Order::findOrFail($id);
             $user->delete();
-
+            $this->logEvent("Order", "Order ID '$id' has been deleted.");
             return response()->json(['message' => 'Order deleted successfully'], 200);
         } catch (\Exception $e) {
             throw $e;

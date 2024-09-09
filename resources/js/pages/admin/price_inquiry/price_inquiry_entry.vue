@@ -301,11 +301,13 @@
                         </Column>
 
                         <Column field="quantity" header="Quantity" />
-                        <Column field="currency" header="Currency" :body="() => 'USD'" />
+                        <Column field="currency" header="Currency" > <template #body="slotProps">
+                            <span>USD</span>
+                        </template></Column>
                         <Column field="exw" header="EXW Price"
                             :body="(row) => row.exw || '<span class=\'fst-italic text-muted\'>Not Provided</span>'" />
                         <Column field="remarks" header="Remarks"
-                            :body="(row) => row.supplierremarks?.remarks || '<span class=\'fst-italic text-muted\'>Not Provided</span>'"
+                            :body="(row) => row.supplierremarks?.remarks  || '<span class=\'fst-italic text-muted\'>Not Provided</span>'"
                             :rowspan="totalRows" v-show="index === 0" />
                     </DataTable>
                 </div>
@@ -870,8 +872,12 @@ export default {
     mounted() {
         NProgress.configure({ showSpinner: false });
         const inquiryData = this.$store.getters.getInquiryData;
+        console.log(inquiryData);
+
         if (inquiryData) {
             this.inquiry = { ...this.inquiry, ...inquiryData };
+            // console.log(this.inquiry.group,inquiryData.group);
+
         };
         this.fetchProductGroups();
         this.fetchBuyers();
