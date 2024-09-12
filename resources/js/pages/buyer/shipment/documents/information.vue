@@ -168,8 +168,8 @@
                         <div class=""></div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">III Packing
-                                    List:</span>
+                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Packing
+                                    List</span>
                             </span>
 
                             <div class="col-4 d-flex">

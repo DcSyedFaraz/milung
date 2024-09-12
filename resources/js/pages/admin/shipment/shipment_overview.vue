@@ -53,11 +53,19 @@
                         <table class="table table-striped table-hover  ">
                             <thead style="color: #009de1; " class="text-center">
                                 <tr style="">
-                                    <th class="text-nowrap">SO# </th>
-                                    <th class="text-nowrap"> Shipment Date </th>
-                                    <th class="text-nowrap">Shipping Method</th>
-                                    <th class="text-nowrap">Tracking / Waybillt#</th>
-                                    <th class="text-nowrap">Delivery Date</th>
+                                    <th @click="sortTable('so_number')" class="text-nowrap cursor-pointer">SO# <i
+                                            :class="getSortIcon('so_number')" class="ms-1"></i></th>
+                                    <th @click="sortTable('shipment.ship_date')" class="text-nowrap cursor-pointer">
+                                        Shipment Date <i :class="getSortIcon('shipment.ship_date')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('method')" class="text-nowrap cursor-pointer">Shipping Method
+                                        <i :class="getSortIcon('method')" class="ms-1"></i></th>
+                                    <th @click="sortTable('shipment.waybill')" class="text-nowrap cursor-pointer">
+                                        Tracking / Waybillt# <i :class="getSortIcon('shipment.waybill')"
+                                            class="ms-1"></i></th>
+                                    <th @click="sortTable('shipment.delivery')" class="text-nowrap cursor-pointer">
+                                        Delivery Date <i :class="getSortIcon('shipment.delivery')" class="ms-1"></i>
+                                    </th>
                                     <th class="text-nowrap">Shipping Documents</th>
                                     <th class="text-nowrap">Actions</th>
                                 </tr>
@@ -66,10 +74,7 @@
                                 <tr class="text-center" style="border-bottom-color: snow !important;">
                                     <td>
                                         <div class="form-check">
-                                            <!-- <input class="form-check-input" type="checkbox" :value="ship.id"
-                                                id="flexCheckDefault" v-model="selectedshipIds">
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                            </label> -->
+
                                             {{ ship.so_number }}
                                         </div>
                                     </td>
@@ -88,67 +93,31 @@
                                         {{ ship?.shipment?.delivery ?? 'null'
                                         }}</td>
                                     <td>
-                                        <router-link class="btn btn-light text-black" v-if="can('exportShippingDocuments')" :to="{ name: 'information', params: { id: ship.id, so_number: ship.so_number }  }"
-                                            >
+                                        <router-link class="btn btn-light text-black"
+                                            v-if="can('exportShippingDocuments')"
+                                            :to="{ name: 'information', params: { id: ship.id, so_number: ship.so_number } }">
                                             <i class="bi bi-file-earmark-text fw-bold"></i>
                                         </router-link>
-                                        <!-- Button trigger modal -->
-                                        <!-- <button type="button" class="btn btn-light text-primary fw-bold"
-                                            data-bs-toggle="modal" :data-bs-target="`#exampleModal${ship.id}`">
-                                            <i class="bi bi-file-earmark-text fw-bold"></i>
-                                        </button>-->
 
-                                        <!-- Modal -->
-                                        <!-- <div class="modal fade" :id="`exampleModal${ship.id}`" tabindex="-1"
-                                            ref="modalRef" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Choose Document
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <ul class="">
-                                                            <li>
-                                                                <router-link :to="{ name: 'information' }"
-                                                                    @click="toggleModal('exampleModal' + ship.id, 'information')"
-                                                                    data-bs-dismiss="modal">
-                                                                    <i class="bi bi-circle"></i> <span>
-                                                                        Information</span>
-                                                                </router-link>
-                                                            </li>
-
-
-                                                        </ul>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                     </td>
 
 
                                     <td>
                                         <button @click="toggleAccordion(ship)" class="btn btn-light"
-                                            :class="{ 'rotate-icon': accordionOpen[ship.id] }" v-if="can('editShipmentOverview')">
+                                            :class="{ 'rotate-icon': accordionOpen[ship.id] }"
+                                            v-if="can('editShipmentOverview')">
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <a href="#" @click="deleteship(ship.id)" class="text-danger" v-if="can('editShipmentOverview')"><i
-                                                class="bi bi-trash"></i>
+                                        <a href="#" @click="deleteship(ship.id)" class="text-danger"
+                                            v-if="can('editShipmentOverview')"><i class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <transition name="fade" v-if="can('editShipmentOverview')">
                                     <tr v-show="accordionOpen[ship.id]">
                                         <td :colspan="7">
-                                            <!-- <tr>hi</tr> -->
+
                                             <shipmentdetails :so-data="ship" @record-updated="handleRecordUpdated" />
                                         </td>
                                     </tr>
@@ -163,12 +132,89 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- <DataTable paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" v-model:expandedRows="accordionOpen" :value="dataToDisplay" responsiveLayout="scroll"
+                             dataKey="id" headerClass="text-center text-nowrap" bodyClass="text-center text-wrap">
+                            <Column sortable field="so_number" header="SO#" headerStyle="color: #009de1;"></Column>
+
+                            <Column sortable header="Shipment Date" headerStyle="color: #009de1;">
+                                <template #body="slotProps">
+                                    {{ slotProps.data.shipment?.ship_date || 'null' }}
+
+                                </template>
+</Column>
+
+<Column header="Shipping Method" headerStyle="color: #009de1;" sortable>
+    <template #body="slotProps">
+                                    {{ slotProps.data.method }}
+                                </template>
+</Column>
+
+<Column sortable header="Tracking / Waybill#" headerStyle="color: #009de1;">
+    <template #body="slotProps">
+                                    <span :class="{ 'text-muted fst-italic': !slotProps.data.shipment?.waybill }">
+                                        {{ slotProps.data.shipment?.waybill || 'null' }}
+                                    </span>
+                                </template>
+</Column>
+
+<Column sortable header="Delivery Date" headerStyle="color: #009de1;">
+    <template #body="slotProps">
+                                    <span :class="{ 'text-muted fst-italic': !slotProps.data.shipment?.delivery }">
+                                        {{ slotProps.data.shipment?.delivery || 'null' }}
+                                    </span>
+                                </template>
+</Column>
+
+<Column header="Shipping Documents" headerStyle="color: #009de1;">
+    <template #body="slotProps">
+                                    <router-link v-if="can('exportShippingDocuments')" class="btn btn-light text-black"
+                                        :to="{
+                                            name: 'information',
+                                            params: {
+                                                id: slotProps.data.id,
+                                                so_number: slotProps.data.so_number,
+                                            },
+                                        }">
+                                        <i class="bi bi-file-earmark-text fw-bold"></i>
+                                    </router-link>
+                                </template>
+</Column>
+
+<Column header="Actions" expander headerStyle="color: #009de1;">
+    <template #body="slotProps">
+                                    <span class="d-flex" >
+
+                                        <button v-if="can('editShipmentOverview')" class="btn btn-light"
+                                            :class="{ 'rotate-icon': accordionOpen[slotProps.data.id] }"
+                                            @click="toggleAccordion(slotProps.data)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button v-if="can('editShipmentOverview')"
+                                            @click="deleteship(slotProps.data.id)" class="text-danger btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </span>
+                                </template>
+</Column>
+
+<template #expansion="slotProps">
+                                <h5>Orders for {{ slotProps.data.name }}</h5>
+                                <shipmentdetails :so-data="slotProps.data" @record-updated="handleRecordUpdated" />
+                            </template>
+
+
+<template #empty>
+                                <p class="text-center">No orders to display.</p>
+                            </template>
+</DataTable> -->
+
 
                         <nav>
                             <ul class="pagination d-flex justify-content-center">
                                 <li class="page-item me-auto fw-bold" :class="{ disabled: currentPage === 1 }">
                                     <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)"><i
-                                            class="bi bi-arrow-left"></i> Previous</a>
+                                            class="bi bi-arrow-left"></i>
+                                        Previous</a>
                                 </li>
                                 <li class="page-item" v-for="page in totalPages" :key="page"
                                     :class="{ active: page === currentPage }">
@@ -182,7 +228,7 @@
                         </nav>
                     </div>
                 </div>
-
+                <EventLogTable :key="componentKey" :filterValue="'SO'" />
             </div>
         </div>
     </section>
@@ -211,12 +257,15 @@ export default {
     },
     data() {
         return {
+            sortKey: '',
+            sortAsc: true,
             groupId: null,
             isLoading: true,
             shipment: [],
             selectedshipIds: [],
             accordionOpen: {},
             currentPage: 1,
+            componentKey: 0,
             searchQuery: '',
             dropdownOpen: false
         };
@@ -262,13 +311,44 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.shipment.sort((a, b) => {
+                const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+                const aValue = getValue(a, key);
+                const bValue = getValue(b, key);
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         handleRecordUpdated() {
             this.accordionOpen = {};
             // Refresh the data in the parent component
             this.fetchShipment();
         },
         toggleAccordion(ship) {
-            this.accordionOpen[ship.id] = !this.accordionOpen[ship.id];
+            if (this.accordionOpen[ship.id]) {
+                delete this.accordionOpen[ship.id];
+            } else {
+                this.accordionOpen[ship.id] = true;
+            }
         },
         changePage(page) {
             this.currentPage = page
@@ -289,7 +369,7 @@ export default {
                 // ship confirmed, proceed with the deletion
                 try {
                     await axios.delete(`/api/soDelete/${shipId}`);
-
+                    this.componentKey += 1;
                     // If successful, remove the ship from the local data
                     this.shipment = this.shipment.filter(ship => ship.id !== shipId);
 

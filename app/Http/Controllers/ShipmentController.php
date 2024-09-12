@@ -433,7 +433,7 @@ class ShipmentController extends Controller
                 );
             }
         }
-
+        $this->logEvent('SO', "SO# {$ShipmentOrder->id} has been updated.");
         return response()->json(['message' => 'Shipment Overview updated successfully']);
     }
     public function create_so(Request $request)
@@ -455,8 +455,8 @@ class ShipmentController extends Controller
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()->all()], 422);
         }
-        ShipmentOrder::create($data);
-
+        $so = ShipmentOrder::create($data);
+        $this->logEvent('SO', "SO# {$so->id} has been created.");
 
         return response()->json(['message' => 'SO# created successfully']);
     }
@@ -502,6 +502,7 @@ class ShipmentController extends Controller
     {
         $shipment = ShipmentOrder::findOrFail($id);
         $shipment->delete();
+        $this->logEvent('SO', "SO# {$shipment->id} has been deleted.");
 
         return response()->json([
             "message" => "Record deleted Successfully",

@@ -16,6 +16,6 @@ class PackingList extends Model
     }
     public function supplierid()
     {
-        return $this->belongsTo(User::class,'user_id')->select('id','userid');
+        return $this->belongsTo(SupplierProfile::class,'user_id')->select('id','supplier_id');
     }
 }

@@ -101,7 +101,7 @@
     color: white;
 }
 
-.p-chip-remove-icon {
+.p-chip-remove-icon, .p-paginator-page.p-paginator-page-selected {
     color: white !important;
 }
 

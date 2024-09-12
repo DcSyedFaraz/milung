@@ -175,8 +175,8 @@
                         <div class=""></div>
                         <div class="d-flex justify-content-between align-items-center mx-3">
                             <span>
-                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">III Packing
-                                    List:</span>
+                                <span class="fw-bold fs-4 text-uppercase" style="color: #14245c"> Packing
+                                    List</span>
                             </span>
 
                             <div class="col-4 d-flex">
@@ -229,33 +229,33 @@
                                 <tr v-for="(item, index) in dataToDisplay" :key="index" v-if="dataToDisplay.length > 0"
                                     class="text-center">
                                     <td class="fw-bold">
-                                        {{ item.supplierid?.userid }}
+                                        {{ item.supplierid?.supplier_id }}
                                     </td>
                                     <td :contenteditable="item.editable" @input="
-        updateData(index, $event, 'carton')
-        ">
+                                        updateData(index, $event, 'carton')
+                                        ">
                                         {{ item.carton }}
                                     </td>
                                     <td>{{ item.order_id }}</td>
                                     <td>
                                         {{
-        item.orders?.product_group
-            ?.group_name
-    }}
+                                            item.orders?.product_group
+                                                ?.group_name
+                                        }}
                                     </td>
                                     <td>{{ item.orders?.quantity_unit }}</td>
                                     <td :contenteditable="item.editable" @input="
-        updateData(index, $event, 'qty')
-        ">
+                                        updateData(index, $event, 'qty')
+                                        ">
                                         {{ item.qty }}
                                     </td>
                                     <td>
                                         {{
-        calculateTotal(
-            item.qty,
-            item.orders?.quantity_unit
-        )
-    }}
+                                            calculateTotal(
+                                                item.qty,
+                                                item.orders?.quantity_unit
+                                            )
+                                        }}
                                     </td>
 
                                     <td :contenteditable="item.editable" @input="updateData(index, $event, 'nw')">
@@ -269,18 +269,18 @@
                                     <td>{{ item.gw * item.qty }}</td>
 
                                     <td :contenteditable="item.editable" @input="
-        updateData(index, $event, 'lcm')
-        ">
+                                        updateData(index, $event, 'lcm')
+                                        ">
                                         {{ item.lcm }}
                                     </td>
                                     <td :contenteditable="item.editable" @input="
-        updateData(index, $event, 'wcm')
-        ">
+                                        updateData(index, $event, 'wcm')
+                                        ">
                                         {{ item.wcm }}
                                     </td>
                                     <td :contenteditable="item.editable" @input="
-        updateData(index, $event, 'hcm')
-        ">
+                                        updateData(index, $event, 'hcm')
+                                        ">
                                         {{ item.hcm }}
                                     </td>
                                     <td>{{ calculateVolume(item) }}</td>
@@ -328,14 +328,14 @@
                                         <tr v-for="item in packinglst" class="text-center">
                                             <td>
                                                 {{
-        item.orders?.product_group
-            ?.hs_de
-    }}
+                                                    item.orders?.product_group
+                                                        ?.hs_de
+                                                }}
                                             </td>
                                             <td>
                                                 {{
-            item.orders?.product_group
-                ?.group_name
+                                                    item.orders?.product_group
+                                                        ?.group_name
                                                 }}
                                             </td>
                                         </tr>
@@ -400,20 +400,23 @@
             </div>
             <div class="col-3">
                 <router-link :to="{
-        name: 'cibd',
-        params: {
-            id: info.shipment_order_id,
-            so_number: info.shipment_order,
-        },
-    }" class="btn btn-milung px-4 fs-7">
+                    name: 'cibd',
+                    params: {
+                        id: info.shipment_order_id,
+                        so_number: info.shipment_order,
+                    },
+                }" class="btn btn-milung px-4 fs-7">
                     <span>Generate CIBD</span>
                 </router-link>
                 <!-- <button ></button> -->
             </div>
 
             <div class="col-3">
-                <router-link :to="{ name: 'ci', params: { id: info.shipment_order_id, so_number: info.shipment_order,
-        }, }" class="btn bg-blue px-4 fs-7">
+                <router-link :to="{
+                    name: 'ci', params: {
+                        id: info.shipment_order_id, so_number: info.shipment_order,
+                    },
+                }" class="btn bg-blue px-4 fs-7">
                     <span>Generate CI</span>
                 </router-link>
             </div>
@@ -434,11 +437,13 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
 export default {
+    emits: ['profileUpdated'],
     data() {
         return {
             info: {
                 shipment_order: null,
                 shipment_order_id: null,
+
             },
             packinglst: [],
             searchQuery: "",
@@ -661,6 +666,13 @@ export default {
                 this.info = response.data;
                 this.info.shipment_order = this.$route.params.so_number;
                 this.info.shipment_order_id = soId;
+                if (!this.info.shipper) {
+                    this.info.shipper = `MiLung Trade Limited
+Unit 1704-05, 17/F, Hang Seng North Point Building,
+341 King's Road, North Point, Hong Kong.
+Contact: Kenneth Chu
+Tel: +852 2540 2488 / 3598 9534 / 2540 2466`;
+                }
                 // this.pagination.totalItems = response.data.total;
                 console.log(this.info);
 
@@ -675,6 +687,7 @@ export default {
     mounted() {
         this.fetchSO();
         this.fetchInfo();
+
     },
 };
 </script>
