@@ -92,6 +92,13 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
     Route::post('reject', [BuyerShipmentController::class, 'reject'])->middleware('can:buyerAccountPayable');
 });
 
+
+
+
+
+
+
+
 // <-- Supplier Routes -->
 Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Supplier']], function () {
 
@@ -131,6 +138,11 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
     Route::post('invoice/reminder', [SupplierShipmentController::class, 'invoicereminder'])->middleware('can:supplierAccountsReceivable');
     Route::get('invoice/{id}', [SupplierShipmentController::class, 'invoiceShow'])->middleware('can:supplierAccountsReceivable');
 });
+
+
+
+
+
 
 // <-- Admin Routes -->
 Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
@@ -221,6 +233,8 @@ Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
     Route::get('buyerFinance', [UserController::class, 'buyerFinance'])->middleware('can:accountReceivable');
     Route::post('rcvablesave/{id}', [ShipmentController::class, 'rcvablesave'])->middleware('can:accountReceivable');
     Route::post('payment', [ShipmentController::class, 'payment']);
+    Route::post('invoice/reminder', [ShipmentController::class, 'invoicereminder']);
+
     // Statement
     Route::get('statementget', [TransactionController::class, 'index']);
     Route::post('statement', [TransactionController::class, 'statement']);

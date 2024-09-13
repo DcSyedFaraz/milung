@@ -43,20 +43,41 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
                             <thead style="color: #009de1" class="text-center">
-                                <tr style="">
-                                    <th class="text-nowrap">POS</th>
-                                    <th class="text-nowrap">Invoice Number</th>
-                                    <th class="text-nowrap">
-                                        Invoice Value
+                                <tr>
+                                    <th class="text-nowrap cursor-pointer" @click="sortTable('id')">POS
+                                        <i :class="getSortIcon('id')" class="ms-1"></i>
                                     </th>
-                                    <th class="text-nowrap">
+                                    <th class="text-nowrap cursor-pointer" @click="sortTable('information.invoice')">
+                                        Invoice Number
+                                        <i :class="getSortIcon('information.invoice')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer"
+                                        @click="sortTable('information.totalpayable')">Invoice Value
+                                        <i :class="getSortIcon('information.totalpayable')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer" @click="sortTable('shipment.ship_date')">
                                         Shipping Date
+                                        <i :class="getSortIcon('shipment.ship_date')" class="ms-1"></i>
                                     </th>
-                                    <th class="text-nowrap">Shipping Method</th>
-                                    <th class="text-nowrap">ETA Date</th>
-                                    <th class="text-nowrap">Payment Settled</th>
-                                    <th class="text-nowrap">Payment Settled Date</th>
-                                    <th class="text-nowrap">Outstanding Balance</th>
+                                    <th class="text-nowrap cursor-pointer" @click="sortTable('method')">Shipping Method
+                                        <i :class="getSortIcon('method')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer" @click="sortTable('shipment.delivery')">ETA
+                                        Date
+                                        <i :class="getSortIcon('shipment.delivery')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer"
+                                        @click="sortTable('settleamount.settle_amount')">Payment Settled
+                                        <i :class="getSortIcon('settleamount.settle_amount')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer"
+                                        @click="sortTable('settleamount.settle_date')">Payment Settled Date
+                                        <i :class="getSortIcon('settleamount.settle_date')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap cursor-pointer"
+                                        @click="sortTable('settleamount.outstanding_amount')">Outstanding Balance
+                                        <i :class="getSortIcon('settleamount.outstanding_amount')" class="ms-1"></i>
+                                    </th>
                                     <th class="text-nowrap">Buyer Remittance Slip</th>
                                     <th class="text-nowrap">MiLung Remittance Slip</th>
                                     <th class="text-nowrap">Remarks</th>
@@ -64,10 +85,19 @@
                                 </tr>
                             </thead>
 
+
                             <tbody class="text-center">
                                 <tr v-for="(item, index) in invoices" :key="index - 1" v-if="invoices.length > 0">
                                     <td>
-                                        {{ item.id }}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                :value="item.information?.invoice" v-if="item.information?.invoice"
+                                                v-model="selectedInvoiceIds">
+                                            <label class="form-check-label">
+
+                                                {{ index + 1 }}
+                                            </label>
+                                        </div>
                                     </td>
                                     <td>{{ item.information?.invoice }}</td>
                                     <td>{{ item.information?.totalpayable }}</td>
@@ -81,7 +111,7 @@
                                             class="form-control">
                                         <span v-else>USD {{ item.settleamount?.settle_amount ?? 0 }}</span>
                                     </td>
-                                    <td>{{ item.settleamount?.settle_date ?? 'Not settled yet'}}</td>
+                                    <td>{{ item.settleamount?.settle_date ?? 'Not settled yet' }}</td>
 
                                     <td :class="{ 'text-danger': item.settleamount?.outstanding_amount > 0 }">
                                         <span v-if="item.settleamount?.outstanding_amount"
@@ -90,7 +120,7 @@
                                             USD {{ item.settleamount?.outstanding_amount }}
                                         </span>
                                         <span v-else class="text-danger">
-                                           USD {{ item.information?.totalpayable }}
+                                            USD {{ item.information?.totalpayable }}
 
                                         </span>
                                     </td>
@@ -146,6 +176,16 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <div class="col-2">
+
+                            <button class="btn btn-warning mt-2 fw-bold" :disabled="selectedInvoiceIds.length == 0"
+                                @click="payment">
+                                Payment Reminder
+                            </button>
+                        </div>
+
                     </div>
 
                     <div class="card-body mt-5" v-show="!isLoading">
@@ -237,17 +277,19 @@
 <script>
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { format } from "date-fns";
-import { parseISO } from "date-fns";
-import axios from "axios";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+
 export default {
     data() {
-
-
         return {
             isLoading: true,
+            sortKey: '',
+            sortAsc: true,
             selectedUserId: "",
             invoices: [],
+            selectedInvoiceIds: [],
             remaining: [],
             sales: [],
             users: [],
@@ -280,6 +322,103 @@ export default {
         });
     },
     methods: {
+        async payment() {
+
+            if (this.selectedInvoiceIds.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select at least one invoice to send reminder.',
+                    icon: 'error',
+                });
+                return;
+            }
+            if (!this.selectedUserId) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select buyer to send reminder.',
+                    icon: 'error',
+                });
+                return;
+            }
+            // Confirm the upload
+            const { isConfirmed } = await Swal.fire({
+                title: 'Are you sure you want to send payment reminder?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+            });
+
+            if (!isConfirmed) {
+                return;
+            }
+            // alert(selectedUserId);
+
+            const formData = {
+                invoice_ids: this.selectedInvoiceIds,
+                buyerid: this.selectedUserId.id,
+
+            };
+
+            Swal.fire({
+                title: 'Please wait...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+            });
+            Swal.showLoading();
+
+            try {
+                const response = await axios.post('/api/invoice/reminder', formData);
+
+                Swal.hideLoading();
+                console.log(response);
+
+                // Show a success message
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Reminder sent successfully.',
+                    icon: 'success',
+                });
+
+                this.selectedInvoiceIds = [];
+
+            } catch (error) {
+                console.log(error);
+                Swal.hideLoading();
+                // Show an error message
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while sending reminder.',
+                    icon: 'error',
+                });
+            }
+
+        },
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+                const aValue = getValue(a, key);
+                const bValue = getValue(b, key);
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         importImage(index) {
             const fileInput = this.$refs['fileInput'][index];
             console.log(this.$refs['fileInput'], index);

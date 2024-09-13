@@ -152,7 +152,8 @@
                             <Column field="note.receipt_note" header="Receipt Note" style="min-width: 10rem">
                                 <template #body="{ data }">
                                     <!-- {{note.receipt_note}} -->
-                                    <a v-if="note != null && note.receipt_note != null" :href="'/storage/' + note?.receipt_note" download
+                                    <a v-if="note != null && note.receipt_note != null"
+                                        :href="'/storage/' + note?.receipt_note" download
                                         class="btn px-4 mx-2 btn-outline-primary">
                                         <i class="bi bi-file-earmark-text fw-bold"></i>
                                     </a>
@@ -236,23 +237,36 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped table-hover">
                             <thead style="color: #009de1" class="text-center">
-                                <tr style="">
-                                    <th class="text-nowrap">
+                                <tr>
+                                    <th class="text-nowrap" @click="sortTable('invoice_number')">
                                         Supplier Invoice#
+                                        <i :class="getSortIcon('invoice_number')" class="ms-1"></i>
                                     </th>
-                                    <th class="text-nowrap">
+                                    <th class="text-nowrap" @click="sortTable('invoice_date')">
                                         Supplier Invoice Date
+                                        <i :class="getSortIcon('invoice_date')" class="ms-1"></i>
                                     </th>
-                                    <th class="text-nowrap">Account Payable</th>
-                                    <th class="text-nowrap">Settle Amount</th>
-                                    <th class="text-nowrap">Settle Date</th>
-                                    <th class="text-nowrap">
+                                    <th class="text-nowrap" @click="sortTable('total_value')">
+                                        Account Payable
+                                        <i :class="getSortIcon('total_value')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortTable('settle_amount')">
+                                        Settle Amount
+                                        <i :class="getSortIcon('settle_amount')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortTable('settle_date')">
+                                        Settle Date
+                                        <i :class="getSortIcon('settle_date')" class="ms-1"></i>
+                                    </th>
+                                    <th class="text-nowrap" @click="sortTable('outstanding_amount')">
                                         Outstanding Amount
+                                        <i :class="getSortIcon('outstanding_amount')" class="ms-1"></i>
                                     </th>
                                     <th class="text-nowrap">Remarks</th>
                                     <th class="text-nowrap">Remittance Slip</th>
                                 </tr>
                             </thead>
+
                             <tbody class="text-center" v-for="(item, index) in invoice" :key="index"
                                 v-if="invoice.length > 0">
                                 <tr>
@@ -264,7 +278,7 @@
 
                                                 <router-link class=""
                                                     :to="{ name: 'invoice_admin', params: { id: item.id } }"> {{
-                                            item.invoice_number }}</router-link>
+                                                        item.invoice_number }}</router-link>
                                             </label>
                                         </div>
                                     </td>
@@ -367,13 +381,13 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row" v-if="invoice.length > 0">
+                    <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-danger px-5 me-2 fw-bold">
+                            <button class="btn btn-danger px-5 me-2 fw-bold" :disabled="selectedInvoiceIds == 0">
                                 Reject
                             </button>
                             <button class="btn btn-warning px-5 me-2 fw-bold" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
+                                :disabled="selectedInvoiceIds == 0" data-bs-target="#exampleModal">
                                 Payment
                             </button>
                             <!-- Modal -->
@@ -429,7 +443,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="card-body w-35" v-show="!isLoading">
+                    <div class="card-body w-35" v-show="!isLoading">
                         <span class="fw-bold fs-6 text-uppercase" style="color: #14245c">General Outstanding account
                             Payable:</span>
 
@@ -459,7 +473,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -473,11 +487,15 @@ import { format } from 'date-fns';
 import { parseISO } from 'date-fns';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { FilterMatchMode } from '@primevue/core/api';
+
 
 export default {
 
     data() {
         return {
+            sortKey: '',
+            sortAsc: true,
             remarks: {},
             paymentType: "",
             amount: "",
@@ -554,6 +572,33 @@ export default {
         },
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.users.sort((a, b) => {
+                const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+                const aValue = getValue(a, key);
+                const bValue = getValue(b, key);
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         calculatedValue(recieve) {
             return recieve.invoice_number[0]?.outstanding_amount ?? (recieve.quantity_unit * recieve.buyingprice);
         },
@@ -626,13 +671,13 @@ export default {
         initFilters() {
             this.filters = {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                status: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                sendoutdate: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                'shipment_orders.so_number': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                'invoice_number[0].invoice_number': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                totalvalue: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-                'note.receipt_note': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                status: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                sendoutdate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                'shipment_orders.so_number': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                'invoice_number[0].invoice_number': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                totalvalue: { value: null, matchMode: FilterMatchMode.EQUALS },
+                'note.receipt_note': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
             };
         },
         clearFilter() {

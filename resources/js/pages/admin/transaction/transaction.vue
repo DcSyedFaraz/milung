@@ -20,26 +20,26 @@
                                             <div class="col-3">
                                                 <input type="date" v-model="endDate" class="form-control">
                                             </div>
-                                            <div class="col-3 my-auto">
+                                            <!-- <div class="col-3 my-auto">
                                                 <button class="btn btn-milung"
                                                     @click="filterTransactions">Submit</button>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <form @submit.prevent="submitForm" enctype="multipart/form-data">
                                             <div class="row mt-2 ">
 
-                                                <!-- <div class="col-3 my-auto">
+                                                <div class="col-3 my-auto">
                                                     <input type="text" placeholder="Bnak Name USD" v-model="bank_name"
                                                         class="form-control ">
-                                                </div> -->
+                                                </div>
                                                 <div class="col-3">
                                                     <button class="btn btn-light text-white fw-bold"
                                                         style="background-color: #009de1; border-color: #009de1;"
                                                         type="button" @click="uploadFile">UPLOAD</button>
                                                     <button
                                                         class="btn btn-milung text-white mx-2 fw-bold">Submit</button>
-                                                    <input ref="fileInput" accept=".xlsx , .csv" type="file" name="statement" class="d-none "
-                                                        @change="handleFileUpload">
+                                                    <input ref="fileInput" accept=".xlsx , .csv" type="file"
+                                                        name="statement" class="d-none " @change="handleFileUpload">
                                                 </div>
                                             </div>
                                         </form>
@@ -82,20 +82,31 @@
                         <!-- Table with stripped rows -->
                         <table class="table table-striped text-center display ">
                             <thead style="color: white; background-color: #14245c" class="">
-                                <tr class="rounded-top-new" style="">
-                                    <th>
-                                        Date
+                                <tr>
+                                    <th @click="sortTable('date')">Date
+                                        <i :class="getSortIcon('date')" class="ms-1"></i>
                                     </th>
-                                    <th>Transaction Details</th>
-                                    <th>Deposit</th>
-                                    <th>Widrawal</th>
-                                    <th>Balance</th>
-                                    <th>Notice</th>
+                                    <th @click="sortTable('transaction_details')">Transaction Details
+                                        <i :class="getSortIcon('transaction_details')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('deposit')">Deposit
+                                        <i :class="getSortIcon('deposit')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('withdrawal')">Withdrawal
+                                        <i :class="getSortIcon('withdrawal')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('balance')">Balance
+                                        <i :class="getSortIcon('balance')" class="ms-1"></i>
+                                    </th>
+                                    <th @click="sortTable('notice')">Notice
+                                        <i :class="getSortIcon('notice')" class="ms-1"></i>
+                                    </th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody >
-                                <tr v-for="transaction in dataToDisplay" :key="transaction.id" v-if="dataToDisplay.length > 0">
+                            <tbody>
+                                <tr v-for="transaction in dataToDisplay" :key="transaction.id"
+                                    v-if="dataToDisplay.length > 0">
                                     <td>{{ transaction.date }}</td>
                                     <td>{{ transaction.transaction_details }}</td>
                                     <td>
@@ -177,6 +188,8 @@ export default {
         return {
             isLoading: true,
             bank_name: '',
+            sortKey: '',
+            sortAsc: true,
             startDate: '',
             endDate: '',
             file: null,
@@ -235,6 +248,33 @@ export default {
         });
     },
     methods: {
+        sortTable(key) {
+            if (this.sortKey === key) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortKey = key;
+                this.sortAsc = true;
+            }
+            this.transactions.sort((a, b) => {
+                const getValue = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
+                const aValue = getValue(a, key);
+                const bValue = getValue(b, key);
+
+                let result = 0;
+                if (aValue < bValue) {
+                    result = -1;
+                } else if (aValue > bValue) {
+                    result = 1;
+                }
+                return this.sortAsc ? result : -result;
+            });
+        },
+        getSortIcon(key) {
+            if (this.sortKey === key) {
+                return this.sortAsc ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            return 'fas fa-sort';
+        },
         async filterTransactions() {
             if (!this.startDate || !this.endDate) {
                 Swal.fire(

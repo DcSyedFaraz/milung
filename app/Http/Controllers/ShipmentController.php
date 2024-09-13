@@ -477,6 +477,27 @@ class ShipmentController extends Controller
 
         return response()->json($shipments, 200);
     }
+    public function invoicereminder(Request $request)
+    {
+        $user = Auth::user();
+
+        $invoiceIds = $request->input('invoice_ids');
+        $buyer = $request->input('buyerid');
+        // Retrieve the invoice numbers from the database
+
+
+        $invoiceNumbersList = implode(', ', $invoiceIds);
+        $message = "Just a quick note to let you know that user '{$user->userid}' named '{$user->name}' has sent payment reminders for the following invoices: {$invoiceNumbersList}.";
+
+        $buyers = User::find($buyer);
+
+        Notification::send($buyers, new UserNotification($message, 'Account Payable-Payment Reminder', null));
+
+        Mail::to($buyers->email)->send(mailable: new PriceInquiryNotification($message, 'Account Payable-Payment Reminder'));
+
+
+        return response()->json(['status' => 'success'], 200);
+    }
     public function shipmentgetid($id)
     {
         $packing = PackingList::where('shipment_order_id', $id)->with('orders.product_group', 'supplierid')->get();
