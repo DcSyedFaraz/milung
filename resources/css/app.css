@@ -1,1 +1,4 @@
 
+.p-chip-remove-icon, .p-paginator-page.p-paginator-page-selected, .p-datatable-column-sorted, .p-datatable-column-sorted .p-datatable-sort-icon {
+    color: white !important;
+}

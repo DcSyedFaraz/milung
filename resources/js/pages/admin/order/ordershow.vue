@@ -188,7 +188,9 @@
                             <p class="my-auto fs-7">Logo Pantone Color:</p>
                         </div>
                         <div class="col-8">
-                            <p class="my-auto">{{ orders.logocolor }}</p>
+                            <p class="my-auto">{{ Array.isArray(orders.logocolor) ? orders.logocolor.join(', ') :
+                                orders.logocolor }}</p>
+
                         </div>
                     </div>
                     <div class="d-flex col-12 my-2">
@@ -204,8 +206,9 @@
                             <p class="my-auto fs-7">Packaging Printing: <br> (if applicable)</p>
                         </div>
                         <div class="col-8">
-                            <p v-for="(printing, index) in orders.packagingprinting" :key="index">
-                                {{ printing }}
+                            <p >
+                                {{ Array.isArray(orders.packagingprinting) ? orders.packagingprinting.join(', ') :
+                                orders.packagingprinting }}
                             </p>
                         </div>
                     </div>
@@ -255,7 +258,7 @@
                     </div>
                     <div class="d-flex col-12 my-2">
                         <div class="col-4 my-auto">
-                            <p class="my-auto fs-7">Latest Send Out  Date:</p>
+                            <p class="my-auto fs-7">Latest Send Out Date:</p>
                         </div>
                         <div class="col-8">
                             <p class="my-auto">{{ orders.sendoutdate }}</p>
@@ -266,7 +269,7 @@
                             <p class="my-auto fs-7">Notice:</p>
                         </div>
                         <div class="col-8">
-                            <p  class="my-auto" v-for="(notice, index) in orders.notice" :key="index">{{ notice }}</p>
+                            <p class="my-auto" v-for="(notice, index) in orders.notice" :key="index">{{ notice }}</p>
                         </div>
                     </div>
                     <div class="d-flex col-12 my-2">

@@ -134,7 +134,7 @@
                                 </div>
                             </template>
 
-                            <Column field="id" header="Order Number" sortable style="width: 20%"></Column>
+                            <Column field="id" header="Order Number" sortable style="width: 20%" />
                             <Column field="status" header="Status" sortable style="width: 20%">
                                 <template #body="{ data }">
                                     <Tag :value="data.status" :severity="getSeverity(data)" />
@@ -157,9 +157,9 @@
                                     <div class="d-flex justify-content-center">
 
                                         <router-link :to="{
-                        name: 'buyer_order_entry',
-                        params: { id: data.id },
-                    }" class="text-success mx-2" v-if="can('editBuyerOrder')">
+                                            name: 'buyer_order_entry',
+                                            params: { id: data.id },
+                                        }" class="text-success mx-2" v-if="can('editBuyerOrder')">
                                             <i class="bi bi-pencil"></i>
                                         </router-link>
 
@@ -203,6 +203,7 @@ import { format } from "date-fns";
 import { parseISO } from "date-fns";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { FilterMatchMode } from '@primevue/core/api';
 
 export default {
 
@@ -256,7 +257,7 @@ export default {
         initFilters() {
             this.filters = {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+                status: { value: null, matchMode: FilterMatchMode.EQUALS },
                 created_at: { value: null, matchMode: FilterMatchMode.EQUALS },
                 updated_at: { value: null, matchMode: FilterMatchMode.EQUALS }
             };
@@ -265,9 +266,9 @@ export default {
             // console.log('hi', order);
             switch (order.status) {
                 case "New Order":
-                    return "primary";
+                    return "success";
                 case "Printview Confirmation":
-                    return "cyan";
+                    return "info";
 
                 case "Printview Reject":
                     return "danger";

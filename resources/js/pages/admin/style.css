@@ -101,9 +101,7 @@
     color: white;
 }
 
-.p-chip-remove-icon, .p-paginator-page.p-paginator-page-selected {
-    color: white !important;
-}
+
 
 .p-select-option.p-select-option-selected.p-focus {
     color: white !important;

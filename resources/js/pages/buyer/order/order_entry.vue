@@ -160,6 +160,7 @@
                             </div>
                             <div class="col-8">
                                 {{ orders[0].printingmethod }}
+
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
@@ -169,7 +170,8 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                {{ orders[0].logocolor }}
+                                {{ Array.isArray(orders[0].logocolor) ? orders[0].logocolor.join(', ') :
+                                    orders[0].logocolor }}
                             </div>
                         </div>
                         <div class="d-flex col-12 my-4">
@@ -191,9 +193,11 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <ul class="my-1">
-                                        <li v-for="item in orders[0].packagingprinting">{{ item }}</li>
-                                    </ul>
+                                    <p>
+                                        {{ Array.isArray(orders[0].packagingprinting) ?
+                                            orders[0].packagingprinting.join(', ') :
+                                        orders[0].packagingprinting }}
+                                    </p>
 
                                 </div>
                             </div>
@@ -238,23 +242,23 @@
                             </div>
                             <div class="col-9">
                                 <div class="col-12" :class="{
-            'text-muted':
-                orders[0].logoFiles?.filename ==
-                null,
-            'fst-italic':
-                orders[0].logoFiles?.filename ==
-                null,
-        }">
+                                    'text-muted':
+                                        orders[0].logoFiles?.filename ==
+                                        null,
+                                    'fst-italic':
+                                        orders[0].logoFiles?.filename ==
+                                        null,
+                                }">
                                     {{
-            orders[0].logoFiles?.filename ??
-            "not uploaded yet"
-        }}
+                                        orders[0].logoFiles?.filename ??
+                                    "not uploaded yet"
+                                    }}
                                 </div>
                                 <div class="col-12 d-flex justify-content-end" v-if="orders[0].logoFiles?.filename">
                                     <a :href="'/storage/' +
-            orders[0].logoFiles?.filepath
-            " :download="orders[0].logoFiles?.filename
-            " class="btn px-4 mx-2 btn-primary my-2 me-5">
+                                        orders[0].logoFiles?.filepath
+                                        " :download="orders[0].logoFiles?.filename
+                " class="btn px-4 mx-2 btn-primary my-2 me-5">
                                         Export
                                     </a>
                                 </div>
@@ -266,23 +270,23 @@
                             </div>
                             <div class="col-9">
                                 <div class="col-12" :class="{
-            'text-muted':
-                orders[0].labelFiles?.filename ==
-                null,
-            'fst-italic':
-                orders[0].labelFiles?.filename ==
-                null,
-        }">
+                                    'text-muted':
+                                        orders[0].labelFiles?.filename ==
+                                        null,
+                                    'fst-italic':
+                                        orders[0].labelFiles?.filename ==
+                                        null,
+                                }">
                                     {{
-            orders[0].labelFiles?.filename ??
-            "not uploaded yet"
-        }}
+                                        orders[0].labelFiles?.filename ??
+                                    "not uploaded yet"
+                                    }}
                                 </div>
                                 <div class="col-12 d-flex justify-content-end" v-if="orders[0].labelFiles?.filename">
                                     <a :href="'/storage/' +
-            orders[0].labelFiles?.filepath
-            " :download="orders[0].labelFiles?.filename
-            " class="btn px-4 mx-2 btn-primary my-2 me-5">
+                                        orders[0].labelFiles?.filepath
+                                        " :download="orders[0].labelFiles?.filename
+                " class="btn px-4 mx-2 btn-primary my-2 me-5">
                                         Export
                                     </a>
                                 </div>
@@ -294,23 +298,23 @@
                             </div>
                             <div class="col-9">
                                 <div class="col-12" :class="{
-            'text-muted':
-                orders[0].manualFiles?.filename ==
-                null,
-            'fst-italic':
-                orders[0].manualFiles?.filename ==
-                null,
-        }">
+                                    'text-muted':
+                                        orders[0].manualFiles?.filename ==
+                                        null,
+                                    'fst-italic':
+                                        orders[0].manualFiles?.filename ==
+                                        null,
+                                }">
                                     {{
-            orders[0].manualFiles?.filename ??
-            "not uploaded yet"
-        }}
+                                        orders[0].manualFiles?.filename ??
+                                    "not uploaded yet"
+                                    }}
                                 </div>
                                 <div class="col-12 d-flex justify-content-end" v-if="orders[0].manualFiles?.filename">
                                     <a :href="'/storage/' +
-            orders[0].manualFiles?.filepath
-            " :download="orders[0].manualFiles?.filename
-            " class="btn px-4 mx-2 btn-primary my-2 me-5">
+                                        orders[0].manualFiles?.filepath
+                                        " :download="orders[0].manualFiles?.filename
+                " class="btn px-4 mx-2 btn-primary my-2 me-5">
                                         Export
                                     </a>
                                 </div>
@@ -322,21 +326,21 @@
                             </div>
                             <div class="col-9">
                                 <div class="col-12" :class="{
-            'text-muted': orders[0].safetySheetFiles?.filename == null, 'fst-italic':
-                orders[0].safetySheetFiles
-                    ?.filename == null,
-        }">
+                                    'text-muted': orders[0].safetySheetFiles?.filename == null, 'fst-italic':
+                                        orders[0].safetySheetFiles
+                                            ?.filename == null,
+                                }">
                                     {{
-            orders[0].safetySheetFiles?.filename ??
-            "not uploaded yet"
-        }}
+                                        orders[0].safetySheetFiles?.filename ??
+                                    "not uploaded yet"
+                                    }}
                                 </div>
                                 <div class="col-12 d-flex justify-content-end"
                                     v-if="orders[0].safetySheetFiles?.filename">
                                     <a :href="'/storage/' +
-            orders[0].safetySheetFiles?.filepath
-            " :download="orders[0].safetySheetFiles?.filename
-            " class="btn px-4 mx-2 btn-primary my-2 me-5">
+                                        orders[0].safetySheetFiles?.filepath
+                                        " :download="orders[0].safetySheetFiles?.filename
+                " class="btn px-4 mx-2 btn-primary my-2 me-5">
                                         Export
                                     </a>
                                 </div>
@@ -369,9 +373,9 @@
                             <div class="col-8">
                                 <!-- <input type="text"  class="form-control"> -->
                                 {{
-            orders[0].sellingprice *
-            orders[0].quantity_unit
-        }}
+                                    orders[0].sellingprice *
+                                orders[0].quantity_unit
+                                }}
                                 USD
                             </div>
                         </div>
@@ -397,7 +401,7 @@
                         <div class="d-flex col-12 my-4">
                             <div class="col-4 my-auto">
                                 <p class="my-auto fs-7">
-                                    Latest Send Out  Date:
+                                    Latest Send Out Date:
                                 </p>
                             </div>
                             <div class="col-8">
