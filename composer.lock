@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs.git",
-                "reference": "7c0d54d031cc84c3ed0ac9c356e2b15283e77145"
+                "reference": "5f481d8c44b9c546804702ed3a83bb4836779787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ahmedsaoud31/laravel-permission-to-vuejs/zipball/7c0d54d031cc84c3ed0ac9c356e2b15283e77145",
-                "reference": "7c0d54d031cc84c3ed0ac9c356e2b15283e77145",
+                "url": "https://api.github.com/repos/ahmedsaoud31/laravel-permission-to-vuejs/zipball/5f481d8c44b9c546804702ed3a83bb4836779787",
+                "reference": "5f481d8c44b9c546804702ed3a83bb4836779787",
                 "shasum": ""
             },
             "require": {
@@ -25,6 +25,13 @@
             },
             "default-branch": true,
             "type": "plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaravelAndVueJS\\LaravelAndVueJSServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "LaravelAndVueJS\\": "src"
@@ -45,7 +52,7 @@
                 "issues": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs/issues",
                 "source": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs/tree/master"
             },
-            "time": "2024-02-11T21:06:42+00:00"
+            "time": "2024-08-07T08:19:05+00:00"
         },
         {
             "name": "brick/math",
