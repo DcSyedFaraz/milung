@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->integer('profit')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
-            $table->integer('hs_de');
-            $table->integer('hs_cn');
+            $table->bigInteger('hs_de');
+            $table->bigInteger('hs_cn');
             $table->timestamps();
         });
     }

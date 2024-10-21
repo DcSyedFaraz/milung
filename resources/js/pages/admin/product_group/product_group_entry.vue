@@ -209,7 +209,7 @@ export default {
                             console.error(error);
 
                             // Show a toastr error notification
-                            toastr.error('An error occurred while adding the user');
+                            toastr.error('An error occurred while adding the group.');
                         }
                     });
             } else {
@@ -231,7 +231,7 @@ export default {
                             console.error(error);
 
                             // Show a toastr error notification
-                            toastr.error('An error occurred while adding the user');
+                            toastr.error('An error occurred while adding the group.');
                         }
                     });
             }
