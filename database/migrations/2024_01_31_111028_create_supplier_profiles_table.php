@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('office_phone')->nullable();
             $table->string('supplier_description');
             $table->json('group');
-            $table->json('sec_group');
+            $table->json('sec_group')->nullable();
             $table->string('company_header')->nullable();
             $table->string('company_logo')->nullable();
             $table->string('bank')->nullable();
