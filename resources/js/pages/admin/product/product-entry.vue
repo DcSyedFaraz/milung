@@ -35,8 +35,8 @@
                                 <InputText class="w-100 " v-model="product.article"
                                     :class="{ 'p-invalid': validationErrors.article }" />
                                 <Message class="my-2" v-if="validationErrors.article" severity="error">{{
-            validationErrors.article[0]
-        }}</Message>
+                                    validationErrors.article[0]
+                                    }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -48,8 +48,8 @@
                                     placeholder="Select status" class="w-100" :options="statusOptions"
                                     :class="{ 'p-invalid': validationErrors.status }" />
                                 <Message class="my-2" v-if="validationErrors.status" severity="error">{{
-            validationErrors.status[0]
-        }}</Message>
+                                    validationErrors.status[0]
+                                    }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -60,7 +60,7 @@
                                 <InputText class="w-100 " v-model="product.name"
                                     :class="{ 'p-invalid': validationErrors.name }" />
                                 <Message class="my-2" v-if="validationErrors.name" severity="error">{{
-            validationErrors.name[0] }}
+                                    validationErrors.name[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                                 <Textarea v-model="product.description"
                                     :class="{ 'p-invalid': validationErrors.description }" rows="4" cols="36" />
                                 <Message class="my-2" v-if="validationErrors.description" severity="error">{{
-            validationErrors.description[0] }}</Message>
+                                    validationErrors.description[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -84,7 +84,7 @@
                                     placeholder="Select Product Group" optionLabel="group_name"
                                     :class="{ 'p-invalid': validationErrors.group }" />
                                 <Message class="my-2" v-if="validationErrors.group" severity="error">{{
-            validationErrors.group[0] }}
+                                    validationErrors.group[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <Message class="my-2" v-if="validationErrors.cargo" severity="error">{{
-            validationErrors.cargo[0] }}
+                                    validationErrors.cargo[0] }}
                                 </Message>
                                 <div class="d-flex my-2">
                                     <div class="form-check">
@@ -121,7 +121,7 @@
                                     </div>
                                 </div>
                                 <Message class="my-2" v-if="validationErrors.cargo_place" severity="error">{{
-            validationErrors.cargo_place[0] }}</Message>
+                                    validationErrors.cargo_place[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11">
@@ -133,7 +133,7 @@
                                 <Chips class="w-100" v-model="product.color"
                                     :class="{ 'p-invalid': validationErrors.color }" />
                                 <Message class="my-2" v-if="validationErrors.color" severity="error">{{
-            validationErrors.color[0] }}
+                                    validationErrors.color[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                                         :class="{ 'p-invalid': validationErrors.material }" />
                                 </InputGroup>
                                 <Message class="my-2" v-if="validationErrors.material" severity="error">{{
-            validationErrors.material[0] }}</Message>
+                                    validationErrors.material[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -173,7 +173,7 @@
                                         :class="{ 'p-invalid': validationErrors.weight }" />
                                     <InputGroupAddon addonType="append">g</InputGroupAddon>
                                     <Message class="my-2" v-if="validationErrors.weight" severity="error">{{
-            validationErrors.weight[0] }}</Message>
+                                        validationErrors.weight[0] }}</Message>
                                 </InputGroup>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                                 <Textarea v-model="product.specification"
                                     :class="{ 'p-invalid': validationErrors.specification }" rows="4" cols="37" />
                                 <Message class="my-2" v-if="validationErrors.specification" severity="error">{{
-            validationErrors.specification[0] }}
+                                    validationErrors.specification[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -197,8 +197,8 @@
                                 <InputText class="w-100 " v-model="product.memory"
                                     :class="{ 'p-invalid': validationErrors.memory }" />
                                 <Message class="my-2" v-if="validationErrors.memory" severity="error">{{
-            validationErrors.memory[0]
-        }}</Message>
+                                    validationErrors.memory[0]
+                                    }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -209,8 +209,8 @@
                                 <InputText class="w-100 " v-model="product.feature"
                                     :class="{ 'p-invalid': validationErrors.feature }" />
                                 <Message class="my-2" v-if="validationErrors.feature" severity="error">{{
-            validationErrors.feature[0]
-        }}</Message>
+                                    validationErrors.feature[0]
+                                    }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -222,7 +222,7 @@
                                 <Chips class="w-100" v-model="product.accessory"
                                     :class="{ 'p-invalid': validationErrors.accessory }" />
                                 <Message class="my-2" v-if="validationErrors.accessory" severity="error">{{
-            validationErrors.accessory[0] }}
+                                    validationErrors.accessory[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -236,7 +236,7 @@
                                         :class="{ 'p-invalid': validationErrors.accessory_weight }" />
                                     <InputGroupAddon>g</InputGroupAddon>
                                     <Message class="my-2" v-if="validationErrors.accessory_weight" severity="error">{{
-            validationErrors.accessory_weight[0] }}</Message>
+                                        validationErrors.accessory_weight[0] }}</Message>
                                 </InputGroup>
                             </div>
                         </div>
@@ -264,14 +264,14 @@
                             <ImageSelector @imagesSelected="handleImagesSelected"
                                 :class="{ 'p-invalid': validationErrors.images }" />
                             <Message class="my-2" v-if="validationErrors.images" severity="error">{{
-            validationErrors.images[0] }}
+                                validationErrors.images[0] }}
                             </Message>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase">3. Certificates & Test Reports</h3>
                         <CertificatesInput @update-certificates="updateCertificates"
                             :class="{ 'p-invalid': validationErrors.certificates }" />
                         <Message class="my-2" v-if="validationErrors.certificates" severity="error">{{
-            validationErrors.certificates[0] }}
+                            validationErrors.certificates[0] }}
                         </Message>
                         <h3 class="text-milung fw-bold text-uppercase">4. Printing Details</h3>
                         <div class="col-11 my-2">
@@ -322,15 +322,15 @@
                                 <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
                                     Paper:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputGroup>
                                     <InputNumber v-model="product.unit_packaging_paper"
                                         :class="{ 'p-invalid': validationErrors.unit_packaging_paper }" />
                                     <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.unit_packaging_paper" severity="error">
-                                        {{
-            validationErrors.unit_packaging_paper[0] }}</Message>
                                 </InputGroup>
+                                <Message class="my-2" v-if="validationErrors.unit_packaging_paper" severity="error">
+                                    {{
+                                        validationErrors.unit_packaging_paper[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -338,15 +338,14 @@
                                 <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
                                     Plastic:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputGroup>
                                     <InputNumber v-model="product.unit_packaging_plastic"
                                         :class="{ 'p-invalid': validationErrors.unit_packaging_plastic }" />
                                     <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.unit_packaging_plastic"
-                                        severity="error">{{
-            validationErrors.unit_packaging_plastic[0] }}</Message>
                                 </InputGroup>
+                                <Message class="my-2" v-if="validationErrors.unit_packaging_plastic" severity="error">{{
+                                    validationErrors.unit_packaging_plastic[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -354,15 +353,15 @@
                                 <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
                                     Metal:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputGroup>
                                     <InputNumber v-model="product.unit_packaging_metal"
                                         :class="{ 'p-invalid': validationErrors.unit_packaging_metal }" />
                                     <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.unit_packaging_metal" severity="error">
-                                        {{
-            validationErrors.unit_packaging_metal[0] }}</Message>
                                 </InputGroup>
+                                <Message class="my-2" v-if="validationErrors.unit_packaging_metal" severity="error">
+                                    {{
+                                        validationErrors.unit_packaging_metal[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
@@ -370,73 +369,72 @@
                                 <label class="my-2">Unit Packaging (1 pc) Net Weight (not include product) -
                                     Others:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputGroup>
                                     <InputNumber v-model="product.unit_packaging_others"
                                         :class="{ 'p-invalid': validationErrors.unit_packaging_others }" />
                                     <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.unit_packaging_others"
-                                        severity="error">{{
-            validationErrors.unit_packaging_others[0] }}</Message>
                                 </InputGroup>
+                                <Message class="my-2" v-if="validationErrors.unit_packaging_others" severity="error">{{
+                                    validationErrors.unit_packaging_others[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
                                 <label class="my-2">Specify Packaging Material:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputText class="w-100 " v-model="product.packaging_material"
                                     :class="{ 'p-invalid': validationErrors.packaging_material }" />
-                                <Message class="my-2" v-if="validationErrors.packaging_material" severity="error">{{
-            validationErrors.packaging_material[0] }}</Message>
                             </div>
+                            <Message class="my-2" v-if="validationErrors.packaging_material" severity="error">{{
+                                validationErrors.packaging_material[0] }}</Message>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
                                 <label class="my-2">Total Packaging Net Weight:</label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputGroup>
                                     <InputNumber v-model="product.packaging_weight"
                                         :class="{ 'p-invalid': validationErrors.packaging_weight }" />
                                     <InputGroupAddon>g</InputGroupAddon>
-                                    <Message class="my-2" v-if="validationErrors.packaging_weight" severity="error">{{
-            validationErrors.packaging_weight[0] }}</Message>
                                 </InputGroup>
+                                <Message class="my-2" v-if="validationErrors.packaging_weight" severity="error">{{
+                                    validationErrors.packaging_weight[0] }}</Message>
                             </div>
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-6">
                                 <label class="my-2">Standard Packaging: <span class="text-danger">*</span></label>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 flex-col">
                                 <InputText class="w-100 " v-model="product.standart_packaging"
                                     :class="{ 'p-invalid': validationErrors.standart_packaging }" />
                                 <Message class="my-2" v-if="validationErrors.standart_packaging" severity="error">{{
-            validationErrors.standart_packaging[0] }}</Message>
+                                    validationErrors.standart_packaging[0] }}</Message>
                             </div>
                         </div>
                         <h3 class="text-milung fw-bold text-uppercase mt-4">6. Manual, Label, Safety Sheet</h3>
                         <fileinput label="Safety Sheet:" inputName="safety_sheet" @upload="handleFileUploaded"
                             :class="{ 'p-invalid': validationErrors.safety_sheet }" />
                         <Message class="my-2" v-if="validationErrors.safety_sheet" severity="error">{{
-            validationErrors.safety_sheet[0] }}
+                            validationErrors.safety_sheet[0] }}
                         </Message>
                         <fileinput label="Manual:" inputName="manual" @upload="handleFileUploaded"
                             :class="{ 'p-invalid': validationErrors.manual }" />
                         <Message class="my-2" v-if="validationErrors.manual" severity="error">{{
-            validationErrors.manual[0] }}
+                            validationErrors.manual[0] }}
                         </Message>
                         <fileinput label="Product Label:" inputName="product_label" @upload="handleFileUploaded"
                             :class="{ 'p-invalid': validationErrors.product_label }" />
                         <Message class="my-2" v-if="validationErrors.product_label" severity="error">{{
-            validationErrors.product_label[0] }}
+                            validationErrors.product_label[0] }}
                         </Message>
                         <fileinput label="Packaging Label:" inputName="packaging_label" @upload="handleFileUploaded"
                             :class="{ 'p-invalid': validationErrors.packaging_label }" />
                         <Message class="my-2" v-if="validationErrors.packaging_label" severity="error">{{
-            validationErrors.packaging_label[0] }}
+                            validationErrors.packaging_label[0] }}
                         </Message>
 
                     </div>
@@ -456,7 +454,7 @@
                                         <InputText class="w-100 " v-model="product.battery_type"
                                             :class="{ 'p-invalid': validationErrors.battery_type }" />
                                         <Message class="my-2" v-if="validationErrors.battery_type" severity="error">{{
-            validationErrors.battery_type[0] }}
+                                            validationErrors.battery_type[0] }}
                                         </Message>
                                     </div>
                                 </div>
@@ -472,10 +470,10 @@
                                                 :class="{ 'p-invalid': validationErrors.capacity }" />
                                             <InputGroupAddon>mAh/Wh</InputGroupAddon>
                                             <Message class="my-2" v-if="validationErrors.rated" severity="error">{{
-            validationErrors.rated[0]
-        }}</Message>
+                                                validationErrors.rated[0]
+                                                }}</Message>
                                             <Message class="my-2" v-if="validationErrors.capacity" severity="error">{{
-            validationErrors.capacity[0] }}
+                                                validationErrors.capacity[0] }}
                                             </Message>
                                         </InputGroup>
                                     </div>
@@ -488,8 +486,8 @@
                                         <InputText class="w-100 " v-model="product.voltage"
                                             :class="{ 'p-invalid': validationErrors.voltage }" />
                                         <Message class="my-2" v-if="validationErrors.voltage" severity="error">{{
-            validationErrors.voltage[0]
-        }}</Message>
+                                            validationErrors.voltage[0]
+                                            }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12 my-2">
@@ -501,10 +499,10 @@
                                             <InputNumber v-model="product.pcs"
                                                 :class="{ 'p-invalid': validationErrors.pcs }" />
                                             <InputGroupAddon>pcs</InputGroupAddon>
-                                            <Message class="my-2" v-if="validationErrors.pcs" severity="error">{{
-            validationErrors.pcs[0] }}
-                                            </Message>
                                         </InputGroup>
+                                        <Message class="my-2" v-if="validationErrors.pcs" severity="error">{{
+                                            validationErrors.pcs[0] }}
+                                        </Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12 my-2">
@@ -517,7 +515,7 @@
                                                 :class="{ 'p-invalid': validationErrors.mAh }" />
                                             <InputGroupAddon>mAh</InputGroupAddon>
                                             <Message class="my-2" v-if="validationErrors.mAh" severity="error">{{
-            validationErrors.mAh[0] }}
+                                                validationErrors.mAh[0] }}
                                             </Message>
                                         </InputGroup>
                                     </div>
@@ -532,7 +530,7 @@
                                                 :class="{ 'p-invalid': validationErrors.mm }" />
                                             <InputGroupAddon>mm</InputGroupAddon>
                                             <Message class="my-2" v-if="validationErrors.mm" severity="error">{{
-            validationErrors.mm[0] }}
+                                                validationErrors.mm[0] }}
                                             </Message>
                                         </InputGroup>
                                     </div>
@@ -547,8 +545,8 @@
                                                 :class="{ 'p-invalid': validationErrors.gram }" />
                                             <InputGroupAddon>g</InputGroupAddon>
                                             <Message class="my-2" v-if="validationErrors.gram" severity="error">{{
-            validationErrors.gram[0]
-        }}</Message>
+                                                validationErrors.gram[0]
+                                                }}</Message>
                                         </InputGroup>
                                     </div>
                                 </div>
@@ -562,7 +560,7 @@
                                         <InputText class="w-100 " v-model="product.edition"
                                             :class="{ 'p-invalid': validationErrors.edition }" />
                                         <Message class="my-2" v-if="validationErrors.edition" severity="error">{{
-            validationErrors.edition[0] }}
+                                            validationErrors.edition[0] }}
                                         </Message>
                                     </div>
                                 </div>
@@ -604,7 +602,7 @@
                                             :class="{ 'p-invalid': validationErrors.air_safety_expiry }" />
                                         <Message class="my-2" v-if="validationErrors.air_safety_expiry"
                                             severity="error">{{
-                                            validationErrors.air_safety_expiry[0] }}</Message>
+                                                validationErrors.air_safety_expiry[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12 my-2">
@@ -617,7 +615,7 @@
                                             :class="{ 'p-invalid': validationErrors.sea_safety_expiry }" />
                                         <Message class="my-2" v-if="validationErrors.sea_safety_expiry"
                                             severity="error">{{
-                                            validationErrors.sea_safety_expiry[0] }}</Message>
+                                                validationErrors.sea_safety_expiry[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12 my-2">
@@ -630,7 +628,7 @@
                                             :class="{ 'p-invalid': validationErrors.train_safety_expiry }" />
                                         <Message class="my-2" v-if="validationErrors.train_safety_expiry"
                                             severity="error">{{
-                                            validationErrors.train_safety_expiry[0] }}</Message>
+                                                validationErrors.train_safety_expiry[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -763,12 +761,13 @@ export default {
             this.selectedImages = images;
         },
         sendDateOnly() {
-
-            // Extract date part from quoteExpiredDate
-            const selectedDate = new Date(this.Dates);
-            const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
-            this.product.quoteExpiredDate = formattedDate;
-            // Now you can send the formattedDate to your backend
+            if (!this.Dates) {
+                this.product.quoteExpiredDate = null;
+            } else {
+                const selectedDate = new Date(this.Dates);
+                const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+                this.product.quoteExpiredDate = formattedDate;
+            }
             console.log('Selected Date:', this.product.quoteExpiredDate);
         },
         async submitForm() {

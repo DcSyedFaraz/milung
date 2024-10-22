@@ -760,7 +760,7 @@ export default {
                 console.log(response.data);
                 this.product.color = response.data.color.split(',').map(item => item.trim());
                 this.product.material = response.data.material.split(',').map(item => item.trim());
-                this.product.accessory = response.data.accessory.split(',').map(item => item.trim());
+                this.product.accessory = response.data.accessory?.split(',').map(item => item.trim());
                 this.product.cargo_place = response.data.cargo_place.split(',').map(item => item.trim());
                 // this.group = this.productOptions.find(option => option.id === this.product.group);
                 // console.log(this.group, this.product.group, this.productOptions);
@@ -783,11 +783,13 @@ export default {
             this.selectedImages = images;
         },
         sendDateOnly() {
-            // Extract date part from quoteExpiredDate
-            const selectedDate = new Date(this.Dates);
-            const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
-            this.product.quoteExpiredDate = formattedDate;
-            // Now you can send the formattedDate to your backend
+            if (!this.Dates) {
+                this.product.quoteExpiredDate = null;
+            } else {
+                const selectedDate = new Date(this.Dates);
+                const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+                this.product.quoteExpiredDate = formattedDate;
+            }
             console.log('Selected Date:', this.product.quoteExpiredDate);
         },
         async submitForm() {
