@@ -457,7 +457,8 @@ class UserController extends Controller
         }
 
 
-
+        $group = array_map('intval', $request->input('group', []));
+        $sec_group = array_map('intval', $request->input('Secgroup', []));
         // Store buyer profile data
         $user = SupplierProfile::create([
             'name' => $request->name,
@@ -467,8 +468,8 @@ class UserController extends Controller
             'website' => $request->website,
             'office_phone' => $request->officePhone,
             'supplier_description' => $request->supplierDescription,
-            'group' => $request->group,
-            'sec_group' => $request->Secgroup,
+            'group' => $group,
+            'sec_group' => $sec_group,
             'company_header' => $request->company_header,
             'bank' => $request->bank,
             'bank_address' => $request->bank_address,
@@ -667,7 +668,8 @@ class UserController extends Controller
         }
         // Update user information
 
-
+        $group = array_map('intval', $request->input('group', []));
+        $sec_group = array_map('intval', $request->input('Secgroup', []));
         // Update buyer profile data
         $user->update([
             'name' => $request->name,
@@ -677,8 +679,8 @@ class UserController extends Controller
             'website' => $request->website,
             'office_phone' => $request->officePhone,
             'supplier_description' => $request->supplierDescription,
-            'group' => $request->group,
-            'sec_group' => $request->Secgroup,
+            'group' => $group,
+            'sec_group' => $sec_group,
             'company_header' => $request->company_header,
             'bank' => $request->bank,
             'bank_address' => $request->bank_address,
