@@ -324,7 +324,8 @@ class OrderController extends Controller
         $originalData = $existingOrder->toArray();
 
         if ($validatedData['linked_order'] === 'create') {
-            $validatedData['linked_order'] = $data['id'];
+            $data['linked_order'] = $data['id'];
+            // dd( $validatedData['linked_order']);
             unset($data['id']);
             $order = Order::create($data);
         } else {
