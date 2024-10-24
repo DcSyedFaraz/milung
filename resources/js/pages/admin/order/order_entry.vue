@@ -42,7 +42,7 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.milungorder" class="form-control">
                                 <Message v-if="errors.milungorder" severity="error" class="my-2">{{
-            errors.milungorder[0] }}</Message>
+                                    errors.milungorder[0] }}</Message>
                             </div>
                         </div>
 
@@ -155,7 +155,7 @@
                                 <textarea v-model="orders.orderremarks" class="form-control" cols="30"
                                     rows="5"></textarea>
                                 <Message v-if="errors.orderremarks" severity="error" class="my-2">{{
-            errors.orderremarks[0] }}</Message>
+                                    errors.orderremarks[0] }}</Message>
                             </div>
                         </div>
 
@@ -258,7 +258,7 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.productname" class="form-control">
                                 <Message v-if="errors.productname" severity="error" class="my-2">{{
-            errors.productname[0] }}</Message>
+                                    errors.productname[0] }}</Message>
                             </div>
                         </div>
 
@@ -270,7 +270,7 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.productcolor" class="form-control">
                                 <Message v-if="errors.productcolor" severity="error" class="my-2">{{
-            errors.productcolor[0] }}</Message>
+                                    errors.productcolor[0] }}</Message>
                             </div>
                         </div>
 
@@ -301,7 +301,7 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.accessories" class="form-control">
                                 <Message v-if="errors.accessories" severity="error" class="my-2">{{
-            errors.accessories[0] }}</Message>
+                                    errors.accessories[0] }}</Message>
                             </div>
                         </div>
 
@@ -313,7 +313,7 @@
                             <div class="col-8">
                                 <input type="text" v-model="orders.printingmethod" class="form-control">
                                 <Message v-if="errors.printingmethod" severity="error" class="my-2">{{
-            errors.printingmethod[0] }}
+                                    errors.printingmethod[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -364,7 +364,7 @@
                                     </div>
                                 </div>
                                 <Message v-if="errors.packagingprinting" severity="error" class="my-2">{{
-            errors.packagingprinting[0] }}
+                                    errors.packagingprinting[0] }}
                                 </Message>
                             </div>
                         </div>
@@ -386,7 +386,7 @@
                                     </div>
                                 </div>
                                 <Message v-if="errors.buyingprice" severity="error" class="my-2">{{
-            errors.buyingprice[0] }}</Message>
+                                    errors.buyingprice[0] }}</Message>
                             </div>
                         </div>
 
@@ -404,7 +404,7 @@
                                     </div>
                                 </div>
                                 <Message v-if="errors.sellingprice" severity="error" class="my-2">{{
-            errors.sellingprice[0] }}</Message>
+                                    errors.sellingprice[0] }}</Message>
                             </div>
                         </div>
 
@@ -456,7 +456,7 @@
                             <div class="col-8">
                                 <input type="date" v-model="orders.sendoutdate" class="form-control">
                                 <Message v-if="errors.sendoutdate" severity="error" class="my-2">{{
-            errors.sendoutdate[0] }}</Message>
+                                    errors.sendoutdate[0] }}</Message>
                             </div>
                         </div>
 
@@ -891,7 +891,10 @@ export default {
             axios.get(`/api/orderentry/${orderId}`)
                 .then(response => {
                     this.orders = response.data;
-                    console.log(this.orders);
+                    if (!this.orders.packagingprinting) {
+                        this.orders.packagingprinting = [];
+                    }
+                    console.log(this.orders, response.data.packagingprinting);
                     const selectedSupplierId = Number(this.orders.supplier);
                     const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
                     if (selectedSupplier) {
