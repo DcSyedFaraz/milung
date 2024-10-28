@@ -192,8 +192,8 @@
                                     <td>{{ order.capacity?.join(', ') }}</td>
                                     <td>{{ order.accessories }}</td>
                                     <td>{{ order.printingmethod }}</td>
-                                    <td>{{ order.logocolor ? order.logocolor.join(', ') : ''}} </td>
-                                    <td>{{ order.packagingprinting.join(', ') ?? 'N/A' }}</td>
+                                    <td>{{ order.logocolor ? order.logocolor.join(', ') : '' }} </td>
+                                    <td>{{ order.packagingprinting ? order.packagingprinting.join(', ') : 'N/A' }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.packaging }}</td>
                                     <td>{{ order.sendoutdate }}</td>
@@ -217,7 +217,7 @@
                                     </td>
                                     <td>
                                         +{{ order.product_group.amount == 0 ? order.product_group.profit + '%' :
-                                                order.product_group.amount }}
+                                            order.product_group.amount }}
                                     </td>
 
                                     <td>
