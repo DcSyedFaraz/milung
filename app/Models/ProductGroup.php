@@ -14,5 +14,16 @@ class ProductGroup extends Model
     {
         return $this->hasMany(AdditionalField::class);
     }
+    public function products()
+    {
+        return $this->hasMany(Products::class, 'group');
+    }
 
+    /**
+     * Get the orders for the product group.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'group');
+    }
 }

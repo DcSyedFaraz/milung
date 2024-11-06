@@ -112,7 +112,7 @@
                         </div>
 
                         <div class="d-flex col-11 my-2">
-                            <div class="col-4">
+                            <div class="col-4 my-auto">
                                 <p for="v-model">Inquiry Quantity<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">

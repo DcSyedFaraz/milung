@@ -30,6 +30,8 @@ import { definePreset } from '@primevue/themes';
 
 import Notifications from './pages/notifications.vue';
 import EventLogTable from './pages/admin/logEvent.vue';
+import { GridLayout, GridItem } from 'grid-layout-plus'
+
 
 
 
@@ -50,6 +52,7 @@ app.component('notifications', Notifications);
 app.component('InputGroup', InputGroup);
 app.component('InputGroupAddon', InputGroupAddon);
 app.component('DatePicker', DatePicker);
+app.component('GridLayout', GridLayout).component('GridItem', GridItem)
 
 
 const MyPreset = definePreset(Aura, {
@@ -78,7 +81,7 @@ app.use(PrimeVue, {
             darkModeSelector: 'off',
         },
         colors: {
-            primary: '#0000', 
+            primary: '#0000',
         },
     }
 });

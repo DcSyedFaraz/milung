@@ -298,7 +298,7 @@ class OrderController extends Controller
         //     return response()->json(['errors' => $validatedData->errors()->all()], 422);
         // }
 
-        $data['quantity_unit'] = $data['quantity'] . $data['unit'];
+        $data['quantity_unit'] = $data['quantity'];
         unset($data['quantity'], $data['quantity_units']);
 
         $data['capacity'] = array_map(function ($entry) {
@@ -404,8 +404,8 @@ class OrderController extends Controller
         //     return response()->json(['errors' => $validatedData->errors()->all()], 422);
         // }
 
-        $data['quantity_unit'] = $data['quantity'] . $data['unit'];
-        unset($data['quantity'], $data['unit']);
+        $data['quantity_unit'] = $data['quantity'];
+        unset($data['quantity']);
         // dd($data['quantity_unit']);
         $data['capacity'] = array_map(function ($entry) {
             return $entry['quantity'] . $entry['unit'];

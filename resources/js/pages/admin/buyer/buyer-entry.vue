@@ -7,8 +7,7 @@
                     <div class="mb-4 d-flex">
 
                         <FileUpload name="excel[]" mode="basic" accept=".xlsx" :maxFileSize="10485760"
-                            :showUploadButton="false" @select="handleExcelSelect($event)"
-                             chooseLabel="Import">
+                            :showUploadButton="false" @select="handleExcelSelect($event)" chooseLabel="Import">
 
                         </FileUpload>
                         <a href="../../../../assets/excelTemplate/buyer entry.xlsx" download
@@ -30,7 +29,7 @@
                                         <Message class="my-2" v-if="!userIdPatternValid" severity="error">User ID must
                                             be alphanumeric and between 1 and 10 characters long.</Message>
                                         <Message class="my-2" v-if="errors.buyer_id" severity="error">{{
-                            errors.buyer_id[0] }}</Message>
+                                            errors.buyer_id[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -65,7 +64,7 @@
                                     <div class="col-6">
                                         <InputText class="w-100" id="officePhone" v-model="buyer.officePhone" />
                                         <Message class="my-2" v-if="errors.officePhone" severity="error">{{
-                            errors.officePhone[0] }}</Message>
+                                            errors.officePhone[0] }}</Message>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +77,7 @@
                                     <div class="col-6">
                                         <Textarea v-model="buyer.address" class="w-100" cols="30" rows="1"></Textarea>
                                         <Message class="my-2" v-if="errors.address" severity="error">{{
-                            errors.address[0] }}</Message>
+                                            errors.address[0] }}</Message>
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
@@ -88,7 +87,28 @@
                                     <div class="col-6">
                                         <InputText id="website" class="w-100" v-model="buyer.website" />
                                         <Message class="my-2" v-if="errors.website" severity="error">{{
-                            errors.website[0] }}</Message>
+                                            errors.website[0] }}</Message>
+                                    </div>
+                                </div>
+                                <div class="d-flex col-6 my-2">
+                                    <div class="col-6 my-auto">
+                                        <label for="consignee">Consignee<span class="text-danger">*</span>:</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <div v-for="(consignee, index) in consignees" :key="index"
+                                            class="d-flex align-items-center my-2">
+                                            <InputText v-model="consignee.name" class="w-"
+                                                placeholder="Enter Consignee" />
+                                            <div class="input-buttons">
+                                                <Button icon="pi pi-plus" class="p-button-warning mx-2"
+                                                    @click="addMaterial" v-if="index === 0" />
+                                                <Button icon="pi pi-minus" class="p-button-danger mx-2"
+                                                    @click="removeMaterial(index)"
+                                                    v-if="consignees.length > 1 && index != 0" />
+                                            </div>
+                                        </div>
+                                        <Message severity="error" class="my-1" v-if="errors.name"
+                                            :text="errors.name[0]" />
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +150,7 @@
                             <Textarea id="buyerDescription" v-model="buyer.buyerDescription" class="w-100" rows="3"
                                 style="height: 120px;"></Textarea>
                             <Message class="my-2" v-if="errors.buyerDescription" severity="error">{{
-                            errors.buyerDescription[0] }}</Message>
+                                errors.buyerDescription[0] }}</Message>
                         </div>
                         <div class="form-group col-6 my-2">
                             <label class="form-label">Product Group</label>
@@ -204,6 +224,7 @@ export default {
     emits: ['profileUpdated'],
     data() {
         return {
+            consignees: [{ name: '' }],
             loader: false,
             productOptions: [],
             statusOptions: [
@@ -228,7 +249,23 @@ export default {
             orders: [],
         };
     },
+    watch: {
+        consignees: {
+            handler(newMaterials) {
+                this.buyer.consignees = newMaterials.map((consignee) => (consignee.name));
+            },
+            deep: true,
+        },
+    },
     methods: {
+        addMaterial() {
+            this.consignees.push({ name: '' });
+        },
+        removeMaterial(index) {
+            if (this.consignees.length > 1) {
+                this.consignees.splice(index, 1);
+            }
+        },
         handleExcelSelect(event) {
             // Get the selected file
             const file = event.files[0];
@@ -300,6 +337,7 @@ export default {
                     person: buyer.person,
                     group: buyer.group
                 };
+                this.consignees = buyer && buyer.consignees ? buyer.consignees.map(name => ({ name })) : [{ name: '' }];
                 this.loader = false;
             } catch (error) {
                 this.loader = false;
@@ -319,7 +357,7 @@ export default {
             if (!this.errors.length) {
                 const formData = {
                     ...this.buyer,
-                    group: this.buyer.group
+                    group: this.buyer.group,
                 };
 
                 try {
