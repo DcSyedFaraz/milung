@@ -1,4 +1,4 @@
-import DefaultAdmin from "./pages/buyer/default.vue";
+import DefaultAdmin from "./pages/admin/default.vue";
 
 // Product
 import product from "./pages/buyer/product/product.vue";

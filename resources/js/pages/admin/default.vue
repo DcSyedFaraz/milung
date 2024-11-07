@@ -8,14 +8,14 @@
                     <div v-if="isAdminOrInternal" class="col-xxl-3 col-md-6">
                         <div class="card info-card sales-card cursor-pointer" @click="navigateTo('Databuyer')">
                             <div class="card-body rounded bg-milung">
-                                <h5 class="card-title text-white">Buyers</h5>
+                                <h5 class="card-title text-white fs-6">Buyers</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-person"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Buyers }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.Buyers }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -25,14 +25,14 @@
                     <div v-if="isAdminOrInternal" class="col-xxl-3 col-md-6">
                         <div class="card info-card revenue-card cursor-pointer" @click="navigateTo('product')">
                             <div class="card-body rounded bg-blue">
-                                <h5 class="card-title text-white">Products</h5>
+                                <h5 class="card-title text-white fs-6">Products</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-box-seam"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Products }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.Products }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -42,14 +42,14 @@
                     <div v-if="isAdminOrInternal" class="col-xxl-3 col-md-6">
                         <div class="card info-card supplier-card cursor-pointer" @click="navigateTo('Datasupplier')">
                             <div class="card-body rounded bg-warning">
-                                <h5 class="card-title text-white">Suppliers</h5>
+                                <h5 class="card-title text-white fs-6">Suppliers</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-truck"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Suppliers }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.Suppliers }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -59,14 +59,14 @@
                     <div v-if="isAdminOrInternal" class="col-xxl-3 col-md-6">
                         <div class="card info-card admin-card cursor-pointer" @click="navigateTo('user')">
                             <div class="card-body rounded bg-primary">
-                                <h5 class="card-title text-white">Admin</h5>
+                                <h5 class="card-title text-white fs-6">Admin</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-gear"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">Manage</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">Manage</p>
                                     </div>
                                 </div>
                             </div>
@@ -74,17 +74,18 @@
                     </div>
 
                     <!-- Internal Operation Widget -->
-                    <div v-if="isAdminOrInternal && hasPermission('createPriceInquiry')" class="col-xxl-3 col-md-6">
+                    <div v-if="isBuyer || isSupplier || (isAdminOrInternal && hasPermission('createPriceInquiry'))"
+                        class="col-xxl-3 col-md-6">
                         <div class="card info-card operation-card cursor-pointer" @click="navigateTo('priceInquiry')">
                             <div class="card-body rounded bg-operation">
-                                <h5 class="card-title text-white">Order Price Inquiry</h5>
+                                <h5 class="card-title text-white fs-6">Order Price Inquiry</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.OrderPriceInquiry }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.OrderPriceInquiry }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -92,17 +93,18 @@
                     </div>
 
                     <!-- Internal Merchandiser Widget -->
-                    <div v-if="isAdminOrInternal && hasPermission('printviewConfirmRejectButton')" class="col-xxl-3 col-md-6">
+                    <div v-if="isBuyer || (isAdminOrInternal && hasPermission('printviewConfirmRejectButton'))"
+                        class="col-xxl-3 col-md-6">
                         <div class="card info-card merchandiser-card cursor-pointer" @click="navigateTo('printview')">
                             <div class="card-body rounded bg-merchandiser">
-                                <h5 class="card-title text-white">Printview Rejected</h5>
+                                <h5 class="card-title text-white fs-6">Printview Rejected</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-printer"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.PrintviewRejected }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.PrintviewRejected }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -113,14 +115,14 @@
                     <div v-if="isBuyer" class="col-xxl-3 col-md-6">
                         <div class="card info-card buyer-card cursor-pointer" @click="navigateTo('fixedOrders')">
                             <div class="card-body rounded bg-buyer">
-                                <h5 class="card-title text-white">Fixed Orders</h5>
+                                <h5 class="card-title text-white fs-6">Fixed Orders</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-cart-check"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.FixedOrders }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.FixedOrders }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -132,14 +134,14 @@
                         <div class="card info-card supplier-widget-card cursor-pointer"
                             @click="navigateTo('inquiries')">
                             <div class="card-body rounded bg-supplier">
-                                <h5 class="card-title text-white">Inquiries</h5>
+                                <h5 class="card-title text-white fs-6">Inquiries</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-question-circle"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.Inquiry }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.Inquiry }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -151,14 +153,14 @@
                     <div v-if="isAdminOrInternal && hasPermission('bestSales')" class="col-xxl-3 col-md-6">
                         <div class="card info-card best-sales-card cursor-pointer" @click="navigateTo('bestSales')">
                             <div class="card-body rounded bg-best-sales">
-                                <h5 class="card-title text-white">Best Sales</h5>
+                                <h5 class="card-title text-white fs-6">Best Sales</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-bar-chart-line"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.bestSalesCount }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.bestSalesCount }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -170,14 +172,14 @@
                         <div class="card info-card best-purchase-card cursor-pointer"
                             @click="navigateTo('bestPurchase')">
                             <div class="card-body rounded bg-best-purchase">
-                                <h5 class="card-title text-white">Best Purchase</h5>
+                                <h5 class="card-title text-white fs-6">Best Purchase</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-cart-plus"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">{{ data.bestPurchaseCount }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">{{ data.bestPurchaseCount }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -189,14 +191,14 @@
                         <div class="card info-card sales-revenue-card cursor-pointer"
                             @click="navigateTo('salesRevenue')">
                             <div class="card-body rounded bg-sales-revenue">
-                                <h5 class="card-title text-white">Sales Revenue</h5>
+                                <h5 class="card-title text-white fs-6">Sales Revenue</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-cash-coin"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">${{ formatNumber(data.salesRevenue) }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">${{ formatNumber(data.salesRevenue) }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -208,14 +210,73 @@
                         <div class="card info-card purchase-revenue-card cursor-pointer"
                             @click="navigateTo('purchaseRevenue')">
                             <div class="card-body rounded bg-purchase-revenue">
-                                <h5 class="card-title text-white">Purchase Revenue</h5>
+                                <h5 class="card-title text-white fs-6">Purchase Revenue Total</h5>
                                 <div class="d-flex align-items-center">
                                     <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-cash-stack"></i>
                                     </div>
-                                    <div class="ps-3">
-                                        <p class="text-white fw-bold">${{ formatNumber(data.purchaseRevenue.total) }}</p>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">${{
+                                            formatNumber(data.purchaseRevenue.total) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="isAdminOrInternal && hasPermission('purchaseRevenue')" class="col-xxl-3 col-md-6">
+                        <div class="card info-card purchase-revenue-card cursor-pointer"
+                            @click="navigateTo('purchaseRevenue')">
+                            <div class="card-body rounded bg-purchase-revenue">
+                                <h5 class="card-title text-white fs-6">Purchase Revenue weekly</h5>
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </div>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">${{
+                                            formatNumber(data.purchaseRevenue.weekly) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="isAdminOrInternal && hasPermission('purchaseRevenue')" class="col-xxl-3 col-md-6">
+                        <div class="card info-card purchase-revenue-card cursor-pointer"
+                            @click="navigateTo('purchaseRevenue')">
+                            <div class="card-body rounded bg-purchase-revenue">
+                                <h5 class="card-title text-white fs-6">Purchase Revenue monthly</h5>
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </div>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">${{
+                                            formatNumber(data.purchaseRevenue.monthly) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="isAdminOrInternal && hasPermission('purchaseRevenue')" class="col-xxl-3 col-md-6">
+                        <div class="card info-card purchase-revenue-card cursor-pointer"
+                            @click="navigateTo('purchaseRevenue')">
+                            <div class="card-body rounded bg-purchase-revenue">
+                                <h5 class="card-title text-white fs-6">Purchase Revenue yearly</h5>
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon my-auto rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </div>
+                                    <div class="ps-3 my-auto">
+                                        <p class="text-white fw-bold my-auto">${{
+                                            formatNumber(data.purchaseRevenue.yearly) }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -294,7 +355,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-white">Dashboard</h5>
+                        <h5 class="card-title text-white fs-6">Dashboard</h5>
                         <p><i class="bi bi-clock-fill"></i> {{ currentTime }}</p>
 
                         <!-- Common Sections -->
@@ -304,7 +365,7 @@
 
                         <!-- Admin/Internal Specific Sections -->
                         <div v-if="isAdminOrInternal">
-                            <h5 class="card-title text-white">
+                            <h5 class="card-title text-white fs-6">
                                 Budget Report <span><a href="#">See All</a></span>
                             </h5>
                             <div class="news">
@@ -318,7 +379,7 @@
 
                         <!-- Additional Admin/Internal Sections -->
                         <div v-if="isAdminOrInternal && hasPermission('createProductGroup')">
-                            <h5 class="card-title text-white">Top Categories</h5>
+                            <h5 class="card-title text-white fs-6">Top Categories</h5>
                             <p>Track sales of items across groups.</p>
                             <table class="table table-active">
                                 <thead>
@@ -343,13 +404,13 @@
 
                         <!-- Buyer Specific Sections -->
                         <div v-if="isBuyer">
-                            <h5 class="card-title text-white">Buyer Insights</h5>
+                            <h5 class="card-title text-white fs-6">Buyer Insights</h5>
                             <!-- Add Buyer-specific widgets or information here -->
                         </div>
 
                         <!-- Supplier Specific Sections -->
                         <div v-if="isSupplier">
-                            <h5 class="card-title text-white">Supplier Insights</h5>
+                            <h5 class="card-title text-white fs-6">Supplier Insights</h5>
                             <!-- Add Supplier-specific widgets or information here -->
                         </div>
 
@@ -425,7 +486,7 @@ export default {
             return new Date(dateString).toLocaleDateString(undefined, options);
         },
         formatNumber(number) {
-            return number.toLocaleString();
+            return number;
         },
     },
 };

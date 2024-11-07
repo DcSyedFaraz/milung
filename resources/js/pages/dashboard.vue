@@ -197,7 +197,8 @@
                     <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
                         :class="{ 'show': isAnyChildRouteActive() }">
                         <li>
-                            <router-link :to="{ name: 'user' }" active-class="active">
+                            <router-link :to="{ name: 'user' }" active-class="active"
+                                :class="{ active: this.$route.name === 'edituser' }">
                                 <i class="bi bi-circle"></i><span>User</span>
                             </router-link>
                         </li>
@@ -388,6 +389,7 @@ export default {
             const activeRoutes = [
                 '/admin/user',
                 '/admin/add-user',
+                '/edit-user/:id',
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));
@@ -463,7 +465,7 @@ export default {
                 '/admin/Databuyer/:id',
                 '/admin/Datasupplier/:id',
                 '/admin/productEdit/:id',
-                '/edit-user/:id',
+
             ];
 
             return this.$route.matched.some(route => activeRoutes.includes(route.path));

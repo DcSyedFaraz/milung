@@ -69,42 +69,12 @@
             <div class="logo-img"><img src="../../../../public/imgs/logo-1.png" /></div>
             <ul class="sidebar-nav" id="sidebar-nav">
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'supplierdash' }">
+                    <router-link class="nav-link" :to="{ name: 'supplierdash' }" active-class="active">
                         <i class="bi bi-pie-chart"></i>
                         <span>Dashboard</span>
                     </router-link>
                 </li>
-                <!-- End Dashboard Nav -->
 
-                <!-- End Components Nav -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-database"></i><span>Database</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="forms-elements.html">
-                                <i class="bi bi-circle"></i><span>Form Elements</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="forms-layouts.html">
-                                <i class="bi bi-circle"></i><span>Form Layouts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="forms-editors.html">
-                                <i class="bi bi-circle"></i><span>Form Editors</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="forms-validation.html">
-                                <i class="bi bi-circle"></i><span>Form Validation</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li> -->
                 <!-- End Forms Nav -->
                 <li class="nav-item" v-if="can('priceInquiry')">
                     <router-link class="nav-link" :to="{ name: 'supplier_price_inquiry' }"

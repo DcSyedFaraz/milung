@@ -1,4 +1,4 @@
-import DefaultAdmin from "./pages/supplier/default.vue";
+import DefaultAdmin from "./pages/admin/default.vue";
 
 // Order
 import order_list from "./pages/supplier/order/order_list.vue";

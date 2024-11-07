@@ -88,14 +88,15 @@
                                         <InputText id="website" class="w-100" v-model="buyer.website" />
                                         <Message class="my-2" v-if="errors.website" severity="error">{{
                                             errors.website[0] }}</Message>
+                                        </div>
                                     </div>
-                                </div>
                                 <div class="d-flex col-6 my-2">
                                     <div class="col-6 my-auto">
                                         <label for="consignee">Consignee<span class="text-danger">*</span>:</label>
                                     </div>
                                     <div class="col-6">
-                                        <div v-for="(consignee, index) in consignees" :key="index"
+                                        <InputText id="website" class="w-100" v-model="buyer.consignee" />
+                                        <!-- <div v-for="(consignee, index) in consignees" :key="index"
                                             class="d-flex align-items-center my-2">
                                             <InputText v-model="consignee.name" class="w-"
                                                 placeholder="Enter Consignee" />
@@ -106,7 +107,7 @@
                                                     @click="removeMaterial(index)"
                                                     v-if="consignees.length > 1 && index != 0" />
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <Message severity="error" class="my-1" v-if="errors.name"
                                             :text="errors.name[0]" />
                                     </div>
@@ -330,6 +331,7 @@ export default {
                     email: buyer.email,
                     status: buyer.status,
                     address: buyer.address,
+                    consignee: buyer.consignee,
                     website: buyer.website,
                     contact_person: buyer.contact_person,
                     officePhone: buyer.office_phone,
@@ -337,7 +339,7 @@ export default {
                     person: buyer.person,
                     group: buyer.group
                 };
-                this.consignees = buyer && buyer.consignees ? buyer.consignees.map(name => ({ name })) : [{ name: '' }];
+                // this.consignees = buyer && buyer.consignees ? buyer.consignees.map(name => ({ name })) : [{ name: '' }];
                 this.loader = false;
             } catch (error) {
                 this.loader = false;

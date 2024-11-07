@@ -4,6 +4,7 @@ namespace App\Http\Controllers\buyer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderSupplier;
 use App\Models\PriceInquiry;
 use App\Models\ProductGroup;
 use App\Models\Products;
@@ -54,7 +55,7 @@ class BuyerController extends Controller
                 ->latest()
                 ->take(3)
                 ->get();
-                
+
             if ($user->hasPermissionTo('purchaseRevenue')) {
                 $purchaseRevenueTotal = Cache::remember('purchase_revenue_total', 300, function () {
                     return Order::sum(DB::raw('buyingprice * quantity_unit'));
@@ -82,6 +83,8 @@ class BuyerController extends Controller
                     'yearly' => $purchaseRevenueYearly,
                 ];
             }
+            $data['OrderPriceInquiry'] = Order::where('buyer', $user->buyer_id)->where('status', 'Printview Reject')
+                ->count();
             // Additional data based on permissions for Internal
             if ($isInternal) {
                 // Determine if user has Operation or Merchandiser permissions
@@ -89,16 +92,14 @@ class BuyerController extends Controller
                 $isMerchandiser = $user->hasPermissionTo('printviewConfirmRejectButton') || $user->hasPermissionTo('massCargoPhotoApproval');
 
                 if ($isOperation) {
-                    $data['OrderPriceInquiry'] = Order::where('status', 'Price Inquiry')->count();
                     // Additional Operation-specific data
                 }
 
                 if ($isMerchandiser) {
-                    $data['PrintviewRejected'] = Order::where('status', 'Printview Rejected')->count();
-                    // Additional Merchandiser-specific data
                 }
 
             }
+            $data['PrintviewRejected'] = Order::where('status', 'Printview Reject')->count();
             if ($user->hasPermissionTo('bestSales') || $user->hasPermissionTo('bestPurchase') || $user->hasPermissionTo('salesRevenue') || $user->hasPermissionTo('purchaseRevenue')) {
                 $topCategories = ProductGroup::select('product_groups.group_name', DB::raw('SUM(orders.quantity_unit) as units_sold'))
                     // ->join('products', 'product_groups.id', '=', 'products.group')
@@ -115,19 +116,29 @@ class BuyerController extends Controller
 
         // Data for Buyer
         if ($roles->contains('Buyer')) {
-            $data['FixedOrders'] = Order::count();
+            $data['FixedOrders'] = Order::where('buyer', $user->buyer_id)
+                ->count();
+            $data['PrintviewRejected'] = Order::where('buyer', $user->buyer_id)->where('status', 'Printview Reject')
+                ->count();
             $data['Orders'] = Order::select('id', 'productname', 'sendoutdate', 'status')
-                ->where('buyer', $user->buyer_id) // Assuming orders are linked to buyers
+                ->where('buyer', $user->buyer_id)
                 ->latest()
                 ->take(3)
                 ->get();
+            $data['OrderPriceInquiry'] = Order::where('buyer', $user->buyer_id)->where('status', 'Price')
+                ->count();
         }
 
         // Data for Supplier
         if ($roles->contains('Supplier')) {
-            $data['Inquiry'] = PriceInquiry::count(); // Adjust based on actual relationships
+            $data['PrintviewRejected'] = Order::where('supplier', $user->supplier_id)->where('status', 'Printview Reject')
+                ->count();
+            $data['Inquiry'] = PriceInquiry::whereJsonContains('supplier_ids', (string) $user->supplier_id)
+                ->count();
+            $data['OrderPriceInquiry'] = OrderSupplier::where('user_id', $user->supplier_id)->whereNull('purchase')
+                ->count();
             $data['Orders'] = Order::select('id', 'productname', 'sendoutdate', 'status')
-                ->where('supplier', $user->supplier_id) // Assuming orders are linked to suppliers
+                ->where('supplier', $user->supplier_id)
                 ->latest()
                 ->take(3)
                 ->get();

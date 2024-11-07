@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/get-permissions', function () {
         return auth()->check() ? auth()->user()->jsPermissions() : 0;
     });
+    Route::get('dashboard', [BuyerController::class, 'dashboard']);
 
     // Notifications
     Route::get('notifications', [UserController::class, 'index']);
@@ -57,7 +58,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer']], function () {
 
 
-    Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
+    Route::get('dashboard', [BuyerController::class, 'dashboard']);
+    // Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
 
     // Product
     Route::get('products', [UserController::class, 'products']);
@@ -102,7 +104,8 @@ Route::group(['prefix' => 'buyer', 'middleware' => ['auth:sanctum', 'role:Buyer'
 // <-- Supplier Routes -->
 Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Supplier']], function () {
 
-    Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
+    // Route::get('dashboard', [BuyerController::class, 'Buyerdashboard']);
+    Route::get('dashboard', [BuyerController::class, 'dashboard']);
     // Shipment
     Route::get('shipments', [SupplierShipmentController::class, 'shipments'])->middleware('can:shipmentOverview');
     Route::post('shipment/{id}', [SupplierShipmentController::class, 'shipment'])->middleware('can:shipmentOverview');
@@ -148,7 +151,6 @@ Route::group(['prefix' => 'supplier', 'middleware' => ['auth:sanctum', 'role:Sup
 Route::middleware(['auth:sanctum', 'role:Admin|Internal'])->group(function () {
 
 
-    Route::get('dashboard', [BuyerController::class, 'dashboard']);
     Route::get('events', [UserController::class, 'events']);
 
     // Fetching Users
