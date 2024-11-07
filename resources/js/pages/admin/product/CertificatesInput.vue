@@ -2,20 +2,22 @@
     <div>
         <div v-for="(certificate, index) in certificates" :key="index" class="row mb-3">
             <div class="col-3 mt-2">
-                <input type="text" v-model="certificate.label" placeholder="Enter label" class="form-control" @input="emitCertificates"/>
+                <input type="text" v-model="certificate.label" placeholder="Enter label" class="form-control"
+                    @input="emitCertificates" />
             </div>
             <div class="col-5 mt-2">
                 <input type="text" :name="`certificate_${index}`" disabled v-model="certificate.fileName"
                     class="form-control w-full">
             </div>
             <div class="col-4 px-0 ">
-                <button type="button" class="btn-sm btn btn-light rotate-icon" @click="triggerFileInput(index)">
+                <button v-if="certificate.filePath && isEditing" type="button" class="btn-sm btn btn-light rotate-icon"
+                    @click="downloadFile(index)">
                     <i class="bi bi-arrow-up-right-square fs-2 text-success"></i>
                 </button>
-                <input ref="fileInput" type="file" style="display: none" @change="onFileChange($event, index)">
-                <button v-if="certificate.filePath && isEditing" type="button" class="btn-sm btn btn-light" @click="downloadFile(index)">
+                <button type="button" class="btn-sm btn btn-light " @click="triggerFileInput(index)">
                     <i class="bi bi-arrow-up-right-square fs-2 text-primary"></i>
                 </button>
+                <input ref="fileInput" type="file" style="display: none" @change="onFileChange($event, index)">
                 <button @click="removeCertificate(index)" type="button" class="btn btn-danger btn-sm">Remove</button>
             </div>
         </div>
