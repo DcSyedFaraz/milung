@@ -178,7 +178,7 @@ class BuyerOrderController extends Controller
 
         // Send the email to the admins
         foreach ($admins as $key => $admin) {
-            //Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'New Order'));
+            Mail::to($admin->email)->send(new PriceInquiryNotification($message, 'New Order'));
         }
 
         return response()->json($order, 200);

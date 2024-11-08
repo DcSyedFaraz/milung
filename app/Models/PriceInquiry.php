@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class PriceInquiry extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
     protected $guarded = [];
     protected $casts = [
         'cargo_place' => 'array',
@@ -26,6 +27,6 @@ class PriceInquiry extends Model
     }
     public function product_group()
     {
-        return $this->belongsTo(ProductGroup::class, 'group')->select('id','group_name');
+        return $this->belongsTo(ProductGroup::class, 'group')->select('id', 'group_name');
     }
 }

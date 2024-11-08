@@ -51,15 +51,19 @@ class InquiryController extends Controller
             'description' => 'required|string',
             'cargo' => 'required|string',
             'cargo_place' => 'required|array',
+            'cargo_place.*' => 'string',
             'incoterm' => 'required|string',
             'urgent' => 'nullable',
             'method' => 'required|string',
-            'color' => 'required|string',
-            'packaging' => 'required|string',
-            'requirements' => 'required|string',
+            'color' => 'nullable|string',
+            'packaging' => 'nullable|string',
+            'requirements' => 'nullable|string',
             'status' => 'required|string',
             'pcs' => 'required|array',
+            'pcs.*' => 'integer',
+            'supplier_ids.*' => 'integer',
             'capacity' => 'required|array',
+            'capacity.*' => 'string',
         ]);
         try {
             DB::beginTransaction();
@@ -100,7 +104,7 @@ class InquiryController extends Controller
 
             //Notification::send($admins, new UserNotification($messages, 'New Price Inquiry', 'price_inquiry_edit', ['id' => $priceInquiry->id]));
 
-            //Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+            Mail::to($admins->pluck('email'))->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
 
             DB::commit();
             return response()->json(['message' => 'Price inquiry submitted successfully'], 201);
@@ -165,15 +169,19 @@ class InquiryController extends Controller
             'description' => 'required|string',
             'cargo' => 'required|string',
             'cargo_place' => 'required|array',
+            'cargo_place.*' => 'string',
             'incoterm' => 'required|string',
             'urgent' => 'nullable',
             'method' => 'required|string',
-            'color' => 'required|string',
-            'packaging' => 'required|string',
-            'requirements' => 'required|string',
+            'color' => 'nullable|string',
+            'packaging' => 'nullable|string',
+            'requirements' => 'nullable|string',
             'status' => 'required|string',
             'pcs' => 'required|array',
+            'pcs.*' => 'integer',
+            'supplier_ids.*' => 'integer',
             'capacity' => 'required|array',
+            'capacity.*' => 'string',
         ]);
 
         $priceInquiry = PriceInquiry::findOrFail($id);

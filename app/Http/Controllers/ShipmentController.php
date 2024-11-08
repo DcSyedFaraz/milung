@@ -138,7 +138,7 @@ class ShipmentController extends Controller
 
             // Send the email to the supplier
             foreach ($supplierId as $key => $user) {
-                //Mail::to($user->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));
+                Mail::to($user->email)->send(new PriceInquiryNotification($message, 'Account Receivable - Payment Received'));
             }
             \DB::commit();
             return response()->json($SupplierInvoice, 200);

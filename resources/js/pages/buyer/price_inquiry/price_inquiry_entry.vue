@@ -1,7 +1,10 @@
 <template>
     <section class="section">
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
-
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary ms-4" type="button" @click="$router.back()">Back</button>
+                <button class="btn btn-primary px-4 me-4 " @click="this.save = true;">Save</button>
+            </div>
             <div class="container">
 
                 <div class="row my-5">
@@ -50,7 +53,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Cargo Classification:</p>
+                                <p for="v-model">Cargo Classification<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
                                 <div class="d-flex">
@@ -90,7 +93,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Incoterm:</p>
+                                <p for="v-model">Incoterm<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
                                 <input type="text" v-model="inquiry.incoterm" class="form-control">
@@ -98,7 +101,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Inquiry Quantity:</p>
+                                <p for="v-model">Inquiry Quantity<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group my-2" v-for="(material, index) in materials" :key="index">
@@ -118,7 +121,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Product Capacity:</p>
+                                <p for="v-model">Product Capacity<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
                                 <div class="input-group my-2" v-for="(caps, indexs) in capacity" :key="indexs">
@@ -142,7 +145,7 @@
                         </div>
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
-                                <p for="v-model">Printing Method:</p>
+                                <p for="v-model">Printing Method<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8"><input type="text" v-model="inquiry.method" class="form-control"></div>
                         </div>

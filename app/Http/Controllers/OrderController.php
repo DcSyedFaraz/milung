@@ -86,7 +86,7 @@ class OrderController extends Controller
 
                     // Send the email to the supplier
                     foreach ($user as $value) {
-                        //Mail::to($value->email)->send(new PriceInquiryNotification($message, 'New Order'));
+                        Mail::to($value->email)->send(new PriceInquiryNotification($message, 'New Order'));
                     }
 
                 } else {

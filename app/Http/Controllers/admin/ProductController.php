@@ -117,7 +117,7 @@ class ProductController extends Controller
 
                 // Send the email to the supplier
                 foreach ($supplier as $key => $user) {
-                    //Mail::to($user->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
+                    Mail::to($user->email)->send(new PriceInquiryNotification($messages, 'Price Inquiry Follow Up'));
                 }
             }
         }
@@ -132,7 +132,7 @@ class ProductController extends Controller
             'buyer' => 'required|exists:buyer_profiles,id',
             'inquiry_number' => 'required|string',
             'article' => 'required|string',
-            'group' => 'nullable|string',
+            'group' => 'required|string',
             'name' => 'required|string',
             'description' => 'required|string',
             'cargo' => 'required|string',
@@ -152,7 +152,7 @@ class ProductController extends Controller
             'capacity.*' => 'string',
             'file' => 'nullable|file',
             'file1' => 'nullable|file',
-            'supplier_ids' => 'required|array',
+            'supplier_ids' => 'array',
         ]);
 
         try {
@@ -306,25 +306,6 @@ class ProductController extends Controller
         $priceInquiry = PriceInquiry::findOrFail($id);
 
 
-        if ($request->supplier_ids) {
-
-            $inquiry_number = $validatedData['inquiry_number'];
-            $messages = "A price inquiry with the number '$inquiry_number' has been added.";
-            foreach ($request->supplier_ids as $supplierId) {
-                // Get the supplier
-                $suppliers = User::where('supplier_id', $supplierId)->get();
-
-                // Send the notification to the supplier
-                Notification::send($suppliers, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
-
-                // Send the email to the supplier
-                foreach ($suppliers as $key => $supplier) {
-
-                    //Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
-                }
-            }
-        }
-
         // Handle file uploads if necessary
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -339,54 +320,75 @@ class ProductController extends Controller
             $priceInquiry->file1 = $fileName1;
         }
 
-        // Original values
-        $originalPcs = $priceInquiry->pcs;
-        $originalCapacity = $priceInquiry->capacity;
 
-        // Filter and update pcs
-        $pcs = $request->input('pcs');
-        $filteredPcs = array_filter($pcs, function ($value) {
-            return $value !== null;
-        });
-        $priceInquiry->pcs = $filteredPcs;
+        if ($request->supplier_ids) {
 
-        // Filter and update capacity
-        $capacity = $request->input('capacity');
-        $filteredCapacity = array_filter($capacity, function ($value) {
-            return $value !== null && $value !== 'undefined';
-        });
-        $priceInquiry->capacity = $filteredCapacity;
+            $inquiry_number = $validatedData['inquiry_number'];
+            $messages = "A price inquiry with the number '$inquiry_number' has been added.";
+            foreach ($request->supplier_ids as $supplierId) {
+                // Get the supplier
+                $suppliers = User::where('supplier_id', $supplierId)->get();
 
-        // Check if there are new values
-        $hasNewPcs = !empty(array_diff($filteredPcs, $originalPcs));
-        $hasNewCapacity = !empty(array_diff($filteredCapacity, $originalCapacity));
-        // dd($hasNewPcs,$hasNewCapacity);
-        // Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
-        $newSupplierIds = array_unique($request->supplier_ids);
+                // Send the notification to the supplier
+                Notification::send($suppliers, new UserNotification($messages, 'New Price Inquiry', 'supplier_price_inquiry_entry', ['id' => $id]));
 
-        // Get existing supplier IDs from the database
-        $existingSupplierIds = $priceInquiry->inquirysuppliers()->pluck('user_id')->toArray();
+                // Send the email to the supplier
+                foreach ($suppliers as $key => $supplier) {
 
-        // Check if there are differences between the two arrays
-        $diff = array_diff($newSupplierIds, $existingSupplierIds);
+                    Mail::to($supplier->email)->send(new PriceInquiryNotification($messages, 'New Price Inquiry'));
+                }
+            }
+            // Original values
+            $originalPcs = $priceInquiry->pcs;
+            $originalCapacity = $priceInquiry->capacity;
 
-        if ($hasNewPcs || $hasNewCapacity || !empty($diff)) {
-            $priceInquiry->inquirysuppliers()->delete();
+            // Filter and update pcs
+            $pcs = $request->input('pcs');
+            $filteredPcs = array_filter($pcs, function ($value) {
+                return $value !== null;
+            });
+            $priceInquiry->pcs = $filteredPcs;
 
-            foreach ($request->supplier_ids as $index => $supplier_id) {
-                foreach ($request->pcs as $pcsIndex => $pcsValue) {
-                    foreach ($request->capacity as $capacityIndex => $capacityValue) {
+            // Filter and update capacity
+            $capacity = $request->input('capacity');
+            $filteredCapacity = array_filter($capacity, function ($value) {
+                return $value !== null && $value !== 'undefined';
+            });
+            $priceInquiry->capacity = $filteredCapacity;
 
-                        $priceInquiry->inquirysuppliers()->create([
-                            'user_id' => $supplier_id,
-                            'quantity' => $pcsValue,
-                            'capacity' => $capacityValue,
-                        ]);
+            // Check if there are new values
+            $hasNewPcs = !empty(array_diff($filteredPcs, $originalPcs));
+            $hasNewCapacity = !empty(array_diff($filteredCapacity, $originalCapacity));
+            // dd($hasNewPcs,$hasNewCapacity);
+            // Auth::check() ? $priceInquiry->user_id = Auth::id() : '';
+            $newSupplierIds = array_unique($request->supplier_ids);
+
+            // Get existing supplier IDs from the database
+            $existingSupplierIds = $priceInquiry->inquirysuppliers()->pluck('user_id')->toArray();
+
+            // Check if there are differences between the two arrays
+            $diff = array_diff($newSupplierIds, $existingSupplierIds);
+
+            if ($hasNewPcs || $hasNewCapacity || !empty($diff)) {
+                $priceInquiry->inquirysuppliers()->delete();
+
+                foreach ($request->supplier_ids as $index => $supplier_id) {
+                    foreach ($request->pcs as $pcsIndex => $pcsValue) {
+                        foreach ($request->capacity as $capacityIndex => $capacityValue) {
+
+                            $priceInquiry->inquirysuppliers()->create([
+                                'user_id' => $supplier_id,
+                                'quantity' => $pcsValue,
+                                'capacity' => $capacityValue,
+                            ]);
+                        }
+
                     }
-
                 }
             }
         }
+
+
 
         // Update the fields with the validated data
         $priceInquiry->update($validatedData);

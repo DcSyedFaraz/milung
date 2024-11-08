@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
     protected $guarded = [];
     protected $casts = [
         'files' => 'array',
@@ -20,7 +21,20 @@ class Order extends Model
         'manualFiles' => 'array',
         'safetySheetFiles' => 'array',
     ];
+    // public function toSearchableArray()
+    // {
+    //     $array = $this->toArray();
 
+    //     // Add a 'model_type' to distinguish between models
+    //     $array['model_type'] = 'order';
+
+    //     // Specify only the fields you want to be searchable
+    //     return [
+    //         'id' => $array['id'],
+    //         'article' => $array['article'],
+    //         'model_type' => $array['model_type'],
+    //     ];
+    // }
     public function getQuantityUnitAttribute($value)
     {
         // Extract numeric part from the quantity_sold attribute
@@ -52,7 +66,7 @@ class Order extends Model
     }
     public function supplierid()
     {
-        return $this->belongsTo(SupplierProfile::class, 'supplier','id')->select('id', 'supplier_id');
+        return $this->belongsTo(SupplierProfile::class, 'supplier', 'id')->select('id', 'supplier_id');
     }
     public function supplier()
     {
@@ -77,7 +91,7 @@ class Order extends Model
     public function invoice_number()
     {
         return $this->belongsToMany(SupplierInvoice::class)
-            ->select('supplier_invoices.invoice_number','supplier_invoices.outstanding_amount');
+            ->select('supplier_invoices.invoice_number', 'supplier_invoices.outstanding_amount');
     }
     public function invoices()
     {

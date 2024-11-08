@@ -19,14 +19,30 @@
                 <!-- <button type="button" @click="remountComponent">click</button> -->
             </div>
 
-            <div class="search-bar">
-                <i class="bi bi-search"></i>
+            <div class="search-bar ">
+                <Search />
+                <!-- <ais-instant-search :search-client="searchClient" class="search-form " :routing="routing"
+                    index-name="price_inquiries">
+
+                    <div class="right-panel">
+                        <ais-search-box />
+                        <ais-hits :escape-HTML="true">
+                            <template v-slot:item="{ item }">
+                                <h2>{{ item.name }}</h2>
+                            </template>
+                        </ais-hits>
+                        <ais-pagination />
+                    </div>
+
+                </ais-instant-search> -->
+
+                <!-- <i class="bi bi-search"></i>
                 <form class="search-form d-flex align-items-center" method="POST" action="#">
                     <input type="text" name="query" placeholder="Live Search" title="Enter search keyword" />
                     <button type="submit" title="Search">
                         <i class="bi bi-send-fill"></i>
                     </button>
-                </form>
+                </form> -->
             </div>
             <!-- End Search Bar -->
 
@@ -50,113 +66,7 @@
                     <!-- End Profile Nav -->
 
                     <notifications />
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-bell"></i>
-                            <span class="badge badge-number">4</span> </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
-                           >
-                            <li class="dropdown-header">
-                                You have 4 new notifications
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="notification-item">
-                                <i class="bi bi-exclamation-circle text-warning"></i>
-                                <div>
-                                    <h4>Lorem Ipsum</h4>
-                                    <p>Quae dolorem earum veritatis oditseno</p>
-                                    <p>30 min. ago</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-
-                            <li class="dropdown-footer">
-                                <a href="#">Show all notifications</a>
-                            </li>
-                        </ul>
-                    </li> -->
-                    <!-- End Notification Dropdown Items -->
-                    <!-- End Notification Nav -->
-
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-chat-left-text"></i>
-                            <span class="badge badge-number">3</span> </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
-                           >
-                            <li class="dropdown-header">
-                                You have 3 new messages
-                                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../assets/img/messages-1.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Maria Hudson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>4 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../assets/img/messages-2.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>Anna Nelson</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>6 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="message-item">
-                                <a href="#">
-                                    <img src="./../../assets/img/messages-3.jpg" alt="" class="rounded-circle" />
-                                    <div>
-                                        <h4>David Muldon</h4>
-                                        <p>
-                                            Velit asperiores et ducimus soluta repudiandae labore
-                                            officia est ut...
-                                        </p>
-                                        <p>8 hrs. ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <li class="dropdown-footer">
-                                <a href="#">Show all messages</a>
-                            </li>
-                        </ul>
-                    </li> -->
                     <!-- End Messages Nav -->
                     <li class="nav-item">
                         <router-link class="nav-link nav-icon me-0 pe-0" :to="{ name: 'adminprofile' }">
@@ -370,10 +280,27 @@
 <script>
 // import '';
 import './admin/index';
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
+import 'instantsearch.css/themes/algolia-min.css';
+import { history } from 'instantsearch.js/es/lib/routers';
+import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
+
+import Search from './search.vue';
 
 export default {
+    components:{
+        Search,
+    },
     data() {
         return {
+            searchClient: algoliasearch(
+                'YU4IWTKXH8',
+                'e7ed9d642d6e013e3b7b0e665d81f0f1'
+            ),
+            routing: {
+                router: history(),
+                stateMapping: singleIndex('instant_search'),
+            },
             componentsKey: 0,
             userDetails: {},
         }

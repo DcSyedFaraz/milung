@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class SupplierProfile extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
     protected $guarded = [];
 
     protected $casts = [
@@ -22,6 +23,6 @@ class SupplierProfile extends Model
     }
     public function person()
     {
-        return $this->hasMany(User::class,'supplier_id')->select('id','supplier_id','userid','email','name','status');
+        return $this->hasMany(User::class, 'supplier_id')->select('id', 'supplier_id', 'userid', 'email', 'name', 'status');
     }
 }

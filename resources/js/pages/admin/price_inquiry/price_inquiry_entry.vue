@@ -1,7 +1,12 @@
 <template>
     <section class="section">
-        <button class="btn btn-secondary ms-4" @click="$router.back()">Back</button>
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
+
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary ms-4" type="button" @click="$router.back()">Back</button>
+                <button class="btn btn-primary px-4 me-4 " @click="this.save = true;">Save</button>
+            </div>
+
             <div class="container">
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
@@ -14,7 +19,7 @@
                                 <p for="v-model">Buyer ID<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <Select v-model="buyer" optionLabel="buyer_id" optionValue="id"
+                                <Select v-model="buyer" optionLabel="buyer_id" filter optionValue="id"
                                     placeholder="Select Buyer" class="w-100" :options="buyers" />
                                 <Message severity="error" class="my-1" v-if="errors.buyer">{{ errors.buyer[0] }}
                                 </Message>
@@ -28,7 +33,7 @@
                             <div class="col-8">
                                 <InputText v-model="inquiry.inquiry_number" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.inquiry_number">{{
-            errors.inquiry_number[0] }}</Message>
+                                    errors.inquiry_number[0] }}</Message>
                             </div>
                         </div>
 
@@ -72,7 +77,7 @@
                             <div class="col-8">
                                 <Textarea v-model="inquiry.description" class="w-100" rows="10" />
                                 <Message severity="error" class="my-1" v-if="errors.description">{{
-            errors.description[0] }}</Message>
+                                    errors.description[0] }}</Message>
                             </div>
                         </div>
 
@@ -301,13 +306,13 @@
                         </Column>
 
                         <Column field="quantity" header="Quantity" />
-                        <Column field="currency" header="Currency" > <template #body="slotProps">
-                            <span>USD</span>
-                        </template></Column>
+                        <Column field="currency" header="Currency"> <template #body="slotProps">
+                                <span>USD</span>
+                            </template></Column>
                         <Column field="exw" header="EXW Price"
                             :body="(row) => row.exw || '<span class=\'fst-italic text-muted\'>Not Provided</span>'" />
                         <Column field="remarks" header="Remarks"
-                            :body="(row) => row.supplierremarks?.remarks  || '<span class=\'fst-italic text-muted\'>Not Provided</span>'"
+                            :body="(row) => row.supplierremarks?.remarks || '<span class=\'fst-italic text-muted\'>Not Provided</span>'"
                             :rowspan="totalRows" v-show="index === 0" />
                     </DataTable>
                 </div>
@@ -365,6 +370,7 @@ export default {
     data() {
         return {
             selectedSupplier: null,
+            save: false,
             selectedQuantity: null,
             selectedCapacity: null,
             loader: false,
@@ -705,6 +711,7 @@ export default {
             try {
                 const formData = new FormData();
                 formData.append('buyer', this.buyer);
+                formData.append('save', this.save);
                 formData.append('inquiry_number', this.inquiry.inquiry_number);
                 formData.append('article', this.inquiry.article);
                 formData.append('group', this.inquiry.group);

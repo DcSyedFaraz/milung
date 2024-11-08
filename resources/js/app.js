@@ -34,7 +34,7 @@ import { GridLayout, GridItem } from 'grid-layout-plus'
 
 
 
-
+import InstantSearch from 'vue-instantsearch/vue3/es';
 import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
 
 
@@ -52,6 +52,7 @@ app.component('notifications', Notifications);
 app.component('InputGroup', InputGroup);
 app.component('InputGroupAddon', InputGroupAddon);
 app.component('DatePicker', DatePicker);
+app.use(InstantSearch);
 app.component('GridLayout', GridLayout).component('GridItem', GridItem)
 
 

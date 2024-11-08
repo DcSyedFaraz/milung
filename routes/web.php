@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Order;
+use App\Models\Products;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +22,17 @@ Route::get('/done', function () {
 
     return 'done';
 });
+Route::get('search', function () {
+    $query = 'a'; // <-- Change the query for testing.
+    // Visit the /search route in your web browser to see articles that match the test $query.
+
+    $articles = Order::search($query)->get();
+
+    return $articles;
+});
 Route::group(['namespace' => 'web'], function () {
 
     Route::get('/{any}', function () {
         return view('welcome');
-    })->where('any','.*');
+    })->where('any', '.*');
 });

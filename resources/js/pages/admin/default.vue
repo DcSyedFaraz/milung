@@ -150,7 +150,7 @@
 
                     <!-- Additional Widgets Based on Permissions -->
                     <!-- Best Sales Widget -->
-                    <div v-if="isAdminOrInternal && hasPermission('bestSales')" class="col-xxl-3 col-md-6">
+                    <!-- <div v-if="isAdminOrInternal && hasPermission('bestSales')" class="col-xxl-3 col-md-6">
                         <div class="card info-card best-sales-card cursor-pointer" @click="navigateTo('bestSales')">
                             <div class="card-body rounded bg-best-sales">
                                 <h5 class="card-title text-white fs-6">Best Sales</h5>
@@ -167,7 +167,6 @@
                         </div>
                     </div>
 
-                    <!-- Best Purchase Widget -->
                     <div v-if="isAdminOrInternal && hasPermission('bestPurchase')" class="col-xxl-3 col-md-6">
                         <div class="card info-card best-purchase-card cursor-pointer"
                             @click="navigateTo('bestPurchase')">
@@ -186,7 +185,6 @@
                         </div>
                     </div>
 
-                    <!-- Sales Revenue Widget -->
                     <div v-if="isAdminOrInternal && hasPermission('salesRevenue')" class="col-xxl-3 col-md-6">
                         <div class="card info-card sales-revenue-card cursor-pointer"
                             @click="navigateTo('salesRevenue')">
@@ -203,7 +201,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Purchase Revenue Widget -->
                     <div v-if="isAdminOrInternal && hasPermission('purchaseRevenue')" class="col-xxl-3 col-md-6">

@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class ShipmentOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
     protected $guarded = [];
 
     public function user()
     {
-        return $this->belongsTo(BuyerProfile::class,'buyerid')->select('id','buyer_id');
+        return $this->belongsTo(BuyerProfile::class, 'buyerid')->select('id', 'buyer_id');
     }
     public function shipment()
     {
@@ -20,7 +21,7 @@ class ShipmentOrder extends Model
     }
     public function orders()
     {
-        return $this->hasMany(Order::class,'so_number');
+        return $this->hasMany(Order::class, 'so_number');
     }
     public function shipmentsupplier()
     {
