@@ -1,11 +1,10 @@
 <template>
     <section class="section">
         <form @submit.prevent="onSubmit" enctype="multipart/form-data">
-
             <div class="container">
                 <div class="d-flex justify-content-end col-12 my-2">
-                    <button v-if="isEditing" class="btn btn-milung mx-2 px-3" type="button" @click="saveDraft">Save</button>
-                    <button class="btn btn-warning mx-2" type="submit">Create New Order</button>
+                    <button value="save" class="btn btn-milung mx-2 px-3" v-if="isEditing">Save</button>
+                    <button value="create" class="btn btn-warning mx-2" type="submit">Create New Order</button>
                 </div>
 
                 <div class="row my-5">
@@ -19,7 +18,7 @@
                                 <p class="my-auto">Status: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <select v-model="draftData.orders.status" class="fw-bold form-select">
+                                <select v-model="orders.status" class="fw-bold form-select">
                                     <option value="New Order">New Order</option>
                                     <option value="Price">Price</option>
                                     <option value="Printview Confirmation">Printview Confirmation</option>
@@ -30,7 +29,8 @@
                                     <option value="Export/Import">Export/Import</option>
                                     <option value="Delivered">Delivered</option>
                                 </select>
-                                <Message v-if="errors.status" severity="error" class="my-2">{{ errors.status[0] }}</Message>
+                                <Message v-if="errors.status" severity="error" class="my-2">{{ errors.status[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -40,8 +40,9 @@
                                 <p class="my-auto fs-7">Milung Order No: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.milungorder" class="form-control">
-                                <Message v-if="errors.milungorder" severity="error" class="my-2">{{ errors.milungorder[0] }}</Message>
+                                <input type="text" v-model="orders.milungorder" class="form-control">
+                                <Message v-if="errors.milungorder" severity="error" class="my-2">{{
+                                    errors.milungorder[0] }}</Message>
                             </div>
                         </div>
 
@@ -51,8 +52,9 @@
                                 <p class="my-auto fs-7">Order Date: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="draftData.orders.orderdate" class="form-control">
-                                <Message v-if="errors.orderdate" severity="error" class="my-2">{{ errors.orderdate[0] }}</Message>
+                                <input type="date" v-model="orders.orderdate" class="form-control">
+                                <Message v-if="errors.orderdate" severity="error" class="my-2">{{ errors.orderdate[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -62,8 +64,9 @@
                                 <p class="my-auto fs-7">Buyer Order No: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.buyerorder" class="form-control">
-                                <Message v-if="errors.buyerorder" severity="error" class="my-2">{{ errors.buyerorder[0] }}</Message>
+                                <input type="text" v-model="orders.buyerorder" class="form-control">
+                                <Message v-if="errors.buyerorder" severity="error" class="my-2">{{ errors.buyerorder[0]
+                                    }}</Message>
                             </div>
                         </div>
 
@@ -73,8 +76,9 @@
                                 <p class="my-auto fs-7">Previous Order Reference: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.reference" class="form-control">
-                                <Message v-if="errors.reference" severity="error" class="my-2">{{ errors.reference[0] }}</Message>
+                                <input type="text" v-model="orders.reference" class="form-control">
+                                <Message v-if="errors.reference" severity="error" class="my-2">{{ errors.reference[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -84,8 +88,9 @@
                                 <p class="my-auto fs-7">Related Inquiry No: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.inquiry" class="form-control">
-                                <Message v-if="errors.inquiry" severity="error" class="my-2">{{ errors.inquiry[0] }}</Message>
+                                <input type="text" v-model="orders.inquiry" class="form-control">
+                                <Message v-if="errors.inquiry" severity="error" class="my-2">{{ errors.inquiry[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -95,15 +100,11 @@
                                 <p class="my-auto fs-7">Buyer ID: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <multiselect
-                                    v-model="draftData.selectedBuyerId"
-                                    :options="buyers"
-                                    field="id"
-                                    label="buyer_id"
-                                    track-by="id"
-                                    placeholder="Select Buyer">
+                                <multiselect v-model="selectedBuyerId" :options="buyers" field="id" label="buyer_id"
+                                    track-by="id">
                                 </multiselect>
-                                <Message v-if="errors.buyer" severity="error" class="my-2">{{ errors.buyer[0] }}</Message>
+                                <Message v-if="errors.buyer" severity="error" class="my-2">{{ errors.buyer[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -113,8 +114,9 @@
                                 <p class="my-auto fs-7">Buyer Email: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="email" v-model="draftData.orders.buyeremail" class="form-control">
-                                <Message v-if="errors.buyeremail" severity="error" class="my-2">{{ errors.buyeremail[0] }}</Message>
+                                <input type="email" v-model="orders.buyeremail" class="form-control">
+                                <Message v-if="errors.buyeremail" severity="error" class="my-2">{{ errors.buyeremail[0]
+                                    }}</Message>
                             </div>
                         </div>
 
@@ -124,16 +126,11 @@
                                 <p class="my-auto fs-7">Supplier ID: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <multiselect
-                                    v-model="draftData.selectedSupplierId"
-                                    :disabled="!isEditing"
-                                    :options="suppliers"
-                                    field="id"
-                                    label="supplier_id"
-                                    track-by="id"
-                                    placeholder="Select Supplier">
+                                <multiselect v-model="selectedSupplierId" :disabled="!isEditing" :options="suppliers"
+                                    field="id" label="supplier_id" track-by="id">
                                 </multiselect>
-                                <Message v-if="errors.supplier" severity="error" class="my-2">{{ errors.supplier[0] }}</Message>
+                                <Message v-if="errors.supplier" severity="error" class="my-2">{{ errors.supplier[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -143,58 +140,46 @@
                                 <p class="my-auto fs-7">Fty Item No: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.ftyitem" class="form-control">
-                                <Message v-if="errors.ftyitem" severity="error" class="my-2">{{ errors.ftyitem[0] }}</Message>
+                                <input type="text" v-model="orders.ftyitem" class="form-control">
+                                <Message v-if="errors.ftyitem" severity="error" class="my-2">{{ errors.ftyitem[0] }}
+                                </Message>
                             </div>
                         </div>
 
                         <!-- Order Remarks -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4">
-                                <p class="fs-7">Order Remarks:</p>
+                                <p class="my-auto fs-7">Order Remarks:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="draftData.orders.orderremarks" class="form-control" cols="30" rows="5"></textarea>
-                                <Message v-if="errors.orderremarks" severity="error" class="my-2">{{ errors.orderremarks[0] }}</Message>
+                                <textarea v-model="orders.orderremarks" class="form-control" cols="30"
+                                    rows="5"></textarea>
+                                <Message v-if="errors.orderremarks" severity="error" class="my-2">{{
+                                    errors.orderremarks[0] }}</Message>
                             </div>
                         </div>
 
                         <!-- QC Remarks -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4">
-                                <p class="fs-7">QC Remarks:</p>
+                                <p class="my-auto fs-7">QC Remarks:</p>
                             </div>
                             <div class="col-8">
-                                <textarea v-model="draftData.orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
-                                <Message v-if="errors.qcremarks" severity="error" class="my-2">{{ errors.qcremarks[0] }}</Message>
+                                <textarea v-model="orders.qcremarks" class="form-control" cols="30" rows="5"></textarea>
+                                <Message v-if="errors.qcremarks" severity="error" class="my-2">{{ errors.qcremarks[0] }}
+                                </Message>
                             </div>
                         </div>
 
                         <!-- File Inputs -->
-                        <FileInputWithName
-                            label="Logo File"
-                            :files="draftData.orders.logoFiles"
-                            :fileData="draftData.orders.logoFiles"
-                            @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName
-                            label="Label File"
-                            :files="draftData.orders.labelFiles"
-                            :fileData="draftData.orders.labelFiles"
-                            @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName
-                            label="Manual"
-                            :files="draftData.orders.manualFiles"
-                            :fileData="draftData.orders.manualFiles"
-                            @update:files="updateFiles"
-                            @export-file="exportFile" />
-                        <FileInputWithName
-                            label="Safety Sheet"
-                            :files="draftData.orders.safetySheetFiles"
-                            :fileData="draftData.orders.safetySheetFiles"
-                            @update:files="updateFiles"
-                            @export-file="exportFile" />
+                        <FileInputWithName label="Logo File" :files="orders.logoFiles" :fileData="orders.logoFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Label File" :files="orders.safetySheetFiles"
+                            :fileData="orders.safetySheetFiles" @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Manual" :files="orders.manualFiles" :fileData="orders.manualFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
+                        <FileInputWithName label="Safety Sheet" :files="orders.labelFiles" :fileData="orders.labelFiles"
+                            @update:files="updateFiles" @export-file="exportFile" />
                     </div>
 
                     <div class="col-md-4">
@@ -204,8 +189,9 @@
                                 <p class="my-auto">Buyer Product Photo/Print View:</p>
                             </div>
                             <div class="col-4">
-                                <button @click="importImage" type="button" class="btn btn-sm px-4 btn-milung">Import</button>
-                                <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png" @change="loadImage">
+                                <button @click="importImage" type="button"
+                                    class="btn btn-sm px-4 btn-milung">Import</button>
+                                <input ref="fileInput" type="file" class="form-control d-none" accept=".jpg,.png">
                             </div>
                         </div>
                         <div class="d-flex col-12 my-2">
@@ -221,15 +207,16 @@
                             </div>
                             <div class="col-9">
                                 <div class="input-group my-2">
-                                    <input type="number" class="form-control" v-model="draftData.orders.quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-select" v-model="draftData.orders.unit">
+                                    <input type="number" class="form-control" v-model="orders.quantity">
+                                    <select style="color: #41b400;" class="fw-bold form-select" v-model="orders.unit">
                                         <option value="pcs">pcs</option>
                                         <option value="units">units</option>
                                         <option value="pairs">pairs</option>
                                         <option value="sets">sets</option>
                                     </select>
                                 </div>
-                                <Message v-if="errors.quantity" severity="error" class="my-2">{{ errors.quantity[0] }}</Message>
+                                <Message v-if="errors.quantity" severity="error" class="my-2">{{ errors.quantity[0] }}
+                                </Message>
                                 <Message v-if="errors.unit" severity="error" class="my-2">{{ errors.unit[0] }}</Message>
                             </div>
                         </div>
@@ -240,14 +227,9 @@
                                 <p class="my-auto fs-7">Article Number:</p>
                             </div>
                             <div class="col-8">
-                                <multiselect
-                                    v-model="draftData.orders.article"
-                                    :options="article"
-                                    placeholder="Select Article Number"
-                                    track-by="id"
-                                    label="name">
-                                </multiselect>
-                                <Message v-if="errors.article" severity="error" class="my-2">{{ errors.article[0] }}</Message>
+                                <multiselect v-model="orders.article" :options="article"></multiselect>
+                                <Message v-if="errors.article" severity="error" class="my-2">{{ errors.article[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -257,13 +239,14 @@
                                 <p class="my-auto fs-7">Product Group: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <select class="form-select" v-model="draftData.orders.group">
+                                <select class="form-select" v-model="orders.group">
                                     <option selected disabled>Select a product group</option>
                                     <option v-for="group1 in groups" :key="group1.id" :value="group1.id">
                                         {{ group1.group_name }}
                                     </option>
                                 </select>
-                                <Message v-if="errors.group" severity="error" class="my-2">{{ errors.group[0] }}</Message>
+                                <Message v-if="errors.group" severity="error" class="my-2">{{ errors.group[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -273,8 +256,9 @@
                                 <p class="my-auto fs-7">Product Name: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.productname" class="form-control">
-                                <Message v-if="errors.productname" severity="error" class="my-2">{{ errors.productname[0] }}</Message>
+                                <input type="text" v-model="orders.productname" class="form-control">
+                                <Message v-if="errors.productname" severity="error" class="my-2">{{
+                                    errors.productname[0] }}</Message>
                             </div>
                         </div>
 
@@ -284,8 +268,9 @@
                                 <p class="my-auto fs-7">Product Color: (Pantone if applicable)</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.productcolor" class="form-control">
-                                <Message v-if="errors.productcolor" severity="error" class="my-2">{{ errors.productcolor[0] }}</Message>
+                                <input type="text" v-model="orders.productcolor" class="form-control">
+                                <Message v-if="errors.productcolor" severity="error" class="my-2">{{
+                                    errors.productcolor[0] }}</Message>
                             </div>
                         </div>
 
@@ -295,30 +280,16 @@
                                 <p class="fs-7">Product Capacity:</p>
                             </div>
                             <div class="col-8">
-                                <div class="input-group my-2" v-for="(caps, indexs) in draftData.orders.capacity" :key="indexs">
+                                <div class="input-group my-2" v-for="(caps, indexs) in orders.capacity" :key="indexs">
                                     <input type="number" class="form-control" v-model="caps.quantity">
-                                    <select style="color: #41b400;" class="fw-bold form-select mx-2" v-model="caps.unit">
+                                    <select style="color: #41b400;" class="fw-bold form-select mx-2"
+                                        v-model="caps.unit">
                                         <option selected value="GB">GB</option>
                                         <option value="mAh">mAh</option>
                                     </select>
-                                    <!-- <div class="input-buttons">
-                                        <button
-                                            type="button"
-                                            class="btn btn-warning btn-sm mx-1"
-                                            @click="addCapacity"
-                                            v-if="indexs === 0">
-                                            +
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-danger btn-sm mx-1"
-                                            @click="removeCapacity(indexs)"
-                                            v-if="indexs !== 0 && draftData.orders.capacity.length > 1">
-                                            -
-                                        </button>
-                                    </div> -->
                                 </div>
-                                <Message v-if="errors.capacity" severity="error" class="my-2">{{ errors.capacity[0] }}</Message>
+                                <Message v-if="errors.capacity" severity="error" class="my-2">{{ errors.capacity[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -328,8 +299,9 @@
                                 <p class="my-auto fs-7">Accessories: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.accessories" class="form-control">
-                                <Message v-if="errors.accessories" severity="error" class="my-2">{{ errors.accessories[0] }}</Message>
+                                <input type="text" v-model="orders.accessories" class="form-control">
+                                <Message v-if="errors.accessories" severity="error" class="my-2">{{
+                                    errors.accessories[0] }}</Message>
                             </div>
                         </div>
 
@@ -339,8 +311,10 @@
                                 <p class="my-auto fs-7">Logo Printing Method: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.printingmethod" class="form-control">
-                                <Message v-if="errors.printingmethod" severity="error" class="my-2">{{ errors.printingmethod[0] }}</Message>
+                                <input type="text" v-model="orders.printingmethod" class="form-control">
+                                <Message v-if="errors.printingmethod" severity="error" class="my-2">{{
+                                    errors.printingmethod[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -350,8 +324,11 @@
                                 <p class="my-auto fs-7">Logo Pantone Color:</p>
                             </div>
                             <div class="col-8">
-                                <Chips class="w-100" v-model="draftData.orders.logocolor" :class="{ 'p-invalid': errors.logocolor }" />
-                                <Message v-if="errors.logocolor" severity="error" class="my-2">{{ errors.logocolor[0] }}</Message>
+                                <Chips class="w-100" v-model="orders.logocolor"
+                                    :class="{ 'p-invalid': errors.logocolor }" />
+                                <!-- <input type="text" v-model="orders.logocolor" class="form-control"> -->
+                                <Message v-if="errors.logocolor" severity="error" class="my-2">{{ errors.logocolor[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -361,8 +338,9 @@
                                 <p class="my-auto fs-7">Packaging:</p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.packaging" class="form-control">
-                                <Message v-if="errors.packaging" severity="error" class="my-2">{{ errors.packaging[0] }}</Message>
+                                <input type="text" v-model="orders.packaging" class="form-control">
+                                <Message v-if="errors.packaging" severity="error" class="my-2">{{ errors.packaging[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -373,16 +351,21 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" v-model="draftData.orders.packagingprinting[0]">
-                                    <button class="btn btn-outline-primary" type="button" id="button-addon2" @click="addPackagingPrinting">+1c Label</button>
+                                    <input type="text" v-model="orders.packagingprinting[0]" class="form-control">
+                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"
+                                        @click="addInput">+1c Label</button>
                                 </div>
-                                <div v-for="(input, index) in draftData.orders.packagingprinting" :key="index">
+                                <div v-for="(input, index) in orders.packagingprinting" :key="index">
                                     <div class="input-group mt-2" v-if="index > 0">
-                                        <input type="text" class="form-control" v-model="draftData.orders.packagingprinting[index]">
-                                        <button class="btn btn-outline-danger" type="button" @click="removePackagingPrinting(index)">Remove</button>
+                                        <input type="text" class="form-control"
+                                            v-model="orders.packagingprinting[index]">
+                                        <button class="btn btn-outline-danger" type="button"
+                                            @click="removeInput(index)">Remove</button>
                                     </div>
                                 </div>
-                                <Message v-if="errors.packagingprinting" severity="error" class="my-2">{{ errors.packagingprinting[0] }}</Message>
+                                <Message v-if="errors.packagingprinting" severity="error" class="my-2">{{
+                                    errors.packagingprinting[0] }}
+                                </Message>
                             </div>
                         </div>
                     </div>
@@ -397,12 +380,13 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" disabled v-model="draftData.orders.buyingprice">
+                                    <input type="text" class="form-control" disabled v-model="orders.buyingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
-                                <Message v-if="errors.buyingprice" severity="error" class="my-2">{{ errors.buyingprice[0] }}</Message>
+                                <Message v-if="errors.buyingprice" severity="error" class="my-2">{{
+                                    errors.buyingprice[0] }}</Message>
                             </div>
                         </div>
 
@@ -413,12 +397,14 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="draftData.orders.sellingprice">
+                                    <input type="text" class="form-control" :disabled="!isEditing"
+                                        v-model="orders.sellingprice">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
-                                <Message v-if="errors.sellingprice" severity="error" class="my-2">{{ errors.sellingprice[0] }}</Message>
+                                <Message v-if="errors.sellingprice" severity="error" class="my-2">{{
+                                    errors.sellingprice[0] }}</Message>
                             </div>
                         </div>
 
@@ -429,12 +415,14 @@
                             </div>
                             <div class="col-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" :disabled="!isEditing" v-model="draftData.orders.totalvalue">
+                                    <input type="text" class="form-control" :disabled="!isEditing"
+                                        v-model="orders.totalvalue">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">USD</span>
                                     </div>
                                 </div>
-                                <Message v-if="errors.totalvalue" severity="error" class="my-2">{{ errors.totalvalue[0] }}</Message>
+                                <Message v-if="errors.totalvalue" severity="error" class="my-2">{{ errors.totalvalue[0]
+                                    }}</Message>
                             </div>
                         </div>
 
@@ -460,14 +448,15 @@
                             </div>
                         </div>
 
-                        <!-- Latest Send Out Date -->
+                        <!-- Latest Send Out  Date -->
                         <div class="d-flex col-12 my-2">
                             <div class="col-4 my-auto">
                                 <p class="my-auto fs-7">Latest Send Out Date: <span class="text-danger">*</span></p>
                             </div>
                             <div class="col-8">
-                                <input type="date" v-model="draftData.orders.sendoutdate" class="form-control">
-                                <Message v-if="errors.sendoutdate" severity="error" class="my-2">{{ errors.sendoutdate[0] }}</Message>
+                                <input type="date" v-model="orders.sendoutdate" class="form-control">
+                                <Message v-if="errors.sendoutdate" severity="error" class="my-2">{{
+                                    errors.sendoutdate[0] }}</Message>
                             </div>
                         </div>
 
@@ -478,14 +467,17 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="Fix Date" v-model="draftData.orders.notice">
+                                    <input class="form-check-input" type="checkbox" value="Fix Date"
+                                        v-model="orders.notice">
                                     <label class="form-check-label">Fix Date</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="PV to Customer" v-model="draftData.orders.notice">
+                                    <input class="form-check-input" type="checkbox" value="PV to Customer"
+                                        v-model="orders.notice">
                                     <label class="form-check-label">PV to Customer</label>
                                 </div>
-                                <Message v-if="errors.notice" severity="error" class="my-2">{{ errors.notice[0] }}</Message>
+                                <Message v-if="errors.notice" severity="error" class="my-2">{{ errors.notice[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -495,15 +487,11 @@
                                 <p class="my-auto fs-7">SO#:</p>
                             </div>
                             <div class="col-8">
-                                <multiselect
-                                    v-model="draftData.selectedsoId"
-                                    :options="so"
-                                    field="id"
-                                    label="so_number"
-                                    track-by="id"
-                                    placeholder="Select SO#">
+                                <multiselect v-model="selectedsoId" :options="so" field="id" label="so_number"
+                                    track-by="id">
                                 </multiselect>
-                                <Message v-if="errors.so_number" severity="error" class="my-2">{{ errors.so_number[0] }}</Message>
+                                <Message v-if="errors.so_number" severity="error" class="my-2">{{ errors.so_number[0] }}
+                                </Message>
                             </div>
                         </div>
 
@@ -513,8 +501,9 @@
                                 <p class="my-auto fs-7">ATC#: </p>
                             </div>
                             <div class="col-8">
-                                <input type="text" v-model="draftData.orders.atc_number" class="form-control">
-                                <Message v-if="errors.atc_number" severity="error" class="my-2">{{ errors.atc_number[0] }}</Message>
+                                <input type="text" v-model="orders.atc_number" class="form-control">
+                                <Message v-if="errors.atc_number" severity="error" class="my-2">{{ errors.atc_number[0]
+                                    }}</Message>
                             </div>
                         </div>
                     </div>
@@ -524,32 +513,29 @@
 
         <!-- Print View Component -->
         <div class="container" v-show="showPrintView" v-if="can('printviewConfirmRejectButton')">
-            <printview :id="draftData.orders.id" :image="draftData.orders.files" />
+            <printview :id="orders.id" :image="orders.files" />
         </div>
 
         <!-- Progress Modal -->
-        <ProgressModal :show="showProgress" />
+        <progress-modal :show="showProgress"></progress-modal>
         <EventLogTable :filterValue="'Order'" />
     </section>
-
-    <div v-if="loader" class="loader-overlay">
-        <div class="loader"></div>
-    </div>
 </template>
 
 <script>
+// import { ref } from 'vue';
+// import useForm from 'laravel-precognition-vue';
 import ProgressModal from "../progress/ProgressModal.vue";
+import '../index';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import FileInputWithName from './FileInputWithName.vue';
 import printview from "./printview.vue";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
-import draftMixin from '@/mixins/draftMixin';
 import { mapGetters } from 'vuex';
 
 export default {
-    mixins: [draftMixin],
     emits: ['profileUpdated'],
     components: {
         FileInputWithName,
@@ -557,56 +543,9 @@ export default {
         printview
     },
     props: {
-        mode: {
-            type: String,
-            default: 'create', // "create" or "edit"
-        },
-        draftKey: {
-            type: String,
-            default: 'orderEntry', // Unique key for this draft
-        },
-        initialData: {
-            type: Object,
-            default: () => ({
-                orders: {
-                    status: 'New Order',
-                    orderdate: new Date().toISOString().split('T')[0],
-                    packagingprinting: [''],
-                    logoFiles: [],
-                    safetySheetFiles: [],
-                    manualFiles: [],
-                    labelFiles: [],
-                    notice: [],
-                    capacity: [{ quantity: '', unit: 'GB' }],
-                    buyingprice: '',
-                    sellingprice: '',
-                    totalvalue: '',
-                    milungorder: '',
-                    buyerorder: '',
-                    reference: '',
-                    inquiry: '',
-                    buyeremail: '',
-                    supplier: '',
-                    ftyitem: '',
-                    orderremarks: '',
-                    qcremarks: '',
-                    productname: '',
-                    productcolor: '',
-                    packaging: '',
-                    atc_number: '',
-                    sendoutdate: '',
-                    accessories: '',
-                    printingmethod: '',
-                    logocolor: [],
-                    files: [],
-                },
-                selectedBuyerId: null,
-                selectedsoId: null,
-            }),
-        },
-        recordId: {
-            type: [String, Number],
-            default: null,
+        isEditing: {
+            type: Boolean,
+            default: false,
         },
     },
     data() {
@@ -615,98 +554,94 @@ export default {
             suppliers: [],
             so: [],
             article: [],
+            selectedSupplierId: [],
+            selectedsoId: [],
+            selectedBuyerId: [],
             buyers: [],
             showProgress: false,
+            inputs: [],
+            files: [],
             groups: [],
             errors: [],
-            loader: false,
+            orders:
+            {
+                status: 'New Order', // Set default status to 'New Order'
+                orderdate: new Date().toISOString().split('T')[0],
+                packagingprinting: [],
+                logoFiles: [],
+                safetySheetFiles: [],
+                manualFiles: [],
+                labelFiles: [],
+                notice: [],
+                capacity: [{ quantity: '', unit: '' }],
+            }
+            ,
+
         }
     },
-    computed: {
-        ...mapGetters(['inquiry']),
-        isEditing() {
-            return this.mode === 'edit';
-        },
-        selectedGroup() {
-            return this.groups.find(group => group.id === this.draftData.orders.group);
-        },
-        selectedProductGroupCode() {
-            const selectedGroup = this.selectedGroup;
-            if (!selectedGroup) {
-                return '';
-            }
-            return selectedGroup; // or any other HS code property you want to display
-        },
-    },
+    // setup(props) {
+    //     console.log(props);
+    //     const form = useForm('post', '/api/orderentry', props.orders);
+
+    //     const submit = () => form.submit();
+
+    //     return {
+    //         form,
+    //         submit,
+    //     };
+    // },
     watch: {
-        'draftData.inquiry': {
+        inquiry: {
             immediate: true,
             handler(newInquiry) {
                 if (newInquiry) {
                     console.log(newInquiry, 'new');
-                    this.draftData.orders.article = newInquiry.article;
-                    this.draftData.orders.productname = newInquiry.name;
-                    this.draftData.orders.inquiry = newInquiry.inquiry_number;
-                    this.draftData.orders.incoterm = newInquiry.incoterm;
-                    this.draftData.orders.quantity = this.inquiry.selectedQuantity;
-                    if (this.inquiry.selectedCapacity) {
-                        const [quantity, unit] = this.inquiry.selectedCapacity.split(' ');
-                        this.draftData.orders.capacity = [{ quantity: parseInt(quantity), unit }];
-                    }
+                    this.orders.article = newInquiry.article;
+                    this.orders.productname = newInquiry.name;
+                    this.orders.inquiry = newInquiry.inquiry_number;
+                    this.orders.incoterm = newInquiry.incoterm;
+                    this.orders.quantity = this.inquiry.selectedQuantity;
+                    const [quantity, unit] = this.inquiry.selectedCapacity.split(' ');
+                    this.orders.capacity = [{ quantity: parseInt(quantity), unit }];
+
                 }
             }
         },
-        'draftData.selectedBuyerId'(newValue) {
-            if (newValue) {
-                this.draftData.orders.buyer = newValue.id;
-            }
+        selectedBuyerId(newValue) {
+            // console.log(newValue);
+            this.orders.buyer = newValue.id;
         },
-        'draftData.selectedsoId'(newValue) {
-            if (newValue) {
-                this.draftData.orders.so_number = newValue.id;
-            }
+        selectedsoId(newValue) {
+            // console.log(newValue);
+            this.orders.so_number = newValue.id;
         },
-        'draftData.selectedSupplierId'(newValue) {
-            if (newValue) {
-                this.draftData.orders.supplier = newValue.id;
-            }
+        selectedSupplierId(newValue) {
+            this.orders.supplier = newValue.id;
+            // console.log(this.orders.supplier);
+        }
+    },
+    unmounted() {
+        // console.log('beforeDestroy');
+        this.$store.dispatch('clearInquiry');
+        this.$store.dispatch('CLEAR_INQUIRY_DATA');
+    },
+    created() {
+        this.articleget();
+        if (this.$route.query.inquiry) {
+            this.inquiry = JSON.parse(this.$route.query.inquiry);
+            console.log(this.inquiry, ' ho');
         }
     },
     methods: {
-        addCapacity() {
-            this.draftData.orders.capacity.push({ quantity: '', unit: 'GB' });
-        },
-        removeCapacity(index) {
-            this.draftData.orders.capacity.splice(index, 1);
-        },
-        addPackagingPrinting() {
-            this.draftData.orders.packagingprinting.push('');
-        },
-        removePackagingPrinting(index) {
-            this.draftData.orders.packagingprinting.splice(index, 1);
-        },
         fetchSuppliers() {
             axios.get('/api/Suppliers')
                 .then(response => {
                     this.suppliers = response.data;
-                    const selectedSupplierId = Number(this.draftData.orders.supplier);
+                    // console.log(this.suppliers);
+                    const selectedSupplierId = Number(this.orders.supplier);
                     const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
                     if (selectedSupplier) {
-                        this.draftData.selectedSupplierId = selectedSupplier;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-        fetchSO() {
-            axios.get('/api/shipmentsget')
-                .then(response => {
-                    this.so = response.data;
-                    console.log(this.so);
-                    const selectedso = this.so.find(sos => sos.id === this.draftData.orders.so_number);
-                    if (selectedso) {
-                        this.draftData.selectedsoId = selectedso;
+                        this.selectedSupplierId = selectedSupplier;
                     }
                 })
                 .catch(error => {
@@ -723,6 +658,7 @@ export default {
                     console.error(error);
                 });
         },
+
         fetchBuyers() {
             axios.get('/api/buyerOrder')
                 .then(response => {
@@ -732,44 +668,65 @@ export default {
                     if (this.inquiry) {
                         selectedBuyerIds = Number(this.inquiry.buyer);
                     } else {
-                        selectedBuyerIds = Number(this.draftData.orders.buyer);
+                        selectedBuyerIds = Number(this.orders.buyer);
                     }
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedBuyerIds);
                     if (selectedbuyer) {
-                        this.draftData.selectedBuyerId = selectedbuyer;
+                        this.selectedBuyerId = selectedbuyer;
                     }
                 })
                 .catch(error => {
                     console.error(error);
                 });
         },
+        fetchSO() {
+            axios.get('/api/shipmentsget')
+                .then(response => {
+                    this.so = response.data;
+                    console.log(this.so);
+                    // const selectedbuyerIds = Number(this.orders.buyer);
+                    const selectedso = this.so.find(sos => sos.id === this.orders.so_number);
+                    if (selectedso) {
+                        this.selectedsoId = selectedso;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        addInput() {
+            this.orders.packagingprinting.push('');
+        },
+        removeInput(index) {
+            this.orders.packagingprinting.splice(index, 1);
+        },
         updateFiles(payload) {
             console.log(payload);
 
             switch (payload.label) {
                 case 'Logo File':
-                    if (!Array.isArray(this.draftData.orders.logoFiles)) {
-                        this.draftData.orders.logoFiles = [];
+                    if (!Array.isArray(this.orders.logoFiles)) {
+                        this.orders.logoFiles = [];
                     }
-                    this.draftData.orders.logoFiles.push(payload);
+                    this.orders.logoFiles.push(payload);
                     break;
                 case 'Label File':
-                    if (!Array.isArray(this.draftData.orders.labelFiles)) {
-                        this.draftData.orders.labelFiles = [];
+                    if (!Array.isArray(this.orders.labelFiles)) {
+                        this.orders.labelFiles = [];
                     }
-                    this.draftData.orders.labelFiles.push(payload);
+                    this.orders.labelFiles.push(payload);
                     break;
                 case 'Manual':
-                    if (!Array.isArray(this.draftData.orders.manualFiles)) {
-                        this.draftData.orders.manualFiles = [];
+                    if (!Array.isArray(this.orders.manualFiles)) {
+                        this.orders.manualFiles = [];
                     }
-                    this.draftData.orders.manualFiles.push(payload);
+                    this.orders.manualFiles.push(payload);
                     break;
                 case 'Safety Sheet':
-                    if (!Array.isArray(this.draftData.orders.safetySheetFiles)) {
-                        this.draftData.orders.safetySheetFiles = [];
+                    if (!Array.isArray(this.orders.safetySheetFiles)) {
+                        this.orders.safetySheetFiles = [];
                     }
-                    this.draftData.orders.safetySheetFiles.push(payload);
+                    this.orders.safetySheetFiles.push(payload);
                     break;
                 default:
                     break;
@@ -781,13 +738,23 @@ export default {
             console.log('File:', file.file);
             console.log('File name:', file.name);
         },
-
         importImage() {
             this.$refs.fileInput.click();
         },
+        handleValidationErrors(validationErrors) {
+            for (const key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    const messages = validationErrors[key];
+                    // Display each validation error message
+                    messages.forEach(message => {
+                        toastr.error(message);
+                    });
+                }
+            }
+        },
         loadImage(event) {
             const file = event.target.files[0];
-            this.draftData.orders.files = file;
+            this.orders.files = file;
             if (file) {
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d');
@@ -807,6 +774,8 @@ export default {
                             newWidth = (img.width * newHeight) / img.height;
                         }
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+
                     };
                     img.src = event.target.result;
                 };
@@ -835,120 +804,70 @@ export default {
             });
         },
 
-        async onSubmit() {
+        onSubmit() {
             this.showProgress = true;
             NProgress.start();
-            console.log(this.draftData.orders);
+            console.log(this.orders);
             if (this.isEditing) {
-                this.draftData.orders.linked_order = event.submitter.getAttribute('value');
+                this.orders.linked_order = event.submitter.getAttribute('value');
             }
             let method = 'post';
-            let url = this.isEditing ? `/api/orderentry/${this.draftData.orders.id}` : '/api/orderentry';
+            let url = this.isEditing ? `/api/orderentry/${this.orders.id}` : '/api/orderentry';
 
-            try {
-                const formData = new FormData();
-                formData.append('status', this.draftData.orders.status);
-                formData.append('milungorder', this.draftData.orders.milungorder);
-                formData.append('orderdate', this.draftData.orders.orderdate);
-                formData.append('buyerorder', this.draftData.orders.buyerorder);
-                formData.append('reference', this.draftData.orders.reference);
-                formData.append('inquiry', this.draftData.orders.inquiry);
-                formData.append('buyeremail', this.draftData.orders.buyeremail);
-                formData.append('supplier', this.draftData.orders.supplier);
-                formData.append('ftyitem', this.draftData.orders.ftyitem);
-                formData.append('orderremarks', this.draftData.orders.orderremarks);
-                formData.append('qcremarks', this.draftData.orders.qcremarks);
-                formData.append('productname', this.draftData.orders.productname);
-                formData.append('productcolor', this.draftData.orders.productcolor);
-                formData.append('packaging', this.draftData.orders.packaging);
-                formData.append('printingmethod', this.draftData.orders.printingmethod);
-                formData.append('logocolor', JSON.stringify(this.draftData.orders.logocolor));
-                formData.append('notice', JSON.stringify(this.draftData.orders.notice));
-
-                formData.append('quantity', this.draftData.orders.quantity);
-                formData.append('unit', this.draftData.orders.unit);
-
-                // Capacity
-                this.draftData.orders.capacity.forEach((cap, index) => {
-                    formData.append(`capacity[${index}].quantity`, cap.quantity);
-                    formData.append(`capacity[${index}].unit`, cap.unit);
-                });
-
-                // Packaging Printing
-                this.draftData.orders.packagingprinting.forEach((pp, index) => {
-                    formData.append(`packagingprinting[${index}]`, pp);
-                });
-
-                // Files
-                this.draftData.orders.logoFiles.forEach((file, index) => {
-                    formData.append(`logoFiles[${index}]`, file.file);
-                });
-                this.draftData.orders.labelFiles.forEach((file, index) => {
-                    formData.append(`labelFiles[${index}]`, file.file);
-                });
-                this.draftData.orders.manualFiles.forEach((file, index) => {
-                    formData.append(`manualFiles[${index}]`, file.file);
-                });
-                this.draftData.orders.safetySheetFiles.forEach((file, index) => {
-                    formData.append(`safetySheetFiles[${index}]`, file.file);
-                });
-
-                // Image File
-                if (this.draftData.orders.files) {
-                    formData.append('files', this.draftData.orders.files);
-                }
-
-                // Additional Fields
-                formData.append('accessories', this.draftData.orders.accessories);
-                formData.append('atc_number', this.draftData.orders.atc_number);
-                formData.append('sendoutdate', this.draftData.orders.sendoutdate);
-
-                // You can append more fields as needed
-
-                const response = await axios[method](url, formData);
-
-                this.showProgress = false;
-                this.loader = false;
-                NProgress.done();
-                if (response.status === 201 || response.status === 200) {
+            this.handleApiCall(method, url, this.orders)
+                .then(response => {
+                    setTimeout(() => {
+                        this.showProgress = false;
+                    }, 1000);
+                    // Handle successful order update or creation
+                    console.log(response);
+                    NProgress.done();
                     toastr.success(this.isEditing ? 'Order updated successfully' : 'Order added successfully');
-                    this.clearDraft(this.generateDraftKey()); // Clear draft after successful submission
                     this.$router.push({ name: 'order_list' });
-                } else {
-                    toastr.error('Something is not correct');
-                }
+                })
+                .catch(error => {
+                    setTimeout(() => {
+                        this.showProgress = false;
+                    }, 1000);
+                    NProgress.done();
 
-            } catch (error) {
-                this.showProgress = false;
-                this.loader = false;
-                NProgress.done();
-                if (error.response && error.response.status === 422) {
-                    const validationErrors = error.response.data.errors;
-                    this.errors = validationErrors;
-                    this.handleValidationErrors(validationErrors);
-                } else {
+                    if (error.response && error.response.status === 422) {
+                        const validationErrors = error.response.data.errors;
+                        this.errors = validationErrors;
+                        this.handleValidationErrors(validationErrors);
+                    } else {
+                        console.error(error);
+                        toastr.error(this.isEditing ? 'An error occurred while updating the order' : 'An error occurred while adding the order');
+                    }
+                });
+        },
+        addcapacity() {
+            this.orders.capacity.push({ quantity: '' });
+        },
+        removecapacity(index) {
+            this.orders.capacity.splice(index, 1);
+        },
+        fetchProductGroups() {
+            NProgress.start();
+            axios.get('/api/product_group_get')
+                .then(response => {
+                    this.groups = response.data;
+                    console.log(response);
+                    NProgress.done();
+                })
+                .catch(error => {
                     console.error(error);
-                    toastr.error(this.isEditing ? 'An error occurred while updating the order' : 'An error occurred while adding the order');
-                }
-            }
+                    NProgress.done();
+                });
         },
-        handleValidationErrors(validationErrors) {
-            for (const key in validationErrors) {
-                if (validationErrors.hasOwnProperty(key)) {
-                    const messages = validationErrors[key];
-                    // Display each validation error message
-                    messages.forEach(message => {
-                        toastr.error(message);
-                    });
-                }
-            }
-        },
+
         loadImageFromPath(imageFileName, canvas) {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
 
             // Construct the URL to the file in the storage folder
             const imageUrl = `/storage/${imageFileName}`;
+            // console.log(imageUrl,ctx);
 
             const img = new Image();
             img.onload = () => {
@@ -966,63 +885,51 @@ export default {
             };
             img.src = imageUrl;
         },
-        fetchProductGroups() {
-            NProgress.start();
-            axios.get('/api/product_group_get')
-                .then(response => {
-                    this.groups = response.data;
-                    console.log(response);
-                    NProgress.done();
-                })
-                .catch(error => {
-                    console.error(error);
-                    NProgress.done();
-                });
-        },
         fetchorder(orderId) {
             NProgress.start();
             this.showProgress = true;
             axios.get(`/api/orderentry/${orderId}`)
                 .then(response => {
-                    this.draftData.orders = response.data;
-                    if (!this.draftData.orders.packagingprinting) {
-                        this.draftData.orders.packagingprinting = [''];
+                    this.orders = response.data;
+                    if (!this.orders.packagingprinting) {
+                        this.orders.packagingprinting = [];
                     }
-                    console.log(this.draftData.orders, response.data.packagingprinting);
-                    const selectedSupplierId = Number(this.draftData.orders.supplier);
+                    console.log(this.orders, response.data.packagingprinting);
+                    const selectedSupplierId = Number(this.orders.supplier);
                     const selectedSupplier = this.suppliers.find(supplier => supplier.id === selectedSupplierId);
                     if (selectedSupplier) {
-                        this.draftData.selectedSupplierId = selectedSupplier;
+                        this.selectedSupplierId = selectedSupplier;
                     }
-                    const selectedBuyerIds = Number(this.draftData.orders.buyer);
+                    const selectedBuyerIds = Number(this.orders.buyer);
                     const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedBuyerIds);
                     if (selectedbuyer) {
-                        this.draftData.selectedBuyerId = selectedbuyer;
+                        this.selectedBuyerId = selectedbuyer;
                     }
                     // Pre-fill capacity if it exists
-                    if (this.draftData.orders.capacity) {
-                        this.draftData.orders.capacity = this.draftData.orders.capacity.map(capacity => {
+                    if (this.orders.capacity) {
+                        this.orders.capacity = this.orders.capacity.map(capacity => {
                             const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1);
                             return { quantity: parseInt(quantity), unit };
                         });
                     } else {
                         // If capacity doesn't exist, initialize it with default values
-                        this.draftData.orders.capacity = [{ quantity: '', unit: 'GB' }];
+                        this.orders.capacity = [{ quantity: '', unit: '' }];
                     }
-                    if (this.draftData.orders.quantity_units) {
-                        const quantityString = this.draftData.orders.quantity_units;
-                        console.log(this.draftData.orders.quantity_units);
+                    if (this.orders.quantity_units) {
+                        const quantityString = this.orders.quantity_units;
+                        console.log(this.orders.quantity_units);
 
                         const quantity = parseInt(quantityString.split('units')[0]);
-                        this.draftData.orders.quantity = quantity;
+                        this.orders.quantity = quantity;
                     }
-
-                    const firstOrderFile = this.draftData.orders?.files?.[0];
+                    // console.log('files ', this.orders.files[0]['filepath']);
+                    const firstOrderFile = this.orders?.files?.[0];
 
                     if (firstOrderFile && firstOrderFile.filepath) {
                         this.loadImageFromPath(firstOrderFile.filepath, this.$refs.canvas);
                     }
 
+                    // this.loadImageFromPath(this.orders.files[0]['filepath'], this.$refs.canvas);
                     NProgress.done();
 
                     setTimeout(() => {
@@ -1038,77 +945,58 @@ export default {
         },
     },
     mounted() {
-        if (this.mode === 'edit') {
-            const orderId = this.recordId || this.$route.params.id;
+        if (this.isEditing) {
+            const orderId = this.$route.params.id;
             this.fetchorder(orderId);
         }
+        const inquiryData = this.$store.getters.getInquiryData;
+        if (inquiryData) {
+            this.orders = { ...this.orders, ...inquiryData };
+            console.log(this.orders, ' ho');
+        };
         NProgress.configure({ showSpinner: false });
         this.fetchSuppliers();
         this.fetchBuyers();
         this.fetchSO();
         this.fetchProductGroups();
+        this.$refs.fileInput.addEventListener('change', this.loadImage);
     },
     beforeUnmount() {
-        this.$store.dispatch('clearInquiry');
-        this.$store.dispatch('CLEAR_INQUIRY_DATA');
+        this.$refs.fileInput.removeEventListener('change', this.loadImage);
+    },
+    computed: {
+        ...mapGetters(['inquiry']),
+        selectedGroup() {
+            return this.groups.find(group => group.id === this.orders.group);
+        },
+        selectedProductGroupCode() {
+            const selectedGroup = this.selectedGroup;
+            // console.log('hi ', selectedGroup);
+            if (!selectedGroup) {
+                return '';
+            }
+            return selectedGroup; // or any other HS code property you want to display
+        },
+        formattedCapacity() {
+            return this.orders.capacity.map(caps => `${caps.quantity}${caps.unit}`);
+        },
     },
 }
 </script>
 
-<style scoped>
-.loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Semi-transparent black overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px);
-    /* Add blur effect */
-    z-index: 9999;
-    /* Ensure it's above other elements */
-}
+<style>
+@import url('./../style.css');
 
-.loader {
-    border: 4px solid #f3f3f3;
-    /* Light gray border */
-    border-top: 4px solid #3498db;
-    /* Blue border for spinning effect */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
-    /* Spin animation */
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.fs-7 {
-    font-size: 14px !important;
-}
-
-.form-select {
-    height: 38px;
+#main {
+    padding: 20px 0px !important;
 }
 
 .multiselect {
     border: 1px solid #ced4da;
-    border-radius: 0.25rem;
+    border-radius: 0.25rem
 }
 
-.input-buttons button {
-    padding: 0.25rem 0.5rem;
+.fs-7 {
+    font-size: 14px !important;
 }
 </style>

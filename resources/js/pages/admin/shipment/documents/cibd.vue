@@ -14,9 +14,7 @@
                 </div>
                 <div class="col-12">
                     <div class="row mx-6 mt-4">
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-milung"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-milung">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Invoice No: <br />
@@ -32,9 +30,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-warning"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-warning">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Date: <br />
@@ -42,9 +38,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div
-                            class="col mx-1 border rounded-3 rounded bg-orange"
-                        >
+                        <div class="col mx-1 border rounded-3 rounded bg-orange">
                             <div class="text-center p-3">
                                 <p class="fw-bold">
                                     Prepred By: <br />
@@ -61,9 +55,7 @@
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >Shipper:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">Shipper:</label>
                                         <p class="mb-6">{{ info.shipper }}</p>
                                         <!-- <textarea v-model="info.shipper" class="form-control" cols="58" rows="6"></textarea> -->
                                     </div>
@@ -71,18 +63,14 @@
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >consignee:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">consignee:</label>
                                         <p class="mb-6">{{ info.consignee }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-2">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >notify party:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">notify
+                                            party:</label>
                                         <p class="">{{ info.party }}</p>
                                     </div>
                                 </div>
@@ -90,37 +78,29 @@
                             <div class="col-6">
                                 <div class="d-flex col-11 my-2">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >carton mark:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">carton
+                                            mark:</label>
                                         <p class="mb-6">{{ info.carton }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-4">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >port of loading:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">port of
+                                            loading:</label>
                                         <p class="">{{ info.loading }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-3">
                                     <div class="">
-                                        <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >final destination:</label
-                                        >
+                                        <label class="form-label text-milung fw-bold text-uppercase fs-5">final
+                                            destination:</label>
                                         <p class="">{{ info.destination }}</p>
                                     </div>
                                 </div>
                                 <div class="col-11 my-2">
                                     <div class="">
                                         <label
-                                            class="form-label text-milung fw-bold text-uppercase fs-5"
-                                            >payment:</label
-                                        >
+                                            class="form-label text-milung fw-bold text-uppercase fs-5">payment:</label>
                                         <p class="">{{ info.payment }}</p>
                                     </div>
                                 </div>
@@ -140,11 +120,7 @@
                             </p>
                         </div>
                         <div class="col-8">
-                            <input
-                                type="text"
-                                v-model="info.shipment_order_id"
-                                class="form-control"
-                            />
+                            <input type="text" v-model="info.shipment_order_id" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -156,37 +132,22 @@
                     <div class="card">
                         <div class="card-header">
                             <div class=""></div>
-                            <div
-                                class="d-flex justify-content-between align-items-center mx-3"
-                            >
+                            <div class="d-flex justify-content-between align-items-center mx-3">
                                 <span>
-                                    <span
-                                        class="fw-bold fs-4 text-uppercase"
-                                        style="color: #14245c"
-                                        >Comercial Invoice:</span
-                                    >
+                                    <span class="fw-bold fs-4 text-uppercase" style="color: #14245c">Comercial
+                                        Invoice:</span>
                                 </span>
 
                                 <div class="col-4 d-flex">
                                     <div class="col-12 d-flex">
                                         <div class="col-12">
                                             <div class="input-group">
-                                                <span
-                                                    class="input-group-text"
-                                                    id="basic-addon1"
-                                                    ><i
+                                                <span class="input-group-text" id="basic-addon1"><i
                                                         style="color: #41b400"
-                                                        class="bx bx-filter-alt fw-bold fs-4"
-                                                    ></i
-                                                ></span>
-                                                <input
-                                                    type="text"
-                                                    name="search"
-                                                    class="form-control"
-                                                    v-model="searchQuery"
-                                                    ref="search"
-                                                    placeholder="Write here to filter..."
-                                                />
+                                                        class="bx bx-filter-alt fw-bold fs-4"></i></span>
+                                                <input type="text" name="search" class="form-control"
+                                                    v-model="searchQuery" ref="search"
+                                                    placeholder="Write here to filter..." />
                                             </div>
                                         </div>
                                     </div>
@@ -194,23 +155,16 @@
                             </div>
                         </div>
 
-                        <div
-                            class="card-body rounded-top table-responsive border-top border-bottom"
-                        >
+                        <div class="card-body rounded-top table-responsive border-top border-bottom">
                             <!-- Table with stripped rows -->
                             <table class="table table-striped table-hover">
-                                <thead
-                                    style="color: #009de1"
-                                    class="text-center fs-7"
-                                >
+                                <thead style="color: #009de1" class="text-center fs-7">
                                     <tr style="">
                                         <th class="text-nowrap">Order No.</th>
                                         <th class="text-nowrap">Description</th>
                                         <th class="text-nowrap">
                                             <span>Quantity</span> <br />
-                                            <span class="text-milung"
-                                                >Pcs or set</span
-                                            >
+                                            <span class="text-milung">Pcs or set</span>
                                         </th>
                                         <th class="text-nowrap">
                                             Unit Price US$
@@ -221,11 +175,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
-                                    <tr
-                                        v-for="(item, index) in packinglst"
-                                        :key="index"
-                                        v-if="packinglst.length > 0"
-                                    >
+                                    <tr v-for="(item, index) in packinglst" :key="index" v-if="packinglst.length > 0">
                                         <td>
                                             {{ item.order_id }}
                                         </td>
@@ -254,13 +204,8 @@
                                     </tr>
                                 </tbody>
                                 <span>
-                                    <table
-                                        class="table table-striped table-hover w-25"
-                                    >
-                                        <thead
-                                            style="color: #009de1"
-                                            class="text-center fs-7"
-                                        >
+                                    <table class="table table-striped table-hover w-25">
+                                        <thead style="color: #009de1" class="text-center fs-7">
                                             <tr style="">
                                                 <th class="text-nowrap">
                                                     HS Code.
@@ -271,10 +216,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                v-for="item in packinglst"
-                                                class="text-center"
-                                            >
+                                            <tr v-for="item in packinglst" class="text-center">
                                                 <td>
                                                     {{
                                                         item.orders
@@ -295,30 +237,16 @@
                                 </span>
                                 <tbody class="w-full border-top border-3">
                                     <tr class="fw-bold">
-                                        <td
-                                            class="text-blue"
-                                            colspan="2"
-                                            style="color: #009de1"
-                                        >
+                                        <td class="text-blue" colspan="2" style="color: #009de1">
                                             Total:
                                         </td>
-                                        <td
-                                            class="text-blue"
-                                            colspan="2"
-                                            style="color: #009de1"
-                                        >
+                                        <td class="text-blue" colspan="2" style="color: #009de1">
                                             <span class="ms-5">{{
                                                 totalQtys
-                                            }}</span>
+                                                }}</span>
                                         </td>
-                                        <td
-                                            class="text-blue"
-                                            colspan="2"
-                                            style="color: #009de1"
-                                        >
-                                            <span class="text-center ms-5"
-                                                >US$ {{ totalvalue }}</span
-                                            >
+                                        <td class="text-blue" colspan="2" style="color: #009de1">
+                                            <span class="text-center ms-5">US$ {{ totalvalue }}</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -328,27 +256,17 @@
                             <div class="">
                                 <div class="d-flex col-4 my-2">
                                     <div class="col-5 my-auto">
-                                        <p
-                                            for="v-model"
-                                            class="my-auto fs-6 text-uppercase fw-bold"
-                                        >
+                                        <p for="v-model" class="my-auto fs-6 text-uppercase fw-bold">
                                             Incoterms:
                                         </p>
                                     </div>
                                     <div class="col-7">
-                                        <input
-                                            type="text"
-                                            v-model="blue.incoterm"
-                                            class="form-control"
-                                        />
+                                        <input type="text" v-model="blue.incoterm" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex col-6 my-2">
                                     <div class="col-3 my-auto">
-                                        <p
-                                            for="v-model"
-                                            class="my-auto fs-6 fw-bold"
-                                        >
+                                        <p for="v-model" class="my-auto fs-6 fw-bold">
                                             Total in words:
                                         </p>
                                     </div>
@@ -364,13 +282,8 @@
                                     </h3>
                                 </div>
                                 <div class="d-flex col-6 mb-5">
-                                    <table
-                                        class="table table-striped table-hover"
-                                    >
-                                        <thead
-                                            style="color: #009de1"
-                                            class="text-center fs-7"
-                                        >
+                                    <table class="table table-striped table-hover">
+                                        <thead style="color: #009de1" class="text-center fs-7">
                                             <tr style="">
                                                 <th class="text-nowrap">
                                                     Item
@@ -431,14 +344,9 @@
         </div>
     </div>
     <div class="col-12">
-        <div
-            class="col-12 d-flex justify-content-end"
-        >
+        <div class="col-12 d-flex justify-content-end">
             <div class="col-2 align-items-end">
-                <button
-                    class="btn btn-milung px-5"
-                    @click="generatePdf"
-                >
+                <button class="btn btn-milung px-5" @click="generatePdf">
                     Export
                 </button>
             </div>
@@ -574,36 +482,52 @@ export default {
             const scales = ["", "thousand", "million", "billion", "trillion"];
 
             const convertToHundreds = (num) => {
+                if (num === 0) return "";
                 return num >= 100
-                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(
-                          num % 100
-                      )}`
+                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(num % 100)}`
                     : convertToTens(num);
             };
 
             const convertToTens = (num) => {
+                const tensIndex = Math.floor(num / 10);
+                const onesIndex = Math.floor(num % 10);
                 return num < 10
                     ? ones[num]
                     : num < 20
-                    ? teens[num - 10]
-                    : `${tens[Math.floor(num / 10)]} ${ones[num % 10]}`;
+                        ? teens[num - 10]
+                        : `${tens[tensIndex]} ${ones[onesIndex]}`;
             };
 
             const numToWords = (num) => {
                 if (num === 0) return "zero";
                 let words = "";
-                for (let i = 0; num > 0; i++) {
-                    if (num % 1000 !== 0) {
-                        words = `${convertToHundreds(num % 1000)} ${
-                            scales[i]
-                        } ${words}`;
+                let scaleIndex = 0;
+
+                while (num > 0) {
+                    const chunk = num % 1000;
+                    if (chunk !== 0) {
+                        words = `${convertToHundreds(chunk)} ${scales[scaleIndex]} ${words}`;
                     }
                     num = Math.floor(num / 1000);
+                    scaleIndex++;
                 }
+
                 return words.trim();
             };
 
-            return numToWords(num);
+            // Ensure the number has exactly two decimal places
+            const [integerPartStr, fractionalPartStr] = Number(num).toFixed(2).split(".");
+
+            const integerPart = parseInt(integerPartStr, 10);
+            const fractionalPart = parseInt(fractionalPartStr, 10);
+
+            let words = numToWords(integerPart);
+
+            if (fractionalPart > 0) {
+                words += ` and ${numToWords(fractionalPart)} cents`;
+            }
+
+            return words;
         },
         created_at(info) {
             if (info.created_at) {
@@ -679,10 +603,12 @@ export default {
     height: 6rem !important;
     max-width: 10rem !important;
 }
+
 .mx-6 {
     margin-right: 11rem !important;
     margin-left: 11rem !important;
 }
+
 .bg-blue {
     background-color: #009de1 !important;
     border-color: #009de1 !important;

@@ -6,10 +6,12 @@
                     <h1 class="text-milung fw-bold text-center">
                         MiLung Trade Limited
                     </h1>
-                    <p class="text-center text-milung fw-bold my-3">
+                    <p class="text-center text-milung fw-bold my-3" style=" white-space: pre-line;">
                         Unit 1704-05, 17/F. Hang Seng North Point Building,<br />
-                        341 North Point, Hong Kong. <br />
+                        341 North Point, Hong Kong.
+                    <p class="text-center fw-bold mb-3">
                         Tel: 852 2540 2488
+                    </p>
                     </p>
                 </div>
                 <div class="col-12">
@@ -170,9 +172,9 @@
 
                                         <td>
                                             {{
-                                        item.orders?.product_group
-                                            ?.group_name
-                                    }}
+                                                item.orders?.product_group
+                                                    ?.group_name
+                                            }}
                                         </td>
                                         <td>
                                             {{ item.orders?.quantity_unit }}
@@ -211,17 +213,17 @@
                                             <tr v-for="item in packinglst" class="text-center">
                                                 <td>
                                                     {{
-                                        item.orders
-                                            ?.product_group
-                                            ?.hs_de
-                                    }}
+                                                        item.orders
+                                                            ?.product_group
+                                                            ?.hs_de
+                                                    }}
                                                 </td>
                                                 <td>
                                                     {{
-                                            item.orders
-                                                ?.product_group
-                                                ?.group_name
-                                        }}
+                                                        item.orders
+                                                            ?.product_group
+                                                            ?.group_name
+                                                    }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -234,7 +236,7 @@
                                         </td>
                                         <td class="text-blue" colspan="1 " style="color: #009de1">
                                             <span class="ms-5 text-center">{{
-                                        totalQtys
+                                                totalQtys
                                                 }}</span>
                                         </td>
                                         <td class="text-blue" colspan="2" style="color: #009de1">
@@ -301,6 +303,7 @@ export default {
             info: {},
             blue: {},
             packinglst: [],
+            user: [],
             searchQuery: "",
             atc: "",
             submitting: false,
@@ -395,35 +398,52 @@ export default {
             const scales = ["", "thousand", "million", "billion", "trillion"];
 
             const convertToHundreds = (num) => {
+                if (num === 0) return "";
                 return num >= 100
-                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(
-                        num % 100
-                    )}`
+                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(num % 100)}`
                     : convertToTens(num);
             };
 
             const convertToTens = (num) => {
+                const tensIndex = Math.floor(num / 10);
+                const onesIndex = Math.floor(num % 10);
                 return num < 10
                     ? ones[num]
                     : num < 20
                         ? teens[num - 10]
-                        : `${tens[Math.floor(num / 10)]} ${ones[num % 10]}`;
+                        : `${tens[tensIndex]} ${ones[onesIndex]}`;
             };
 
             const numToWords = (num) => {
                 if (num === 0) return "zero";
                 let words = "";
-                for (let i = 0; num > 0; i++) {
-                    if (num % 1000 !== 0) {
-                        words = `${convertToHundreds(num % 1000)} ${scales[i]
-                            } ${words}`;
+                let scaleIndex = 0;
+
+                while (num > 0) {
+                    const chunk = num % 1000;
+                    if (chunk !== 0) {
+                        words = `${convertToHundreds(chunk)} ${scales[scaleIndex]} ${words}`;
                     }
                     num = Math.floor(num / 1000);
+                    scaleIndex++;
                 }
+
                 return words.trim();
             };
 
-            return numToWords(num);
+            // Ensure the number has exactly two decimal places
+            const [integerPartStr, fractionalPartStr] = Number(num).toFixed(2).split(".");
+
+            const integerPart = parseInt(integerPartStr, 10);
+            const fractionalPart = parseInt(fractionalPartStr, 10);
+
+            let words = numToWords(integerPart);
+
+            if (fractionalPart > 0) {
+                words += ` and ${numToWords(fractionalPart)} cents`;
+            }
+
+            return words;
         },
         created_at(info) {
             if (info.created_at) {

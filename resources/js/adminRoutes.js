@@ -167,7 +167,7 @@ const adminRoutes = [
         name: "order_edit",
         component: order_entry,
         props: {
-            isEditing: true,
+            mode: "edit",
         },
     },
     {

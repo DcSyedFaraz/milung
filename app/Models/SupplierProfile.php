@@ -16,6 +16,10 @@ class SupplierProfile extends Model
         'group' => 'array',
         'sec_group' => 'array',
     ];
+    public function shouldBeSearchable()
+    {
+        return !$this->trashed();
+    }
 
     public function user()
     {

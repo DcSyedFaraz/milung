@@ -2,9 +2,21 @@
     <div class="container">
         <!-- Header -->
         <div class="row my-4">
-            <div class="col text-center">
-                <h1 class="text-capitalize">{{ user?.company_header ?? 'not provided' }}</h1>
+            <div class="col-12">
+                <h1 class=" fw-bold text-center">
+                    {{ user?.company_header ?? 'not provided' }}
+                </h1>
+                <p class="text-center  fw-bold mt-3" style=" white-space: pre-line;">
+                    {{ user?.address ?? 'N/A' }}
+
+                <p class="text-center  fw-bold mb-3">
+                    Tel: {{ user?.office_phone ?? 'N/A' }}
+                </p>
+                </p>
             </div>
+            <!-- <div class="col text-center">
+                <h1 class="text-capitalize">{{ user?.company_header ?? 'not provided' }}</h1>
+            </div> -->
         </div>
 
         <!-- Invoice Info -->
@@ -52,7 +64,7 @@
                     <td>{{ order.product_group?.group_name }}</td>
                     <td>{{ order.quantity_unit }} pcs</td>
                     <td>{{ order.buyingprice }}</td>
-                    <td class="text-end">{{ order.quantity_unit * order.buyingprice }}</td>
+                    <td class="text-end">{{ formatPrice(order.quantity_unit * order.buyingprice) }}</td>
                 </tr>
             </tbody>
             <tfoot>
@@ -85,27 +97,27 @@
                     <tbody>
                         <tr>
                             <td>Beneficiary Bank</td>
-                            <td> {{ user?.bank ?? 'not provided'}} </td>
+                            <td> {{ user?.bank ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Bank Address</td>
-                            <td> {{ user?.bank_address ?? 'not provided'}} </td>
+                            <td> {{ user?.bank_address ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>SWIFT Code</td>
-                            <td> {{ user?.swift_code ?? 'not provided'}} </td>
+                            <td> {{ user?.swift_code ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>CHIPS No</td>
-                            <td> {{ user?.chips_no ?? 'not provided'}} </td>
+                            <td> {{ user?.chips_no ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Name</td>
-                            <td> {{ user?.beneficiary_name ?? 'not provided'}} </td>
+                            <td> {{ user?.beneficiary_name ?? 'not provided' }} </td>
                         </tr>
                         <tr>
                             <td>Beneficiary Account Number</td>
-                            <td> {{ user?.account_no ?? 'not provided'}} </td>
+                            <td> {{ user?.account_no ?? 'not provided' }} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -179,35 +191,52 @@ export default {
             const scales = ["", "thousand", "million", "billion", "trillion"];
 
             const convertToHundreds = (num) => {
+                if (num === 0) return "";
                 return num >= 100
-                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(
-                        num % 100
-                    )}`
+                    ? `${ones[Math.floor(num / 100)]} hundred ${convertToTens(num % 100)}`
                     : convertToTens(num);
             };
 
             const convertToTens = (num) => {
+                const tensIndex = Math.floor(num / 10);
+                const onesIndex = Math.floor(num % 10);
                 return num < 10
                     ? ones[num]
                     : num < 20
                         ? teens[num - 10]
-                        : `${tens[Math.floor(num / 10)]} ${ones[num % 10]}`;
+                        : `${tens[tensIndex]} ${ones[onesIndex]}`;
             };
 
             const numToWords = (num) => {
                 if (num === 0) return "zero";
                 let words = "";
-                for (let i = 0; num > 0; i++) {
-                    if (num % 1000 !== 0) {
-                        words = `${convertToHundreds(num % 1000)} ${scales[i]
-                            } ${words}`;
+                let scaleIndex = 0;
+
+                while (num > 0) {
+                    const chunk = num % 1000;
+                    if (chunk !== 0) {
+                        words = `${convertToHundreds(chunk)} ${scales[scaleIndex]} ${words}`;
                     }
                     num = Math.floor(num / 1000);
+                    scaleIndex++;
                 }
+
                 return words.trim();
             };
 
-            return numToWords(num);
+            // Ensure the number has exactly two decimal places
+            const [integerPartStr, fractionalPartStr] = Number(num).toFixed(2).split(".");
+
+            const integerPart = parseInt(integerPartStr, 10);
+            const fractionalPart = parseInt(fractionalPartStr, 10);
+
+            let words = numToWords(integerPart);
+
+            if (fractionalPart > 0) {
+                words += ` and ${numToWords(fractionalPart)} cents`;
+            }
+
+            return words;
         },
         date(recieve) {
             if (recieve.created_at) {
@@ -218,6 +247,13 @@ export default {
             } else {
                 return '';
             }
+        },
+        formatPrice(value) {
+            const number = parseFloat(value);
+            if (isNaN(number)) {
+                return '0.00';
+            }
+            return number.toFixed(2);
         },
         async invoice() {
 

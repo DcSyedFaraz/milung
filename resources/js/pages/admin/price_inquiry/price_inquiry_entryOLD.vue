@@ -10,6 +10,7 @@
             <div class="container">
                 <div class="row my-5">
                     <h3 class="text-milung mb-4 fw-bold text-uppercase">Price Inquiry</h3>
+                    <!-- Back button -->
 
                     <!-- Left Column -->
                     <div class="col-md-6">
@@ -18,7 +19,7 @@
                                 <p for="v-model">Buyer ID<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <Select v-model="draftData.buyer" optionLabel="buyer_id" filter optionValue="id"
+                                <Select v-model="buyer" optionLabel="buyer_id" filter optionValue="id"
                                     placeholder="Select Buyer" class="w-100" :options="buyers" />
                                 <Message severity="error" class="my-1" v-if="errors.buyer">{{ errors.buyer[0] }}
                                 </Message>
@@ -30,7 +31,7 @@
                                 <p for="v-model">Inquiry Number<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.inquiry_number" class="w-100" />
+                                <InputText v-model="inquiry.inquiry_number" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.inquiry_number">{{
                                     errors.inquiry_number[0] }}</Message>
                             </div>
@@ -41,7 +42,7 @@
                                 <p for="v-model">Article Number<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.article" class="w-100" />
+                                <InputText v-model="inquiry.article" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.article">{{ errors.article[0] }}
                                 </Message>
                             </div>
@@ -52,9 +53,9 @@
                                 <p for="v-model">Product Group:</p>
                             </div>
                             <div class="col-8">
-                                <Select v-model="draftData.inquiry.group" :options="groups" optionLabel="group_name"
+                                <Select v-model="inquiry.group" :options="groups" optionLabel="group_name"
                                     optionValue="id" placeholder="Select a product group" class="w-100"
-                                    @change="fetchSupplierProfiles(draftData.inquiry.group)" />
+                                    @change="fetchSupplierProfiles(inquiry.group)" />
                             </div>
                         </div>
 
@@ -63,7 +64,7 @@
                                 <p for="v-model">Product Name<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.name" class="w-100" />
+                                <InputText v-model="inquiry.name" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.name">{{ errors.name[0] }}</Message>
                             </div>
                         </div>
@@ -74,7 +75,7 @@
                                 </p>
                             </div>
                             <div class="col-8">
-                                <Textarea v-model="draftData.inquiry.description" class="w-100" rows="10" />
+                                <Textarea v-model="inquiry.description" class="w-100" rows="10" />
                                 <Message severity="error" class="my-1" v-if="errors.description">{{
                                     errors.description[0] }}</Message>
                             </div>
@@ -86,10 +87,10 @@
                             </div>
                             <div class="col-8">
                                 <div class="d-flex">
-                                    <RadioButton class="mx-2" inputId="generalCargo" v-model="draftData.inquiry.cargo"
+                                    <RadioButton class="mx-2" inputId="generalCargo" v-model="inquiry.cargo"
                                         value="general" />
                                     <label for="generalCargo" class="ml-2">General Cargo</label>
-                                    <RadioButton class="mx-2" inputId="dangerCargo" v-model="draftData.inquiry.cargo"
+                                    <RadioButton class="mx-2" inputId="dangerCargo" v-model="inquiry.cargo"
                                         value="danger" />
                                     <label for="dangerCargo" class="ml-2">Danger Goods</label>
                                 </div>
@@ -109,7 +110,7 @@
                                 <p for="v-model">Incoterm<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.incoterm" class="w-100" />
+                                <InputText v-model="inquiry.incoterm" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.incoterm">{{ errors.incoterm[0] }}
                                 </Message>
                             </div>
@@ -165,7 +166,7 @@
                                 <p for="v-model">Printing Method<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.method" class="w-100" />
+                                <InputText v-model="inquiry.method" class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.method">{{ errors.method[0] }}
                                 </Message>
                             </div>
@@ -176,7 +177,7 @@
                                 <p for="v-model">Printing Color:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.color" class="w-100" />
+                                <InputText v-model="inquiry.color" class="w-100" />
                             </div>
                         </div>
 
@@ -185,7 +186,7 @@
                                 <p for="v-model">Standard Packaging:</p>
                             </div>
                             <div class="col-8">
-                                <InputText v-model="draftData.inquiry.packaging" class="w-100" />
+                                <InputText v-model="inquiry.packaging" class="w-100" />
                             </div>
                         </div>
 
@@ -194,7 +195,7 @@
                                 <p for="v-model">Special Requirement:</p>
                             </div>
                             <div class="col-8">
-                                <Textarea v-model="draftData.inquiry.requirements" class="w-100" rows="10" />
+                                <Textarea v-model="inquiry.requirements" class="w-100" rows="10" />
                             </div>
                         </div>
                     </div>
@@ -206,7 +207,7 @@
                                 <p for="v-model" class="my-1">Status<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <Select v-model="draftData.inquiry.status"
+                                <Select v-model="inquiry.status"
                                     :options="['ML Checking', 'Supplier Checking', 'ML Follow Up', 'Supplier Follow Up', 'Supplier Replied', 'ML Quoted']"
                                     class="w-100" />
                                 <Message severity="error" class="my-1" v-if="errors.status">{{ errors.status[0] }}
@@ -219,8 +220,7 @@
                                 <p for="v-model">Notice:</p>
                             </div>
                             <div class="col-8">
-                                <input class="form-check-input " id="urgent" type="checkbox"
-                                    v-model="draftData.inquiry.urgent" />
+                                <input class="form-check-input " id="urgent" type="checkbox" v-model="inquiry.urgent" />
                                 <label for="urgent" class="mx-2">Urgent</label>
                             </div>
                         </div>
@@ -240,7 +240,6 @@
                                 <canvas ref="canvas" width="322" height="300" class="border border-2"></canvas>
                             </div>
                         </div>
-
                         <div class="d-flex col-11 my-2">
                             <div class="col-4">
                                 <p for="v-model">Supplier Product Photo/3D Artwork:</p>
@@ -344,7 +343,7 @@
                     <Select v-model="selectedCapacity" class="w-100"
                         :options="capacity.map((c) => `${c.quantity} ${c.unit}`)" />
                 </div>
-                <Button label="Create Order" class="p-button-primary" @click="createOrder(draftData.inquiry)" />
+                <Button label="Create Order" class="p-button-primary" @click="createOrder(inquiry)" />
             </Dialog>
         </form>
         <EventLogTable :filterValue="'Inquiry'" />
@@ -367,64 +366,36 @@ export default {
     emits: ['profileUpdated'],
 
     props: {
-        mode: {
-            type: String,
-            required: false, // "create" or "edit"
-        },
-        draftKey: {
-            type: String,
-            default: 'priceInquiry', // Unique key for this draft
-        },
-        initialData: {
-            type: Object,
-            default: () => ({
-                buyer: null,
-                inquiry: {
-                    urgent: false,
-                    materials: [{ quantity: 0 }],
-                    capacity: [{ quantity: 0, unit: '' }],
-                    inquiry_number: '',
-                    article: '',
-                    group: null,
-                    name: '',
-                    description: '',
-                    cargo: '',
-                    cargo_place: [],
-                    incoterm: '',
-                    method: '',
-                    color: '',
-                    packaging: '',
-                    requirements: '',
-                    status: '',
-                    // Add any other fields as needed
-                },
-                // Include other data properties if necessary
-            }),
-        },
-        recordId: {
-            type: [String, Number],
-            default: null,
-        },
+        mode: String, // "create" or "edit"
+
     },
     data() {
         return {
-            materials: [{ quantity: 0 }],
-            capacity: [{ quantity: 0, unit: '' }],
-            cargo_place: [],
-            supplierData: {},
             selectedSupplier: null,
+            save: false,
             selectedQuantity: null,
             selectedCapacity: null,
+            loader: false,
+            inquiry: {
+                urgent: false,
+                materials: [{ quantity: 0 }], // Initialize with default values
+                capacity: [{ quantity: 0, unit: '' }],
+            },
+            cargo_place: [],
+            supplierData: {},
+            materials: [{ quantity: 0 }],
+            capacity: [{ quantity: 0, unit: '' }],
+            selectedBuyerId: [],
             buyers: [],
             buyer: null,
-            errors: [],
+            imageLoaded: false,
             groups: [],
+            errors: [],
             supplierInquiry: [],
             supplier_profiles: [],
             follow_up: false,
             showSupplierModal: false,
             showOrderModal: false,
-            loader: false,
         };
     },
     methods: {
@@ -445,6 +416,7 @@ export default {
             this.supplierData[supplierIndex].forEach(row => {
                 row.selected = true;
             });
+            // Uncheck and disable all other suppliers' rows
             Object.keys(this.supplierData).forEach(key => {
                 if (key !== supplierIndex) {
                     this.supplierData[key].forEach(row => {
@@ -460,20 +432,131 @@ export default {
         },
         createOrder(inquiry) {
             const inquiryData = {
-                ...this.draftData.inquiry,
+                ...this.inquiry,
                 selectedQuantity: this.selectedQuantity,
                 selectedCapacity: this.selectedCapacity
             };
             this.$store.dispatch('updateInquiry', inquiryData);
             this.$router.push({
                 name: 'order_entry',
+                // query: { inquiry: JSON.stringify(inquiry) },
             });
         },
+
+        precheckSelected() {
+            console.log(this.supplierData);
+            Object.values(this.supplierData).forEach(rows => {
+                rows.forEach(row => {
+                    if (row.selected) {
+                        this.supplierInquiry.push(row.id);
+                    }
+                });
+            });
+        },
+        isSupplierIdChecked(supplierId) {
+            // const index = this.selectedSupplierIds.indexOf(supplierId);
+            // if (index === -1) {
+            //     this.selectedSupplierIds.push(supplierId);
+            // } else {
+            //     this.selectedSupplierIds.splice(index, 1);
+            // }
+            // console.log( this.inquiry.supplier_ids.some(id => id.toString() === supplierId.toString()));
+            return this.inquiry.supplier_ids.some(id => id.toString() === supplierId.toString());
+        },
+        async quote() {
+            if (!this.supplierInquiry.length) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select at least one quote from the supplier!',
+                });
+                NProgress.done();
+                this.loader = false;
+                return;
+            }
+            const inquiryid = this.$route.params.id;
+            console.log(this.supplierInquiry, this.selectedSupplier);
+            if (inquiryid) {
+                let formData
+                if (this.selectedSupplier) {
+                    formData = {
+                        // quoteIds: this.supplierInquiry
+                        quoteIds: this.supplierData[this.selectedSupplier].map(row => row.id)
+                    };
+
+                } else {
+                    formData = {
+                        quoteIds: this.supplierInquiry
+                    };
+                }
+                try {
+                    this.loader = true;
+                    const response = await axios.post('/api/inquiry/quote/' + inquiryid, formData);
+                    console.log(response);
+                    this.loader = false;
+                    toastr.success(response.data.message)
+                    this.fetchInquiry();
+                } catch (error) {
+                    this.loader = false;
+                    console.error(error);
+                    // Handle the error if needed
+                }
+            }
+        },
         updateInquiryMaterials() {
-            this.draftData.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
+            this.inquiry.materials = this.materials.map(material => ({ quantity: material.quantity }));
         },
         updateInquiryCapacity() {
-            this.draftData.inquiry.capacity = this.capacity.map(capacity => ({ quantity: capacity.quantity, unit: capacity.unit }));
+            this.inquiry.capacity = this.capacity.map(capacity => ({ quantity: capacity.quantity, unit: capacity.unit }));
+            console.log(this.capacity, this.inquiry.capacity);
+        },
+        fetchBuyers() {
+            axios.get('/api/buyerOrder')
+                .then(response => {
+                    this.buyers = response.data;
+                    console.log(this.buyers);
+                    const selectedbuyerIds = Number(this.inquiry.buyer);
+                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    if (selectedbuyer) {
+                        this.selectedBuyerId = selectedbuyer;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        fetchSupplierProfiles(groupId) {
+            NProgress.start();
+            console.log(groupId);
+            axios.get(`/api/supplier_profiles/${groupId}`) // Replace '/api/supplier_profiles/' with your API endpoint
+                .then(response => {
+                    if (this.inquiry.supplier_ids) {
+
+                        const supplierIds = this.inquiry.supplier_ids.map(id => Number(id));
+
+                        this.supplier_profiles = response.data.map(supplier => {
+                            const supplierId = Number(supplier.id);
+
+                            supplier.checked = supplierIds.includes(supplierId);
+                            supplier.checked = supplierIds.includes(supplierId);
+                            // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+                            supplier.checked = supplierIds.includes(supplierId);
+                            // console.log('Checked:', supplier.checked, 'for Supplier:', supplier,this.inquiry.supplier_ids.includes(supplierId));
+
+                            return supplier;
+                        });
+                    } else {
+                        this.supplier_profiles = response.data;
+                    }
+
+
+
+                    NProgress.done();
+                })
+                .catch(error => {
+                    console.error(error);
+                    NProgress.done();
+                });
         },
         followup() {
             NProgress.start();
@@ -495,80 +578,12 @@ export default {
                     NProgress.done();
                 });
         },
-        async quote() {
-            if (!this.supplierInquiry.length) {
-                swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please select at least one quote from the supplier!',
-                });
-                NProgress.done();
-                this.loader = false;
-                return;
-            }
-            const inquiryid = this.$route.params.id;
-            let formData;
-            if (this.selectedSupplier) {
-                formData = {
-                    quoteIds: this.supplierData[this.selectedSupplier].map(row => row.id)
-                };
-            } else {
-                formData = {
-                    quoteIds: this.supplierInquiry
-                };
-            }
-
-            try {
-                this.loader = true;
-                const response = await axios.post(`/api/inquiry/quote/${inquiryid}`, formData);
-                this.loader = false;
-                toastr.success(response.data.message);
-                this.fetchInquiry();
-            } catch (error) {
-                this.loader = false;
-                console.error(error);
-            }
-        },
-        fetchBuyers() {
-            axios.get('/api/buyerOrder')
-                .then(response => {
-                    this.buyers = response.data;
-                    const selectedbuyerIds = Number(this.draftData.inquiry.buyer);
-                    const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
-                    if (selectedbuyer) {
-                        this.buyer = selectedbuyer;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-        fetchSupplierProfiles(groupId) {
-            NProgress.start();
-            axios.get(`/api/supplier_profiles/${groupId}`)
-                .then(response => {
-                    if (this.draftData.inquiry.supplier_ids) {
-                        const supplierIds = this.draftData.inquiry.supplier_ids.map(id => Number(id));
-                        this.supplier_profiles = response.data.map(supplier => {
-                            const supplierId = Number(supplier.id);
-                            supplier.checked = supplierIds.includes(supplierId);
-                            return supplier;
-                        });
-                    } else {
-                        this.supplier_profiles = response.data;
-                    }
-                    NProgress.done();
-                })
-                .catch(error => {
-                    console.error(error);
-                    NProgress.done();
-                });
-        },
         fetchProductGroups() {
             NProgress.start();
-            axios.get('/api/product_group_get')
+            axios.get('/api/product_group_get') // Replace '/api/product-groups' with your API endpoint
                 .then(response => {
                     this.groups = response.data;
+                    console.log(response);
                     NProgress.done();
                 })
                 .catch(error => {
@@ -596,7 +611,7 @@ export default {
             if (file) {
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
 
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -612,12 +627,42 @@ export default {
                             newWidth = (img.width * newHeight) / img.height;
                         }
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+
                     };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                console.log('event', this.file);
+                this.loadImageFromPath(this.file, this.$refs.canvas);
             }
         },
+        loadImageFromPath(imageFileName, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
+
+            // Construct the URL to the file in the storage folder
+            const imageUrl = `/storage/files/${imageFileName}`;
+            // console.log(imageUrl,ctx);
+
+            const img = new Image();
+            img.onload = () => {
+                const aspectRatio = canvas.width / canvas.height;
+                let newWidth, newHeight;
+                if (img.width > img.height) {
+                    newWidth = canvas.width;
+                    newHeight = (img.height * newWidth) / img.width;
+                } else {
+                    newHeight = canvas.height;
+                    newWidth = (img.width * newHeight) / img.height;
+                }
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                console.log('Image loaded and drawn onto the canvas successfully.');
+            };
+            img.src = imageUrl;
+        },
+
         importImage1() {
             this.$refs.fileInput1.click();
         },
@@ -626,7 +671,7 @@ export default {
             if (file) {
                 const canvas = this.$refs.canvas1;
                 const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
 
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -642,6 +687,8 @@ export default {
                             newWidth = (img.width * newHeight) / img.height;
                         }
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+
                     };
                     img.src = event.target.result;
                 };
@@ -649,9 +696,11 @@ export default {
             }
         },
         handleValidationErrors(validationErrors) {
+            // Assuming you have a function to display toastr error messages
             for (const key in validationErrors) {
                 if (validationErrors.hasOwnProperty(key)) {
                     const messages = validationErrors[key];
+                    // Display each validation error message
                     messages.forEach(message => {
                         toastr.error(message);
                     });
@@ -663,30 +712,30 @@ export default {
             this.loader = true;
             try {
                 const formData = new FormData();
-                formData.append('buyer', this.draftData.buyer);
+                formData.append('buyer', this.buyer);
                 formData.append('save', this.save);
-                formData.append('inquiry_number', this.draftData.inquiry.inquiry_number);
-                formData.append('article', this.draftData.inquiry.article);
-                formData.append('group', this.draftData.inquiry.group);
-                formData.append('name', this.draftData.inquiry.name);
-                formData.append('description', this.draftData.inquiry.description);
-                formData.append('cargo', this.draftData.inquiry.cargo);
-                this.draftData.inquiry.cargo_place.forEach(place => {
+                formData.append('inquiry_number', this.inquiry.inquiry_number);
+                formData.append('article', this.inquiry.article);
+                formData.append('group', this.inquiry.group);
+                formData.append('name', this.inquiry.name);
+                formData.append('description', this.inquiry.description);
+                formData.append('cargo', this.inquiry.cargo);
+                this.cargo_place.forEach(place => {
                     formData.append('cargo_place[]', place);
                 });
-                formData.append('incoterm', this.draftData.inquiry.incoterm);
-                formData.append('urgent', this.draftData.inquiry.urgent ? 'true' : 'false');
-                formData.append('method', this.draftData.inquiry.method);
-                if (this.draftData.inquiry.color !== null && this.draftData.inquiry.color !== undefined) {
-                    formData.append('color', this.draftData.inquiry.color);
+                formData.append('incoterm', this.inquiry.incoterm);
+                formData.append('urgent', this.inquiry.urgent ? 'true' : 'false');
+                formData.append('method', this.inquiry.method);
+                if (this.inquiry.color !== null && this.inquiry.color !== undefined) {
+                    formData.append('color', this.inquiry.color);
                 }
-                if (this.draftData.inquiry.packaging !== null && this.draftData.inquiry.packaging !== undefined) {
-                    formData.append('packaging', this.draftData.inquiry.packaging);
+                if (this.inquiry.packaging !== null && this.inquiry.packaging !== undefined) {
+                    formData.append('packaging', this.inquiry.packaging);
                 }
-                if (this.draftData.inquiry.requirements !== null && this.draftData.inquiry.requirements !== undefined) {
-                    formData.append('requirements', this.draftData.inquiry.requirements);
+                if (this.inquiry.requirements !== null && this.inquiry.requirements !== undefined) {
+                    formData.append('requirements', this.inquiry.requirements);
                 }
-                formData.append('status', this.draftData.inquiry.status);
+                formData.append('status', this.inquiry.status);
                 if (this.$refs.fileInput.files[0]) {
                     formData.append('file', this.$refs.fileInput.files[0]);
                 }
@@ -699,17 +748,18 @@ export default {
                     formData.append('supplier_ids[]', id);
                 });
 
-                for (let i = 0; i < this.draftData.inquiry.materials.length; i++) {
-                    formData.append(`pcs[${i}]`, this.draftData.inquiry.materials[i].quantity);
+                for (let i = 0; i < this.inquiry.materials.length; i++) {
+                    formData.append(`pcs[${i}]`, this.inquiry.materials[i].quantity);
                 }
 
-                this.draftData.inquiry.capacity.forEach((caps, index) => {
+                this.capacity.forEach((caps, index) => {
                     const capacityString = `${caps.quantity}${caps.unit}`;
                     formData.append(`capacity[${index}]`, capacityString);
                 });
-
+                console.log(formData);
                 const inquiryid = this.$route.params.id;
                 const url = this.mode === 'edit' ? `/api/update_price_inquiry/${inquiryid}` : '/api/price_inquiry';
+                // const method = this.mode === 'edit' ? 'put' : 'post';
                 const method = 'post';
                 const response = await axios[method](url, formData);
 
@@ -717,8 +767,10 @@ export default {
                 if (response.status === 201 || response.status === 200) {
                     NProgress.done();
                     toastr.success(response.data.message);
-                    this.clearDraft(this.generateDraftKey());
                     this.$router.push({ name: 'price_inquiry' });
+                    // if (this.mode === 'edit') {
+                    //     this.$emit('record-updated');
+                    // }
                 } else {
                     NProgress.done();
                     toastr.error('Something is not correct');
@@ -738,43 +790,66 @@ export default {
             }
         },
         fetchInquiry() {
+
             const inquiryid = this.$route.params.id;
             axios.get('/api/price_inquiry_get/' + inquiryid)
                 .then(response => {
-                    this.draftData.inquiry = response.data.price;
+                    this.inquiry = response.data.price;
                     this.supplierData = response.data.users;
+                    console.log(this.inquiry, this.supplierData);
 
-                    if (this.draftData.inquiry != null) {
-                        this.cargo_place = this.draftData.inquiry.cargo_place || [];
-                        this.loadImageFromPath(this.draftData.inquiry.file, this.$refs.canvas);
 
-                        if (this.draftData.inquiry.file1 != null) {
+                    if (this.inquiry != null) {
+                        this.cargo_place = this.inquiry.cargo_place || [];
+                        this.loadImageFromPath(this.inquiry.file, this.$refs.canvas);
+
+                        if (this.inquiry.file1 != null) {
                             this.loadImageFromPath(
-                                this.draftData.inquiry.file1,
+                                this.inquiry.file1,
                                 this.$refs.canvas1
                             );
                         }
+                        if (this.inquiry.file != null) {
+                            this.loadImageFromPath(
+                                this.inquiry.file,
+                                this.$refs.canvas
+                            );
+                        }
 
-                        this.materials = this.draftData.inquiry.pcs || [{ quantity: '' }];
-                        this.capacity = this.draftData.inquiry.capacity || [{ quantity: '', unit: '' }];
+                        this.materials = this.inquiry && this.inquiry.pcs ? this.inquiry.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }];
+                        this.capacity = this.inquiry && this.inquiry.capacity ? this.inquiry.capacity.map(capacity => {
+                            const [quantity, unit] = capacity.match(/(\d+)([a-zA-Z]+)/).slice(1); // Extract quantity and unit from combined value
+                            return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+                        }) : [{ quantity: '', unit: '' }];
                     }
 
-                    this.draftData.buyer = Number(this.draftData.inquiry.buyer);
-                    this.draftData.inquiry.group = Number(this.draftData.inquiry.group);
-                    if (this.draftData.inquiry.group) {
-                        this.fetchSupplierProfiles(this.draftData.inquiry.group);
+                    this.buyer = Number(this.inquiry.buyer);
+                    this.inquiry.group = Number(this.inquiry.group);
+                    // const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+                    // if (selectedbuyer) {
+                    //     this.selectedBuyerId = selectedbuyer;
+                    // }
+
+                    if (this.inquiry.group) {
+                        this.fetchSupplierProfiles(this.inquiry.group);
                     }
+                    this.precheckSelected();
                     this.updateInquiryMaterials();
                     this.updateInquiryCapacity();
+
                 })
                 .catch(error => {
                     console.error(error);
                 });
         },
+
     },
     computed: {
         totalRows() {
-            return this.draftData.inquiry.capacity.length * this.draftData.inquiry.pcs.length;
+            return this.inquiry.capacity.length * this.inquiry.pcs.length;
+        },
+        formattedCapacity() {
+            return this.capacity.map(caps => `${caps.quantity}${caps.unit}`);
         },
         selectedSupplierIds() {
             return this.supplier_profiles
@@ -782,19 +857,58 @@ export default {
                 .map(supplier => supplier.id);
         },
     },
+    watch: {
+        'capacity[indexs].quantity': function (newVal) {
+            console.log(newVal);
+
+            this.updateInquiryCapacity(newVal);
+        }
+        // selectedBuyerId(newValue) {
+        //     // console.log(newValue);
+        //     this.buyer = newValue.id;
+        // },
+        // inquiry: {
+        //     handler(newValue) {
+        //         const selectedbuyerIds = Number(newValue.buyer);
+        //         const selectedbuyer = this.buyers.find(buyer => buyer.id === selectedbuyerIds);
+        //         if (selectedbuyer) {
+        //             this.selectedBuyerId = selectedbuyer;
+        //         }
+        //     },
+        //     deep: true,
+        // },
+    },
     mounted() {
         NProgress.configure({ showSpinner: false });
+        const inquiryData = this.$store.getters.getInquiryData;
+        console.log(inquiryData);
 
+        if (inquiryData) {
+            this.inquiry = { ...this.inquiry, ...inquiryData };
+            // console.log(this.inquiry.group,inquiryData.group);
+
+        };
         this.fetchProductGroups();
         this.fetchBuyers();
+        this.$refs.fileInput.addEventListener('change', this.loadImage);
+        this.$refs.fileInput1.addEventListener('change', this.loadImage1);
 
+        // Trigger loadImage method if in edit mode and there's an existing image
         if (this.mode === 'edit') {
             this.fetchInquiry();
             this.follow_up = true;
         }
+        if (this.mode === 'edit' && this.file) {
+            this.loadImageFromPath(this.file, this.$refs.canvas);
+        }
+        if (this.mode === 'edit' && this.file1) {
+            this.loadImageFromPath(this.file1, this.$refs.canvas1);
+        }
+    },
 
-        this.$refs.fileInput.addEventListener('change', this.loadImage);
-        this.$refs.fileInput1.addEventListener('change', this.loadImage1);
+    unmounted() {
+        // console.log('beforeDestroy');
+        this.$store.dispatch('CLEAR_INQUIRY_DATA');
     },
     beforeUnmount() {
         this.$refs.fileInput.removeEventListener('change', this.loadImage);
@@ -802,7 +916,6 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .loader-overlay {
     position: fixed;
@@ -811,20 +924,26 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black overlay */
     display: flex;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
+    /* Add blur effect */
     z-index: 9999;
+    /* Ensure it's above other elements */
 }
 
 .loader {
     border: 4px solid #f3f3f3;
+    /* Light gray border */
     border-top: 4px solid #3498db;
+    /* Blue border for spinning effect */
     border-radius: 50%;
     width: 50px;
     height: 50px;
     animation: spin 2s linear infinite;
+    /* Spin animation */
 }
 
 @keyframes spin {
