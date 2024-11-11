@@ -18,7 +18,7 @@
                                 <p for="v-model">Buyer ID<span class="text-danger">*</span>:</p>
                             </div>
                             <div class="col-8">
-                                <Select v-model="draftData.buyer" optionLabel="buyer_id" filter optionValue="id"
+                                <Select v-model="draftData.inquiry.buyer" optionLabel="buyer_id" filter optionValue="id"
                                     placeholder="Select Buyer" class="w-100" :options="buyers" />
                                 <Message severity="error" class="my-1" v-if="errors.buyer">{{ errors.buyer[0] }}
                                 </Message>
@@ -663,15 +663,14 @@ export default {
             this.loader = true;
             try {
                 const formData = new FormData();
-                formData.append('buyer', this.draftData.buyer);
+                formData.append('buyer', this.draftData.inquiry.buyer);
                 formData.append('save', this.save);
                 formData.append('inquiry_number', this.draftData.inquiry.inquiry_number);
                 formData.append('article', this.draftData.inquiry.article);
-                formData.append('group', this.draftData.inquiry.group);
                 formData.append('name', this.draftData.inquiry.name);
                 formData.append('description', this.draftData.inquiry.description);
                 formData.append('cargo', this.draftData.inquiry.cargo);
-                this.draftData.inquiry.cargo_place.forEach(place => {
+                this.cargo_place.forEach(place => {
                     formData.append('cargo_place[]', place);
                 });
                 formData.append('incoterm', this.draftData.inquiry.incoterm);
@@ -679,6 +678,9 @@ export default {
                 formData.append('method', this.draftData.inquiry.method);
                 if (this.draftData.inquiry.color !== null && this.draftData.inquiry.color !== undefined) {
                     formData.append('color', this.draftData.inquiry.color);
+                }
+                if (this.draftData.inquiry.group !== null && this.draftData.inquiry.group !== undefined) {
+                    formData.append('group', this.draftData.inquiry.group);
                 }
                 if (this.draftData.inquiry.packaging !== null && this.draftData.inquiry.packaging !== undefined) {
                     formData.append('packaging', this.draftData.inquiry.packaging);
@@ -703,8 +705,10 @@ export default {
                     formData.append(`pcs[${i}]`, this.draftData.inquiry.materials[i].quantity);
                 }
 
-                this.draftData.inquiry.capacity.forEach((caps, index) => {
+                this.capacity.forEach((caps, index) => {
                     const capacityString = `${caps.quantity}${caps.unit}`;
+                    console.log(caps);
+
                     formData.append(`capacity[${index}]`, capacityString);
                 });
 
@@ -737,12 +741,38 @@ export default {
                 }
             }
         },
+        loadImageFromPath(imageFileName, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas context
+
+            // Construct the URL to the file in the storage folder
+            const imageUrl = `/storage/files/${imageFileName}`;
+            // console.log(imageUrl,ctx);
+
+            const img = new Image();
+            img.onload = () => {
+                const aspectRatio = canvas.width / canvas.height;
+                let newWidth, newHeight;
+                if (img.width > img.height) {
+                    newWidth = canvas.width;
+                    newHeight = (img.height * newWidth) / img.width;
+                } else {
+                    newHeight = canvas.height;
+                    newWidth = (img.width * newHeight) / img.height;
+                }
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                console.log('Image loaded and drawn onto the canvas successfully.');
+            };
+            img.src = imageUrl;
+        },
         fetchInquiry() {
             const inquiryid = this.$route.params.id;
             axios.get('/api/price_inquiry_get/' + inquiryid)
                 .then(response => {
                     this.draftData.inquiry = response.data.price;
                     this.supplierData = response.data.users;
+                    console.log(response.data);
+
 
                     if (this.draftData.inquiry != null) {
                         this.cargo_place = this.draftData.inquiry.cargo_place || [];
@@ -755,8 +785,19 @@ export default {
                             );
                         }
 
-                        this.materials = this.draftData.inquiry.pcs || [{ quantity: '' }];
-                        this.capacity = this.draftData.inquiry.capacity || [{ quantity: '', unit: '' }];
+                        this.materials = this.draftData.inquiry && this.draftData.inquiry.pcs ? this.draftData.inquiry.pcs.map(quantity => ({ quantity })) : [{ quantity: '' }];
+                        this.capacity = this.draftData.inquiry && this.draftData.inquiry.capacity
+                            ? this.draftData.inquiry.capacity.map(capacity => {
+                                const match = capacity.match(/(\d+)([a-zA-Z]+)/); // Extract quantity and unit from combined value
+                                if (match) {
+                                    const [quantity, unit] = match.slice(1);
+                                    return { quantity: parseInt(quantity), unit }; // Parse quantity to integer and keep unit as extracted
+                                }
+                                // Return a default object if the pattern does not match
+                                return { quantity: '', unit: '' };
+                            })
+                            : [{ quantity: '', unit: '' }];
+
                     }
 
                     this.draftData.buyer = Number(this.draftData.inquiry.buyer);
