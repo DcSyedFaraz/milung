@@ -165,11 +165,11 @@ class SuppProductController extends Controller
             ->where('user_id', $userId)
             ->first();
 
+            if (!$priceInquiry) {
+                return response()->json(['error' => 'Price inquiry not found or not assigned to the user.'], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+            }
         $priceInquiry->remarks = $remarks;
 
-        if (!$priceInquiry) {
-            return response()->json(['error' => 'Price inquiry not found or not assigned to the user.'], JsonResponse::HTTP_NOT_FOUND);
-        }
 
         return response()->json($priceInquiry, 200);
     }

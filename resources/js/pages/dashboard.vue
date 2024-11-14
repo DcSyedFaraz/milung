@@ -280,10 +280,10 @@
 <script>
 // import '';
 import './admin/index';
-import { liteClient as algoliasearch } from 'algoliasearch/lite';
+// import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import 'instantsearch.css/themes/algolia-min.css';
-import { history } from 'instantsearch.js/es/lib/routers';
-import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
+// import { history } from 'instantsearch.js/es/lib/routers';
+// import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
 
 import Search from './search.vue';
 
@@ -293,14 +293,14 @@ export default {
     },
     data() {
         return {
-            searchClient: algoliasearch(
-                'YU4IWTKXH8',
-                'e7ed9d642d6e013e3b7b0e665d81f0f1'
-            ),
-            routing: {
-                router: history(),
-                stateMapping: singleIndex('instant_search'),
-            },
+            // searchClient: algoliasearch(
+            //     'YU4IWTKXH8',
+            //     'e7ed9d642d6e013e3b7b0e665d81f0f1'
+            // ),
+            // routing: {
+            //     router: history(),
+            //     stateMapping: singleIndex('instant_search'),
+            // },
             componentsKey: 0,
             userDetails: {},
         }

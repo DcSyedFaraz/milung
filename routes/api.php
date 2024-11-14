@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\StatController;
 use App\Http\Controllers\admin\TransactionController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\buyer\BuyerController;
 use App\Http\Controllers\buyer\BuyerOrderController;
 use App\Http\Controllers\buyer\BuyerShipmentController;
@@ -34,6 +35,8 @@ Route::post('login', [UserController::class, 'login'])->middleware('api');
 Route::post('passChange', [UserController::class, 'passChange'])->middleware('api');
 Route::post('forgotPass', [UserController::class, 'forgotPass']);
 Route::post('register', [UserController::class, 'register']);
+
+Route::middleware('auth:sanctum')->get('/search', [SearchController::class, 'search']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/get-permissions', function () {

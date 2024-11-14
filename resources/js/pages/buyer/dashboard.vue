@@ -15,13 +15,14 @@
             </div>
 
             <div class="search-bar">
-                <i class="bi bi-search"></i>
+                <Search />
+                <!-- <i class="bi bi-search"></i>
                 <form class="search-form d-flex align-items-center" method="POST" action="#">
                     <input type="text" name="query" placeholder="Live Search" title="Enter search keyword" />
                     <button type="submit" title="Search">
                         <i class="bi bi-send-fill"></i>
                     </button>
-                </form>
+                </form> -->
             </div>
             <!-- End Search Bar -->
 
@@ -159,8 +160,12 @@
 </template>
 
 <script>
+import Search from './../searchDatabase.vue';
 import './../admin/index';
 export default {
+    components:{
+        Search,
+    },
     data() {
         return {
             componentKey: 0,

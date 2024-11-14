@@ -14,16 +14,18 @@ use Validator;
 
 class SupplierOrderController extends Controller
 {
+
     public function orderentryget()
     {
-        $id = Auth::user()->supplier_id;
-        // $id = 3;
-        $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->where('supplier', $id)->orderby('created_at', 'desc')->get();
+        $userid = Auth::user()->supplier_id;
+        // $userid = 3;
+        $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'supplier', 'status', 'group')->where('supplier', $userid)->orderby('created_at', 'desc')->get();
         return response()->json($order, 200);
     }
     public function orderentrygetID($id)
     {
-        $order = Order::where('id', $id)->with('product_group', 'shipmentOrders', 'printview')->first();
+        $userid = Auth::user()->supplier_id;
+        $order = Order::where('id', $id)->where('supplier', $userid)->with('product_group', 'shipmentOrders', 'printview')->first();
         // dd($order);
         return response()->json($order, 200);
     }
@@ -47,6 +49,8 @@ class SupplierOrderController extends Controller
         }
 
 
+        $userid = Auth::user()->supplier_id;
+        $order = Order::where('supplier', $userid)->findOrFail($id);
 
         $printView = Printview::where('order_id', $id)->first();
 
@@ -70,7 +74,6 @@ class SupplierOrderController extends Controller
             if (!$request->hasFile('product') && !$request->hasFile('packaging') && !$request->hasFile('accessories')) {
                 return response()->json(['errors' => 'At least one file must be uploaded.'], 422);
             }
-            $order = Order::findOrFail($id);
             $order->status = 'Printview Confirmation';
             $order->save();
             $printView = Printview::create([

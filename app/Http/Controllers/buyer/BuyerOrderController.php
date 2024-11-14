@@ -17,20 +17,23 @@ use Validator;
 
 class BuyerOrderController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $id = Auth::user()->buyer_id;
-        // $id = 2;
-        $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'status', 'group')->where('buyer', $id)->orderby('created_at', 'desc')->get();
+        $userid = Auth::user()->buyer_id;
+
+        $order = Order::select('id', 'updated_at', 'created_at', 'sendoutdate', 'status', 'group')->where('buyer', $userid)->orderby('created_at', 'desc')->get();
         return response()->json($order, 200);
     }
 
     public function orderentrygetID($id)
     {
-        $order = Order::with('product_group')->findOrFail($id);
+        $userid = Auth::user()->buyer_id;
+
+        $order = Order::with('product_group')->where('buyer', $userid)->findOrFail($id);
         // dd($order->getRawOriginal('quantity_unit'));
         $order->quantity_units = $order->getRawOriginal('quantity_unit');
         return response()->json($order, 200);
@@ -43,6 +46,10 @@ class BuyerOrderController extends Controller
     }
     public function printview(Request $request, $id)
     {
+        $userid = Auth::user()->buyer_id;
+
+        $order = Order::where('buyer', $userid)->findOrFail($id);
+
         $validator = Validator::make($request->all(), [
             'reason' => 'nullable|string',
             'action' => 'required|string',
@@ -68,7 +75,6 @@ class BuyerOrderController extends Controller
                 'action' => $request->input('action'),
             ]);
         }
-        $order = Order::find($id);
 
         // Determine the new status based on the action
         $newStatus = ($request->input('action') == 'reject') ? 'Printview Reject' : 'Order Confirm';
@@ -235,9 +241,10 @@ class BuyerOrderController extends Controller
     {
         // return '$id';
         // dd($request->all(), $id);
+        $userid = Auth::user()->buyer_id;
 
         $data = $request->all();
-        $existingOrder = Order::findOrFail($id);
+        $existingOrder = Order::where('buyer', $userid)->findOrFail($id);
 
         $validatedData = Validator::make($data, [
             'files' => 'required|image',

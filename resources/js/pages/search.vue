@@ -7,7 +7,7 @@
                     <div class="input-wrapper">
                         <i class="fas fa-search search-icon"></i> <!-- Search Icon -->
                         <input type="text" :value="currentRefinement" @input="refine($event.target.value)"
-                            @focus="showHits = true" @blur="handleBlur" placeholder="Search for price inquiries..."
+                            @focus="showHits = true" @blur="handleBlur" placeholder="Search ..."
                             class="search-input" />
                         <button v-if="currentRefinement" @click="clear" class="clear-button">
                             &times;
@@ -15,127 +15,75 @@
                         <span v-if="isSearchStalled" class="loading-indicator">Loading...</span>
                     </div>
                 </ais-search-box>
-                <!-- <ais-configure  :hitsPerPage="2" /> -->
             </div>
 
             <!-- Search Results -->
             <transition name="fade">
                 <div class="hits-wrapper" v-if="showHits">
-                    <!-- <ais-hits>
-                        <template v-slot:item="{ item }">
-                            <div class="hit-item" @click="navigateTo(item)">
-                                <h2>{{ item.name }} {{ item.model_type }}</h2>
-                            </div>
-                        </template>
-</ais-hits> -->
-                    <!-- Orders Index -->
-                    <ais-index index-name="orders">
-                        <span class="hit-type">Orders</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'order')">
-                                    <h2>Order No: <ais-highlight :attribute="'id'" :hit="item" /></h2>
-                                    <p class="hit-description">Article: <ais-highlight :attribute="'article'"
-                                            :hit="item" /></p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-
-                    <!-- Products Index -->
-                    <ais-index index-name="products">
-                        <span class="hit-type">Products</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'product')">
-                                    <h2>Article: <ais-highlight :attribute="'article'" :hit="item" /></h2>
-                                    <p class="hit-description">
-                                        <ais-highlight :attribute="'description'" :hit="item" />
-                                    </p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-
-                    <!-- Price Inquiries Index -->
-                    <ais-index index-name="price_inquiries">
-                        <span class="hit-type">Price Inquiry</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'user')">
-                                    <h2>Inquiry Number: <ais-highlight :attribute="'inquiry_number'" :hit="item" /></h2>
-                                    <p class="hit-description">Article: <ais-highlight :attribute="'article'"
-                                            :hit="item" /></p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-                    <ais-index index-name="supplier_profiles">
-                        <span class="hit-type">Supplier</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'user')">
-                                    <h2>Supplier ID: <ais-highlight :attribute="'supplier_id'" :hit="item" /></h2>
-                                    <p class="hit-description">Status: <ais-highlight :attribute="'status'"
-                                            :hit="item" /></p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-                    <ais-index index-name="buyer_profiles">
-                        <span class="hit-type">Buyer</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'user')">
-                                    <h2>Buyer ID: <ais-highlight :attribute="'buyer_id'" :hit="item" /></h2>
-                                    <p class="hit-description">Status: <ais-highlight :attribute="'status'"
-                                            :hit="item" /></p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-                    <ais-index index-name="shipment_orders">
-                        <span class="hit-type">Shipment Orders</span>
-                        <ais-hits>
-                            <template v-slot:item="{ item }">
-                                <div class="hit-item" @click="navigateTo(item, 'user')">
-                                    <h2>SO# : <ais-highlight :attribute="'so_number'" :hit="item" /></h2>
-                                    <p class="hit-description">Destination: <ais-highlight :attribute="'destination'"
-                                            :hit="item" /></p>
-                                </div>
-                            </template>
-                        </ais-hits>
-                    </ais-index>
-
-                    <!-- <ais-pagination class="pagination" /> -->
+                    <!-- Conditionally render indices based on accessibleIndices -->
+                    <template v-for="index in accessibleIndices" :key="index">
+                        <ais-index :index-name="index" v-if="isIndexAccessible(index)">
+                            <span class="hit-type">{{ formatIndexName(index) }}</span>
+                            <ais-hits>
+                                <template v-slot:item="{ item }">
+                                    <div class="hit-item" @click="navigateTo(item, determineItemType(index))">
+                                        <h2>
+                                            <span v-if="index === 'orders'">Order No: </span>
+                                            <span v-if="index === 'products'">Article: </span>
+                                            <span v-if="index === 'price_inquiries'">Inquiry Number: </span>
+                                            <span v-if="index === 'supplier_profiles'">Supplier ID: </span>
+                                            <span v-if="index === 'buyer_profiles'">Buyer ID: </span>
+                                            <span v-if="index === 'shipment_orders'">SO#: </span>
+                                            <ais-highlight :attribute="getPrimaryAttribute(index)" :hit="item" />
+                                        </h2>
+                                        <p class="hit-description">
+                                            <ais-highlight :attribute="getSecondaryAttribute(index)" :hit="item" />
+                                        </p>
+                                    </div>
+                                </template>
+                            </ais-hits>
+                        </ais-index>
+                    </template>
                 </div>
             </transition>
         </ais-instant-search>
     </div>
 </template>
 
+
 <script>
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { history } from 'instantsearch.js/es/lib/routers';
 import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
-// App.js
-
-// Include only the reset
-// import 'instantsearch.css/themes/reset.css';
-// // or include the full Satellite theme
-// import 'instantsearch.css/themes/satellite.css';
-
+// import { mapGetters } from 'vuex';
 
 export default {
     data() {
         return {
             searchClient: algoliasearch('YU4IWTKXH8', 'e7ed9d642d6e013e3b7b0e665d81f0f1'),
             showHits: false,
+            userRole: localStorage.getItem('authrole'),
             routing: {
                 router: history(),
                 stateMapping: singleIndex('instant_search'),
             },
         };
+    },
+    computed: {
+        // ...mapGetters(['userRole']),
+        accessibleIndices() {
+            switch (this.userRole) {
+                case 'Admin':
+                case 'Internal':
+                    return ['orders', 'products', 'price_inquiries', 'supplier_profiles', 'buyer_profiles', 'shipment_orders'];
+                case 'Supplier':
+                    return ['orders', 'products', 'price_inquiries', 'supplier_profiles', 'shipment_orders'];
+                case 'Buyer':
+                    return ['orders', 'products', 'price_inquiries', 'buyer_profiles', 'shipment_orders'];
+                default:
+                    return [];
+            }
+        },
     },
     methods: {
         handleBlur() {
@@ -148,12 +96,147 @@ export default {
                 this.showHits = false;
             }
         },
-        navigateTo(item) {
-            this.$router.push({ name: `${item.model_type.toLowerCase()}.show`, params: { id: item.id } });
+        navigateTo(item, itemType) {
+            let routeName;
+            let params = { id: item.id };
+
+            // Define route mapping based on role and item type
+            if (this.userRole === 'Admin' || this.userRole === 'Internal') {
+                switch (itemType) {
+                    case 'order':
+                        routeName = 'order_edit'; // Ensure this route exists
+                        break;
+                    case 'product':
+                        routeName = 'adminproductEdit';
+                        break;
+                    case 'price_inquiry':
+                        routeName = 'price_inquiry_edit';
+                        break;
+                    case 'supplier_profile':
+                        routeName = 'edituser'; // Adjust as needed
+                        break;
+                    case 'buyer_profile':
+                        routeName = 'editbuyer'; // Adjust as needed
+                        break;
+                    case 'shipment_order':
+                        routeName = 'information'; // Adjust as needed
+                        params = { id: item.id, so_number: item.so_number };
+                        break;
+                    default:
+                        routeName = 'home';
+                }
+            } else if (this.userRole === 'Supplier') {
+                switch (itemType) {
+                    case 'order':
+                        routeName = 'supplier_order_edit';
+                        break;
+                    case 'product':
+                        routeName = 'productEdit'; // Assuming 'productEdit' exists for suppliers
+                        break;
+                    case 'price_inquiry':
+                        routeName = 'supplier_price_inquiry_entry';
+                        break;
+                    case 'supplier_profile':
+                        routeName = 'edituser'; // Adjust as needed
+                        break;
+                    case 'shipment_order':
+                        routeName = 'information'; // Adjust as needed
+                        params = { id: item.id, so_number: item.so_number };
+                        break;
+                    default:
+                        routeName = 'home';
+                }
+            } else if (this.userRole === 'Buyer') {
+                switch (itemType) {
+                    case 'order':
+                        routeName = 'buyer_order_entry';
+                        break;
+                    case 'product':
+                        routeName = 'buyer_productEdit';
+                        break;
+                    case 'price_inquiry':
+                        routeName = 'buyer_price_inquiry_edit';
+                        break;
+                    case 'buyer_profile':
+                        routeName = 'editbuyer'; // Adjust as needed
+                        break;
+                    case 'shipment_order':
+                        routeName = 'buyer_information'; // Adjust as needed
+                        params = { id: item.id, so_number: item.so_number };
+                        break;
+                    default:
+                        routeName = 'home';
+                }
+            } else {
+                // Default route or handle unauthorized access
+                routeName = 'home';
+                params = {};
+            }
+
+            // Verify if routeName exists to prevent navigation errors
+            if (this.$router.hasRoute(routeName)) {
+                this.$router.push({ name: routeName, params });
+            } else {
+                // Fallback route
+                this.$router.push({ name: 'home' });
+            }
+        },
+        isIndexAccessible(index) {
+            // Additional logic can be added here if needed
+            return this.accessibleIndices.includes(index);
+        },
+        formatIndexName(index) {
+            // Format index names for display purposes
+            const mapping = {
+                orders: 'Orders',
+                products: 'Products',
+                price_inquiries: 'Price Inquiry',
+                supplier_profiles: 'Supplier',
+                buyer_profiles: 'Buyer',
+                shipment_orders: 'Shipment Orders',
+            };
+            return mapping[index] || index;
+        },
+        determineItemType(index) {
+            // Map index names to item types used in navigateTo
+            const mapping = {
+                orders: 'order',
+                products: 'product',
+                price_inquiries: 'price_inquiry',
+                supplier_profiles: 'supplier_profile',
+                buyer_profiles: 'buyer_profile',
+                shipment_orders: 'shipment_order',
+            };
+            return mapping[index] || 'unknown';
+        },
+        getPrimaryAttribute(index) {
+            // Define primary attribute based on index
+            const mapping = {
+                orders: 'id',
+                products: 'article',
+                price_inquiries: 'inquiry_number',
+                supplier_profiles: 'supplier_id',
+                buyer_profiles: 'buyer_id',
+                shipment_orders: 'so_number',
+            };
+            return mapping[index] || 'id';
+        },
+        getSecondaryAttribute(index) {
+            // Define secondary attribute based on index
+            const mapping = {
+                orders: 'article',
+                products: 'description',
+                price_inquiries: 'article',
+                supplier_profiles: 'status',
+                buyer_profiles: 'status',
+                shipment_orders: 'destination',
+            };
+            return mapping[index] || 'description';
         },
     },
 };
 </script>
+
 
 <style>
 /* Container Styling */

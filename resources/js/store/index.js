@@ -32,9 +32,11 @@ const store = new Vuex.Store({
             localStorage.setItem('authToken', token);
         },
         setUserRole(state, role) {
+            localStorage.setItem('authrole', role);
             state.userRole = role;
         },
         clearAuth(state) {
+            localStorage.removeItem('authrole');
             localStorage.removeItem('authToken');
             state.authToken = null;
             state.userRole = null;
@@ -65,6 +67,7 @@ const store = new Vuex.Store({
         },
     },
     getters: {
+        userRole: (state) => state.userRole,
         getInquiryData: (state) => state.inquiryData,
         inquiry: state => state.inquiry,
         isAuthenticated: state => !!state.authToken,

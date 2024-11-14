@@ -15,13 +15,14 @@
             </div>
 
             <div class="search-bar">
-                <i class="bi bi-search"></i>
+                <Search />
+                <!-- <i class="bi bi-search"></i>
                 <form class="search-form d-flex align-items-center" method="POST" action="#">
                     <input type="text" name="query" placeholder="Live Search" title="Enter search keyword" />
                     <button type="submit" title="Search">
                         <i class="bi bi-send-fill"></i>
                     </button>
-                </form>
+                </form> -->
             </div>
             <!-- End Search Bar -->
 
@@ -131,7 +132,8 @@
                 <!-- End Icons Nav -->
                 <li class="nav-item" v-if="can('supplierAccountsReceivable')">
 
-                    <router-link class="nav-link" :to="{ name: 'supplier_recievables' }" :class="{active: $route.name === 'supplier_invoice'}" active-class="active">
+                    <router-link class="nav-link" :to="{ name: 'supplier_recievables' }"
+                        :class="{ active: $route.name === 'supplier_invoice' }" active-class="active">
                         <i class="bi bi-cash-coin"></i><span>Finance</span>
                     </router-link>
                 </li>
@@ -163,8 +165,13 @@
 </template>
 
 <script>
+import Search from './../searchDatabase.vue';
+
 import './../admin/index';
 export default {
+    components: {
+        Search,
+    },
     data() {
         return {
             componentKey: 0,
