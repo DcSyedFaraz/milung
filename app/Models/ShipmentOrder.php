@@ -13,7 +13,7 @@ class ShipmentOrder extends Model
 
     public function user()
     {
-        return $this->belongsTo(BuyerProfile::class, 'buyerid')->select('id', 'buyer_id');
+        return $this->belongsTo(BuyerProfile::class, 'buyerid')->select('id', 'buyer_id','consignee');
     }
     public function shipment()
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PriceInquiryNotification;
+use App\Models\BuyerProfile;
 use App\Models\Information;
 use App\Models\Order;
 use App\Models\PackingList;
@@ -152,6 +153,16 @@ class ShipmentController extends Controller
     public function information($id)
     {
         $data = Information::where('shipment_order_id', $id)->with('user')->first();
+        if (!$data) {
+            // In the controller
+            $shipmentOrder = ShipmentOrder::with('user')->find($id);
+            if ($shipmentOrder && $shipmentOrder->user) {
+                $data = [
+                    'consignee' => $shipmentOrder->user->consignee,
+                ];
+            }
+
+        }
         return response()->json($data, 200);
     }
     public function supplier_invoice($id)

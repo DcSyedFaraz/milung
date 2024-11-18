@@ -116,7 +116,7 @@
                             <div class="row my-3" v-if="isEditMode">
                                 <h3 class="fw-bold" style="color: #14245c;">Contact Person</h3>
                                 <DataTable :value="buyer.person" responsiveLayout="scroll"
-                                    :paginator="buyer.person.length > 10" :rows="10" dataKey="id" :rowHover="true"
+                                    :paginator="true" :rows="10" dataKey="id" :rowHover="true"
                                     :loading="loader">
                                     <template #loading>
                                         Loading contact persons...

@@ -664,6 +664,8 @@ export default {
             try {
                 const response = await axios.get("/api/information/" + soId);
                 this.info = response.data;
+                console.log(this.info,' sdfsdf');
+
                 this.info.shipment_order = this.$route.params.so_number;
                 this.info.shipment_order_id = soId;
                 if (!this.info.shipper) {

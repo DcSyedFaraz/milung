@@ -329,6 +329,7 @@ class UserController extends Controller
 
     public function buyersUpdate(Request $request, $id)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'buyer_id' => 'required|regex:/^[^\s]+$/|unique:buyer_profiles,buyer_id,' . $id,
@@ -336,6 +337,7 @@ class UserController extends Controller
             'address' => 'required|string',
             'website' => 'required|string',
             'officePhone' => 'required|string',
+            'consignee' => 'required|string',
             'buyerDescription' => 'required|string',
             'group' => 'required|array',
             'group.*' => 'integer|exists:product_groups,id',
@@ -364,10 +366,11 @@ class UserController extends Controller
                 'buyer_description' => $request->buyerDescription,
                 'group' => $request->group,
                 'status' => $request->status,
+                'consignee' => $request->consignee,
             ]
         );
 
-        return response()->json(['message' => 'Successfully updated user!'], 200);
+        return response()->json(['message' => 'Successfully updated buyer!'], 200);
     }
 
     public function buyers(Request $request)
@@ -382,6 +385,7 @@ class UserController extends Controller
             'address' => 'required|string',
             'website' => 'required|string',
             'officePhone' => 'required|string',
+            'consignee' => 'required|string',
             'buyerDescription' => 'required|string',
             'group' => 'required|array',
             'group.*' => 'integer|exists:product_groups,id',
@@ -405,6 +409,7 @@ class UserController extends Controller
                 'buyer_description' => $request->buyerDescription,
                 'group' => $request->group,
                 'status' => $request->status,
+                'consignee' => $request->consignee,
                 // 'sec_group' => $request->Secgroup,
             ]);
 
